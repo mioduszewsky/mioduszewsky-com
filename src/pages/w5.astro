@@ -1,0 +1,360 @@
+---
+// W5 „ATELIER" — quiet luxury: Clash Display + Sentient, maślany scroll (Lenis),
+// maskowane reveale linii, magnetyczne CTA, custom cursor, dmuchane 3D logo (SVG filter).
+import VariantLayout from '../layouts/VariantLayout.astro';
+import PhoneFrame from '../components/frames/PhoneFrame.astro';
+import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
+import woodspotScroll from '../assets/live/woodspot-scroll.webp';
+
+const uslugi = [
+  { nr: '01', n: 'Plan projektu', d: 'Zanim wydasz pierwszą złotówkę: rozkładam pomysł na części i dostajesz konkretną mapę — co budować, w jakiej kolejności i czym to uruchomić.' },
+  { nr: '02', n: 'Strona internetowa', d: 'Jedna strona pod cel albo pełna strona firmy. Projekt, treść i wdrożenie — gotowa, żeby pokazywać ją klientom bez tłumaczenia się.' },
+  { nr: '03', n: 'Aplikacja lub system', d: 'Sklep, system zapisów, panel klienta, pierwsza wersja produktu. Coś, co pracuje na Ciebie od pierwszego dnia.' },
+];
+---
+
+<VariantLayout title="W5 — ATELIER · mioduszewsky" bg="#f3f1ea" fg="#17150f">
+  <main class="w5">
+    <!-- Kurtyna wejściowa -->
+    <div class="veil" aria-hidden="true"><span class="veil-word">mioduszewsky</span></div>
+
+    <!-- Custom cursor -->
+    <div class="cur" aria-hidden="true"></div>
+
+    <header class="nav">
+      <a class="mark" href="#" aria-label="mioduszewsky">
+        <svg viewBox="0 0 150 74" width="86" role="img" aria-hidden="true">
+          <defs>
+            <filter id="puff" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="5.5" result="b" />
+              <feSpecularLighting in="b" surfaceScale="7" specularConstant="0.9" specularExponent="16" lighting-color="#ffffff" result="spec">
+                <fePointLight x="40" y="-24" z="120" />
+              </feSpecularLighting>
+              <feComposite in="spec" in2="SourceAlpha" operator="in" result="spec2" />
+              <feFlood flood-color="#b9ecd9" result="fill" />
+              <feComposite in="fill" in2="SourceAlpha" operator="in" result="base" />
+              <feMerge>
+                <feMergeNode in="base" /><feMergeNode in="spec2" />
+              </feMerge>
+              <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#17150f" flood-opacity="0.28" />
+            </filter>
+          </defs>
+          <text x="50%" y="56" text-anchor="middle" filter="url(#puff)"
+            style="font-family:'ClashV',sans-serif;font-weight:700;font-size:56px;letter-spacing:-2px;">km.</text>
+        </svg>
+      </a>
+      <span class="nav-mid">Kacper Mioduszewski — Wrocław</span>
+      <a class="btn mag" href="mailto:kacper@mioduszewsky.com"><span class="btn-in">Napisz do mnie</span></a>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <p class="label rv">( Strony · Aplikacje · Plany projektów )</p>
+      <h1>
+        <span class="ln"><span class="ln-in">Buduję rzeczy,</span></span>
+        <span class="ln"><span class="ln-in">które <em>zaczynają</em></span></span>
+        <span class="ln"><span class="ln-in">biznesy.</span></span>
+      </h1>
+      <div class="hero-b">
+        <p class="hero-sub rv">
+          Od pomysłu do startu: projekt, treść i wdrożenie w jednych rękach.
+          Bez szablonów i bez lania wody — pierwsza wersja, która działa i zarabia.
+        </p>
+        <span class="hero-line-v rv" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <!-- REALIZACJE -->
+    <section class="work">
+      <div class="sec-head">
+        <p class="label rv">Wybrane realizacje</p>
+        <p class="label dim rv">( ekrany są przewijalne — to żywe projekty )</p>
+      </div>
+
+      <article class="proj">
+        <div class="proj-t">
+          <span class="ln"><span class="ln-in idx">№ 01</span></span>
+          <h2 class="ln"><span class="ln-in">eskapizm</span></h2>
+          <p class="proj-d rv">
+            Plany podróży po Azji, szyte na miarę. Strona, sklep, aplikacja z planami
+            i system AI do ich budowania — <em>zaprojektowane i zbudowane od zera.</em>
+          </p>
+          <a class="tlink rv" href="https://eskapizm.com" target="_blank" rel="noopener">eskapizm.com<i>↗</i></a>
+        </div>
+        <div class="proj-f" data-parallax>
+          <PhoneFrame src={eskapizmScroll} alt="eskapizm.com — poskroluj" />
+        </div>
+      </article>
+
+      <article class="proj flip">
+        <div class="proj-t">
+          <span class="ln"><span class="ln-in idx">№ 02</span></span>
+          <h2 class="ln"><span class="ln-in">woodspot</span></h2>
+          <p class="proj-d rv">
+            Interaktywny deck wydarzenia z modelem finansowym — dokument,
+            który <em>sprzedaje pomysł</em> lepiej niż prezentacja.
+          </p>
+        </div>
+        <div class="proj-f" data-parallax>
+          <PhoneFrame src={woodspotScroll} alt="WoodSpot — poskroluj" />
+        </div>
+      </article>
+    </section>
+
+    <!-- MANIFEST -->
+    <section class="manif">
+      <p class="manif-t">
+        <span class="ln"><span class="ln-in">Kupujesz stronę,</span></span>
+        <span class="ln"><span class="ln-in">a <em>przemyślany plan wejścia</em></span></span>
+        <span class="ln"><span class="ln-in">dostajesz w cenie.</span></span>
+      </p>
+    </section>
+
+    <!-- USŁUGI -->
+    <section class="serv">
+      <p class="label rv">Z czym możesz przyjść</p>
+      <div class="rows">
+        {uslugi.map((u) => (
+          <a class="srow" href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(u.n)}`}>
+            <span class="idx">{u.nr}</span>
+            <span class="sname">{u.n}</span>
+            <span class="sdesc">{u.d}</span>
+            <span class="sarr">↗</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="foot">
+      <p class="label rv">( Następny krok )</p>
+      <a class="foot-h" href="mailto:kacper@mioduszewsky.com">
+        <span class="ln"><span class="ln-in">Porozmawiajmy</span></span>
+        <span class="ln"><span class="ln-in"><em>o Twoim projekcie.</em></span></span>
+      </a>
+      <div class="foot-b">
+        <a class="btn mag big" href="mailto:kacper@mioduszewsky.com"><span class="btn-in">kacper@mioduszewsky.com</span></a>
+        <a class="btn mag ghost" href="https://instagram.com/mioduszewsky" target="_blank" rel="noopener"><span class="btn-in">Instagram</span></a>
+      </div>
+      <div class="meta">
+        <span>© 2026 mioduszewsky</span>
+        <span>Wrocław, PL (CET)</span>
+        <span>Zaprojektowane i zbudowane samodzielnie</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    import Lenis from 'lenis';
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+    gsap.registerPlugin(ScrollTrigger);
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const EASE = 'cubic-bezier(0.19, 1, 0.22, 1)';
+
+    if (!reduced) {
+      const lenis = new Lenis({ duration: 1.25, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((t) => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    /* Kurtyna wejściowa + intro hero */
+    const veil = document.querySelector<HTMLElement>('.veil')!;
+    const heroLines = document.querySelectorAll('.hero .ln-in, .nav');
+    const intro = () => {
+      const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+      tl.to('.veil-word', { opacity: 1, y: 0, duration: 0.5 })
+        .to(veil, { yPercent: -100, duration: 0.9, ease: 'expo.inOut' }, 0.75)
+        .fromTo('.hero .ln-in', { y: '112%' }, { y: 0, duration: 1.2, stagger: 0.09 }, 1.05)
+        .fromTo('.nav', { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.8 }, 1.25)
+        .fromTo('.hero .rv', { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08 }, 1.35);
+    };
+    if (reduced) {
+      veil.remove();
+      document.querySelectorAll<HTMLElement>('.ln-in, .rv, .nav').forEach((el) => { el.style.transform = 'none'; el.style.opacity = '1'; });
+    } else {
+      intro();
+    }
+
+    /* Maskowane linie + delikatne reveale na scrollu */
+    if (!reduced) {
+      document.querySelectorAll<HTMLElement>('main section:not(.hero) .ln-in, footer .ln-in').forEach((el) => {
+        gsap.fromTo(el, { y: '112%' }, {
+          y: 0, duration: 1.15, ease: 'expo.out',
+          scrollTrigger: { trigger: el.closest('.ln'), start: 'top 88%' },
+        });
+      });
+      document.querySelectorAll<HTMLElement>('main section:not(.hero) .rv, footer .rv, .srow, .meta').forEach((el) => {
+        gsap.fromTo(el, { opacity: 0, y: 26 }, {
+          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 90%' },
+        });
+      });
+      /* Parallax ramek */
+      document.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
+        gsap.fromTo(el, { y: 60 }, {
+          y: -60, ease: 'none',
+          scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
+        });
+      });
+    }
+
+    /* Magnetyczne przyciski */
+    if (!reduced && matchMedia('(pointer: fine)').matches) {
+      document.querySelectorAll<HTMLElement>('.mag').forEach((btn) => {
+        const inner = btn.querySelector<HTMLElement>('.btn-in')!;
+        btn.addEventListener('mousemove', (e) => {
+          const r = btn.getBoundingClientRect();
+          const x = (e.clientX - r.left - r.width / 2) * 0.35;
+          const y = (e.clientY - r.top - r.height / 2) * 0.45;
+          gsap.to(btn, { x, y, duration: 0.4, ease: 'power2.out' });
+          gsap.to(inner, { x: x * 0.4, y: y * 0.4, duration: 0.4 });
+        });
+        btn.addEventListener('mouseleave', () => {
+          gsap.to([btn, inner], { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.4)' });
+        });
+      });
+
+      /* Custom cursor */
+      const cur = document.querySelector<HTMLElement>('.cur')!;
+      const qx = gsap.quickTo(cur, 'x', { duration: 0.35, ease: 'power3.out' });
+      const qy = gsap.quickTo(cur, 'y', { duration: 0.35, ease: 'power3.out' });
+      addEventListener('mousemove', (e) => { qx(e.clientX); qy(e.clientY); });
+      document.querySelectorAll('a, button').forEach((el) => {
+        el.addEventListener('mouseenter', () => gsap.to(cur, { scale: 2.6, duration: 0.3 }));
+        el.addEventListener('mouseleave', () => gsap.to(cur, { scale: 1, duration: 0.3 }));
+      });
+    } else {
+      document.querySelector('.cur')?.remove();
+    }
+  </script>
+</VariantLayout>
+
+<style>
+  .w5 {
+    --ivory: #f3f1ea;
+    --ink: #17150f;
+    --dim: #8b8677;
+    --blue: #2438ff;
+    --mint: #b9ecd9;
+    font-family: 'GeneralSansV', sans-serif;
+    background: var(--ivory);
+    color: var(--ink);
+  }
+  @font-face { font-family: 'ClashV'; src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-VariableItalic.woff2') format('woff2'); font-weight: 200 700; font-style: italic; font-display: swap; }
+  @font-face { font-family: 'SentientV'; src: url('/fonts/Sentient-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  @font-face { font-family: 'SentientV'; src: url('/fonts/Sentient-VariableItalic.woff2') format('woff2'); font-weight: 200 700; font-style: italic; font-display: swap; }
+
+  ::selection { background: var(--blue); color: var(--ivory); }
+  .w5 a { cursor: none; }
+  @media (pointer: coarse) { .w5 a { cursor: auto; } }
+
+  .veil {
+    position: fixed; inset: 0; z-index: 200; background: var(--ink);
+    display: grid; place-items: center;
+  }
+  .veil-word {
+    font-family: 'ClashV'; font-weight: 500; font-size: clamp(1.4rem, 3vw, 2.4rem);
+    color: var(--ivory); letter-spacing: 0.02em; opacity: 0; translate: 0 20px;
+  }
+
+  .cur {
+    position: fixed; top: -40px; left: -40px; z-index: 300; width: 14px; height: 14px;
+    border-radius: 50%; background: var(--blue); pointer-events: none;
+    mix-blend-mode: exclusion;
+  }
+
+  .nav {
+    position: fixed; inset-inline: 0; top: 0; z-index: 90;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 3vw;
+    background: color-mix(in srgb, var(--ivory) 82%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .nav-mid { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dim); }
+  .mark svg text { font-family: 'ClashV', 'Clash Display', sans-serif; }
+
+  .btn {
+    display: inline-block; position: relative; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--ink); border-radius: 999px; padding: 10px 22px;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    transition: background 0.35s, color 0.35s;
+    will-change: transform;
+  }
+  .btn .btn-in { display: inline-block; }
+  .btn:hover { background: var(--ink); color: var(--ivory); }
+  .btn.big { padding: 16px 34px; font-size: 13px; background: var(--ink); color: var(--ivory); }
+  .btn.big:hover { background: var(--blue); border-color: var(--blue); }
+  .btn.ghost { color: var(--ink); }
+
+  .label { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dim); }
+  .label.dim { color: color-mix(in srgb, var(--dim) 70%, transparent); }
+
+  /* maskowane linie */
+  .ln { display: block; overflow: hidden; }
+  .ln-in { display: inline-block; will-change: transform; }
+
+  .hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 18vh 3vw 10vh; }
+  .hero h1 {
+    font-family: 'ClashV'; font-weight: 480; letter-spacing: -0.025em;
+    font-size: clamp(3.2rem, 9.5vw, 9.8rem); line-height: 1.0; margin-top: 3vh;
+  }
+  .hero h1 em, .proj-d em, .manif em, .foot-h em {
+    font-family: 'SentientV'; font-style: italic; font-weight: 380; letter-spacing: -0.01em;
+  }
+  .hero-b { display: flex; justify-content: flex-end; margin-top: 6vh; }
+  .hero-sub { max-width: 40ch; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.65; color: #4c483c; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-top: 1.4rem; }
+
+  .work { padding: 10vh 3vw; }
+  .sec-head { display: flex; justify-content: space-between; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-top: 1rem; margin-bottom: 10vh; }
+  .proj { display: grid; grid-template-columns: 1fr 1fr; gap: 5vw; align-items: center; margin-bottom: 16vh; }
+  .proj.flip .proj-t { order: 2; }
+  .proj-t .idx { font-size: 12px; letter-spacing: 0.3em; color: var(--dim); }
+  .proj-t h2 { font-family: 'ClashV'; font-weight: 480; font-size: clamp(2.6rem, 6vw, 6rem); letter-spacing: -0.02em; margin: 0.6rem 0 1.4rem; }
+  .proj-d { max-width: 40ch; font-size: clamp(1rem, 1.35vw, 1.15rem); line-height: 1.65; color: #4c483c; }
+  .tlink { display: inline-block; margin-top: 1.6rem; color: var(--ink); text-decoration: none; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; position: relative; }
+  .tlink i { font-style: normal; margin-left: 8px; color: var(--blue); display: inline-block; transition: translate 0.3s; }
+  .tlink::after { content: ""; position: absolute; left: 0; bottom: -5px; height: 1px; width: 100%; background: var(--ink); transform-origin: right; transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1); }
+  .tlink:hover::after { transform: scaleX(0.2); }
+  .tlink:hover i { translate: 4px -4px; }
+  .proj-f { display: flex; justify-content: center; }
+
+  .manif { padding: 18vh 3vw; text-align: center; background: var(--ink); color: var(--ivory); }
+  .manif-t { font-family: 'ClashV'; font-weight: 440; font-size: clamp(1.9rem, 4.6vw, 4.4rem); line-height: 1.12; letter-spacing: -0.02em; }
+  .manif em { color: var(--mint); }
+
+  .serv { padding: 14vh 3vw; }
+  .rows { margin-top: 5vh; }
+  .srow {
+    display: grid; grid-template-columns: 60px 1fr 1.2fr 40px; gap: 3vw; align-items: baseline;
+    padding: 30px 6px; text-decoration: none; color: var(--ink);
+    border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+    transition: padding-left 0.4s cubic-bezier(0.19, 1, 0.22, 1), background 0.4s;
+  }
+  .srow:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .srow:hover { padding-left: 22px; background: color-mix(in srgb, var(--ink) 4%, transparent); }
+  .srow .idx { font-size: 12px; letter-spacing: 0.24em; color: var(--dim); }
+  .sname { font-family: 'ClashV'; font-weight: 500; font-size: clamp(1.5rem, 3vw, 2.6rem); letter-spacing: -0.015em; }
+  .sdesc { font-size: 14.5px; line-height: 1.6; color: #4c483c; max-width: 52ch; }
+  .sarr { font-size: 1.3rem; color: var(--blue); opacity: 0; translate: -8px 4px; transition: opacity 0.3s, translate 0.35s; }
+  .srow:hover .sarr { opacity: 1; translate: 0 0; }
+
+  .foot { padding: 16vh 3vw 4vh; }
+  .foot-h { display: block; text-decoration: none; color: var(--ink); margin-top: 3vh; font-family: 'ClashV'; font-weight: 480; font-size: clamp(3rem, 8.5vw, 8.6rem); line-height: 1.02; letter-spacing: -0.025em; }
+  .foot-h em { color: var(--blue); }
+  .foot-b { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6vh; }
+  .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 10vh; padding-top: 1.2rem; border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
+
+  @media (max-width: 860px) {
+    .nav-mid { display: none; }
+    .proj { grid-template-columns: 1fr; gap: 6vh; }
+    .proj.flip .proj-t { order: 0; }
+    .srow { grid-template-columns: 40px 1fr 30px; }
+    .sdesc { display: none; }
+  }
+</style>
