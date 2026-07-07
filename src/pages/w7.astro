@@ -1,0 +1,299 @@
+---
+// W7 „ORBITA" — impeccable/overdrive: JEDEN ekstraordynarny moment (interaktywne pole
+// gwiazd z warp na przytrzymanie), reszta zdyscyplinowana: custom easing, stagger,
+// tinted blacks, @property na gradientach, prefers-reduced-motion z pięknym fallbackiem.
+import VariantLayout from '../layouts/VariantLayout.astro';
+import PhoneFrame from '../components/frames/PhoneFrame.astro';
+import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
+import woodspotScroll from '../assets/live/woodspot-scroll.webp';
+
+const uslugi = [
+  { nr: 'K-01', n: 'Plan projektu', d: 'Mapa lotu zanim odpalisz silniki: co budować, w jakiej kolejności, czym wystartować.' },
+  { nr: 'K-02', n: 'Strona internetowa', d: 'Jedna strona pod cel albo pełna strona firmy. Projekt, treść, wdrożenie — bez międzylądowań.' },
+  { nr: 'K-03', n: 'Aplikacja lub system', d: 'Sklep, zapisy, panel klienta, pierwsza wersja produktu. Ląduje i od razu pracuje.' },
+];
+---
+
+<VariantLayout title="W7 — ORBITA · mioduszewsky" bg="#06060e" fg="#f2efe6">
+  <main class="w7">
+    <canvas id="space" aria-hidden="true"></canvas>
+    <div class="nebula" aria-hidden="true"></div>
+
+    <header class="nav">
+      <span class="brand">mioduszewsky<i>*</i></span>
+      <span class="mono hint-hold">przytrzymaj gdziekolwiek, żeby wejść w nadświetlną</span>
+      <a class="pill" href="mailto:kacper@mioduszewsky.com">Napisz ↳</a>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <p class="mono dim rv7">Kacper Mioduszewski — strony · aplikacje · plany projektów</p>
+      <h1 class="rv7">
+        Strony<br />z&nbsp;innej <span class="grad">orbity<i>.</i></span>
+      </h1>
+      <p class="sub rv7">
+        Od pomysłu do startu bez tarcia: projekt, treść i wdrożenie w jednych rękach.
+        Reszta rynku niech dalej krąży po LEO.
+      </p>
+      <div class="cta-row rv7">
+        <a class="pill solid" href="mailto:kacper@mioduszewsky.com">Wystrzel projekt ↳</a>
+        <span class="mono dim">↓ dowody niżej</span>
+      </div>
+    </section>
+
+    <!-- DOWODY -->
+    <section class="proof">
+      <p class="mono dim rv7">( DOWODY W PRÓŻNI — EKRANY SĄ PRZEWIJALNE, TO ŻYWE PROJEKTY )</p>
+      <div class="pods">
+        <div class="pod rv7" data-tilt>
+          <PhoneFrame src={eskapizmScroll} alt="eskapizm.com" label="eskapizm.com ↗" href="https://eskapizm.com" />
+        </div>
+        <div class="pod rv7" data-tilt>
+          <PhoneFrame src={woodspotScroll} alt="WoodSpot" label="woodspot — deck wydarzenia" />
+        </div>
+      </div>
+    </section>
+
+    <!-- USŁUGI -->
+    <section class="serv">
+      <h2 class="rv7">Ładownia<i class="grad">.</i></h2>
+      {uslugi.map((u) => (
+        <a class="srow rv7" href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(u.n)}`}>
+          <span class="mono dim">{u.nr}</span>
+          <span class="sn">{u.n}</span>
+          <span class="sd">{u.d}</span>
+          <span class="sa">→</span>
+        </a>
+      ))}
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="foot">
+      <p class="mono dim rv7">( OSTATNIA TRANSMISJA )</p>
+      <a class="fh rv7" href="mailto:kacper@mioduszewsky.com">Wystrzelmy<br /><span class="grad">Twój projekt.</span></a>
+      <div class="cta-row rv7">
+        <a class="pill solid" href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com ↳</a>
+        <a class="pill" href="https://instagram.com/mioduszewsky" target="_blank" rel="noopener">Instagram</a>
+      </div>
+      <p class="meta mono dim">© 2026 mioduszewsky · Wrocław, PL · zaprojektowane i zbudowane samodzielnie</p>
+    </footer>
+  </main>
+
+  <script>
+    /* ── Pole gwiazd: 3D projekcja, grawitacja kursora, warp na przytrzymanie ── */
+    const cv = document.getElementById('space') as HTMLCanvasElement;
+    const cx2d = cv.getContext('2d')!;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const DPR = Math.min(devicePixelRatio || 1, 2);
+    let W = 0, H = 0, CX = 0, CY = 0;
+
+    const resize = () => {
+      W = cv.width = innerWidth * DPR;
+      H = cv.height = innerHeight * DPR;
+      CX = W / 2; CY = H / 2;
+    };
+    resize();
+    addEventListener('resize', resize);
+
+    const N = innerWidth < 700 ? 340 : 720;
+    const FOV = 320 * DPR;
+    type Star = { x: number; y: number; z: number; pz: number };
+    const stars: Star[] = Array.from({ length: N }, () => spawn(true));
+    function spawn(any = false): Star {
+      const z = any ? Math.random() * 1000 + 1 : 1000;
+      return { x: (Math.random() - 0.5) * 2200, y: (Math.random() - 0.5) * 2200, z, pz: z };
+    }
+
+    let speed = 0.6, targetSpeed = 0.6;
+    let mx = 0, my = 0;                    // grawitacja kursora
+    let lastScroll = scrollY, scrollVel = 0;
+
+    addEventListener('pointermove', (e) => {
+      mx = (e.clientX / innerWidth - 0.5) * 2;
+      my = (e.clientY / innerHeight - 0.5) * 2;
+    });
+    /* WARP: przytrzymanie = nadświetlna (poza linkami) */
+    addEventListener('pointerdown', (e) => {
+      if ((e.target as HTMLElement).closest('a, button, .phone-screen, .variant-switch')) return;
+      targetSpeed = 26;
+      document.documentElement.classList.add('warping');
+    });
+    addEventListener('pointerup', () => {
+      targetSpeed = 0.6;
+      document.documentElement.classList.remove('warping');
+    });
+
+    function frame() {
+      scrollVel = Math.abs(scrollY - lastScroll); lastScroll = scrollY;
+      const boost = Math.min(scrollVel * 0.06, 5);
+      speed += (targetSpeed + boost - speed) * 0.06;
+
+      /* smugi: im szybciej, tym dłuższy ogon */
+      cx2d.fillStyle = `rgba(6, 6, 14, ${speed > 6 ? 0.28 : 0.5})`;
+      cx2d.fillRect(0, 0, W, H);
+
+      const ox = mx * 140 * DPR, oy = my * 140 * DPR;
+      for (const s of stars) {
+        s.pz = s.z;
+        s.z -= speed;
+        if (s.z < 1) { const n = spawn(); s.x = n.x; s.y = n.y; s.z = 1000; s.pz = 1000; }
+        const sx = (s.x / s.z) * FOV + CX - ox;
+        const sy = (s.y / s.z) * FOV + CY - oy;
+        const px = (s.x / s.pz) * FOV + CX - ox;
+        const py = (s.y / s.pz) * FOV + CY - oy;
+        if (sx < 0 || sx > W || sy < 0 || sy > H) continue;
+        const t = 1 - s.z / 1000;
+        const warm = s.x % 7 === 0;
+        cx2d.strokeStyle = warm
+          ? `rgba(255, 183, 3, ${0.25 + t * 0.75})`
+          : `rgba(242, 239, 230, ${0.2 + t * 0.7})`;
+        cx2d.lineWidth = Math.max(t * 2.2 * DPR, 0.5);
+        cx2d.beginPath(); cx2d.moveTo(px, py); cx2d.lineTo(sx, sy); cx2d.stroke();
+      }
+      if (!document.hidden) requestAnimationFrame(frame);
+    }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) requestAnimationFrame(frame); });
+
+    if (reduced) {
+      /* piękny statyczny fallback: pojedyncza klatka gęstszego pola */
+      speed = 0;
+      cx2d.fillStyle = '#06060e'; cx2d.fillRect(0, 0, W, H);
+      for (const s of stars) {
+        const sx = (s.x / s.z) * FOV + CX, sy = (s.y / s.z) * FOV + CY;
+        const t = 1 - s.z / 1000;
+        cx2d.fillStyle = `rgba(242, 239, 230, ${0.2 + t * 0.6})`;
+        cx2d.beginPath(); cx2d.arc(sx, sy, Math.max(t * 1.6 * DPR, 0.4), 0, 7); cx2d.fill();
+      }
+      document.querySelectorAll<HTMLElement>('.rv7').forEach((el) => (el.style.opacity = '1'));
+      document.querySelector('.hint-hold')?.remove();
+    } else {
+      requestAnimationFrame(frame);
+
+      /* Reveale (WAAPI + IO, custom ease) */
+      const io = new IntersectionObserver((es) => {
+        es.forEach((e) => {
+          if (!e.isIntersecting) return;
+          (e.target as HTMLElement).animate(
+            [{ opacity: 0, transform: 'translateY(34px) scale(0.985)' }, { opacity: 1, transform: 'none' }],
+            { duration: 950, easing: 'cubic-bezier(0.19, 1, 0.22, 1)', fill: 'forwards' }
+          );
+          io.unobserve(e.target);
+        });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.rv7').forEach((el) => io.observe(el));
+
+      /* Delikatny tilt kapsuł za kursorem */
+      if (matchMedia('(pointer: fine)').matches) {
+        document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((el) => {
+          el.addEventListener('mousemove', (e) => {
+            const r = el.getBoundingClientRect();
+            const rx = ((e.clientY - r.top) / r.height - 0.5) * -7;
+            const ry = ((e.clientX - r.left) / r.width - 0.5) * 9;
+            el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+          });
+          el.addEventListener('mouseleave', () => { el.style.transform = 'perspective(900px)'; el.style.transition = 'transform 0.7s cubic-bezier(0.19,1,0.22,1)'; setTimeout(() => (el.style.transition = ''), 700); });
+        });
+      }
+    }
+  </script>
+</VariantLayout>
+
+<style is:global>
+  html.warping .w7 .nebula { opacity: 0.9; scale: 1.15; }
+  html.warping .w7 h1, html.warping .w7 .fh { letter-spacing: 0.04em; }
+</style>
+
+<style>
+  .w7 {
+    --void: #06060e;
+    --star: #f2efe6;
+    --dim7: #7d7a8c;
+    --solar: #ffb703;
+    font-family: 'GS7', sans-serif;
+    color: var(--star);
+    position: relative;
+  }
+  @font-face { font-family: 'Clash7'; src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  @font-face { font-family: 'GS7'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  ::selection { background: var(--solar); color: var(--void); }
+
+  #space { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  .nebula {
+    position: fixed; inset: -20%; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(38% 30% at 22% 24%, rgba(124, 92, 255, 0.16), transparent 70%),
+      radial-gradient(30% 26% at 78% 68%, rgba(255, 183, 3, 0.1), transparent 70%),
+      radial-gradient(26% 24% at 62% 18%, rgba(61, 219, 217, 0.08), transparent 70%);
+    filter: blur(30px);
+    transition: opacity 0.6s, scale 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  main > :not(#space):not(.nebula) { position: relative; z-index: 2; }
+
+  .mono { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; }
+  .dim { color: var(--dim7); }
+  .rv7 { opacity: 0; }
+
+  .nav { position: fixed; inset-inline: 0; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 2vw; padding: 16px 3vw; }
+  .brand { font-family: 'Clash7'; font-weight: 600; font-size: 1.25rem; }
+  .brand i { font-style: normal; color: var(--solar); }
+  .hint-hold { color: var(--dim7); animation: pulse7 3s ease-in-out infinite; }
+  @keyframes pulse7 { 50% { opacity: 0.45; } }
+
+  .pill {
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none;
+    color: var(--star); border: 1px solid color-mix(in srgb, var(--star) 40%, transparent);
+    border-radius: 999px; padding: 10px 22px; backdrop-filter: blur(6px);
+    transition: border-color 0.3s, background 0.3s, color 0.3s;
+  }
+  .pill:hover { border-color: var(--solar); color: var(--solar); }
+  .pill.solid { background: var(--solar); color: var(--void); border-color: var(--solar); font-weight: 600; }
+  .pill.solid:hover { filter: brightness(1.1); color: var(--void); }
+
+  .hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 16vh 4vw 10vh; gap: 2.2rem; }
+  .hero h1 {
+    font-family: 'Clash7'; font-weight: 560; letter-spacing: -0.02em;
+    font-size: clamp(3.4rem, 11vw, 11rem); line-height: 0.98;
+    text-shadow: 0 0 80px rgba(124, 92, 255, 0.25);
+    transition: letter-spacing 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  @property --ga { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  .grad {
+    background: conic-gradient(from var(--ga) at 50% 60%, #ffb703, #ff7a3d, #b45cff, #3ddbd9, #ffb703);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: spin7 7s linear infinite;
+  }
+  .grad i { font-style: normal; }
+  @keyframes spin7 { to { --ga: 360deg; } }
+  .sub { max-width: 52ch; font-size: clamp(1rem, 1.5vw, 1.25rem); line-height: 1.65; color: #b9b6c6; }
+  .cta-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: center; }
+
+  .proof { padding: 12vh 4vw; text-align: center; }
+  .pods { display: flex; flex-wrap: wrap; gap: 7vw; justify-content: center; margin-top: 7vh; }
+  .pod { will-change: transform; }
+
+  .serv { max-width: 1100px; margin: 0 auto; padding: 12vh 4vw; }
+  .serv h2 { font-family: 'Clash7'; font-weight: 560; font-size: clamp(2.6rem, 6vw, 5.4rem); margin-bottom: 5vh; }
+  .srow {
+    display: grid; grid-template-columns: 70px 1fr 1.1fr 36px; gap: 3vw; align-items: baseline;
+    padding: 26px 10px; text-decoration: none; color: var(--star);
+    border-top: 1px solid color-mix(in srgb, var(--star) 16%, transparent);
+    background: linear-gradient(90deg, transparent, transparent);
+    transition: background 0.4s, padding-left 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .srow:last-of-type { border-bottom: 1px solid color-mix(in srgb, var(--star) 16%, transparent); }
+  .srow:hover { background: linear-gradient(90deg, rgba(255, 183, 3, 0.07), transparent 60%); padding-left: 26px; }
+  .sn { font-family: 'Clash7'; font-weight: 540; font-size: clamp(1.4rem, 2.8vw, 2.3rem); }
+  .sd { font-size: 14.5px; line-height: 1.6; color: #b9b6c6; }
+  .sa { color: var(--solar); }
+
+  .foot { text-align: center; padding: 16vh 4vw 5vh; display: flex; flex-direction: column; align-items: center; gap: 2.4rem; }
+  .fh { font-family: 'Clash7'; font-weight: 560; font-size: clamp(3rem, 9vw, 9rem); line-height: 1.0; letter-spacing: -0.02em; color: var(--star); text-decoration: none; }
+  .fh:hover { opacity: 0.85; }
+  .meta { margin-top: 6vh; }
+
+  @media (max-width: 820px) {
+    .hint-hold { display: none; }
+    .srow { grid-template-columns: 1fr 30px; }
+    .srow .mono, .sd { display: none; }
+  }
+</style>

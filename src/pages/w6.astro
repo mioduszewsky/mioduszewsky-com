@@ -1,0 +1,305 @@
+---
+// W6 „KOLEKTYW" — wierne odwzorowanie języka The Bon Collectif (ref #6, "MEGA"):
+// noir #010101 / creme #fef9e7 / żółty #ffb703, gigant stacked wordmark na pełnoekranowym
+// żywym medium, sekcja DNA z PIN+scrub (001/002/003), theme switch noir→creme, footer > hero.
+import VariantLayout from '../layouts/VariantLayout.astro';
+import PhoneFrame from '../components/frames/PhoneFrame.astro';
+import eskapizmDesktop from '../assets/live/eskapizm-desktop-scroll.webp';
+import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
+import woodspotScroll from '../assets/live/woodspot-scroll.webp';
+
+const dna = [
+  { nr: '001', n: 'Myślenie biznesowe', d: 'Zanim powstanie piksel, patrzę na rynek, model i cel. Strona bez planu wejścia to tylko ładny obrazek — u mnie plan jest częścią roboty.', bg: '#d8d3c3' },
+  { nr: '002', n: 'Projekt i treść', d: 'Układ, słowa i rytm, które prowadzą klienta za rękę. Piszę i projektuję pod jeden test: czy obcy człowiek rozumie w 5 sekund, po co tu jest.', bg: '#ece5d0' },
+  { nr: '003', n: 'Techniczny build', d: 'Od pierwszej linijki po wdrożenie i domenę. Szybkie, dopracowane i mierzalne — bez podwykonawców i bez zgadywania.', bg: '#fef9e7' },
+];
+---
+
+<VariantLayout title="W6 — KOLEKTYW · mioduszewsky" bg="#010101" fg="#fef9e7">
+  <main class="w6">
+    <!-- NAV (Bon: stacked logo / center links / żółte CTA) -->
+    <header class="nav">
+      <a class="logo" href="#top">MIODU<br />SZEWSKY</a>
+      <nav class="links">
+        <a href="#dna">DNA</a>
+        <a href="#projekty">PROJEKTY</a>
+        <a href="#oferta">OFERTA</a>
+      </nav>
+      <a class="cta" href="mailto:kacper@mioduszewsky.com">NAPISZ DO MNIE <span class="cta-dot">↓</span></a>
+    </header>
+
+    <!-- HERO: pełnoekranowe żywe medium + gigant wordmark -->
+    <section id="top" class="hero" data-hero>
+      <div class="media" aria-hidden="true">
+        <div class="media-scroll"><img src={eskapizmDesktop.src} alt="" draggable="false" /></div>
+        <div class="media-dim"></div>
+      </div>
+      <h1 class="wordmark" aria-label="mioduszewsky">
+        <span>MIODU</span>
+        <span>SZEWSKY</span>
+      </h1>
+      <div class="hero-foot">
+        <p class="mini">PROJEKT <i>✳</i> TREŚĆ <i>✳</i> WDROŻENIE — W JEDNYCH RĘKACH</p>
+        <p class="state">STRONY, APLIKACJE<br />I PLANY PROJEKTÓW</p>
+      </div>
+    </section>
+
+    <!-- DNA: gigant słowo + 3 filary PIN+scrub -->
+    <section id="dna" class="dna">
+      <div class="dna-head">
+        <h2 class="giant" data-reveal6>DNA</h2>
+      </div>
+      <div class="pillars" data-pillars>
+        {dna.map((p) => (
+          <article class="pillar" data-pillar style={`background:${p.bg}`}>
+            <p class="p-nr">{p.nr}</p>
+            <h3 class="p-n">{p.n}</h3>
+            <p class="p-d">{p.d}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marq" aria-hidden="true">
+      <div class="marq-in">
+        {Array(8).fill('OD POMYSŁU DO STARTU ✳ STRONY ✳ APLIKACJE ✳ PLANY PROJEKTÓW ✳ ').map((t) => <span>{t}</span>)}
+      </div>
+    </div>
+
+    <!-- PROJEKTY -->
+    <section id="projekty" class="work">
+      <p class="eyebrow" data-reveal6>( WYBRANE PROJEKTY — EKRANY SĄ PRZEWIJALNE )</p>
+      <div class="work-grid">
+        <figure class="wcard" data-reveal6>
+          <PhoneFrame src={eskapizmScroll} alt="eskapizm.com" label="ESKAPIZM — PLANY PODRÓŻY PO AZJI" href="https://eskapizm.com" />
+        </figure>
+        <figure class="wcard" data-reveal6>
+          <PhoneFrame src={woodspotScroll} alt="WoodSpot" label="WOODSPOT — DECK WYDARZENIA" />
+        </figure>
+      </div>
+    </section>
+
+    <!-- STATEMENT (jedyny italic kontrast, jak u Bon) -->
+    <section id="oferta" class="statement">
+      <p data-reveal6>
+        NIE ROBIĘ SZABLONÓW.<br />
+        BUDUJĘ PIERWSZE WERSJE, KTÓRE<br />
+        WYGLĄDAJĄ JAK <em>dziesiąte.</em>
+      </p>
+      <div class="offer" data-reveal6>
+        <span>PLAN PROJEKTU</span><i>✳</i><span>STRONA INTERNETOWA</span><i>✳</i><span>APLIKACJA LUB SYSTEM</span>
+      </div>
+    </section>
+
+    <!-- FOOTER > HERO, theme switch noir → creme -->
+    <footer class="foot" data-footer6>
+      <p class="eyebrow" data-reveal6>( OSTATNI EKRAN — TWÓJ RUCH )</p>
+      <a class="ready" href="mailto:kacper@mioduszewsky.com" data-reveal6>
+        JESTEM<br />GOTOWY<span class="dot">.</span><br /><em>a Ty?</em>
+      </a>
+      <div class="foot-cta" data-reveal6>
+        <a class="pillbtn" href="mailto:kacper@mioduszewsky.com">KACPER@MIODUSZEWSKY.COM ↳</a>
+        <a class="pillbtn ghost" href="https://instagram.com/mioduszewsky" target="_blank" rel="noopener">INSTAGRAM</a>
+      </div>
+      <div class="meta">
+        <span>© 2026 MIODUSZEWSKY</span>
+        <span>WROCŁAW, PL (CET)</span>
+        <span>ZAPROJEKTOWANE I ZBUDOWANE SAMODZIELNIE</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    import Lenis from 'lenis';
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+    gsap.registerPlugin(ScrollTrigger);
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!reduced) {
+      const lenis = new Lenis({ duration: 1.15 });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((t) => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+
+      /* Hero intro: wordmark wjeżdża literami, media się rozjaśnia */
+      gsap.fromTo('.wordmark span', { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.3, stagger: 0.12, ease: 'expo.out', delay: 0.2 });
+      gsap.fromTo('.media', { scale: 1.12, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.6, ease: 'power2.out' });
+      gsap.fromTo('.nav, .hero-foot', { opacity: 0 }, { opacity: 1, duration: 1, delay: 0.9 });
+
+      /* Hero outro scrub (Bon #1) */
+      gsap.to('.wordmark', {
+        yPercent: -18, opacity: 0.15, ease: 'none',
+        scrollTrigger: { trigger: '[data-hero]', start: '40% top', end: 'bottom top', scrub: 0.6 },
+      });
+
+      /* DNA pillars: PIN + scrub (Bon #2) — desktop */
+      const mm = gsap.matchMedia();
+      mm.add('(min-width: 820px)', () => {
+        const cards = gsap.utils.toArray<HTMLElement>('[data-pillar]');
+        gsap.set(cards, { yPercent: 108 });
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: '[data-pillars]', start: 'top top', end: '+=980', pin: true, scrub: 0.7 },
+        });
+        cards.forEach((c, i) => tl.to(c, { yPercent: 0, duration: 1, ease: 'power2.out' }, i * 0.8));
+      });
+      mm.add('(max-width: 819px)', () => {
+        gsap.utils.toArray<HTMLElement>('[data-pillar]').forEach((c) => {
+          gsap.fromTo(c, { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8, scrollTrigger: { trigger: c, start: 'top 85%' } });
+        });
+      });
+
+      /* Reveale */
+      document.querySelectorAll<HTMLElement>('[data-reveal6]').forEach((el) => {
+        gsap.fromTo(el, { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
+      });
+
+      /* Theme switch noir → creme na footerze (Bon #7, 1:1) */
+      ScrollTrigger.create({
+        trigger: '[data-footer6]', start: 'top 42%', end: '+=1', scrub: true,
+        onEnter: () => document.documentElement.classList.add('w6-creme'),
+        onLeaveBack: () => document.documentElement.classList.remove('w6-creme'),
+      });
+    } else {
+      document.querySelectorAll<HTMLElement>('[data-reveal6], [data-pillar], .wordmark span, .media, .nav, .hero-foot').forEach((el) => {
+        el.style.opacity = '1'; el.style.transform = 'none';
+      });
+    }
+  </script>
+</VariantLayout>
+
+<style is:global>
+  html { --w6bg: #010101; --w6fg: #fef9e7; }
+  html.w6-creme { --w6bg: #fef9e7; --w6fg: #010101; }
+</style>
+
+<style>
+  .w6 {
+    --noir: #010101;
+    --creme: #fef9e7;
+    --yellow: #ffb703;
+    background: var(--w6bg);
+    color: var(--w6fg);
+    font-family: 'GS6', sans-serif;
+    font-weight: 500;
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+  @font-face { font-family: 'GS6'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  @font-face { font-family: 'Sent6'; src: url('/fonts/Sentient-VariableItalic.woff2') format('woff2'); font-weight: 200 700; font-style: italic; font-display: swap; }
+  ::selection { background: var(--yellow); color: var(--noir); }
+
+  .cond {
+    font-family: 'Anybody Variable', sans-serif;
+  }
+
+  .nav {
+    position: fixed; inset-inline: 0; top: 0; z-index: 80;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    padding: 20px 2.4vw;
+  }
+  .logo, .links { mix-blend-mode: difference; color: #fef9e7; }
+  .logo {
+    font-family: 'Anybody Variable'; font-variation-settings: 'wdth' 78; font-weight: 900;
+    font-size: 15px; line-height: 0.94; letter-spacing: 0.01em;
+    color: inherit; text-decoration: none;
+  }
+  .links { display: flex; gap: 34px; padding-top: 4px; }
+  .links a { color: inherit; text-decoration: none; font-size: 12.5px; letter-spacing: 0.14em; }
+  .links a:hover { opacity: 0.6; }
+  .cta {
+    color: var(--noir); background: var(--yellow); text-decoration: none;
+    font-size: 12px; letter-spacing: 0.14em; font-weight: 600;
+    border-radius: 999px; padding: 9px 18px;
+  }
+  .cta:hover { filter: brightness(1.08); }
+  .cta-dot { margin-left: 6px; }
+
+  /* HERO */
+  .hero { position: relative; height: 100svh; overflow: clip; display: grid; place-items: center; }
+  .media { position: absolute; inset: 0; }
+  .media-scroll { position: absolute; inset: 0; }
+  .media-scroll img {
+    display: block; width: 100%; height: auto;
+    filter: brightness(0.42) contrast(1.06) saturate(1.15);
+    animation: mediaScroll 60s linear infinite alternate;
+  }
+  @keyframes mediaScroll { from { translate: 0 0; } to { translate: 0 calc(-100% + 100svh); } }
+  .media-dim {
+    position: absolute; inset: 0;
+    background: linear-gradient(rgba(1,1,1,0.72), rgba(1,1,1,0.28) 40%, rgba(1,1,1,0.3) 62%, rgba(1,1,1,0.78));
+  }
+  .wordmark {
+    position: relative; z-index: 2; text-align: center;
+    font-family: 'Anybody Variable'; font-variation-settings: 'wdth' 76; font-weight: 900;
+    font-size: clamp(4.4rem, 15.5vw, 15.5rem); line-height: 0.86; letter-spacing: 0.005em;
+    color: var(--creme);
+    text-shadow: 0 10px 60px rgba(1, 1, 1, 0.35);
+  }
+  .wordmark span { display: block; }
+  .hero-foot { position: absolute; inset-inline: 0; bottom: 3.4vh; z-index: 2; text-align: center; color: var(--creme); }
+  .mini { font-size: 11.5px; letter-spacing: 0.22em; margin-bottom: 12px; }
+  .mini i { font-style: normal; color: var(--yellow); }
+  .state { font-size: clamp(1.3rem, 2.6vw, 2.2rem); letter-spacing: 0.04em; line-height: 1.15; font-weight: 500; }
+
+  /* DNA */
+  .dna-head { padding: 22vh 2.4vw 10vh; text-align: center; }
+  .giant {
+    font-family: 'Anybody Variable'; font-variation-settings: 'wdth' 80; font-weight: 900;
+    font-size: clamp(6rem, 24vw, 24rem); line-height: 0.9; color: var(--creme); letter-spacing: 0.01em;
+  }
+  .pillars { display: grid; min-height: 100svh; }
+  @media (min-width: 820px) { .pillars { grid-template-columns: repeat(3, 1fr); } }
+  .pillar { color: var(--noir); padding: 8vh 3vw; display: flex; flex-direction: column; }
+  .p-nr { font-size: 12px; letter-spacing: 0.24em; text-align: center; }
+  .p-n { margin: 22vh 0 4vh; text-align: center; font-size: clamp(1.7rem, 2.5vw, 2.6rem); line-height: 1.05; letter-spacing: 0.02em; text-transform: uppercase; font-weight: 600; }
+  .p-d { max-width: 34ch; margin: 0 auto; text-align: center; font-size: 15px; line-height: 1.6; font-weight: 450; }
+
+  /* MARQUEE */
+  .marq { overflow: clip; border-block: 1px solid color-mix(in srgb, var(--w6fg) 25%, transparent); padding: 14px 0; }
+  .marq-in { display: flex; width: max-content; animation: marq6 30s linear infinite; }
+  .marq-in span { white-space: nowrap; font-size: 13px; letter-spacing: 0.22em; }
+  @keyframes marq6 { to { translate: -50% 0; } }
+
+  /* WORK */
+  .work { padding: 14vh 2.4vw; }
+  .eyebrow { font-size: 11.5px; letter-spacing: 0.24em; text-align: center; opacity: 0.75; }
+  .work-grid { display: flex; flex-wrap: wrap; gap: 6vw; justify-content: center; margin-top: 8vh; }
+  .wcard { text-align: center; }
+
+  /* STATEMENT */
+  .statement { padding: 16vh 2.4vw; text-align: center; }
+  .statement p {
+    font-size: clamp(1.7rem, 4.2vw, 4rem); line-height: 1.14; letter-spacing: 0.015em; font-weight: 550;
+  }
+  .statement em, .ready em {
+    font-family: 'Sent6'; font-style: italic; font-weight: 420; text-transform: none;
+    color: var(--yellow); letter-spacing: 0;
+  }
+  .offer { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; margin-top: 7vh; font-size: 13px; letter-spacing: 0.2em; }
+  .offer i { font-style: normal; color: var(--yellow); }
+
+  /* FOOTER (większy niż hero) */
+  .foot { min-height: 118svh; display: flex; flex-direction: column; justify-content: center; padding: 14vh 2.4vw 4vh; text-align: center; }
+  .ready {
+    display: block; margin-top: 5vh; color: var(--w6fg); text-decoration: none;
+    font-family: 'Anybody Variable'; font-variation-settings: 'wdth' 78; font-weight: 900;
+    font-size: clamp(4rem, 15vw, 15rem); line-height: 0.88; letter-spacing: 0.005em; text-transform: uppercase;
+  }
+  .ready .dot { color: var(--yellow); }
+  .ready em { display: block; font-size: 0.34em; margin-top: 0.25em; }
+  .ready:hover { opacity: 0.85; }
+  .foot-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 7vh; }
+  .pillbtn {
+    font-size: 12.5px; letter-spacing: 0.16em; text-decoration: none;
+    background: var(--yellow); color: var(--noir); border-radius: 999px; padding: 14px 28px;
+  }
+  .pillbtn:hover { filter: brightness(1.08); }
+  .pillbtn.ghost { background: transparent; color: var(--w6fg); border: 1px solid color-mix(in srgb, var(--w6fg) 45%, transparent); }
+  .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 12vh; padding-top: 1.2rem; border-top: 1px solid color-mix(in srgb, var(--w6fg) 20%, transparent); font-size: 11px; letter-spacing: 0.18em; opacity: 0.8; }
+
+  @media (max-width: 819px) {
+    .links { display: none; }
+  }
+</style>
