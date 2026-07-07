@@ -1,0 +1,65 @@
+---
+const services = [
+  {
+    nr: '001',
+    name: 'Plan projektu',
+    body: 'Masz pomysł, ale nie wiesz, od czego zacząć. Rozkładam projekt na części i dostajesz konkretny plan: co budować, w jakiej kolejności i czym to uruchomić.',
+    dla: 'Dla osób z pomysłem — przed pierwszą złotówką wydaną na budowanie.',
+    bg: 'bg-creme-card-1',
+  },
+  {
+    nr: '002',
+    name: 'Strona internetowa',
+    body: 'Jedna strona pod konkretny cel albo pełna strona firmy. Zaprojektowana, napisana i wdrożona — gotowa, żeby pokazywać ją klientom.',
+    dla: 'Dla firm i projektów, które potrzebują czytelnej obecności online.',
+    bg: 'bg-creme-card-2',
+  },
+  {
+    nr: '003',
+    name: 'Aplikacja lub system',
+    body: 'Sklep online, system zapisów, panel klienta albo pierwsza wersja aplikacji. Coś, co działa i pracuje na Twój biznes od pierwszego dnia.',
+    dla: 'Dla tych, którym zwykła strona już nie wystarcza.',
+    bg: 'bg-creme-card-3',
+  },
+];
+---
+
+<section id="oferta" class="bg-noir" data-services>
+  <div class="px-5 pt-24 md:px-10 md:pt-40">
+    <p class="text-mono-eyebrow mb-6 text-creme-dim" data-reveal>(02) — Z czym możesz przyjść</p>
+    <h2 class="text-display text-[clamp(4rem,15vw,14rem)] text-creme" data-reveal>
+      Oferta<span class="text-yellow">.</span>
+    </h2>
+  </div>
+
+  <div class="mt-12 md:mt-20 md:grid md:min-h-svh md:grid-cols-3" data-services-stage>
+    {services.map((s) => (
+      <article
+        class:list={[
+          'flex flex-col justify-between px-6 py-10 text-noir md:px-8 md:py-14',
+          s.bg,
+        ]}
+        data-service-card
+      >
+        <div>
+          <p class="text-mono-eyebrow mb-10 text-center text-noir/60 md:mb-20">{s.nr}</p>
+          <h3 class="text-display text-center text-[clamp(2.4rem,4.2vw,4rem)] leading-[0.95]">
+            {s.name}
+          </h3>
+        </div>
+        <div class="mt-10 md:mt-16">
+          <p class="mx-auto max-w-xs text-center text-[15px] leading-relaxed md:text-base">{s.body}</p>
+          <p class="text-mono-eyebrow mt-6 text-center text-noir/50">{s.dla}</p>
+          <p class="mt-8 text-center">
+            <a
+              href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(s.name)}`}
+              class="text-mono-bar inline-block rounded-full border border-noir px-5 py-2.5 transition-colors hover:bg-noir hover:text-creme"
+            >
+              Napisz w tej sprawie&nbsp;↳
+            </a>
+          </p>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

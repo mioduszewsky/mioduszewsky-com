@@ -1,0 +1,24 @@
+---
+const rules = [
+  { pl: "Let's make MVP boring.", accent: 'text-yellow' },
+  { pl: 'Od rozkminiania do ruchu.', accent: 'text-coral' },
+  { pl: 'Nie romantyzuję wolności. Buduję ją.', accent: 'text-creme' },
+];
+---
+
+<section class="border-y border-creme/10 px-5 py-24 md:px-10 md:py-40">
+  <p class="text-mono-eyebrow mb-10 text-creme-dim" data-reveal>(04) — Jak pracuję</p>
+  <ul class="space-y-6 md:space-y-8">
+    {rules.map((r, i) => (
+      <li class="flex items-baseline gap-5 md:gap-10" data-reveal>
+        <span class="text-mono-eyebrow shrink-0 text-creme-dim">[0{i + 1}]</span>
+        <span class:list={['text-display text-[clamp(1.9rem,5.5vw,5rem)] leading-[1.02]', r.accent]}>{r.pl}</span>
+      </li>
+    ))}
+  </ul>
+  <p class="mt-14 max-w-2xl text-base leading-relaxed text-creme-dim md:mt-20 md:text-lg" data-reveal>
+    Pierwsza wersja ma być prosta, konkretna i wypuszczona — zamiast miesięcy dopieszczania rzeczy,
+    których nikt jeszcze nie potrzebuje. Ustalamy, co jest naprawdę ważne, buduję to szybko,
+    a potem sprawdzamy na realnych odbiorcach i poprawiamy to, co ma znaczenie.
+  </p>
+</section>

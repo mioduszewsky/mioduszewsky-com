@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import eskapizmApp from '../assets/work/eskapizm-app.png';
+import cannversity from '../assets/work/cannversity.png';
+
+const projects = [
+  {
+    img: eskapizmApp,
+    alt: 'Aplikacja eskapizm — spersonalizowany plan podróży po Azji',
+    label: 'eskapizm.com',
+    name: 'eskapizm',
+    desc: 'Spersonalizowane plany podróży po Azji. Strona, sklep, aplikacja z planami i system AI do ich budowania — zaprojektowane i zbudowane od zera. Działa i sprzedaje.',
+    accent: 'text-coral',
+  },
+  {
+    img: cannversity,
+    alt: 'Cannversity — platforma edukacyjna dla branży konopnej',
+    label: 'w przygotowaniu',
+    name: 'Cannversity',
+    desc: 'Platforma edukacyjna dla branży konopnej. Zbudowana na tym samym silniku myślenia: najpierw rynek i model, potem produkt.',
+    accent: 'text-yellow',
+  },
+];
+---
+
+<section id="projekty" class="px-5 py-24 md:px-10 md:py-40">
+  <p class="text-mono-eyebrow mb-6 text-creme-dim" data-reveal>(03) — Co buduję dla siebie</p>
+  <h2 class="text-display max-w-4xl text-[clamp(2.6rem,7vw,6.5rem)] text-creme" data-reveal>
+    Zbudowałem to dla siebie,<br />
+    <span class="text-coral">więc wiem, jak zbudować dla Ciebie.</span>
+  </h2>
+
+  <div class="mt-16 grid gap-12 md:mt-24 md:grid-cols-2 md:gap-10">
+    {projects.map((p) => (
+      <article data-reveal>
+        <div class="overflow-clip rounded-lg bg-noir-soft">
+          <Image
+            src={p.img}
+            alt={p.alt}
+            widths={[560, 880, 1280]}
+            sizes="(min-width: 768px) 44vw, 92vw"
+            class="w-full transition-transform duration-700 hover:scale-[1.02]"
+            loading="lazy"
+          />
+        </div>
+        <div class="mt-5 flex items-baseline justify-between gap-4">
+          <h3 class="text-display text-2xl text-creme md:text-3xl">{p.name}</h3>
+          <span class:list={['text-mono-eyebrow', p.accent]}>{p.label}</span>
+        </div>
+        <p class="mt-3 max-w-md text-[15px] leading-relaxed text-creme-dim md:text-base">{p.desc}</p>
+      </article>
+    ))}
+  </div>
+</section>

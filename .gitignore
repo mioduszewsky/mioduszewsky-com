@@ -22,3 +22,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# docs/ jest symlinkiem do Google Drive (_WORKSPACE/projekty/marka-osobista/mioduszewsky-com/docs)
+# centralny hub Kacpra (dostep z kazdego urzadzenia), NIE wersjonowane w repo
+docs
+
+# codex lokalny config
+.codex/

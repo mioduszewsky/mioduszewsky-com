@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets';
+import eskapizm from '../assets/work/eskapizm.png';
+import glassstone from '../assets/work/glassstone.png';
+import woodspot from '../assets/work/woodspot.png';
+import igor from '../assets/work/igor.png';
+
+const cards = [
+  { src: igor, alt: 'Strona galerii sztuki AI — Igor Grabowski', rot: '-8deg', x: '-6%', y: '10%' },
+  { src: woodspot, alt: 'Deck wydarzenia WoodSpot', rot: '5deg', x: '4%', y: '4%' },
+  { src: glassstone, alt: 'Strona firmowa GlassStone — kamień i szkło', rot: '-3deg', x: '-2%', y: '-3%' },
+  { src: eskapizm, alt: 'eskapizm — plany podróży po Azji, strona i aplikacja', rot: '2deg', x: '0%', y: '0%' },
+];
+---
+
+<section id="top" class="relative flex min-h-svh flex-col overflow-clip bg-noir" data-hero>
+  <div class="relative flex flex-1 flex-col justify-center px-5 pt-24 pb-20 md:px-10 md:pt-28 md:pb-16">
+    <p class="text-mono-eyebrow mb-6 text-creme-dim md:mb-2" data-hero-eyebrow>
+      Kacper Mioduszewski — od pomysłu do startu
+    </p>
+
+    <h1 class="text-display relative text-creme">
+      <span class="hero-line relative z-10 text-[clamp(4.2rem,16.5vw,16rem)]">
+        <span>Strony<span class="text-coral">,</span></span>
+      </span>
+      <span class="hero-line relative z-30 text-right text-[clamp(4.2rem,16.5vw,16rem)]">
+        <span>Aplikacje</span>
+      </span>
+      <span class="hero-line relative z-10 mt-2 text-[clamp(2.1rem,7.5vw,7.5rem)] text-yellow md:mt-4">
+        <span>&amp; plany projekt<span class="italic-accent">ó</span>w</span>
+      </span>
+    </h1>
+
+    <!-- Stack realnych realizacji, wciśnięty W typografię (flayks) -->
+    <div
+      class="pointer-events-none relative z-20 mx-auto mt-10 w-[80vw] max-w-[340px] md:absolute md:left-[30%] md:top-1/2 md:mx-0 md:mt-0 md:w-[30vw] md:max-w-[440px] md:-translate-x-1/2 md:-translate-y-[54%]"
+      data-hero-cards
+      aria-hidden="true"
+    >
+      {cards.map((c, i) => (
+        <div
+          class:list={['hero-card', i === cards.length - 1 ? 'relative' : 'absolute inset-0']}
+          style={`transform: rotate(${c.rot}) translate(${c.x}, ${c.y});`}
+        >
+          <Image
+            src={c.src}
+            alt={c.alt}
+            widths={[420, 680, 960]}
+            sizes="(min-width: 768px) 30vw, 72vw"
+            class="w-full rounded-lg shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
+            loading="eager"
+          />
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-10 flex justify-end md:mt-8" data-hero-sub>
+      <p class="max-w-sm text-[15px] leading-relaxed text-creme-dim md:text-base">
+        Buduję strony internetowe, aplikacje i plany działania — dla firm i ludzi,
+        którzy chcą ruszyć z projektem. Projekt, treść i wdrożenie w jednych rękach.
+      </p>
+    </div>
+  </div>
+
+  <!-- Bottom bar (flayks pattern: status — dostępność — kontakt) -->
+  <div
+    class="text-mono-bar flex flex-col gap-1.5 border-t border-creme/10 px-5 py-4 text-creme-dim md:flex-row md:items-center md:justify-between md:px-10"
+    data-hero-bar
+  >
+    <span><span class="text-yellow">●</span>&nbsp; Obecnie: Wrocław (CET)</span>
+    <span class="text-creme">Przyjmuję nowe projekty</span>
+    <a href="#kontakt" class="transition-opacity hover:opacity-60"><span class="text-coral">✳</span>&nbsp; Kontakt</a>
+  </div>
+</section>

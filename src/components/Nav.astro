@@ -1,0 +1,26 @@
+---
+const links = [
+  { href: '#oferta', label: 'Oferta' },
+  { href: '#projekty', label: 'Projekty' },
+  { href: '#o-mnie', label: 'O mnie' },
+];
+---
+
+<header class="fixed inset-x-0 top-0 z-50 mix-blend-difference">
+  <nav class="flex items-center justify-between px-5 py-4 md:px-10 md:py-6">
+    <a href="#top" class="text-display text-creme text-[1.35rem] leading-none md:text-2xl" aria-label="mioduszewsky — start">
+      mioduszewsky<span class="text-yellow">.</span>
+    </a>
+    <div class="hidden items-center gap-8 md:flex">
+      {links.map((l) => (
+        <a href={l.href} class="text-mono-bar text-creme transition-opacity hover:opacity-60">{l.label}</a>
+      ))}
+    </div>
+    <a
+      href="#kontakt"
+      class="text-mono-bar rounded-full border border-creme px-4 py-2 text-creme transition-colors hover:bg-creme hover:text-noir"
+    >
+      Napisz&nbsp;↳
+    </a>
+  </nav>
+</header>

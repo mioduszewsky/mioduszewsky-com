@@ -1,0 +1,19 @@
+---
+const items = [
+  'Od pomysłu do startu',
+  'Strony internetowe',
+  'Aplikacje i systemy',
+  'Plany projektów',
+];
+const strip = Array(4).fill(items).flat();
+---
+
+<div class="overflow-clip border-y border-noir bg-yellow py-3 text-noir" aria-hidden="true">
+  <div class="animate-marquee flex w-max items-center gap-8 pr-8">
+    {strip.map((item) => (
+      <span class="text-display flex items-center gap-8 whitespace-nowrap text-xl md:text-2xl">
+        {item} <span class="text-base">✳</span>
+      </span>
+    ))}
+  </div>
+</div>
