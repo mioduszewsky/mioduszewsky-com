@@ -1,0 +1,241 @@
+---
+// W1 „BETON" — neo-brutalizm: surowy papier, twarde bordery, Anybody na osi szerokości.
+import VariantLayout from '../layouts/VariantLayout.astro';
+import PhoneFrame from '../components/frames/PhoneFrame.astro';
+import MacFrame from '../components/frames/MacFrame.astro';
+import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
+import woodspotScroll from '../assets/live/woodspot-scroll.webp';
+import eskapizmDesktop from '../assets/live/eskapizm-desktop-scroll.webp';
+
+const uslugi = [
+  { nr: '01', n: 'PLAN PROJEKTU', d: 'Konkretny plan zanim wydasz pierwszą złotówkę na budowanie.' },
+  { nr: '02', n: 'STRONA INTERNETOWA', d: 'Zaprojektowana, napisana, wdrożona. Gotowa na klientów.' },
+  { nr: '03', n: 'APLIKACJA LUB SYSTEM', d: 'Sklep, zapisy, panel klienta. Działa od pierwszego dnia.' },
+];
+---
+
+<VariantLayout title="W1 — BETON · mioduszewsky" bg="#efece3" fg="#0d0d0d">
+  <main class="w1">
+    <!-- Pasek górny -->
+    <header class="bar">
+      <span class="logo">MIODUSZEWSKY<sup>®</sup></span>
+      <span class="bar-mid">WROCŁAW — OD POMYSŁU DO STARTU</span>
+      <a class="bar-cta" href="mailto:kacper@mioduszewsky.com">KONTAKT</a>
+    </header>
+
+    <!-- Hero: sztaplowana typografia na osi szerokości -->
+    <section class="hero">
+      <h1>
+        <span class="l l1">BUDUJĘ</span>
+        <span class="l l2">STRONY,</span>
+        <span class="l l3">APLIKACJE</span>
+        <span class="l l4"><em>&amp;</em> PLANY PROJEKTÓW</span>
+      </h1>
+      <div class="hero-foot">
+        <p class="claim">
+          Projekt, treść i wdrożenie w jednych rękach. Zero szablonów, zero lania wody —
+          rzeczy, które <strong>działają i zarabiają</strong>.
+        </p>
+        <div class="badge" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <defs><path id="circ" d="M 60,60 m -46,0 a 46,46 0 1,1 92,0 a 46,46 0 1,1 -92,0" /></defs>
+            <text><textPath href="#circ">100% RĘCZNA ROBOTA ✳ ZERO SZABLONÓW ✳ </textPath></text>
+          </svg>
+          <span class="badge-core">KM</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marq" aria-hidden="true">
+      <div class="marq-in">
+        {Array(6).fill('STRONY ✕ APLIKACJE ✕ PLANY PROJEKTÓW ✕ OD ROZKMINIANIA DO RUCHU ✕ ').map((t) => <span>{t}</span>)}
+      </div>
+    </div>
+
+    <!-- Praca: żywe strony w ramkach, scrollujesz w środku -->
+    <section class="work">
+      <h2>DOWODY, NIE OBIETNICE<span class="red">.</span></h2>
+      <p class="hint">↓ Te ekrany są przewijalne. Poskroluj po prawdziwych projektach.</p>
+      <div class="work-grid">
+        <div class="work-card rot-l">
+          <PhoneFrame src={eskapizmScroll} alt="eskapizm.com na telefonie" label="eskapizm.com" href="https://eskapizm.com" />
+        </div>
+        <div class="work-card rot-r">
+          <PhoneFrame src={woodspotScroll} alt="WoodSpot deck na telefonie" label="woodspot — deck wydarzenia" />
+        </div>
+        <div class="work-card wide">
+          <MacFrame src={eskapizmDesktop} alt="eskapizm.com na desktopie" url="eskapizm.com" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Usługi: brutalna tabela -->
+    <section class="uslugi">
+      <h2>CENNIK ZAJĘĆ<span class="red">:</span></h2>
+      {uslugi.map((u) => (
+        <a class="row" href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(u.n)}`}>
+          <span class="row-nr">{u.nr}</span>
+          <span class="row-n">{u.n}</span>
+          <span class="row-d">{u.d}</span>
+          <span class="row-a">→</span>
+        </a>
+      ))}
+    </section>
+
+    <!-- Stopka -->
+    <footer class="foot">
+      <a href="mailto:kacper@mioduszewsky.com" class="foot-cta">NAPISZ<span class="red">.</span></a>
+      <div class="foot-meta">
+        <span>© 2026 MIODUSZEWSKY</span>
+        <span>KACPER MIODUSZEWSKI — WROCŁAW (CET)</span>
+        <span>ZAPROJEKTOWANE I ZBUDOWANE SAMODZIELNIE</span>
+      </div>
+    </footer>
+  </main>
+</VariantLayout>
+
+<style>
+  .w1 {
+    --ink: #0d0d0d;
+    --paper: #efece3;
+    --red: #ff2e00;
+    --blue: #2438ff;
+    font-family: 'Space Grotesk Variable', sans-serif;
+    cursor: crosshair;
+    background:
+      linear-gradient(var(--ink) 1px, transparent 1px) 0 0 / 100% 120px,
+      linear-gradient(90deg, color-mix(in srgb, var(--ink) 8%, transparent) 1px, transparent 1px) 0 0 / 120px 100%,
+      var(--paper);
+  }
+  .red { color: var(--red); }
+  ::selection { background: var(--blue); color: #fff; }
+
+  .bar {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 4px solid var(--ink);
+    background: var(--paper);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .logo, .bar-mid, .bar-cta {
+    font-family: 'Anybody Variable';
+    font-variation-settings: 'wdth' 120;
+    font-weight: 800;
+    padding: 14px 18px;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+  }
+  .bar-mid {
+    flex: 1;
+    border-inline: 4px solid var(--ink);
+    font-weight: 500;
+    font-family: 'Space Grotesk Variable';
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    display: flex; align-items: center;
+  }
+  .bar-cta { background: var(--ink); color: var(--paper); text-decoration: none; display: flex; align-items: center; }
+  .bar-cta:hover { background: var(--red); }
+
+  .hero { padding: 5vh 3vw 6vh; }
+  .hero h1 { display: grid; gap: 0.5rem; }
+  .l {
+    font-family: 'Anybody Variable';
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 0.86;
+    display: block;
+    width: fit-content;
+  }
+  .l1 { font-variation-settings: 'wdth' 60; font-size: clamp(4rem, 15vw, 15rem); }
+  .l2 {
+    font-variation-settings: 'wdth' 150;
+    font-size: clamp(3rem, 11.5vw, 11.5rem);
+    color: transparent;
+    -webkit-text-stroke: 3px var(--ink);
+  }
+  .l3 {
+    font-variation-settings: 'wdth' 96;
+    font-size: clamp(3.4rem, 13vw, 13rem);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0 2vw;
+    rotate: -1.2deg;
+  }
+  .l3:hover { background: var(--blue); }
+  .l4 { font-variation-settings: 'wdth' 76; font-size: clamp(2rem, 7.2vw, 7.2rem); color: var(--red); }
+  .l4 em { font-style: normal; color: var(--ink); }
+
+  .hero-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-top: 5vh; flex-wrap: wrap; }
+  .claim { max-width: 42ch; font-size: clamp(1rem, 1.6vw, 1.25rem); line-height: 1.45; border-left: 4px solid var(--ink); padding-left: 1rem; }
+  .badge { position: relative; width: 120px; height: 120px; animation: spin 14s linear infinite; }
+  .badge text { font-family: 'Anybody Variable'; font-weight: 800; font-size: 12.5px; letter-spacing: 0.16em; fill: var(--ink); }
+  .badge-core {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    font-family: 'Anybody Variable'; font-weight: 900; font-variation-settings: 'wdth' 130;
+    font-size: 30px; color: var(--red);
+    animation: spin 14s linear infinite reverse;
+  }
+  @keyframes spin { to { rotate: 360deg; } }
+
+  .marq { border-block: 4px solid var(--ink); background: var(--ink); color: var(--paper); overflow: clip; }
+  .marq-in { display: flex; width: max-content; animation: marq 24s linear infinite; }
+  .marq-in span {
+    font-family: 'Anybody Variable'; font-weight: 800; font-variation-settings: 'wdth' 110;
+    font-size: clamp(1.2rem, 2.4vw, 2rem); padding: 10px 0; white-space: nowrap;
+  }
+  @keyframes marq { to { translate: -50% 0; } }
+
+  .work { padding: 8vh 3vw; }
+  .work h2, .uslugi h2 {
+    font-family: 'Anybody Variable'; font-weight: 900; font-variation-settings: 'wdth' 92;
+    font-size: clamp(2.2rem, 6.5vw, 6rem); text-transform: uppercase; margin-bottom: 0.6rem;
+  }
+  .hint { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4vh; color: color-mix(in srgb, var(--ink) 65%, transparent); }
+  .work-grid { display: flex; flex-wrap: wrap; gap: 4vw; align-items: flex-start; justify-content: center; }
+  .work-card {
+    background: #fff;
+    border: 4px solid var(--ink);
+    box-shadow: 12px 12px 0 var(--ink);
+    padding: 26px 26px 18px;
+  }
+  .work-card:hover { box-shadow: 12px 12px 0 var(--red); translate: -2px -2px; }
+  .rot-l { rotate: -1.6deg; }
+  .rot-r { rotate: 1.4deg; margin-top: 6vh; }
+  .wide { flex: 1 1 100%; max-width: 980px; rotate: -0.5deg; margin-top: 4vh; }
+
+  .uslugi { padding: 4vh 3vw 8vh; }
+  .row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 3vw;
+    align-items: baseline;
+    border-top: 4px solid var(--ink);
+    padding: 22px 8px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .row:last-of-type { border-bottom: 4px solid var(--ink); }
+  .row:hover { background: var(--ink); color: var(--paper); }
+  .row:hover .row-a { translate: 8px 0; color: var(--red); }
+  .row-nr { font-family: 'Space Grotesk Variable'; font-size: 13px; letter-spacing: 0.2em; }
+  .row-n { font-family: 'Anybody Variable'; font-weight: 900; font-variation-settings: 'wdth' 105; font-size: clamp(1.5rem, 4vw, 3.4rem); }
+  .row-d { max-width: 34ch; font-size: 14px; line-height: 1.4; }
+  .row-a { font-size: clamp(1.5rem, 3vw, 2.6rem); transition: translate 0.15s; }
+
+  .foot { border-top: 4px solid var(--ink); padding: 8vh 3vw 3vh; }
+  .foot-cta {
+    font-family: 'Anybody Variable'; font-weight: 900; font-variation-settings: 'wdth' 130;
+    font-size: clamp(4rem, 18vw, 18rem); line-height: 0.9;
+    color: var(--ink); text-decoration: none; display: block; width: fit-content;
+  }
+  .foot-cta:hover { color: transparent; -webkit-text-stroke: 4px var(--red); }
+  .foot-meta { display: flex; flex-wrap: wrap; gap: 1rem 3rem; margin-top: 5vh; font-size: 11px; letter-spacing: 0.16em; }
+
+  @media (max-width: 720px) {
+    .bar-mid { display: none; }
+    .row { grid-template-columns: auto 1fr auto; }
+    .row-d { display: none; }
+  }
+</style>

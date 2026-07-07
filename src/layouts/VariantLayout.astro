@@ -1,0 +1,74 @@
+---
+// Wspólny layout eksperymentalnych wariantów designu (/w1-/w4).
+// Fonty: WSZYSTKIE z pełnym latin-ext (ą ć ę ł ń ó ś ź ż) — warunek zero.
+import '@fontsource-variable/unbounded';
+import '@fontsource-variable/anybody';
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/space-grotesk';
+import '@fontsource-variable/syne';
+import '@fontsource-variable/archivo';
+
+interface Props {
+  title: string;
+  bg?: string;
+  fg?: string;
+}
+const { title, bg = '#111', fg = '#fff' } = Astro.props;
+
+const variants = [
+  { href: '/w1', label: 'W1' },
+  { href: '/w2', label: 'W2' },
+  { href: '/w3', label: 'W3' },
+  { href: '/w4', label: 'W4' },
+];
+const current = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+    <style define:vars={{ bg, fg }}>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { background: var(--bg); color: var(--fg); }
+      body { min-height: 100svh; overflow-x: clip; -webkit-font-smoothing: antialiased; }
+      img { max-width: 100%; }
+      .variant-switch {
+        position: fixed;
+        bottom: 14px;
+        right: 14px;
+        z-index: 999;
+        display: flex;
+        gap: 6px;
+        font-family: 'Space Grotesk Variable', monospace;
+        font-size: 12px;
+      }
+      .variant-switch a {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        opacity: 0.82;
+      }
+      .variant-switch a:hover { opacity: 1; }
+      .variant-switch a.active { background: #fff; color: #000; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <slot />
+    <nav class="variant-switch" aria-label="Przełącznik wariantów">
+      {variants.map((v) => (
+        <a href={v.href} class:list={[current === v.href && 'active']}>{v.label}</a>
+      ))}
+    </nav>
+  </body>
+</html>

@@ -1,0 +1,62 @@
+---
+// Okno przeglądarki (desktop) z przewijalną żywą stroną w środku.
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  url?: string;
+  class?: string;
+}
+import type { ImageMetadata } from 'astro';
+const { src, alt, url = '', class: cls } = Astro.props;
+---
+
+<figure class:list={['mac-frame', cls]}>
+  <div class="mac-bar">
+    <span class="mac-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    {url && <span class="mac-url">{url}</span>}
+  </div>
+  <div class="mac-screen" tabindex="0" aria-label={`${alt} — przewiń, żeby zobaczyć całość`}>
+    <img src={src.src} alt={alt} draggable="false" />
+  </div>
+</figure>
+
+<style>
+  .mac-frame {
+    width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #161616;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.45);
+  }
+  .mac-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #232323;
+  }
+  .mac-dots { display: flex; gap: 6px; }
+  .mac-dots i {
+    width: 11px; height: 11px; border-radius: 50%;
+    background: #ff5f57;
+  }
+  .mac-dots i:nth-child(2) { background: #febc2e; }
+  .mac-dots i:nth-child(3) { background: #28c840; }
+  .mac-url {
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: #9a9a9a;
+    background: #161616;
+    border-radius: 6px;
+    padding: 3px 12px;
+  }
+  .mac-screen {
+    aspect-ratio: 16 / 10;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    background: #fff;
+  }
+  .mac-screen::-webkit-scrollbar { display: none; }
+  .mac-screen img { display: block; width: 100%; height: auto; }
+</style>
