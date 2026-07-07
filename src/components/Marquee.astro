@@ -8,11 +8,11 @@ const items = [
 const strip = Array(4).fill(items).flat();
 ---
 
-<div class="overflow-clip border-y border-noir bg-yellow py-3 text-noir" aria-hidden="true">
+<div class="relative z-10 -my-6 -rotate-[1.4deg] scale-x-[1.02] overflow-clip border-y border-noir bg-yellow py-4 text-noir shadow-[0_16px_50px_rgba(0,0,0,0.45)]" aria-hidden="true">
   <div class="animate-marquee flex w-max items-center gap-8 pr-8">
     {strip.map((item) => (
-      <span class="text-display flex items-center gap-8 whitespace-nowrap text-xl md:text-2xl">
-        {item} <span class="text-base">✳</span>
+      <span class="text-display flex items-center gap-8 whitespace-nowrap text-2xl md:text-3xl">
+        {item} <span class="text-lg">✳</span>
       </span>
     ))}
   </div>

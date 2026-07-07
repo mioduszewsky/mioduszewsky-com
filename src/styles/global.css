@@ -144,6 +144,48 @@ html.theme-creme {
   animation: marquee 28s linear infinite;
 }
 
+/* ── Grain overlay (ciepły, filmowy — anty-sterylność) ─────────── */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 90;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  animation: grain-shift 0.9s steps(4) infinite;
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 1%); }
+  50% { transform: translate(1%, -2%); }
+  75% { transform: translate(-1%, 2%); }
+  100% { transform: translate(2%, -1%); }
+}
+
+/* ── Color-cycle akcentu (mechanika 3 kolorów z flayks) ────────── */
+@keyframes accent-cycle {
+  0%, 100% { color: var(--color-coral); }
+  33% { color: var(--color-yellow); }
+  66% { color: var(--color-creme); }
+}
+@utility animate-accent-cycle {
+  animation: accent-cycle 7s ease-in-out infinite;
+}
+
+/* ── Idle float kart hero („cały czas coś się dzieje", soscale) ── */
+@keyframes card-drift {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50% { translate: 0 -1.2%; rotate: 0.7deg; }
+}
+.hero-card {
+  animation: card-drift 7s ease-in-out infinite;
+}
+.hero-card:nth-child(1) { animation-delay: -1.4s; animation-duration: 8.5s; }
+.hero-card:nth-child(2) { animation-delay: -3.2s; animation-duration: 7.6s; }
+.hero-card:nth-child(3) { animation-delay: -5.1s; animation-duration: 9.2s; }
+.hero-card:nth-child(4) { animation-delay: -2.3s; }
+
 /* ── Accessibility ─────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
