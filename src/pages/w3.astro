@@ -1,10 +1,14 @@
 ---
 // W3 „NOKTURN" — immersyjne scrollytelling: noc → świt → dzień, narracja pierwszoosobowa.
-// Tła scen = CSS (ciepły zachód, gruby grain); po zalogowaniu Higgsfield podmienimy na
-// wygenerowane surrealne kadry (var --img sceny).
+// Tła scen: kadry wygenerowane w Higgsfield Soul V2 (08.07.2026, prompty analog/film grain,
+// zero neonu) — src/assets/scenes/*.webp; oryginały .png obok.
 import VariantLayout from '../layouts/VariantLayout.astro';
 import PhoneFrame from '../components/frames/PhoneFrame.astro';
 import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
+import s1 from '../assets/scenes/s1-noc.webp';
+import s2 from '../assets/scenes/s2-swit.webp';
+import s3 from '../assets/scenes/s3-zlota.webp';
+import s4 from '../assets/scenes/s4-dzien.webp';
 ---
 
 <VariantLayout title="W3 — NOKTURN · mioduszewsky" bg="#0a0918" fg="#fdf6e9">
@@ -16,7 +20,7 @@ import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
 
     <!-- SCENA 1: noc -->
     <section class="scene s1" data-scene>
-      <div class="sticky">
+      <div class="sticky" style={`background-image:url(${s1.src})`}>
         <p class="eyebrow">Rozdział pierwszy</p>
         <h1 class="serif">Masz pomysł.</h1>
         <p class="sub">Siedzi w Tobie od miesięcy. Wraca wieczorami.</p>
@@ -26,7 +30,7 @@ import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
 
     <!-- SCENA 2: świt -->
     <section class="scene s2" data-scene>
-      <div class="sticky">
+      <div class="sticky" style={`background-image:url(${s2.src})`}>
         <p class="eyebrow">Rozdział drugi</p>
         <h2 class="serif">Ja buduję<br /><em>pierwsze wersje.</em></h2>
         <p class="sub">Strony, aplikacje i plany projektów. Od rozkminiania do ruchu.</p>
@@ -35,7 +39,7 @@ import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
 
     <!-- SCENA 3: telefon — żywy projekt -->
     <section class="scene s3 tall" data-scene>
-      <div class="sticky row">
+      <div class="sticky row" style={`background-image:url(${s3.src})`}>
         <div class="txt">
           <p class="eyebrow">Rozdział trzeci</p>
           <h2 class="serif">To nie makieta.</h2>
@@ -57,7 +61,7 @@ import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
 
     <!-- SCENA 4: dzień / CTA -->
     <section class="scene s4" data-scene>
-      <div class="sticky">
+      <div class="sticky" style={`background-image:url(${s4.src})`}>
         <p class="eyebrow">Rozdział ostatni — Twój</p>
         <h2 class="serif">Opowiedz mi<br /><em>o swoim projekcie.</em></h2>
         <a class="cta" href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com ↳</a>
@@ -109,11 +113,11 @@ import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* Sceny: podmienialne tła (docelowo obrazy z Higgsfield przez background-image) */
-  .s1 .sticky { background: radial-gradient(120% 90% at 50% 110%, #3d1d4d 0%, #1b1233 40%, #0a0918 78%); }
-  .s2 .sticky { background: radial-gradient(130% 100% at 50% 115%, #ff9a3d 0%, #c2486b 34%, #4a2258 62%, #140f26 92%); }
-  .s3 .sticky { background: radial-gradient(140% 110% at 30% 115%, #ffb703 0%, #e2683f 30%, #6d2f60 62%, #17102b 95%); }
-  .s4 .sticky { background: radial-gradient(130% 100% at 50% -10%, #ffe6b0 0%, #ffb703 30%, #e2683f 62%, #402043 100%); color: #1c1206; }
+  /* Sceny: kadry z Higgsfield Soul V2 jako tła (inline style), gradienty = fallback */
+  .sticky { background-size: cover; background-position: center; background-color: #0a0918; }
+  .s4 .sticky { color: #1c1206; }
+  .s1 .sticky, .s2 .sticky, .s3 .sticky { text-shadow: 0 2px 30px rgba(5, 4, 14, 0.55); }
+  .s4 .sticky { text-shadow: 0 2px 26px rgba(255, 246, 224, 0.6); }
 
   /* miękkie krawędzie scen: sceny wtapiają się w noc zamiast twardego szwu */
   .sticky::before {
