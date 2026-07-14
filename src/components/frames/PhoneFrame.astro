@@ -1,20 +1,38 @@
 ---
 // iPhone frame z żywą stroną w środku — scrollujesz palcem/kółkiem po projekcie.
+// Proporcje i detale wg iPhone 15 Pro: cienki bezel, tytanowa rama, Dynamic Island,
+// boczne przyciski, pasek statusu iOS przypięty nad przewijaną treścią.
 interface Props {
   src: ImageMetadata;
   alt: string;
   label?: string;
   href?: string;
   class?: string;
+  /** kolor ikon paska statusu: 'dark' na jasnych stronach, 'light' na ciemnych */
+  statusbar?: 'dark' | 'light';
+  /** kolor tła ekranu (strip pod paskiem statusu) — dopasuj do tła strony w środku */
+  screenbg?: string;
 }
 import type { ImageMetadata } from 'astro';
-const { src, alt, label, href, class: cls } = Astro.props;
+const { src, alt, label, href, class: cls, statusbar = 'dark', screenbg = '#fff' } = Astro.props;
 ---
 
 <figure class:list={['phone-frame', cls]}>
   <div class="phone-body">
-    <span class="phone-island" aria-hidden="true"></span>
-    <div class="phone-screen" tabindex="0" aria-label={`${alt} — przewiń, żeby zobaczyć całość`}>
+    <span class="phone-btn btn-action" aria-hidden="true"></span>
+    <span class="phone-btn btn-vol-up" aria-hidden="true"></span>
+    <span class="phone-btn btn-vol-down" aria-hidden="true"></span>
+    <span class="phone-btn btn-power" aria-hidden="true"></span>
+    <div class:list={['phone-statusbar', `sb-${statusbar}`]} aria-hidden="true">
+      <span class="sb-time">9:41</span>
+      <span class="phone-island"></span>
+      <span class="sb-icons">
+        <svg viewBox="0 0 18 12" class="sb-signal"><rect x="0" y="8" width="3" height="4" rx="0.8"/><rect x="5" y="5.5" width="3" height="6.5" rx="0.8"/><rect x="10" y="3" width="3" height="9" rx="0.8"/><rect x="15" y="0.5" width="3" height="11.5" rx="0.8"/></svg>
+        <svg viewBox="0 0 16 12" class="sb-wifi"><path d="M8 10.6a1.4 1.4 0 1 0 0 .01M8 7.4c1.2 0 2.3.45 3.1 1.2l1.4-1.45A6.4 6.4 0 0 0 8 5.2a6.4 6.4 0 0 0-4.5 1.95L4.9 8.6A4.4 4.4 0 0 1 8 7.4Zm0-4.4c2.3 0 4.4.9 6 2.35L15.4 3.9A10.4 10.4 0 0 0 8 1a10.4 10.4 0 0 0-7.4 2.9L2 5.35A8.4 8.4 0 0 1 8 3Z"/></svg>
+        <svg viewBox="0 0 25 12" class="sb-batt"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6"/><path d="M23.5 4v4a2.2 2.2 0 0 0 0-4Z" opacity="0.4"/></svg>
+      </span>
+    </div>
+    <div class="phone-screen" tabindex="0" data-lenis-prevent style={`background:${screenbg}`} aria-label={`${alt} — przewiń, żeby zobaczyć całość`}>
       <img src={src.src} alt={alt} draggable="false" />
     </div>
   </div>
@@ -34,32 +52,79 @@ const { src, alt, label, href, class: cls } = Astro.props;
   }
   .phone-body {
     position: relative;
-    width: min(300px, 78vw);
-    aspect-ratio: 300 / 620;
-    border-radius: 46px;
-    background: #101010;
-    padding: 12px;
+    width: min(292px, 76vw);
+    aspect-ratio: 393 / 810;
+    border-radius: 47px;
+    /* tytanowa rama: jasna krawędź + głębia */
+    background: linear-gradient(145deg, #6b6b6e 0%, #3c3c3f 30%, #2b2b2e 70%, #55555a 100%);
+    padding: 4px;
     box-shadow:
-      inset 0 0 0 2px #3a3a3a,
-      inset 0 0 0 5px #0a0a0a,
-      0 30px 80px rgba(0, 0, 0, 0.5);
+      inset 0 0 1.5px 0.5px rgba(255, 255, 255, 0.35),
+      0 24px 60px rgba(0, 0, 0, 0.38),
+      0 4px 14px rgba(0, 0, 0, 0.22);
+  }
+  /* czarny bezel wokół szkła */
+  .phone-body::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 43px;
+    background: #050505;
+    pointer-events: none;
+  }
+  /* boczne przyciski */
+  .phone-btn {
+    position: absolute;
+    width: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #5a5a5e, #38383c);
+  }
+  .btn-action   { left: -3px; top: 18%; height: 4.2%; }
+  .btn-vol-up   { left: -3px; top: 26%; height: 8%; }
+  .btn-vol-down { left: -3px; top: 35.5%; height: 8%; }
+  .btn-power    { right: -3px; top: 29%; height: 12%; background: linear-gradient(270deg, #5a5a5e, #38383c); }
+
+  /* pasek statusu iOS — przypięty NAD przewijaną treścią, jak na prawdziwym iPhone */
+  .phone-statusbar {
+    position: absolute;
+    inset: 9px 9px auto;
+    height: 40px;
+    z-index: 4;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0 20px;
+    pointer-events: none;
+  }
+  .sb-dark { color: #050505; }
+  .sb-light { color: #f5f5f5; }
+  .sb-time {
+    font-family: -apple-system, 'SF Pro Text', 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 620;
+    letter-spacing: -0.01em;
+    justify-self: start;
   }
   .phone-island {
-    position: absolute;
-    top: 22px;
-    left: 50%;
-    translate: -50% 0;
-    width: 86px;
-    height: 24px;
+    width: 94px;
+    height: 27px;
     border-radius: 999px;
     background: #000;
-    z-index: 3;
+    justify-self: center;
   }
+  .sb-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    justify-self: end;
+  }
+  .sb-icons svg { height: 11px; width: auto; fill: currentColor; }
+
   .phone-screen {
     /* absolute w ramce: obrazek w środku nie może rozepchnąć aspect-ratio obudowy */
     position: absolute;
-    inset: 12px;
-    border-radius: 35px;
+    inset: 9px;
+    border-radius: 38px;
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
@@ -72,6 +137,9 @@ const { src, alt, label, href, class: cls } = Astro.props;
     display: block;
     width: 100%;
     height: auto;
+    /* treść startuje pod paskiem statusu jak na prawdziwym iPhone;
+       przy scrollu wjeżdża pod niego */
+    margin-top: 44px;
   }
   .phone-caption {
     font-size: 0.7rem;

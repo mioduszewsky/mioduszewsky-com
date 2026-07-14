@@ -6,12 +6,15 @@ import '@fontsource-variable/shantell-sans';
 import VariantLayout from '../layouts/VariantLayout.astro';
 import PhoneFrame from '../components/frames/PhoneFrame.astro';
 import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
-import woodspotScroll from '../assets/live/woodspot-scroll.webp';
+import aigorScroll from '../assets/live/aigor-scroll.webp';
+import thumbWoodspot from '../assets/live/thumb-woodspot.webp';
+import thumbAigor from '../assets/live/thumb-aigor.webp';
+import thumbEskapizm from '../assets/live/thumb-eskapizm.webp';
 
 const uslugi = [
-  { nr: '01', n: 'Plan projektu', d: 'Zanim wydasz pierwszą złotówkę: rozkładam pomysł na części i dostajesz konkretną mapę. Co budować, w jakiej kolejności i czym to uruchomić.' },
-  { nr: '02', n: 'Strona internetowa', d: 'Jedna strona pod cel albo pełna strona firmy. Projekt, treść i wdrożenie. Gotowa, żeby pokazywać ją klientom bez tłumaczenia się.' },
-  { nr: '03', n: 'Aplikacja lub system', d: 'Sklep, system zapisów, panel klienta, pierwsza wersja produktu. Coś, co pracuje na Ciebie od pierwszego dnia.' },
+  { nr: '01', n: 'Plan projektu', d: 'Zanim wydasz pierwszą złotówkę: rozkładam pomysł na części i dostajesz konkretną mapę. Co budować, w jakiej kolejności i czym to uruchomić.', thumb: thumbWoodspot.src },
+  { nr: '02', n: 'Strona internetowa', d: 'Jedna strona pod cel albo pełna strona firmy. Projekt, treść i wdrożenie. Gotowa, żeby pokazywać ją klientom bez tłumaczenia się.', thumb: thumbAigor.src },
+  { nr: '03', n: 'Aplikacja lub system', d: 'Sklep, system zapisów, panel klienta, pierwsza wersja produktu. Coś, co pracuje na Ciebie od pierwszego dnia.', thumb: thumbEskapizm.src },
 ];
 ---
 
@@ -90,7 +93,7 @@ const uslugi = [
         </div>
         <div class="proj-f" data-parallax>
           <div class="phone-hold">
-            <PhoneFrame src={eskapizmScroll} alt="eskapizm.com — poskroluj" />
+            <PhoneFrame src={eskapizmScroll} alt="eskapizm.com — poskroluj" screenbg="#fbfff7" />
             <div class="spray-note" aria-hidden="true">
               <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M120 14 L 140 16 L 132 36" filter="url(#sprayF)" /></svg>
               <span class="tag">psst, to żyje.<br />poskroluj!</span>
@@ -102,14 +105,14 @@ const uslugi = [
       <article class="proj flip">
         <div class="proj-t">
           <span class="ln"><span class="ln-in idx">№ 02</span></span>
-          <h2 class="ln"><span class="ln-in">woodspot</span></h2>
+          <h2 class="ln"><span class="ln-in">aigor.grabowski</span></h2>
           <p class="proj-d rv">
-            Interaktywny deck wydarzenia z modelem finansowym. Dokument,
-            który <em>sprzedaje pomysł</em> lepiej niż prezentacja.
+            Strona kolekcji sztuki tworzonej z AI: prace, artyści
+            i historia zakupów. <em>Zaprojektowana, żeby sprzedawać opowieść.</em>
           </p>
         </div>
         <div class="proj-f" data-parallax>
-          <PhoneFrame src={woodspotScroll} alt="WoodSpot — poskroluj" />
+          <PhoneFrame src={aigorScroll} alt="aigor.grabowski — poskroluj" />
         </div>
       </article>
     </section>
@@ -128,7 +131,7 @@ const uslugi = [
       <p class="label rv">Z czym możesz przyjść</p>
       <div class="rows">
         {uslugi.map((u, i) => (
-          <a class="srow" href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(u.n)}`}>
+          <a class="srow" href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(u.n)}`} data-thumb={u.thumb}>
             <span class="idx idx-wrap">
               {u.nr}
               {i === 0 && (
@@ -251,6 +254,40 @@ const uslugi = [
       });
     }
 
+    /* Nav chowa się przy scrollu w dół — nic nie nachodzi na ekrany projektów */
+    const navEl = document.querySelector<HTMLElement>('.nav')!;
+    let lastY = 0;
+    addEventListener('scroll', () => {
+      const y = scrollY;
+      const d = y - lastY;
+      if (Math.abs(d) > 4 || y <= 180) {
+        navEl.classList.toggle('nav-hide', d > 0 && y > 180);
+        lastY = y;
+      }
+    }, { passive: true });
+
+    /* Hover-reveal: miniatura realizacji płynie przy kursorze nad wierszem usługi */
+    if (!reduced && matchMedia('(pointer: fine)').matches) {
+      const peek = document.createElement('img');
+      peek.className = 'row-peek';
+      peek.alt = '';
+      document.body.appendChild(peek);
+      gsap.set(peek, { opacity: 0, scale: 0.9, rotate: 3 });
+      const pkx = gsap.quickTo(peek, 'x', { duration: 0.45, ease: 'power3.out' });
+      const pky = gsap.quickTo(peek, 'y', { duration: 0.45, ease: 'power3.out' });
+      document.querySelectorAll<HTMLElement>('.srow[data-thumb]').forEach((row) => {
+        row.addEventListener('pointerenter', (e) => {
+          peek.src = row.dataset.thumb!;
+          pkx(e.clientX + 30); pky(e.clientY - 120);
+          gsap.to(peek, { opacity: 1, scale: 1, duration: 0.35, ease: 'power3.out' });
+        });
+        row.addEventListener('pointermove', (e) => { pkx(e.clientX + 30); pky(e.clientY - 120); });
+        row.addEventListener('pointerleave', () => {
+          gsap.to(peek, { opacity: 0, scale: 0.9, duration: 0.28, ease: 'power2.out' });
+        });
+      });
+    }
+
     /* Magnetyczne przyciski */
     if (!reduced && matchMedia('(pointer: fine)').matches) {
       document.querySelectorAll<HTMLElement>('.mag').forEach((btn) => {
@@ -357,6 +394,8 @@ const uslugi = [
     padding: 20px 3vw; pointer-events: none;
   }
   .nav a { pointer-events: auto; }
+  .nav { transition: translate 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
+  .nav.nav-hide { translate: 0 -130%; }
   .mark { display: block; }
   .mark video {
     height: clamp(46px, 4.6vw, 68px); width: auto; display: block;
@@ -488,11 +527,6 @@ const uslugi = [
 
   .tag-foot { font-size: 0.34em; rotate: -6deg; display: inline-block; vertical-align: middle; margin-left: 0.3em; }
 
-  .splat {
-    position: fixed; z-index: 250; width: 110px; height: 110px;
-    translate: -50% -50%; pointer-events: none;
-  }
-  .splat circle { fill: var(--spray); }
 
   a:focus-visible, .btn:focus-visible {
     outline: 2px solid var(--blue); outline-offset: 4px; border-radius: 4px;
@@ -522,5 +556,21 @@ const uslugi = [
     .tag-row { display: none; }
     .foot-b .btn { width: 100%; text-align: center; }
     .meta { flex-direction: column; gap: 6px; }
+  }
+</style>
+
+<style is:global>
+  /* Elementy tworzone z JS (poza scope Astro): splaty spreju + miniatura hover */
+  .splat {
+    position: fixed; z-index: 250; width: 110px; height: 110px;
+    translate: -50% -50%; pointer-events: none;
+  }
+  .splat circle { fill: #d92027; }
+  .row-peek {
+    position: fixed; left: 0; top: 0; z-index: 80;
+    width: min(240px, 22vw); aspect-ratio: 4 / 5; object-fit: cover; object-position: top;
+    border-radius: 14px; pointer-events: none; opacity: 0;
+    box-shadow: 0 24px 60px rgba(23, 21, 15, 0.32), 0 0 0 1px rgba(23, 21, 15, 0.08);
+    will-change: transform;
   }
 </style>
