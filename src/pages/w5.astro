@@ -18,7 +18,7 @@ const uslugi = [
 ];
 ---
 
-<VariantLayout title="W5 — ATELIER · mioduszewsky" bg="#f3f1ea" fg="#17150f">
+<VariantLayout title="W5 — ATELIER · mioduszewsky" bg="#f8f9f2" fg="#000000">
   <main class="w5">
     <!-- Wspólne filtry spray (inline SVG = działa też w Safari) -->
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -352,10 +352,11 @@ const uslugi = [
 
 <style>
   .w5 {
-    --ivory: #f3f1ea;
-    --ink: #17150f;
+    /* kanoniczna paleta marki (decyzja Kacpra 14.07.2026) */
+    --ivory: #f8f9f2;
+    --ink: #000000;
     --dim: #8b8677;
-    --blue: #2438ff;
+    --blue: #0522ff;
     --brand: #ffcc33;
     font-family: 'GeneralSansV', sans-serif;
     background: var(--ivory);
@@ -477,7 +478,7 @@ const uslugi = [
   .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 10vh; padding-top: 1.2rem; border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
 
   /* ── Warstwa WANDAL: spray, dopiski, splaty ─────────────────── */
-  .w5 { --spray: #d92027; }
+  .w5 { --spray: #c70404; }
   .tag {
     font-family: 'Shantell Sans Variable', cursive;
     font-weight: 560;
@@ -565,7 +566,7 @@ const uslugi = [
     position: fixed; z-index: 250; width: 110px; height: 110px;
     translate: -50% -50%; pointer-events: none;
   }
-  .splat circle { fill: #d92027; }
+  .splat circle { fill: #c70404; }
   .row-peek {
     position: fixed; left: 0; top: 0; z-index: 80;
     width: min(240px, 22vw); aspect-ratio: 4 / 5; object-fit: cover; object-position: top;
