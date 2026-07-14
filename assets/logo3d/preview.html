@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mioduszewsky — balonowe logo 3D (podgląd)</title>
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, sans-serif; background: #111; color: #eee; }
+  section { padding: 6vh 6vw; display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+  .noir   { background: #101010; }
+  .creme  { background: #f4efe6; color: #111; }
+  .yellow { background: #ffd02f; color: #111; }
+  .header-demo { background: #101010; padding: 18px 6vw; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; }
+  .header-demo video { height: 44px; width: auto; }
+  .header-demo nav { display: flex; gap: 2rem; font-size: 14px; letter-spacing: .06em; color: #bbb; }
+  video.big { width: min(900px, 88vw); height: auto; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .2em; opacity: .5; font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="header-demo">
+    <video autoplay loop muted playsinline preload="auto">
+      <source src="logo.mp4" type="video/mp4;codecs=hvc1">
+      <source src="logo.webm" type="video/webm">
+      <p>mioduszewsky</p>
+    </video>
+    <nav><span>praca</span><span>oferta</span><span>kontakt</span></nav>
+  </div>
+
+  <section class="noir">
+    <h2>na czerni — hero size</h2>
+    <video class="big" autoplay loop muted playsinline preload="auto">
+      <source src="logo.mp4" type="video/mp4;codecs=hvc1">
+      <source src="logo.webm" type="video/webm">
+    </video>
+  </section>
+
+  <section class="creme">
+    <h2>na kremie — alpha działa na każdym tle</h2>
+    <video class="big" autoplay loop muted playsinline preload="auto">
+      <source src="logo.mp4" type="video/mp4;codecs=hvc1">
+      <source src="logo.webm" type="video/webm">
+    </video>
+  </section>
+
+  <section class="yellow">
+    <h2>na żółtym brandowym</h2>
+    <video class="big" autoplay loop muted playsinline preload="auto">
+      <source src="logo.mp4" type="video/mp4;codecs=hvc1">
+      <source src="logo.webm" type="video/webm">
+    </video>
+  </section>
+</body>
+</html>
