@@ -2,8 +2,12 @@
 // iPhone frame z żywą stroną w środku — scrollujesz palcem/kółkiem po projekcie.
 // Proporcje i detale wg iPhone 15 Pro: cienki bezel, tytanowa rama, Dynamic Island,
 // boczne przyciski, pasek statusu iOS przypięty nad przewijaną treścią.
+// Dwa tryby: `url` = żywa, klikalna strona w iframe (skalowana do 393px logicznej
+// szerokości iPhone'a); `src` = przewijany screenshot (fallback / starsze warianty).
 interface Props {
-  src: ImageMetadata;
+  src?: ImageMetadata;
+  /** żywa strona w środku — pełna interakcja: klik, scroll, nawigacja */
+  url?: string;
   alt: string;
   label?: string;
   href?: string;
@@ -14,7 +18,7 @@ interface Props {
   screenbg?: string;
 }
 import type { ImageMetadata } from 'astro';
-const { src, alt, label, href, class: cls, statusbar = 'dark', screenbg = '#fff' } = Astro.props;
+const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '#fff' } = Astro.props;
 ---
 
 <figure class:list={['phone-frame', cls]}>
@@ -32,9 +36,15 @@ const { src, alt, label, href, class: cls, statusbar = 'dark', screenbg = '#fff'
         <svg viewBox="0 0 25 12" class="sb-batt"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6"/><path d="M23.5 4v4a2.2 2.2 0 0 0 0-4Z" opacity="0.4"/></svg>
       </span>
     </div>
-    <div class="phone-screen" tabindex="0" data-lenis-prevent style={`background:${screenbg}`} aria-label={`${alt} — przewiń, żeby zobaczyć całość`}>
-      <img src={src.src} alt={alt} draggable="false" />
-    </div>
+    {url ? (
+      <div class="phone-screen phone-live" style={`background:${screenbg}`}>
+        <iframe src={url} title={alt} loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+    ) : (
+      <div class="phone-screen" tabindex="0" data-lenis-prevent style={`background:${screenbg}`} aria-label={`${alt} — przewiń, żeby zobaczyć całość`}>
+        <img src={src!.src} alt={alt} draggable="false" />
+      </div>
+    )}
   </div>
   {label && (
     <figcaption class="phone-caption">
@@ -42,6 +52,25 @@ const { src, alt, label, href, class: cls, statusbar = 'dark', screenbg = '#fff'
     </figcaption>
   )}
 </figure>
+
+<script>
+  // Żywy ekran: strona renderuje się w logicznej szerokości iPhone'a (393px)
+  // i jest skalowana transformem do faktycznej szerokości ekranu ramki.
+  const LOGICAL_W = 393;
+  const TOPBAR = 44; // strip pod paskiem statusu — treść startuje pod nim jak na iPhone
+  document.querySelectorAll<HTMLElement>('.phone-live').forEach((screen) => {
+    const frame = screen.querySelector<HTMLIFrameElement>('iframe');
+    if (!frame) return;
+    const fit = () => {
+      const s = screen.clientWidth / LOGICAL_W;
+      frame.style.transform = `scale(${s})`;
+      frame.style.height = `${Math.round((screen.clientHeight - TOPBAR * s) / s)}px`;
+      frame.style.top = `${Math.round(TOPBAR * s)}px`;
+    };
+    fit();
+    new ResizeObserver(fit).observe(screen);
+  });
+</script>
 
 <style>
   .phone-frame {
@@ -140,6 +169,16 @@ const { src, alt, label, href, class: cls, statusbar = 'dark', screenbg = '#fff'
     /* treść startuje pod paskiem statusu jak na prawdziwym iPhone;
        przy scrollu wjeżdża pod niego */
     margin-top: 44px;
+  }
+  /* tryb żywy: iframe scrolluje sam w sobie, ekran nic nie przewija */
+  .phone-screen.phone-live { overflow: hidden; }
+  .phone-live iframe {
+    position: absolute;
+    left: 0;
+    width: 393px;
+    border: 0;
+    transform-origin: 0 0;
+    background: transparent;
   }
   .phone-caption {
     font-size: 0.7rem;

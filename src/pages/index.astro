@@ -1,26 +1,8 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Nav from '../components/Nav.astro';
-import Hero from '../components/Hero.astro';
-import Marquee from '../components/Marquee.astro';
-import Intro from '../components/Intro.astro';
-import Services from '../components/Services.astro';
-import Building from '../components/Building.astro';
-import HowIWork from '../components/HowIWork.astro';
-import About from '../components/About.astro';
-import FooterCta from '../components/FooterCta.astro';
+// Strona główna = wariant W5 „ATELIER × WANDAL" (werdykt Kacpra 14.07.2026).
+// Tryb prod: bez przełącznika wariantów, z indeksowaniem i meta description.
+// Poprzedni index (V1, odrzucony jako AI-slop) — w historii gita.
+import W5 from './w5.astro';
 ---
 
-<Layout>
-  <Nav />
-  <main>
-    <Hero />
-    <Marquee />
-    <Intro />
-    <Services />
-    <Building />
-    <HowIWork />
-    <About />
-  </main>
-  <FooterCta />
-</Layout>
+<W5 prod title="mioduszewsky — strony, aplikacje i plany projektów" />

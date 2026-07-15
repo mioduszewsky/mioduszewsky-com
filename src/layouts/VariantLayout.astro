@@ -13,8 +13,14 @@ interface Props {
   title: string;
   bg?: string;
   fg?: string;
+  /** przełącznik W1-W7 w rogu — wyłączany na produkcyjnym indexie */
+  switcher?: boolean;
+  /** nadpisanie meta robots (warianty domyślnie noindex) */
+  robots?: string;
+  /** meta description — podawana tylko na produkcyjnym indexie */
+  description?: string;
 }
-const { title, bg = '#111', fg = '#fff' } = Astro.props;
+const { title, bg = '#111', fg = '#fff', switcher = true, robots = 'noindex, nofollow', description } = Astro.props;
 
 const variants = [
   { href: '/w1', label: 'W1' },
@@ -33,7 +39,8 @@ const current = Astro.url.pathname.replace(/\/$/, '');
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="robots" content={robots} />
+    {description && <meta name="description" content={description} />}
     <title>{title}</title>
     <style define:vars={{ bg, fg }}>
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -68,10 +75,12 @@ const current = Astro.url.pathname.replace(/\/$/, '');
   </head>
   <body>
     <slot />
-    <nav class="variant-switch" aria-label="Przełącznik wariantów">
-      {variants.map((v) => (
-        <a href={v.href} class:list={[current === v.href && 'active']}>{v.label}</a>
-      ))}
-    </nav>
+    {switcher && (
+      <nav class="variant-switch" aria-label="Przełącznik wariantów">
+        {variants.map((v) => (
+          <a href={v.href} class:list={[current === v.href && 'active']}>{v.label}</a>
+        ))}
+      </nav>
+    )}
   </body>
 </html>

@@ -5,11 +5,13 @@
 import '@fontsource-variable/shantell-sans';
 import VariantLayout from '../layouts/VariantLayout.astro';
 import PhoneFrame from '../components/frames/PhoneFrame.astro';
-import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
-import aigorScroll from '../assets/live/aigor-scroll.webp';
 import thumbWoodspot from '../assets/live/thumb-woodspot.webp';
 import thumbAigor from '../assets/live/thumb-aigor.webp';
 import thumbEskapizm from '../assets/live/thumb-eskapizm.webp';
+
+// Tryb prod (index): bez przełącznika wariantów, z indeksowaniem i meta description.
+interface Props { prod?: boolean; title?: string; }
+const { prod = false, title = 'W5 — ATELIER · mioduszewsky' } = Astro.props;
 
 const uslugi = [
   { nr: '01', n: 'Plan projektu', d: 'Zanim wydasz pierwszą złotówkę: rozkładam pomysł na części i dostajesz konkretną mapę. Co budować, w jakiej kolejności i czym to uruchomić.', thumb: thumbWoodspot.src },
@@ -18,7 +20,14 @@ const uslugi = [
 ];
 ---
 
-<VariantLayout title="W5 — ATELIER · mioduszewsky" bg="#f8f9f2" fg="#000000">
+<VariantLayout
+  title={title}
+  bg="#f8f9f2"
+  fg="#000000"
+  switcher={!prod}
+  robots={prod ? 'index, follow, max-image-preview:large' : undefined}
+  description={prod ? 'Strony internetowe, aplikacje i plany projektów. Od pomysłu do startu: projekt, treść i wdrożenie w jednych rękach.' : undefined}
+>
   <main class="w5">
     <!-- Wspólne filtry spray (inline SVG = działa też w Safari) -->
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -93,7 +102,7 @@ const uslugi = [
         </div>
         <div class="proj-f" data-parallax>
           <div class="phone-hold">
-            <PhoneFrame src={eskapizmScroll} alt="eskapizm.com — poskroluj" screenbg="#fbfff7" />
+            <PhoneFrame url="https://eskapizm.com" alt="eskapizm.com — poskroluj" screenbg="#fbfff7" />
             <div class="spray-note" aria-hidden="true">
               <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M120 14 L 140 16 L 132 36" filter="url(#sprayF)" /></svg>
               <span class="tag">psst, to żyje.<br />poskroluj!</span>
@@ -112,7 +121,7 @@ const uslugi = [
           </p>
         </div>
         <div class="proj-f" data-parallax>
-          <PhoneFrame src={aigorScroll} alt="aigor.grabowski — poskroluj" />
+          <PhoneFrame url="https://aigor-grabowski.vercel.app" alt="aigor.grabowski — poskroluj" />
         </div>
       </article>
     </section>
@@ -275,13 +284,24 @@ const uslugi = [
       gsap.set(peek, { opacity: 0, scale: 0.9, rotate: 3 });
       const pkx = gsap.quickTo(peek, 'x', { duration: 0.45, ease: 'power3.out' });
       const pky = gsap.quickTo(peek, 'y', { duration: 0.45, ease: 'power3.out' });
+      /* miniatura płynie NAD linią kursora (nie zasłania czytanego wiersza)
+         i nigdy nie wyjeżdża poza viewport */
+      const place = (e: PointerEvent) => {
+        const w = peek.offsetWidth || 200;
+        const h = peek.offsetHeight || 250;
+        pkx(Math.min(e.clientX + 36, innerWidth - w - 16));
+        pky(Math.min(Math.max(14, e.clientY - h - 28), innerHeight - h - 14));
+      };
       document.querySelectorAll<HTMLElement>('.srow[data-thumb]').forEach((row) => {
         row.addEventListener('pointerenter', (e) => {
           peek.src = row.dataset.thumb!;
-          pkx(e.clientX + 30); pky(e.clientY - 120);
+          place(e as PointerEvent);
+          /* teleport na pozycję kursora — bez przelotu przez pół ekranu */
+          pkx.tween?.progress(1);
+          pky.tween?.progress(1);
           gsap.to(peek, { opacity: 1, scale: 1, duration: 0.35, ease: 'power3.out' });
         });
-        row.addEventListener('pointermove', (e) => { pkx(e.clientX + 30); pky(e.clientY - 120); });
+        row.addEventListener('pointermove', (e) => place(e as PointerEvent));
         row.addEventListener('pointerleave', () => {
           gsap.to(peek, { opacity: 0, scale: 0.9, duration: 0.28, ease: 'power2.out' });
         });
@@ -312,6 +332,11 @@ const uslugi = [
       document.querySelectorAll('a, button').forEach((el) => {
         el.addEventListener('mouseenter', () => gsap.to(cur, { scale: 2.6, duration: 0.3 }));
         el.addEventListener('mouseleave', () => gsap.to(cur, { scale: 1, duration: 0.3 }));
+      });
+      /* nad żywym ekranem iPhone'a kursor przejmuje strona w środku — nasz znika */
+      document.querySelectorAll('.phone-live').forEach((s) => {
+        s.addEventListener('pointerenter', () => gsap.to(cur, { opacity: 0, duration: 0.2 }));
+        s.addEventListener('pointerleave', () => gsap.to(cur, { opacity: 1, duration: 0.2 }));
       });
     } else {
       document.querySelector('.cur')?.remove();
@@ -569,7 +594,7 @@ const uslugi = [
   .splat circle { fill: #c70404; }
   .row-peek {
     position: fixed; left: 0; top: 0; z-index: 80;
-    width: min(240px, 22vw); aspect-ratio: 4 / 5; object-fit: cover; object-position: top;
+    width: min(200px, 17vw); aspect-ratio: 4 / 5; object-fit: cover; object-position: top;
     border-radius: 14px; pointer-events: none; opacity: 0;
     box-shadow: 0 24px 60px rgba(23, 21, 15, 0.32), 0 0 0 1px rgba(23, 21, 15, 0.08);
     will-change: transform;
