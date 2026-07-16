@@ -7,7 +7,9 @@ import VariantLayout from '../layouts/VariantLayout.astro';
 // === DO UZUPEŁNIENIA ===
 // Link z Google Calendar → „Umów termin" (Appointment schedule). Pusty = pokazujemy
 // przycisk-zastępnik z mailem, bez osadzonego kalendarza.
-const GOOGLE_BOOKING_URL = '';
+// Pełny URL harmonogramu + ?gv=true (parametr embed Google); krótki link:
+// https://calendar.app.google/GhHdELRtMzaYqnJk6
+const GOOGLE_BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ39wrl4iSUoqCtoj5VJq-7MT070YyXr1xMDsy1ncUfS8g-bHiVCisccj1MjHpkPjRlwDlJSw1kU?gv=true';
 // Endpoint = API Gateway HTTP API → Lambda → SES (eu-central-1).
 // (Function URL z publicznym auth NIE działa na tym koncie — guardrail; użyto API GW.)
 const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.com/';
