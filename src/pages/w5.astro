@@ -74,7 +74,7 @@ const services = [
     <section class="hero">
       <p class="label rv">( Websites · Apps · Project plans )</p>
       <h1>
-        <span class="ln"><span class="ln-in">A <span class="fix">nice<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix" aria-hidden="true">working!</span></span> website</span></span>
+        <span class="ln"><span class="ln-in">A <span class="fix">generic<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix" aria-hidden="true">working!</span></span> website</span></span>
         <span class="ln"><span class="ln-in">you can <em>finally</em></span></span>
         <span class="ln"><span class="ln-in">send people to<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span>
       </h1>
@@ -101,16 +101,21 @@ const services = [
       <div class="lead-rows">
         <div class="lrow rv">
           <span class="idx">01</span>
-          <h3>You tried AI</h3>
-          <p>It generated a page, but you cannot tell if a customer will understand the offer.</p>
+          <h3>You do not know where to start</h3>
+          <p>Is that a developer, a designer, a copywriter, or all three?</p>
         </div>
         <div class="lrow rv">
           <span class="idx">02</span>
+          <h3>You tried AI</h3>
+          <p>It generated a page, but customers may not understand the offer.</p>
+        </div>
+        <div class="lrow rv">
+          <span class="idx">03</span>
           <h3>Someone technical built it</h3>
           <p>It works. It also looks like something made by someone technical.</p>
         </div>
         <div class="lrow rv">
-          <span class="idx">03</span>
+          <span class="idx">04</span>
           <h3>A designer sent polished screens</h3>
           <p>The project stopped before the website became part of the business.</p>
         </div>
@@ -228,6 +233,7 @@ const services = [
       <div class="how-why">
         <p class="how-why-t rv">I am not the best specialist in every single discipline. <span class="dim2">A dedicated designer may draw a prettier system. A specialist developer may write more advanced code.</span> That is not the comparison I am trying to win.</p>
         <p class="how-why-t rv">I work across the points where projects usually break: <em>the decision, the offer, the design, the build, the launch</em>. One system, by one person.</p>
+        <p class="how-why-t rv how-why-full">eskapizm and Cannversity, shown above, are not client work. <span class="dim2">They are my own companies.</span> I run this exact system on my own business before I ever run it on yours.</p>
       </div>
     </section>
 
@@ -769,6 +775,7 @@ const services = [
     font-size: clamp(1.15rem, 1.7vw, 1.6rem); line-height: 1.35; letter-spacing: -0.01em;
     color: var(--ink); max-width: 44ch;
   }
+  .how-why-full { grid-column: 1 / -1; max-width: 70ch; margin-top: 1rem; }
   .dim2 { color: var(--dim); }
 
   .serv { padding: 14vh 3vw; }
