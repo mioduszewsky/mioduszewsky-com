@@ -117,3 +117,33 @@ strokes → voxel remesh (0.03) zlewa w balonową powierzchnię → corrective s
 
 Pełna notatka wiedzy: memory `reference-flayks-logo-technika` (Claude) +
 wpis w `projekty/mioduszewsky (AUTOFIRMA)/mioduszewsky-com/STATUS.md`.
+
+## Wariant „dalmatyńczyk" (futro) — 15.07.2026
+
+Druga wersja logotypu: białe futro z czarnymi łatami (hair particles Cycles).
+
+```
+tube_logo_fur.py        ← generator wariantu (te same LETTERS, osobne FUR_*/SPOT_*)
+fur.blend               ← zbudowana scena futrzana
+logo-dalmatian.webm/mp4 ← finały (obok logo.webm/mp4 balona — NIE nadpisują)
+render_dalmatian.sh     ← finał: render 180 kl. + enkodowanie + sprzątanie klatek
+```
+
+Stillka: `blender -b -P tube_logo_fur.py -- "$PWD/fur.blend"` →
+`blender -b fur.blend -o "$PWD/still_fur_####" -F PNG -f 1` (~4-5 min, futro liczy
+się dużo wolniej niż balon; finał 180 klatek ≈ 12 h).
+
+Twarde lekcje wariantu futrzanego:
+- **NIE ustawiaj `tangent_factor`/`normal_factor`** w hair particles — w Blenderze
+  5.x skalują DŁUGOŚĆ włosa, nie tylko kierunek (włosy eksplodują na całą scenę).
+- Przyjemny plusz = fala (`kink='WAVE'`, mała amplituda), NIE `CURL` (wychodzi
+  karakuł/popcorn) i NIE krótki prosty włos (wychodzi proszek/pleśń).
+- Biel = jasny kolor + domieszka Diffuse do Hair BSDF + więcej bounces
+  (max 24 / transmission 16) + mocne ciepłe lampy; bez tego futro szarzeje.
+- Czytelność liter: rura odchudzona globalnie (R 0.165 + futro 0.13 ≈ waga balona
+  0.30). Kacper wymaga JEDNOLITEJ grubości liter — bez per-literowych ścienień
+  poza `s` (rscale 0.92, poniżej progu percepcji, inaczej pasma S się zlewają).
+- Litery otwarte pod futro: `w` szerszy zygzak (adv 2.08), `k` adv 1.22
+  (prześwit przed y), `s` minimalnie rozciągnięte (1.14 / -0.12).
+- Łaty: voronoi + noise w coords lokalnych obiektu, per-litera offset z Object
+  Info Random — reroll układu = zmiana mnożników 21.4/11.9/15.3 w `build_spot_mask`.
