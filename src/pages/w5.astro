@@ -67,8 +67,14 @@ const services = [
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <a class="btn mag" href="mailto:kacper@mioduszewsky.com"><span class="btn-in">Work with me</span></a>
+      <a class="btn mag" href="/contact"><span class="btn-in">Book a call</span></a>
     </header>
+
+    <!-- Sticky CTA (pojawia się po zjechaniu z hero) -->
+    <a class="sticky-cta" href="/contact" aria-label="Book a 15-minute call">
+      <span>Book a 15-min call</span>
+      <i aria-hidden="true">→</i>
+    </a>
 
     <!-- HERO -->
     <section class="hero">
@@ -80,7 +86,7 @@ const services = [
       </h1>
       <div class="hero-b">
         <div class="hero-cta rv">
-          <a class="btn mag big" href="mailto:kacper@mioduszewsky.com"><span class="btn-in">Work with me</span></a>
+          <a class="btn mag big" href="/contact"><span class="btn-in">Book a 15-min call</span></a>
           <p class="hero-price">Landing pages from $1,000 · Company websites from $1,500</p>
         </div>
         <p class="hero-sub rv">
@@ -246,7 +252,7 @@ const services = [
       </h2>
       <div class="rows">
         {services.map((u) => (
-          <a class="srow" href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(u.n)}`}>
+          <a class="srow" href={`/contact?service=${encodeURIComponent(u.n)}`}>
             <span class="idx idx-wrap">
               {u.nr}
               {u.tag && (
@@ -337,13 +343,13 @@ const services = [
     <!-- FOOTER -->
     <footer class="foot">
       <p class="label rv">( Next step )</p>
-      <a class="foot-h" href="mailto:kacper@mioduszewsky.com">
+      <a class="foot-h" href="/contact">
         <span class="ln"><span class="ln-in">Let's build the website</span></span>
         <span class="ln"><span class="ln-in">your business <em>actually needs</em>. <span class="tag tag-foot" aria-hidden="true">or fix the one you have.</span></span></span>
       </a>
       <p class="foot-sub rv">Tell me what you have now, even if it is nothing yet, what is not working and what the new page should do. I will tell you whether the project is a fit and what I would build first.</p>
       <div class="foot-b">
-        <a class="btn mag big" href="mailto:kacper@mioduszewsky.com"><span class="btn-in">kacper@mioduszewsky.com</span></a>
+        <a class="btn mag big" href="/contact"><span class="btn-in">Book a 15-min call</span></a>
       </div>
       <div class="foot-grid">
         <div class="fcol rv">
@@ -374,6 +380,7 @@ const services = [
       <div class="meta">
         <span>© 2026 mioduszewsky</span>
         <span>Designed and built by one person</span>
+        <a href="/privacy" style="color:inherit">Privacy</a>
       </div>
     </footer>
   </main>
@@ -587,6 +594,17 @@ const services = [
         gsap.to(svg, { opacity: 0, duration: 0.9, delay: 1.6, onComplete: () => svg.remove() });
       });
     }
+
+    /* Sticky CTA: widoczny po zjechaniu z hero, chowany przy stopce */
+    const sticky = document.querySelector('.sticky-cta');
+    const heroEl = document.querySelector('.hero');
+    const footEl = document.querySelector('.foot');
+    if (sticky && heroEl) {
+      let pastHero = false, atFoot = false;
+      const sync = () => sticky.classList.toggle('show', pastHero && !atFoot);
+      new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; sync(); }, { threshold: 0.1 }).observe(heroEl);
+      if (footEl) new IntersectionObserver(([e]) => { atFoot = e.isIntersecting; sync(); }, { threshold: 0.05 }).observe(footEl);
+    }
   </script>
 </VariantLayout>
 
@@ -656,6 +674,22 @@ const services = [
   .btn:hover { background: var(--ink); color: var(--ivory); }
   .btn.big { padding: 16px 34px; font-size: 13px; background: var(--ink); color: var(--ivory); }
   .btn.big:hover { background: var(--blue); border-color: var(--blue); }
+  /* Sticky CTA — powtarzany główny cel konwersji */
+  .sticky-cta {
+    position: fixed; bottom: 22px; left: 50%; z-index: 120;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 24px; border-radius: 999px;
+    background: var(--ink); color: var(--ivory); text-decoration: none;
+    font-size: 13px; letter-spacing: 0.04em;
+    box-shadow: 0 10px 30px color-mix(in srgb, var(--ink) 28%, transparent);
+    transform: translate(-50%, 130%); opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.19,1,0.22,1), opacity 0.4s, background 0.3s;
+  }
+  .sticky-cta.show { transform: translate(-50%, 0); opacity: 1; }
+  .sticky-cta:hover { background: var(--blue); }
+  .sticky-cta i { font-style: normal; transition: translate 0.3s; }
+  .sticky-cta:hover i { translate: 4px 0; }
+  @media (max-width: 620px) { .sticky-cta { font-size: 12px; padding: 12px 20px; bottom: 16px; } }
   .btn.ghost { color: var(--ink); }
 
   .label { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dim); }

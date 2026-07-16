@@ -1,0 +1,37 @@
+---
+// Custom 404 — styl WANDAL (spray, brand). Zawsze wraca do konwersji.
+import VariantLayout from '../layouts/VariantLayout.astro';
+---
+
+<VariantLayout title="404 · mioduszewsky" bg="#f8f9f2" fg="#000000" switcher={false} robots="noindex, follow">
+  <main class="nf">
+    <p class="label">( Lost )</p>
+    <h1>4<span class="o">0</span>4</h1>
+    <p class="msg">This page does not exist. Or it does not exist <em>yet</em>. Either way, let's get you somewhere useful.</p>
+    <div class="nf-cta">
+      <a class="btn big" href="/"><span>Back home</span></a>
+      <a class="btn" href="/contact"><span>Book a 15-min call</span></a>
+    </div>
+  </main>
+
+  <style>
+    @font-face { font-family:'NohemiV'; src:url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight:100 900; font-display:swap; }
+    @font-face { font-family:'GeneralSansV'; src:url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight:200 700; font-display:swap; }
+    .nf {
+      --ink:#000; --ivory:#f8f9f2; --dim:#8b8677; --blue:#0522ff; --brand:#ffcc33;
+      font-family:'GeneralSansV',sans-serif; background:var(--ivory); color:var(--ink);
+      min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; padding:6vw; gap:0.4rem;
+    }
+    .label { font-size:11px; letter-spacing:0.26em; text-transform:uppercase; color:var(--dim); }
+    .nf h1 { font-family:'NohemiV',sans-serif; font-weight:540; letter-spacing:-0.04em; font-size:clamp(6rem,22vw,16rem); line-height:0.9; margin:0.5rem 0; }
+    .nf h1 .o { color:var(--blue); }
+    .msg { max-width:42ch; font-size:clamp(1rem,1.6vw,1.25rem); line-height:1.6; color:#4c483c; margin-bottom:2rem; }
+    .msg em { font-style:normal; background:linear-gradient(100deg,transparent 2%,color-mix(in srgb,var(--brand) 80%,transparent) 6% 94%,transparent 98%); padding:0 0.1em; }
+    .nf-cta { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+    .btn { display:inline-block; text-decoration:none; color:var(--ink); border:1px solid var(--ink); border-radius:999px; padding:12px 26px; font-size:12px; letter-spacing:0.06em; transition:background 0.3s,color 0.3s,border-color 0.3s; }
+    .btn:hover { background:var(--ink); color:var(--ivory); }
+    .btn.big { background:var(--ink); color:var(--ivory); padding:14px 30px; }
+    .btn.big:hover { background:var(--blue); border-color:var(--blue); }
+  </style>
+</VariantLayout>

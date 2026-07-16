@@ -22,6 +22,27 @@ interface Props {
 }
 const { title, bg = '#111', fg = '#fff', switcher = true, robots = 'noindex, nofollow', description } = Astro.props;
 
+// SEO: kanoniczny host = docelowa domena produkcyjna.
+const SITE = 'https://mioduszewsky.com';
+const canonical = new URL(Astro.url.pathname, SITE).href;
+const ogImage = `${SITE}/og.png`;
+const indexable = robots.includes('index') && !robots.includes('noindex');
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'mioduszewsky',
+  url: SITE,
+  image: ogImage,
+  description: description || 'Landing pages, company websites, AI implementations and web apps, built by one person from idea to launch.',
+  founder: { '@type': 'Person', name: 'Kacper Mioduszewski' },
+  areaServed: 'Worldwide',
+  address: { '@type': 'PostalAddress', addressLocality: 'Wrocław', addressCountry: 'PL' },
+  sameAs: [
+    'https://instagram.com/mioduszewsky',
+    'https://contra.com/kacper_mioduszewski_i7ytzt28',
+  ],
+};
+
 const variants = [
   { href: '/w1', label: 'W1' },
   { href: '/w2', label: 'W2' },
@@ -42,6 +63,25 @@ const current = Astro.url.pathname.replace(/\/$/, '');
     <meta name="robots" content={robots} />
     {description && <meta name="description" content={description} />}
     <title>{title}</title>
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#f8f9f2" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="mioduszewsky" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={ogImage} />
+
+    {indexable && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <script defer src="/_vercel/insights/script.js"></script>
     <style define:vars={{ bg, fg }}>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html { background: var(--bg); color: var(--fg); }

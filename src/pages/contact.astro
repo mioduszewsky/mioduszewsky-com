@@ -1,0 +1,258 @@
+---
+// /contact — dedykowana strona domykająca (research 16.07.2026: hybryda
+// „umów rozmowę" + krótki formularz konwertuje najlepiej dla high-ticket
+// founder-led). Styl 1:1 z W5 (ivory/ink/blue/brand, Nohemi + General Sans).
+import VariantLayout from '../layouts/VariantLayout.astro';
+
+// === DO UZUPEŁNIENIA ===
+// Link z Google Calendar → „Umów termin" (Appointment schedule). Pusty = pokazujemy
+// przycisk-zastępnik z mailem, bez osadzonego kalendarza.
+const GOOGLE_BOOKING_URL = '';
+// Lambda Function URL (backend/contact-form/deploy.sh wypisuje go po deployu).
+const CONTACT_ENDPOINT = 'https://ef3uiolh3rodbioopjpiuw3jle0tkxsl.lambda-url.eu-central-1.on.aws/';
+// =======================
+---
+
+<VariantLayout
+  title="Book a call · mioduszewsky"
+  bg="#f8f9f2"
+  fg="#000000"
+  switcher={false}
+  robots="index, follow, max-image-preview:large"
+  description="Book a free 15-minute call or send a short message. One person from idea to launch: strategy, copy, design and build."
+>
+  <main class="ct">
+    <header class="ct-nav">
+      <a class="mark" href="/" aria-label="mioduszewsky — back home">
+        <video autoplay loop muted playsinline preload="auto" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+      </a>
+      <a class="back" href="/">← Back</a>
+    </header>
+
+    <section class="ct-head">
+      <p class="label">( Next step · one honest conversation )</p>
+      <h1>
+        Book a <span class="hl">15-minute</span> call.<br />
+        Or just write to me.
+      </h1>
+      <p class="lead">
+        Tell me what you have now, even if it is nothing yet, what is not working
+        and what the new page should do. I will tell you whether the project is a
+        fit and what I would build first. No pressure, no sales script.
+      </p>
+    </section>
+
+    <section class="ct-grid">
+      <!-- ŚCIEŻKA 1: umów rozmowę (główny CTA) -->
+      <div class="path path-call">
+        <span class="pnum">01</span>
+        <h2>Book a call</h2>
+        <p class="pdesc">Pick a slot that works for you. 15 minutes, video, no obligation.</p>
+        {GOOGLE_BOOKING_URL ? (
+          <div class="cal-embed">
+            <iframe
+              src={GOOGLE_BOOKING_URL}
+              title="Book a 15-minute call"
+              loading="lazy"
+              style="border:0"
+              width="100%"
+              height="640"
+            ></iframe>
+          </div>
+        ) : (
+          <div class="cal-fallback">
+            <a class="btn big" href="mailto:kacper@mioduszewsky.com?subject=Book%20a%20call">
+              <span class="btn-in">Email me to book a call</span>
+            </a>
+            <p class="note">Live calendar is being connected. For now, email works and I reply fast.</p>
+          </div>
+        )}
+      </div>
+
+      <!-- ŚCIEŻKA 2: krótki formularz (max 3 pola + zgoda) -->
+      <div class="path path-form">
+        <span class="pnum">02</span>
+        <h2>Or send a message</h2>
+        <p class="pdesc">Prefer to write first? Three fields, that is it.</p>
+
+        <form id="ctForm" novalidate>
+          <label class="fld">
+            <span>Your name</span>
+            <input type="text" name="name" autocomplete="name" required maxlength="120" />
+          </label>
+          <label class="fld">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required maxlength="200" />
+          </label>
+          <label class="fld">
+            <span>What should we talk about?</span>
+            <textarea name="message" rows="4" required maxlength="4000"></textarea>
+          </label>
+
+          <!-- honeypot: ukryte, boty wypełnią -->
+          <div class="hp" aria-hidden="true">
+            <label>Leave this empty<input type="text" name="hp" tabindex="-1" autocomplete="off" /></label>
+          </div>
+
+          <label class="consent">
+            <input type="checkbox" name="consent" required />
+            <span>I agree that my data is processed to answer this message, per the <a href="/privacy">privacy policy</a>.</span>
+          </label>
+
+          <button type="submit" class="btn big submit">
+            <span class="btn-in">Send message</span>
+          </button>
+          <p class="formmsg" id="ctMsg" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="ct-success" id="ctSuccess" hidden>
+          <h3>Thanks — message sent.</h3>
+          <p>I read every message myself and reply within a day. Want it faster? Grab a call slot:</p>
+          <a class="btn big" href={GOOGLE_BOOKING_URL || 'mailto:kacper@mioduszewsky.com?subject=Book%20a%20call'}>
+            <span class="btn-in">Book a 15-min call</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="ct-alt">
+      <p class="label">( Other ways )</p>
+      <div class="alt-grid">
+        <a href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com</a>
+        <a href="https://instagram.com/mioduszewsky" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://contra.com/kacper_mioduszewski_i7ytzt28" target="_blank" rel="noopener">Contra</a>
+      </div>
+    </section>
+
+    <footer class="ct-foot">
+      <span>© 2026 mioduszewsky</span>
+      <span>Wrocław, PL · working worldwide</span>
+      <a href="/privacy">Privacy</a>
+    </footer>
+  </main>
+
+  <script define:vars={{ CONTACT_ENDPOINT }}>
+    const form = document.getElementById('ctForm');
+    const msg = document.getElementById('ctMsg');
+    const success = document.getElementById('ctSuccess');
+    const btn = form?.querySelector('button[type="submit"]');
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = '';
+      const fd = new FormData(form);
+      const name = (fd.get('name') || '').toString().trim();
+      const email = (fd.get('email') || '').toString().trim();
+      const message = (fd.get('message') || '').toString().trim();
+      const consent = fd.get('consent') === 'on';
+      const hp = (fd.get('hp') || '').toString();
+
+      if (!name || !email || !message) { msg.textContent = 'Please fill in all three fields.'; return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.textContent = 'That email does not look right.'; return; }
+      if (!consent) { msg.textContent = 'Please tick the consent box so I can reply.'; return; }
+
+      // Bez skonfigurowanego endpointu — fallback do maila (nic nie ginie).
+      if (!CONTACT_ENDPOINT) {
+        window.location.href =
+          'mailto:kacper@mioduszewsky.com?subject=' + encodeURIComponent('Contact from ' + name) +
+          '&body=' + encodeURIComponent(message + '\n\n— ' + name + ' (' + email + ')');
+        return;
+      }
+
+      btn.disabled = true;
+      const orig = btn.querySelector('.btn-in').textContent;
+      btn.querySelector('.btn-in').textContent = 'Sending…';
+      try {
+        const res = await fetch(CONTACT_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, message, consent, hp }),
+        });
+        if (!res.ok) throw new Error('bad_status');
+        form.hidden = true;
+        success.hidden = false;
+      } catch {
+        msg.textContent = 'Something went wrong. Email me directly at kacper@mioduszewsky.com.';
+        btn.disabled = false;
+        btn.querySelector('.btn-in').textContent = orig;
+      }
+    });
+  </script>
+
+  <style>
+    @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+    @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+
+    .ct {
+      --ink: #000; --ivory: #f8f9f2; --dim: #8b8677; --blue: #0522ff; --brand: #ffcc33;
+      font-family: 'GeneralSansV', sans-serif; background: var(--ivory); color: var(--ink);
+      min-height: 100svh; padding: 0 6vw 6vh; display: flex; flex-direction: column;
+    }
+    .label { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dim); }
+    h1, h2, h3 { font-family: 'NohemiV', sans-serif; letter-spacing: -0.025em; font-weight: 520; }
+
+    .ct-nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+    .ct-nav .mark { display: inline-block; width: 54px; height: 54px; }
+    .ct-nav .mark video { width: 100%; height: 100%; object-fit: contain; }
+    .back { text-decoration: none; color: var(--ink); font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; }
+    .back:hover { color: var(--blue); }
+
+    .ct-head { padding: 6vh 0 5vh; max-width: 22ch; }
+    .ct-head { max-width: none; }
+    .ct-head h1 { font-size: clamp(2.4rem, 6vw, 5.4rem); line-height: 1.03; margin: 1.4rem 0; }
+    .hl { background: linear-gradient(100deg, transparent 1%, color-mix(in srgb, var(--brand) 80%, transparent) 5% 95%, transparent 99%); padding: 0 0.1em; }
+    .lead { max-width: 54ch; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.65; color: #4c483c; }
+
+    .ct-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); padding: 4vh 0; }
+    .path { border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-top: 1.6rem; position: relative; }
+    .pnum { font-family: 'GeneralSansV', monospace; font-size: 12px; letter-spacing: 0.24em; color: var(--dim); }
+    .path h2 { font-size: clamp(1.5rem, 2.4vw, 2.2rem); margin: 0.4rem 0 0.6rem; }
+    .pdesc { color: #4c483c; font-size: 15px; line-height: 1.55; margin-bottom: 1.8rem; max-width: 40ch; }
+
+    .btn { display: inline-block; text-decoration: none; color: var(--ink); border: 1px solid var(--ink); border-radius: 999px; padding: 10px 22px; font-size: 12px; letter-spacing: 0.06em; background: var(--ivory); cursor: pointer; transition: background 0.3s, color 0.3s, border-color 0.3s; font-family: inherit; }
+    .btn:hover { background: var(--ink); color: var(--ivory); }
+    .btn.big { padding: 16px 34px; font-size: 13px; background: var(--ink); color: var(--ivory); border-color: var(--ink); }
+    .btn.big:hover { background: var(--blue); border-color: var(--blue); }
+    .btn[disabled] { opacity: 0.5; cursor: default; }
+
+    .cal-embed { border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); border-radius: 14px; overflow: hidden; background: #fff; }
+    .cal-embed iframe { display: block; }
+    .cal-fallback .note { margin-top: 1rem; font-size: 12px; color: var(--dim); line-height: 1.5; max-width: 36ch; }
+
+    .fld { display: block; margin-bottom: 1.1rem; }
+    .fld span { display: block; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); margin-bottom: 0.45rem; }
+    .fld input, .fld textarea {
+      width: 100%; font-family: inherit; font-size: 16px; color: var(--ink);
+      background: #fff; border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+      border-radius: 10px; padding: 12px 14px; resize: vertical;
+      transition: border-color 0.2s;
+    }
+    .fld input:focus, .fld textarea:focus { outline: none; border-color: var(--blue); }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .consent { display: flex; gap: 10px; align-items: flex-start; margin: 0.4rem 0 1.6rem; font-size: 13px; line-height: 1.5; color: #4c483c; }
+    .consent input { margin-top: 3px; accent-color: var(--blue); width: 16px; height: 16px; flex: none; }
+    .consent a { color: var(--blue); }
+    .submit { width: 100%; }
+    .formmsg { margin-top: 1rem; font-size: 13px; color: var(--blue); min-height: 1.2em; }
+
+    .ct-success h3 { font-size: clamp(1.4rem, 2.2vw, 2rem); margin-bottom: 0.8rem; }
+    .ct-success p { color: #4c483c; font-size: 15px; line-height: 1.6; margin-bottom: 1.4rem; max-width: 40ch; }
+
+    .ct-alt { border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); padding-top: 2rem; margin-top: 2vh; }
+    .alt-grid { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .alt-grid a { text-decoration: none; color: var(--ink); font-family: 'NohemiV', sans-serif; font-size: clamp(1.1rem, 1.8vw, 1.5rem); font-weight: 520; letter-spacing: -0.015em; position: relative; }
+    .alt-grid a:hover { color: var(--blue); }
+
+    .ct-foot { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: auto; padding-top: 6vh; font-size: 12px; color: var(--dim); letter-spacing: 0.04em; }
+    .ct-foot a { color: var(--dim); text-decoration: none; }
+    .ct-foot a:hover { color: var(--ink); }
+
+    @media (max-width: 820px) {
+      .ct-grid { grid-template-columns: 1fr; gap: 3.5rem; }
+      .ct { padding: 0 5vw 5vh; }
+    }
+  </style>
+</VariantLayout>

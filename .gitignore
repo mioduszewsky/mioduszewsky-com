@@ -30,3 +30,4 @@ docs
 # codex lokalny config
 .codex/
 .vercel
+backend/contact-form/function.zip
