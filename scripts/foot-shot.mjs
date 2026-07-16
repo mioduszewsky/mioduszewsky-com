@@ -1,9 +1,11 @@
 import { chromium } from 'playwright';
 const b = await chromium.launch();
 const p = await b.newPage({ viewport:{width:1440,height:950} });
-await p.goto('http://localhost:4333/', { waitUntil:'networkidle' });
-await p.waitForTimeout(800);
+await p.goto('http://localhost:4335/', { waitUntil:'networkidle' });
+await p.waitForTimeout(1000);
 await p.evaluate(()=>window.scrollTo(0, document.body.scrollHeight));
-await p.waitForTimeout(2500);
-await p.screenshot({ path:'/tmp/foot.png' });
-await b.close(); console.log('ok');
+await p.waitForTimeout(3000);
+await p.screenshot({ path:'/tmp/foot3.png' });
+const h = await p.evaluate(()=>{const f=document.querySelector('.foot'); const d=document.querySelector('.foot-dal'); const fr=f.getBoundingClientRect(); const dr=d.getBoundingClientRect(); return {footBottom: Math.round(fr.bottom), dalBottom: Math.round(dr.bottom), gapBelowDal: Math.round(fr.bottom-dr.bottom)};});
+console.log('spacing:', JSON.stringify(h));
+await b.close();
