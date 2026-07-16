@@ -885,27 +885,43 @@ const services = [
   .fbody { padding: 0 6px 28px; }
   .fbody p { max-width: 68ch; font-size: 15px; line-height: 1.7; color: #4c483c; margin: 0; }
 
-  .foot { padding: 16vh 3vw 4vh; }
-  .foot-sub { margin-top: 4vh; max-width: 52ch; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.65; color: #4c483c; }
-  .foot-h { display: block; text-decoration: none; color: var(--ink); margin-top: 3vh; font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520; font-size: clamp(3rem, 8.5vw, 8.6rem); line-height: 1.02; letter-spacing: -0.025em; }
+  /* STOPKA CIEMNA — dalmatyńczyk (białe futro + czarne łaty) świeci dopiero na czerni */
+  .foot { position: relative; background: var(--ink); color: var(--ivory); padding: 18vh 3vw 5vh; margin-top: 10vh; overflow: clip; }
+  .foot .label { color: color-mix(in srgb, var(--ivory) 55%, transparent); }
+  .foot-sub { margin-top: 4vh; max-width: 52ch; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.65; color: color-mix(in srgb, var(--ivory) 62%, transparent); }
+  .foot-h { display: block; text-decoration: none; color: var(--ivory); margin-top: 3vh; font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520; font-size: clamp(3rem, 8.5vw, 8.6rem); line-height: 1.02; letter-spacing: -0.025em; }
+  .foot-h em { color: var(--brand); font-style: normal; }
+  .foot .tag-foot { color: color-mix(in srgb, var(--ivory) 72%, transparent); }
   .foot-b { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6vh; }
-  /* Stopka właściwa: namiar + studio + dostępność, potem dalmatyńczyk */
+  /* CTA na ciemnym: jasny przycisk, hover żółty brand */
+  .foot .btn.big { background: var(--ivory); color: var(--ink); border-color: var(--ivory); }
+  .foot .btn.big:hover { background: var(--brand); color: var(--ink); border-color: var(--brand); }
+
+  /* Dalmatyńczyk = sygnaturowe domknięcie: duży, wyśrodkowany, w miękkim reflektorze */
+  .foot-dal { position: relative; display: flex; justify-content: center; margin: 13vh 0 3vh; pointer-events: none; }
+  .foot-dal::before {
+    content: ""; position: absolute; top: 46%; left: 50%; translate: -50% -50%;
+    width: min(1150px, 96vw); aspect-ratio: 1;
+    background: radial-gradient(circle, color-mix(in srgb, var(--ivory) 13%, transparent) 0%, transparent 60%);
+    z-index: 0;
+  }
+  .foot-dal video {
+    position: relative; z-index: 1;
+    width: clamp(380px, 64vw, 1020px); height: auto; display: block;
+    filter: drop-shadow(0 34px 66px rgba(0, 0, 0, 0.62));
+  }
+
   .foot-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 3vw;
-    margin-top: 9vh; padding-top: 3.5vh;
-    border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+    margin-top: 3vh; padding-top: 3.5vh;
+    border-top: 1px solid color-mix(in srgb, var(--ivory) 16%, transparent);
   }
-  .fcol { display: flex; flex-direction: column; gap: 0.55rem; font-size: 14px; line-height: 1.5; color: #4c483c; }
-  .fcol a { color: var(--ink); text-decoration: none; width: fit-content; position: relative; }
-  .fcol a::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 100%; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1); }
+  .fcol { display: flex; flex-direction: column; gap: 0.55rem; font-size: 14px; line-height: 1.5; color: color-mix(in srgb, var(--ivory) 60%, transparent); }
+  .fcol a { color: var(--ivory); text-decoration: none; width: fit-content; position: relative; }
+  .fcol a::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 100%; background: var(--ivory); transform: scaleX(0); transform-origin: left; transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1); }
   .fcol a:hover::after { transform: scaleX(1); }
-  .flabel { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dim); margin-bottom: 0.5rem; }
-  .foot-dal { display: flex; justify-content: center; margin-top: 8vh; pointer-events: none; }
-  .foot-dal video {
-    width: clamp(340px, 54vw, 860px); height: auto; display: block;
-    filter: drop-shadow(0 22px 44px color-mix(in srgb, var(--ink) 20%, transparent));
-  }
-  .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 5vh; padding-top: 1.2rem; border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
+  .flabel { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: color-mix(in srgb, var(--ivory) 45%, transparent); margin-bottom: 0.5rem; }
+  .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 5vh; padding-top: 1.2rem; border-top: 1px solid color-mix(in srgb, var(--ivory) 14%, transparent); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in srgb, var(--ivory) 45%, transparent); }
 
   /* ── Warstwa WANDAL: spray, dopiski, splaty ─────────────────── */
   .w5 { --spray: #c70404; }
