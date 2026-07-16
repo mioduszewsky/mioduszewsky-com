@@ -6,17 +6,21 @@ import '@fontsource-variable/shantell-sans';
 import VariantLayout from '../layouts/VariantLayout.astro';
 import PhoneFrame from '../components/frames/PhoneFrame.astro';
 import thumbWoodspot from '../assets/live/thumb-woodspot.webp';
-import thumbAigor from '../assets/live/thumb-aigor.webp';
-import thumbEskapizm from '../assets/live/thumb-eskapizm.webp';
+import thumbGlassstone from '../assets/live/thumb-glassstone.webp';
+import thumbCannversity from '../assets/live/thumb-cannversity.webp';
 
 // Tryb prod (index): bez przełącznika wariantów, z indeksowaniem i meta description.
 interface Props { prod?: boolean; title?: string; }
 const { prod = false, title = 'W5 — ATELIER · mioduszewsky' } = Astro.props;
 
-const uslugi = [
-  { nr: '01', n: 'Plan projektu', d: 'Zanim wydasz pierwszą złotówkę: rozkładam pomysł na części i dostajesz konkretną mapę. Co budować, w jakiej kolejności i czym to uruchomić.', thumb: thumbWoodspot.src },
-  { nr: '02', n: 'Strona internetowa', d: 'Jedna strona pod cel albo pełna strona firmy. Projekt, treść i wdrożenie. Gotowa, żeby pokazywać ją klientom bez tłumaczenia się.', thumb: thumbAigor.src },
-  { nr: '03', n: 'Aplikacja lub system', d: 'Sklep, system zapisów, panel klienta, pierwsza wersja produktu. Coś, co pracuje na Ciebie od pierwszego dnia.', thumb: thumbEskapizm.src },
+// Copy EN wg docs/strategy/LANDING_COPY_DRAFT.md (decyzja Kacpra 16.07.2026:
+// strona po angielsku, ceny USD jak na Contrze).
+const services = [
+  { nr: '01', n: 'Landing page', p: 'from $1,000', d: 'One page built around one clear goal: a service, product, campaign, launch or lead-generation offer. Offer structure, copy, design, build and launch.' },
+  { nr: '02', n: 'Company website', p: 'from $1,500', d: 'A complete website for a company, personal brand or project. A credible place to send customers, partners and leads.' },
+  { nr: '03', n: 'Project plan', p: 'from $1,000', d: 'For people who have an idea but do not yet know what should be built first. A defined direction, scope and order of work before you spend money on the build.', tag: true },
+  { nr: '04', n: 'AI implementation', p: 'from $1,200', d: 'For companies that already have customers and want to improve a specific process. I map it, define what to automate and build the workflow, agent, integration or dashboard.' },
+  { nr: '05', n: 'Application or system', p: 'from $3,000', d: 'A first working version of a product, application, dashboard or business system. Something that works for the business from day one.' },
 ];
 ---
 
@@ -26,7 +30,7 @@ const uslugi = [
   fg="#000000"
   switcher={!prod}
   robots={prod ? 'index, follow, max-image-preview:large' : undefined}
-  description={prod ? 'Strony internetowe, aplikacje i plany projektów. Od pomysłu do startu: projekt, treść i wdrożenie w jednych rękach.' : undefined}
+  description={prod ? 'Landing pages, company websites, AI implementations and web apps. One person from idea to launch: strategy, copy, design and build.' : undefined}
 >
   <main class="w5">
     <!-- Wspólne filtry spray (inline SVG = działa też w Safari) -->
@@ -63,31 +67,62 @@ const uslugi = [
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <a class="btn mag" href="mailto:kacper@mioduszewsky.com"><span class="btn-in">Napisz do mnie</span></a>
+      <a class="btn mag" href="mailto:kacper@mioduszewsky.com"><span class="btn-in">Work with me</span></a>
     </header>
 
     <!-- HERO -->
     <section class="hero">
-      <p class="label rv">( Strony · Aplikacje · Plany projektów )</p>
+      <p class="label rv">( Websites · Apps · Project plans )</p>
       <h1>
-        <span class="ln"><span class="ln-in">Buduję <span class="fix">ładne<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix" aria-hidden="true">działające!</span></span> rzeczy,</span></span>
-        <span class="ln"><span class="ln-in">które <em>zaczynają</em></span></span>
-        <span class="ln"><span class="ln-in">biznesy<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span>
+        <span class="ln"><span class="ln-in">A <span class="fix">nice<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix" aria-hidden="true">working!</span></span> website</span></span>
+        <span class="ln"><span class="ln-in">you can <em>finally</em></span></span>
+        <span class="ln"><span class="ln-in">send people to<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span>
       </h1>
       <div class="hero-b">
+        <div class="hero-cta rv">
+          <a class="btn mag big" href="mailto:kacper@mioduszewsky.com"><span class="btn-in">Work with me</span></a>
+          <p class="hero-price">Landing pages from $1,000 · Company websites from $1,500</p>
+        </div>
         <p class="hero-sub rv">
-          Od pomysłu do startu: projekt, treść i wdrożenie w jednych rękach.
-          Bez szablonów i bez lania wody. Pierwsza wersja, która działa i zarabia.
+          I plan, write, design and build landing pages and company websites.
+          One person takes the project from an idea to a working page.
+          No agency handovers. No design made in isolation.
         </p>
-        <span class="hero-line-v rv" aria-hidden="true"></span>
       </div>
+    </section>
+
+    <!-- LEAD: problem, który biorę na siebie -->
+    <section class="lead">
+      <p class="label rv">( The problem )</p>
+      <h2 class="sec-h">
+        <span class="ln"><span class="ln-in">Having a website is not the same</span></span>
+        <span class="ln"><span class="ln-in">as having one you <em>trust</em>.</span></span>
+      </h2>
+      <div class="lead-rows">
+        <div class="lrow rv">
+          <span class="idx">01</span>
+          <h3>You tried AI</h3>
+          <p>It generated a page, but you cannot tell if a customer will understand the offer.</p>
+        </div>
+        <div class="lrow rv">
+          <span class="idx">02</span>
+          <h3>Someone technical built it</h3>
+          <p>It works. It also looks like something made by someone technical.</p>
+        </div>
+        <div class="lrow rv">
+          <span class="idx">03</span>
+          <h3>A designer sent polished screens</h3>
+          <p>The project stopped before the website became part of the business.</p>
+        </div>
+      </div>
+      <p class="lead-close rv">The problem is rarely access to another tool. It is knowing what to build and whether the result is ready to meet customers. <em>That is the part I take responsibility for.</em></p>
     </section>
 
     <!-- REALIZACJE -->
     <section class="work">
       <div class="sec-head">
-        <p class="label rv">Wybrane realizacje</p>
-        <p class="label dim rv">( ekrany są przewijalne — to żywe projekty )</p>
+        <p class="label rv">Selected work</p>
+        <p class="label dim rv">( the screens scroll, these are live projects )</p>
       </div>
 
       <article class="proj">
@@ -95,17 +130,18 @@ const uslugi = [
           <span class="ln"><span class="ln-in idx">№ 01</span></span>
           <h2 class="ln"><span class="ln-in">eskapizm</span></h2>
           <p class="proj-d rv">
-            Plany podróży po Azji, szyte na miarę. Strona, sklep, aplikacja z planami
-            i system AI do ich budowania. <em>Zaprojektowane i zbudowane od zera.</em>
+            A travel-planning platform: public website, sales flow, checkout, client
+            application, content management and operational tools.
+            <em>Designed and built from zero, as one connected system.</em>
           </p>
           <a class="tlink rv" href="https://eskapizm.com" target="_blank" rel="noopener">eskapizm.com<i>↗</i></a>
         </div>
         <div class="proj-f" data-parallax>
           <div class="phone-hold">
-            <PhoneFrame url="https://eskapizm.com" alt="eskapizm.com — poskroluj" screenbg="#fbfff7" />
+            <PhoneFrame url="https://eskapizm.com/en" alt="eskapizm.com - scroll it" screenbg="#fbfff7" />
             <div class="spray-note" aria-hidden="true">
               <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M120 14 L 140 16 L 132 36" filter="url(#sprayF)" /></svg>
-              <span class="tag">psst, to żyje.<br />poskroluj!</span>
+              <span class="tag">psst, it's live.<br />scroll it!</span>
             </div>
           </div>
         </div>
@@ -116,34 +152,98 @@ const uslugi = [
           <span class="ln"><span class="ln-in idx">№ 02</span></span>
           <h2 class="ln"><span class="ln-in">aigor.grabowski</span></h2>
           <p class="proj-d rv">
-            Strona kolekcji sztuki tworzonej z AI: prace, artyści
-            i historia zakupów. <em>Zaprojektowana, żeby sprzedawać opowieść.</em>
+            A website for an AI-art collection: works, artists and acquisition
+            history. <em>Designed to sell a story.</em>
           </p>
         </div>
         <div class="proj-f" data-parallax>
-          <PhoneFrame url="https://www.igorgrabowski.com" alt="igorgrabowski.com — poskroluj" />
+          <PhoneFrame url="https://www.igorgrabowski.com/?lang=en" alt="igorgrabowski.com - scroll it" />
         </div>
       </article>
+
+      <div class="more">
+        <p class="label rv">More work</p>
+        <a class="mrow rv" href="https://glassstone.pl" target="_blank" rel="noopener" data-thumb={thumbGlassstone.src}>
+          <span class="mname">GlassStone</span>
+          <span class="mdesc">Company website with a portfolio gallery, publishing tools and an admin panel. A system the business keeps using after launch.</span>
+          <span class="sarr">↗</span>
+        </a>
+        <a class="mrow rv" href="https://www.cannversity.com" target="_blank" rel="noopener" data-thumb={thumbCannversity.src}>
+          <span class="mname">Cannversity</span>
+          <span class="mdesc">A platform translating a complex offer and a broader strategy into a structure people can understand and navigate.</span>
+          <span class="sarr">↗</span>
+        </a>
+        <!-- Wewnętrzny dokument, nie strona publiczna: bez linku, tylko podgląd na hover -->
+        <div class="mrow mrow-static rv" data-thumb={thumbWoodspot.src}>
+          <span class="mname">Private event platform</span>
+          <span class="mdesc">An internal deck prepared to start the project: interactive presentation and a financial model connecting the event concept, operational limits and business decisions.</span>
+        </div>
+        <p class="work-note rv">These examples show the scope and type of work delivered, not proof of guaranteed revenue, conversion or cost savings.</p>
+      </div>
     </section>
 
-    <!-- MANIFEST -->
+    <!-- MANIFEST: czarny panel rozrasta się do pełnej szerokości na scrollu -->
     <section class="manif">
-      <p class="manif-t">
-        <span class="ln"><span class="ln-in">Kupujesz stronę,</span></span>
-        <span class="ln"><span class="ln-in">a <em>przemyślany plan wejścia</em></span></span>
-        <span class="ln"><span class="ln-in">dostajesz w cenie. <span class="tag tag-manif" aria-hidden="true">serio.</span></span></span>
-      </p>
+      <div class="manif-in">
+        <p class="manif-t">
+          <span class="ln"><span class="ln-in">The goal is not to give you</span></span>
+          <span class="ln"><span class="ln-in"><em>more files.</em></span></span>
+          <span class="ln"><span class="ln-in">It is a page you can use. <span class="tag tag-manif" aria-hidden="true">for real.</span></span></span>
+        </p>
+        <p class="manif-sub rv">Send it in an email. Run a campaign to it. Show it to a customer. Build on it after launch.</p>
+      </div>
+    </section>
+
+    <!-- JAK PRACUJĘ (OLD vs NEW + WHY ME z draftu) -->
+    <section class="how">
+      <p class="label rv">( How I work )</p>
+      <h2 class="sec-h">
+        <span class="ln"><span class="ln-in">A good website is not the one</span></span>
+        <span class="ln"><span class="ln-in">with the <em>most polish</em>.</span></span>
+      </h2>
+      <div class="how-cols">
+        <div class="how-col rv">
+          <h3 class="how-t how-t-old"><span class="fix">The usual way<svg class="strike strike-sm" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g filter="url(#sprayF)"><path d="M6 25 C 60 18, 138 30, 194 21" /></g></svg></span></h3>
+          <ol class="how-list">
+            <li>You write a brief.</li>
+            <li>Someone designs the page.</li>
+            <li>Someone else writes the copy.</li>
+            <li>A developer receives the files later.</li>
+            <li>Every person sees one part of the project.</li>
+          </ol>
+          <p class="how-out">You become the person responsible for making sure those parts still fit together.</p>
+        </div>
+        <div class="how-col rv">
+          <h3 class="how-t">The way I work</h3>
+          <ol class="how-list">
+            <li>What are you selling?</li>
+            <li>Who needs to understand it?</li>
+            <li>What should they do after visiting the page?</li>
+            <li>What must be included and what can be removed?</li>
+            <li>Only then do I write, design and build.</li>
+          </ol>
+          <p class="how-out">You speak directly with the person doing the work, from the first conversation to launch.</p>
+        </div>
+      </div>
+      <div class="how-why">
+        <p class="how-why-t rv">I am not the best specialist in every single discipline. <span class="dim2">A dedicated designer may draw a prettier system. A specialist developer may write more advanced code.</span> That is not the comparison I am trying to win.</p>
+        <p class="how-why-t rv">I work across the points where projects usually break: <em>the decision, the offer, the design, the build, the launch</em>. One system, by one person.</p>
+      </div>
     </section>
 
     <!-- USŁUGI -->
     <section class="serv">
-      <p class="label rv">Z czym możesz przyjść</p>
+      <p class="label rv">( Services )</p>
+      <h2 class="sec-h">
+        <span class="ln"><span class="ln-in">Choose what needs</span></span>
+        <span class="ln"><span class="ln-in">to <em>exist first</em>.</span></span>
+      </h2>
       <div class="rows">
-        {uslugi.map((u, i) => (
-          <a class="srow" href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(u.n)}`} data-thumb={u.thumb}>
+        {services.map((u) => (
+          <a class="srow" href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(u.n)}`}>
             <span class="idx idx-wrap">
               {u.nr}
-              {i === 0 && (
+              {u.tag && (
                 <svg class="spray-circle" viewBox="0 0 90 60" aria-hidden="true">
                   <path class="draw" d="M22 14 C 48 4, 84 12, 85 29 C 86 46, 56 56, 30 52 C 8 48, 2 34, 14 22 C 20 16, 30 12, 38 11" filter="url(#sprayF)" />
                 </svg>
@@ -151,28 +251,123 @@ const uslugi = [
             </span>
             <span class="sname">{u.n}</span>
             <span class="sdesc">{u.d}</span>
+            <span class="sprice">{u.p}</span>
             <span class="sarr">↗</span>
-            {i === 0 && <span class="tag tag-row" aria-hidden="true">od tego bym zaczął</span>}
+            {u.tag && <span class="tag tag-row" aria-hidden="true">where I'd start</span>}
           </a>
         ))}
+      </div>
+      <p class="serv-note rv">Long-term advertising, ongoing SEO and guaranteed sales results are not part of the scope.</p>
+    </section>
+
+    <!-- PROCES -->
+    <section class="proc">
+      <p class="label rv">( Process )</p>
+      <h2 class="sec-h">
+        <span class="ln"><span class="ln-in">What working together</span></span>
+        <span class="ln"><span class="ln-in"><em>actually</em> looks like.</span></span>
+      </h2>
+      <ol class="steps">
+        <li class="step rv">
+          <span class="idx">01</span>
+          <h3>We talk about the business</h3>
+          <p>What exists today, what needs to change and what the project should achieve.</p>
+        </li>
+        <li class="step rv">
+          <span class="idx">02</span>
+          <h3>I define the scope</h3>
+          <p>A clear proposal: what will be built, what is not included and how it is priced.</p>
+        </li>
+        <li class="step rv">
+          <span class="idx">03</span>
+          <h3>You book the build</h3>
+          <p>Work is paid upfront: in full for small projects, stage by stage for larger ones.</p>
+        </li>
+        <li class="step rv">
+          <span class="idx">04</span>
+          <h3>I build</h3>
+          <p>The same person who discussed the business writes, designs and implements.</p>
+        </li>
+        <li class="step rv">
+          <span class="idx">05</span>
+          <h3>We launch</h3>
+          <p>The page or system goes live and starts receiving real use.</p>
+        </li>
+        <li class="step rv">
+          <span class="idx">06</span>
+          <h3>We iterate when it makes sense</h3>
+          <p>Ongoing development for selected projects. Build + Iterate from $1,500 per month.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- FAQ (+ „czego nie obiecuję" z draftu) -->
+    <section class="faq">
+      <p class="label rv">( Fair questions )</p>
+      <div class="faq-list">
+        <details class="rv">
+          <summary>Can AI build the website for me?<span class="fmark" aria-hidden="true"></span></summary>
+          <div class="fbody"><p>It can generate text, layouts and code. The harder part is deciding whether the result is clear, credible and appropriate for the business. Using AI is not the problem. Knowing what to keep, what to remove and what needs to be rebuilt is where experience matters.</p></div>
+        </details>
+        <details class="rv">
+          <summary>Do I need to prepare all the copy?<span class="fmark" aria-hidden="true"></span></summary>
+          <div class="fbody"><p>No. Copy can be part of the project scope. I still need real information about the business, customers and offer. I will not invent results, testimonials or claims to fill the page.</p></div>
+        </details>
+        <details class="rv">
+          <summary>Do you only work on websites?<span class="fmark" aria-hidden="true"></span></summary>
+          <div class="fbody"><p>Websites and landing pages are the main focus. I also build AI workflows, applications, dashboards and internal systems when the project requires more than a public-facing page.</p></div>
+        </details>
+        <details class="rv">
+          <summary>Are you an agency?<span class="fmark" aria-hidden="true"></span></summary>
+          <div class="fbody"><p>No. You work directly with one person from the first conversation to implementation. I currently take on a maximum of three active projects at the same time.</p></div>
+        </details>
+        <details class="rv">
+          <summary>Do you guarantee results?<span class="fmark" aria-hidden="true"></span></summary>
+          <div class="fbody"><p>No. I do not guarantee revenue or a specific marketing result, and a new website will not fix an unclear offer by itself. I define the problem, build the agreed solution and give you something real to put in front of customers. What happens next also depends on the offer, traffic, market and how the business uses what was built.</p></div>
+        </details>
       </div>
     </section>
 
     <!-- FOOTER -->
     <footer class="foot">
-      <p class="label rv">( Następny krok )</p>
+      <p class="label rv">( Next step )</p>
       <a class="foot-h" href="mailto:kacper@mioduszewsky.com">
-        <span class="ln"><span class="ln-in">Porozmawiajmy</span></span>
-        <span class="ln"><span class="ln-in"><em>o Twoim projekcie.</em> <span class="tag tag-foot" aria-hidden="true">bez ściemy.</span></span></span>
+        <span class="ln"><span class="ln-in">Let's build the website</span></span>
+        <span class="ln"><span class="ln-in">your business <em>actually needs</em>. <span class="tag tag-foot" aria-hidden="true">or fix the one you have.</span></span></span>
       </a>
+      <p class="foot-sub rv">Tell me what you have now, even if it is nothing yet, what is not working and what the new page should do. I will tell you whether the project is a fit and what I would build first.</p>
       <div class="foot-b">
         <a class="btn mag big" href="mailto:kacper@mioduszewsky.com"><span class="btn-in">kacper@mioduszewsky.com</span></a>
-        <a class="btn mag ghost" href="https://instagram.com/mioduszewsky" target="_blank" rel="noopener"><span class="btn-in">Instagram</span></a>
+      </div>
+      <div class="foot-grid">
+        <div class="fcol rv">
+          <p class="flabel">Contact</p>
+          <a href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com</a>
+          <a href="https://instagram.com/mioduszewsky" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://contra.com/kacper_mioduszewski_i7ytzt28" target="_blank" rel="noopener">Contra</a>
+        </div>
+        <div class="fcol rv">
+          <p class="flabel">Studio</p>
+          <span>Kacper Mioduszewski</span>
+          <span>Wrocław, PL (CET)</span>
+          <span>Working worldwide, in English and Polish</span>
+        </div>
+        <div class="fcol rv">
+          <p class="flabel">Availability</p>
+          <span>A maximum of three active projects at a time</span>
+          <span>Next step is always one honest conversation</span>
+        </div>
+      </div>
+      <!-- Dalmatyńczyk (wariant futrzany logo) — celowo inny niż balon w nav -->
+      <div class="foot-dal rv" aria-hidden="true">
+        <video autoplay loop muted playsinline preload="metadata" poster="/logo3d/logo-dalmatian-poster.webp">
+          <source src="/logo3d/logo-dalmatian.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-dalmatian.webm" type="video/webm" />
+        </video>
       </div>
       <div class="meta">
         <span>© 2026 mioduszewsky</span>
-        <span>Wrocław, PL (CET)</span>
-        <span>Zaprojektowane i zbudowane samodzielnie</span>
+        <span>Designed and built by one person</span>
       </div>
     </footer>
   </main>
@@ -263,6 +458,12 @@ const uslugi = [
           scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
         });
       });
+      /* Manifest: czarna plama (jak psiknięcie sprayem) rozlewa się na pełny
+         ekran w rytmie scrolla — pełny bleed, zero pasków po bokach */
+      gsap.fromTo('.manif-in', { clipPath: 'circle(9% at 50% 52%)' }, {
+        clipPath: 'circle(125% at 50% 52%)', ease: 'none',
+        scrollTrigger: { trigger: '.manif', start: 'top 78%', end: 'top 12%', scrub: 0.5 },
+      });
     }
 
     /* Nav chowa się przy scrollu w dół — nic nie nachodzi na ekrany projektów */
@@ -294,8 +495,14 @@ const uslugi = [
         pkx(Math.min(e.clientX + 36, innerWidth - w - 16));
         pky(Math.min(Math.max(14, e.clientY - h - 28), innerHeight - h - 14));
       };
-      document.querySelectorAll<HTMLElement>('.srow[data-thumb]').forEach((row) => {
+      let peekOn = false;
+      const hidePeek = () => {
+        peekOn = false;
+        gsap.to(peek, { opacity: 0, scale: 0.9, duration: 0.22, ease: 'power2.out' });
+      };
+      document.querySelectorAll<HTMLElement>('.mrow[data-thumb]').forEach((row) => {
         row.addEventListener('pointerenter', (e) => {
+          peekOn = true;
           peek.src = row.dataset.thumb!;
           place(e as PointerEvent);
           /* teleport na pozycję kursora — bez przelotu przez pół ekranu */
@@ -304,10 +511,11 @@ const uslugi = [
           gsap.to(peek, { opacity: 1, scale: 1, duration: 0.35, ease: 'power3.out' });
         });
         row.addEventListener('pointermove', (e) => place(e as PointerEvent));
-        row.addEventListener('pointerleave', () => {
-          gsap.to(peek, { opacity: 0, scale: 0.9, duration: 0.28, ease: 'power2.out' });
-        });
+        row.addEventListener('pointerleave', hidePeek);
       });
+      /* scroll przesuwa wiersz spod kursora bez pointerleave — chowaj od razu,
+         inaczej miniatura zostaje przyklejona do ekranu */
+      addEventListener('scroll', () => { if (peekOn) hidePeek(); }, { passive: true });
     }
 
     /* Magnetyczne przyciski */
@@ -326,11 +534,10 @@ const uslugi = [
         });
       });
 
-      /* Custom cursor */
+      /* Custom cursor — kropka siedzi DOKŁADNIE na czubku pointera (bez smyczy) */
       const cur = document.querySelector<HTMLElement>('.cur')!;
-      const qx = gsap.quickTo(cur, 'x', { duration: 0.35, ease: 'power3.out' });
-      const qy = gsap.quickTo(cur, 'y', { duration: 0.35, ease: 'power3.out' });
-      addEventListener('mousemove', (e) => { qx(e.clientX); qy(e.clientY); });
+      gsap.set(cur, { x: -200, y: -200 });
+      addEventListener('mousemove', (e) => { gsap.set(cur, { x: e.clientX, y: e.clientY }); });
       document.querySelectorAll('a, button').forEach((el) => {
         el.addEventListener('mouseenter', () => gsap.to(cur, { scale: 2.6, duration: 0.3 }));
         el.addEventListener('mouseleave', () => gsap.to(cur, { scale: 1, duration: 0.3 }));
@@ -394,8 +601,6 @@ const uslugi = [
   @font-face { font-family: 'ClashV'; src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
   @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
   @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-VariableItalic.woff2') format('woff2'); font-weight: 200 700; font-style: italic; font-display: swap; }
-  @font-face { font-family: 'SentientV'; src: url('/fonts/Sentient-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
-  @font-face { font-family: 'SentientV'; src: url('/fonts/Sentient-VariableItalic.woff2') format('woff2'); font-weight: 200 700; font-style: italic; font-display: swap; }
 
   ::selection { background: var(--blue); color: var(--ivory); }
   .w5 a { cursor: none; }
@@ -411,7 +616,8 @@ const uslugi = [
   }
 
   .cur {
-    position: fixed; top: -40px; left: -40px; z-index: 300; width: 14px; height: 14px;
+    /* -7px = połowa średnicy: środek kropki leży dokładnie w punkcie kliknięcia */
+    position: fixed; top: -7px; left: -7px; z-index: 300; width: 14px; height: 14px;
     border-radius: 50%; background: var(--blue); pointer-events: none;
     mix-blend-mode: exclusion;
   }
@@ -458,11 +664,44 @@ const uslugi = [
     font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520; letter-spacing: -0.025em;
     font-size: clamp(3.2rem, 9.5vw, 9.8rem); line-height: 1.0; margin-top: 3vh;
   }
-  .hero h1 em, .proj-d em, .manif em, .foot-h em {
-    font-family: 'SentientV'; font-style: italic; font-weight: 380; letter-spacing: -0.01em;
+  /* Wyróżnienia: pociągnięcie żółtym markerem zamiast kursywy (decyzja 16.07:
+     italic/serif czytał się jako AI-maniera) */
+  .hero h1 em, .proj-d em, .foot-h em, .sec-h em, .lead-close em, .how-why-t em {
+    font-style: normal;
+    padding: 0 0.08em;
+    background:
+      linear-gradient(100deg, transparent 1.5%, color-mix(in srgb, var(--brand) 72%, transparent) 6% 94%, transparent 98.5%)
+      no-repeat 0 68% / 100% 56%;
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
   }
-  .hero-b { display: flex; justify-content: flex-end; margin-top: 6vh; }
+  .hero-b { display: flex; justify-content: space-between; align-items: flex-end; gap: 4vw; margin-top: 6vh; }
+  .hero-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 1.1rem; }
+  .hero-price { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
   .hero-sub { max-width: 40ch; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.65; color: #4c483c; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-top: 1.4rem; }
+
+  /* wspólny nagłówek sekcji (lead / how / serv / proc) — celowo o oczko
+     mniejszy niż hero, żeby sekcje nie atakowały (feedback 16.07) */
+  .sec-h {
+    font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520;
+    font-size: clamp(1.8rem, 3.4vw, 3.1rem); line-height: 1.08; letter-spacing: -0.02em;
+    margin-top: 2vh;
+  }
+
+  /* LEAD */
+  .lead { padding: 12vh 3vw 4vh; }
+  .lead-rows { margin-top: 5vh; }
+  .lrow {
+    display: grid; grid-template-columns: 60px 1fr 1.4fr; gap: 3vw; align-items: baseline;
+    padding: 22px 6px; border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  }
+  .lrow:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .lrow .idx { font-size: 12px; letter-spacing: 0.24em; color: var(--dim); }
+  .lrow h3 { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.15rem, 1.8vw, 1.55rem); letter-spacing: -0.015em; margin: 0; }
+  .lrow p { font-size: 14.5px; line-height: 1.6; color: #4c483c; max-width: 58ch; margin: 0; }
+  .lead-close {
+    max-width: 56ch; margin-top: 6vh; color: var(--ink);
+    font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.55;
+  }
 
   .work { padding: 10vh 3vw; }
   .sec-head { display: flex; justify-content: space-between; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-top: 1rem; margin-bottom: 10vh; }
@@ -478,14 +717,64 @@ const uslugi = [
   .tlink:hover i { translate: 4px -4px; }
   .proj-f { display: flex; justify-content: center; }
 
-  .manif { padding: 18vh 3vw; text-align: center; background: var(--ink); color: var(--ivory); }
+  /* MORE WORK — kompaktowa lista pod żywymi makietami */
+  .more { margin-top: -4vh; }
+  .mrow {
+    display: grid; grid-template-columns: 1fr 1.6fr 40px; gap: 3vw; align-items: baseline;
+    padding: 22px 6px; text-decoration: none; color: var(--ink);
+    border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+    transition: padding-left 0.4s cubic-bezier(0.19, 1, 0.22, 1), background 0.4s;
+  }
+  .mrow:last-of-type { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .mrow:hover { padding-left: 18px; background: color-mix(in srgb, var(--ink) 4%, transparent); }
+  .mrow:hover .sarr { opacity: 1; translate: 0 0; }
+  .mname { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.2rem, 2.2vw, 1.9rem); letter-spacing: -0.015em; }
+  .mdesc { font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 62ch; }
+  .work-note { margin-top: 3.5vh; font-size: 12px; line-height: 1.6; color: var(--dim); max-width: 62ch; }
+
+  .manif { padding: 0; }
+  .manif-in {
+    /* pełny bleed; bez JS / reduced-motion po prostu czarna sekcja,
+       z JS clip-path rozlewa ją jak psiknięcie sprayem */
+    background: var(--ink); color: var(--ivory); text-align: center;
+    padding: 18vh 3vw;
+    will-change: clip-path;
+  }
   .manif-t { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 460; font-size: clamp(1.9rem, 4.6vw, 4.4rem); line-height: 1.12; letter-spacing: -0.02em; }
-  .manif em { color: var(--brand); }
+  .manif em { color: var(--brand); font-style: normal; }
+  .manif-sub { margin-top: 4.5vh; font-size: clamp(0.9rem, 1.25vw, 1.05rem); letter-spacing: 0.03em; color: color-mix(in srgb, var(--ivory) 60%, transparent); }
+
+  /* HOW I WORK */
+  .how { padding: 10vh 3vw 8vh; }
+  .how-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4vw; margin-top: 7vh; }
+  .how-col { border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); padding-top: 1.4rem; }
+  .how-t { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.3rem, 2vw, 1.8rem); letter-spacing: -0.015em; margin-bottom: 1.5rem; }
+  .how-t-old { color: var(--dim); }
+  .strike-sm { fill: none; stroke: var(--spray); stroke-linecap: round; }
+  .strike-sm path { stroke-width: 3; opacity: 0.9; }
+  .how-list { list-style: none; padding: 0; margin: 0; }
+  .how-list li {
+    padding: 0.62rem 0; font-size: 15px; line-height: 1.6; color: #4c483c;
+    border-top: 1px dashed color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .how-list li:first-child { border-top: none; }
+  .how-out { margin-top: 1.4rem; font-size: 16px; line-height: 1.6; font-weight: 500; color: var(--ink); }
+  /* WHY ME: dwa statementy obok siebie — widoczne, ale bez połaci pustki */
+  .how-why {
+    margin-top: 7vh; display: grid; grid-template-columns: 1fr 1fr; gap: 4vw;
+    border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); padding-top: 4vh;
+  }
+  .how-why-t {
+    font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 480;
+    font-size: clamp(1.15rem, 1.7vw, 1.6rem); line-height: 1.35; letter-spacing: -0.01em;
+    color: var(--ink); max-width: 44ch;
+  }
+  .dim2 { color: var(--dim); }
 
   .serv { padding: 14vh 3vw; }
   .rows { margin-top: 5vh; }
   .srow {
-    display: grid; grid-template-columns: 60px 1fr 1.2fr 40px; gap: 3vw; align-items: baseline;
+    display: grid; grid-template-columns: 60px 1fr 1.2fr max-content 40px; gap: 3vw; align-items: baseline;
     padding: 30px 6px; text-decoration: none; color: var(--ink);
     border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
     transition: padding-left 0.4s cubic-bezier(0.19, 1, 0.22, 1), background 0.4s;
@@ -497,12 +786,67 @@ const uslugi = [
   .sdesc { font-size: 14.5px; line-height: 1.6; color: #4c483c; max-width: 52ch; }
   .sarr { font-size: 1.3rem; color: var(--blue); opacity: 0; translate: -8px 4px; transition: opacity 0.3s, translate 0.35s; }
   .srow:hover .sarr { opacity: 1; translate: 0 0; }
+  .sprice { font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); white-space: nowrap; justify-self: end; }
+  .serv-note { margin-top: 3vh; font-size: 12px; line-height: 1.6; color: var(--dim); }
+
+  /* PROCES — kompaktowe wiersze: numer | krok | opis (jedna linia wysokości) */
+  .proc { padding: 8vh 3vw; }
+  .steps { list-style: none; padding: 0; margin: 4vh 0 0; }
+  .step {
+    display: grid; grid-template-columns: 60px 1fr 1.4fr; gap: 3vw; align-items: baseline;
+    padding: 18px 6px; border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  }
+  .step:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .step .idx { font-size: 12px; letter-spacing: 0.24em; color: var(--dim); }
+  .step h3 { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.1rem, 1.7vw, 1.45rem); letter-spacing: -0.015em; margin: 0; }
+  .step p { font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 58ch; margin: 0; }
+
+  /* FAQ */
+  .faq { padding: 6vh 3vw 14vh; }
+  .faq-list { margin-top: 4vh; }
+  .faq details { border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .faq details:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .faq summary {
+    list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 2rem;
+    padding: 24px 6px; cursor: pointer;
+    font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540;
+    font-size: clamp(1.1rem, 1.9vw, 1.55rem); letter-spacing: -0.01em;
+    transition: padding-left 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary:hover { padding-left: 18px; }
+  .fmark { position: relative; flex: none; width: 15px; height: 15px; }
+  .fmark::before, .fmark::after {
+    content: ""; position: absolute; inset: 0; margin: auto; background: var(--blue);
+    transition: rotate 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .fmark::before { width: 15px; height: 2px; }
+  .fmark::after { width: 2px; height: 15px; }
+  .faq details[open] .fmark::after { rotate: 90deg; }
+  .fbody { padding: 0 6px 28px; }
+  .fbody p { max-width: 68ch; font-size: 15px; line-height: 1.7; color: #4c483c; margin: 0; }
 
   .foot { padding: 16vh 3vw 4vh; }
+  .foot-sub { margin-top: 4vh; max-width: 52ch; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.65; color: #4c483c; }
   .foot-h { display: block; text-decoration: none; color: var(--ink); margin-top: 3vh; font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520; font-size: clamp(3rem, 8.5vw, 8.6rem); line-height: 1.02; letter-spacing: -0.025em; }
-  .foot-h em { color: var(--blue); }
   .foot-b { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6vh; }
-  .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 10vh; padding-top: 1.2rem; border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
+  /* Stopka właściwa: namiar + studio + dostępność, potem dalmatyńczyk */
+  .foot-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 3vw;
+    margin-top: 9vh; padding-top: 3.5vh;
+    border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  }
+  .fcol { display: flex; flex-direction: column; gap: 0.55rem; font-size: 14px; line-height: 1.5; color: #4c483c; }
+  .fcol a { color: var(--ink); text-decoration: none; width: fit-content; position: relative; }
+  .fcol a::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 100%; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1); }
+  .fcol a:hover::after { transform: scaleX(1); }
+  .flabel { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dim); margin-bottom: 0.5rem; }
+  .foot-dal { display: flex; justify-content: center; margin-top: 8vh; pointer-events: none; }
+  .foot-dal video {
+    width: clamp(340px, 54vw, 860px); height: auto; display: block;
+    filter: drop-shadow(0 22px 44px color-mix(in srgb, var(--ink) 20%, transparent));
+  }
+  .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 5vh; padding-top: 1.2rem; border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
 
   /* ── Warstwa WANDAL: spray, dopiski, splaty ─────────────────── */
   .w5 { --spray: #c70404; }
@@ -564,25 +908,50 @@ const uslugi = [
   @media (max-width: 860px) {
     .nav { padding: 14px 5vw; }
     .hero { padding-inline: 5vw; }
-    .hero-b { justify-content: flex-start; margin-top: 8vh; }
-    .work, .serv, .foot, .manif { padding-inline: 5vw; }
+    .hero-b { flex-direction: column-reverse; align-items: flex-start; gap: 2.4rem; margin-top: 8vh; }
+    .work, .serv, .foot, .lead, .how, .proc, .faq { padding-inline: 5vw; }
+    .manif-in { padding-inline: 6vw; }
     .sec-head { flex-direction: column; gap: 6px; margin-bottom: 7vh; }
+    .lrow { grid-template-columns: 44px 1fr; grid-template-rows: auto auto; row-gap: 8px; padding: 22px 2px; }
+    .lrow .idx { grid-row: 1; }
+    .lrow h3 { grid-column: 2; grid-row: 1; }
+    .lrow p { grid-column: 2; grid-row: 2; }
+    .lead-close { margin-top: 5vh; }
     .spray-note { left: auto; right: 0; bottom: -9%; width: 62%; }
     .spray-note svg { width: 56%; }
     .proj { grid-template-columns: 1fr; gap: 6vh; margin-bottom: 12vh; }
     .proj.flip .proj-t { order: 0; }
+    .more { margin-top: 0; }
+    .mrow { grid-template-columns: 1fr 30px; grid-template-rows: auto auto; row-gap: 8px; padding: 20px 2px; }
+    .mrow:hover { padding-left: 2px; }
+    .mname { grid-column: 1; grid-row: 1; }
+    .mrow .sarr { grid-column: 2; grid-row: 1; opacity: 1; translate: 0 0; }
+    .mdesc { grid-column: 1 / -1; grid-row: 2; font-size: 13.5px; }
+    .how-cols { grid-template-columns: 1fr; gap: 3rem; margin-top: 5vh; }
+    .how-why { grid-template-columns: 1fr; gap: 1.6rem; margin-top: 5vh; }
     .srow {
       grid-template-columns: 44px 1fr 30px;
-      grid-template-rows: auto auto;
+      grid-template-rows: auto auto auto;
       row-gap: 10px; padding: 24px 2px;
     }
     .srow:hover { padding-left: 2px; }
     .srow .idx { grid-row: 1; }
     .sname { grid-column: 2; grid-row: 1; }
     .sarr { grid-column: 3; grid-row: 1; opacity: 1; translate: 0 0; }
-    .sdesc { display: block; grid-column: 2 / -1; grid-row: 2; font-size: 13.5px; }
+    .sprice { grid-column: 2 / -1; grid-row: 2; justify-self: start; }
+    .sdesc { display: block; grid-column: 2 / -1; grid-row: 3; font-size: 13.5px; }
     .tag-row { display: none; }
+    .step { grid-template-columns: 44px 1fr; grid-template-rows: auto auto; row-gap: 6px; padding: 18px 2px; }
+    .step .idx { grid-row: 1; }
+    .step h3 { grid-column: 2; grid-row: 1; }
+    .step p { grid-column: 2; grid-row: 2; }
+    .faq summary { padding: 20px 2px; }
+    .faq summary:hover { padding-left: 2px; }
+    .fbody { padding: 0 2px 24px; }
     .foot-b .btn { width: 100%; text-align: center; }
+    .foot-grid { grid-template-columns: 1fr; gap: 2rem; margin-top: 7vh; }
+    .foot-dal { margin-top: 6vh; }
+    .foot-dal video { width: 88vw; }
     .meta { flex-direction: column; gap: 6px; }
   }
 </style>
@@ -595,9 +964,10 @@ const uslugi = [
   }
   .splat circle { fill: #c70404; }
   .row-peek {
+    /* poziomy kadr = hero z desktopu 1:1, bez ściskania strony do pionu */
     position: fixed; left: 0; top: 0; z-index: 80;
-    width: min(200px, 17vw); aspect-ratio: 4 / 5; object-fit: cover; object-position: top;
-    border-radius: 14px; pointer-events: none; opacity: 0;
+    width: min(360px, 28vw); aspect-ratio: 16 / 10; object-fit: cover; object-position: top;
+    border-radius: 12px; pointer-events: none; opacity: 0;
     box-shadow: 0 24px 60px rgba(23, 21, 15, 0.32), 0 0 0 1px rgba(23, 21, 15, 0.08);
     will-change: transform;
   }
