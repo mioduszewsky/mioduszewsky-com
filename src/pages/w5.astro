@@ -279,38 +279,38 @@ const services = [
         <span class="ln"><span class="ln-in">What working together</span></span>
         <span class="ln"><span class="ln-in"><em>actually</em> looks like.</span></span>
       </h2>
-      <ol class="steps">
-        <li class="step rv">
-          <span class="idx">01</span>
+      <div class="proc-flow">
+        <article class="pstep rv">
+          <span class="pn">01</span>
           <h3>We talk about the business</h3>
           <p>What exists today, what needs to change and what the project should achieve.</p>
-        </li>
-        <li class="step rv">
-          <span class="idx">02</span>
+        </article>
+        <article class="pstep rv">
+          <span class="pn">02</span>
           <h3>I define the scope</h3>
           <p>A clear proposal: what will be built, what is not included and how it is priced.</p>
-        </li>
-        <li class="step rv">
-          <span class="idx">03</span>
-          <h3>You book the build</h3>
+        </article>
+        <article class="pstep rv">
+          <span class="pn">03</span>
+          <h3>You <span class="hl-y">book the build</span></h3>
           <p>Work is paid upfront: in full for small projects, stage by stage for larger ones.</p>
-        </li>
-        <li class="step rv">
-          <span class="idx">04</span>
-          <h3>I build</h3>
+        </article>
+        <article class="pstep rv">
+          <span class="pn">04</span>
+          <h3>I build it</h3>
           <p>The same person who discussed the business writes, designs and implements.</p>
-        </li>
-        <li class="step rv">
-          <span class="idx">05</span>
+        </article>
+        <article class="pstep rv">
+          <span class="pn">05</span>
           <h3>We launch</h3>
           <p>The page or system goes live and starts receiving real use.</p>
-        </li>
-        <li class="step rv">
-          <span class="idx">06</span>
-          <h3>We iterate when it makes sense</h3>
+        </article>
+        <article class="pstep rv">
+          <span class="pn">06</span>
+          <h3>We iterate when it helps</h3>
           <p>Ongoing development for selected projects. Build + Iterate from $1,500 per month.</p>
-        </li>
-      </ol>
+        </article>
+      </div>
     </section>
 
     <!-- FAQ (+ „czego nie obiecuję" z draftu) -->
@@ -526,6 +526,14 @@ const services = [
         row.addEventListener('pointermove', (e) => place(e as PointerEvent));
         row.addEventListener('pointerleave', hidePeek);
       });
+      /* twardy bezpiecznik: gdy kursor nie jest nad żadnym wierszem z miniaturą,
+         chowaj (pointerleave bywa gubiony przy szybkim ruchu / wyjściu poza wiersz) */
+      document.addEventListener('pointermove', (e) => {
+        if (peekOn && !(e.target as HTMLElement).closest('.mrow[data-thumb]')) hidePeek();
+      });
+      /* kursor opuszcza całe okno */
+      document.addEventListener('pointerleave', () => { if (peekOn) hidePeek(); });
+      window.addEventListener('blur', () => { if (peekOn) hidePeek(); });
       /* scroll przesuwa wiersz spod kursora bez pointerleave — chowaj od razu,
          inaczej miniatura zostaje przyklejona do ekranu */
       addEventListener('scroll', () => { if (peekOn) hidePeek(); }, { passive: true });
@@ -832,15 +840,25 @@ const services = [
 
   /* PROCES — kompaktowe wiersze: numer | krok | opis (jedna linia wysokości) */
   .proc { padding: 8vh 3vw; }
-  .steps { list-style: none; padding: 0; margin: 4vh 0 0; }
-  .step {
-    display: grid; grid-template-columns: 60px 1fr 1.4fr; gap: 3vw; align-items: baseline;
-    padding: 18px 6px; border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  /* Proces = siatka z gigantycznymi „ghost" numerami (celowo NIE lista jak serv/faq) */
+  .proc-flow {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    column-gap: clamp(1.5rem, 3vw, 3.5rem); row-gap: clamp(2.5rem, 5vw, 4.5rem);
+    margin-top: 6vh;
   }
-  .step:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
-  .step .idx { font-size: 12px; letter-spacing: 0.24em; color: var(--dim); }
-  .step h3 { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.1rem, 1.7vw, 1.45rem); letter-spacing: -0.015em; margin: 0; }
-  .step p { font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 58ch; margin: 0; }
+  .pstep { position: relative; }
+  .pn {
+    display: block; font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 600;
+    font-size: clamp(3.4rem, 6vw, 6rem); line-height: 0.86; letter-spacing: -0.04em;
+    color: transparent; -webkit-text-stroke: 1.4px color-mix(in srgb, var(--ink) 32%, transparent);
+    margin-bottom: 0.7rem; transition: color 0.4s, -webkit-text-stroke-color 0.4s;
+  }
+  .pstep:hover .pn { color: var(--blue); -webkit-text-stroke-color: var(--blue); }
+  .pstep h3 { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.15rem, 1.8vw, 1.5rem); letter-spacing: -0.015em; margin: 0 0 0.5rem; }
+  .pstep p { font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 36ch; margin: 0; }
+  .hl-y { background: linear-gradient(100deg, transparent 2%, color-mix(in srgb, var(--brand) 80%, transparent) 6% 94%, transparent 98%); padding: 0 0.08em; }
+  @media (max-width: 900px) { .proc-flow { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .proc-flow { grid-template-columns: 1fr; row-gap: 2.5rem; } .pn { font-size: clamp(3rem, 18vw, 4.2rem); } }
 
   /* FAQ */
   .faq { padding: 6vh 3vw 14vh; }
