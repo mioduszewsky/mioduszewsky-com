@@ -56,17 +56,26 @@ echo "==> Log retention 14 dni"
 aws logs put-retention-policy --log-group-name "/aws/lambda/${FN}" \
   --retention-in-days 14 --region "$REGION" 2>/dev/null || true
 
-echo "==> Function URL + CORS"
-if ! aws lambda get-function-url-config --function-name "$FN" --region "$REGION" >/dev/null 2>&1; then
-  aws lambda create-function-url-config --function-name "$FN" --region "$REGION" \
-    --auth-type NONE \
-    --cors 'AllowOrigins=["https://mioduszewsky.com","https://www.mioduszewsky.com","https://mioduszewsky-com.vercel.app","http://localhost:4321"],AllowMethods=["POST"],AllowHeaders=["content-type"],MaxAge=86400' >/dev/null
-  aws lambda add-permission --function-name "$FN" --region "$REGION" \
-    --statement-id FunctionURLAllowPublicAccess --action lambda:InvokeFunctionUrl \
-    --principal '*' --function-url-auth-type NONE >/dev/null
+# UWAGA: Lambda Function URL z auth=NONE NIE działa publicznie na tym koncie
+# (uporczywe 403 AccessDeniedException mimo poprawnej resource-policy; konto NIE
+# jest w organizacji, więc to nie SCP/RCP — jakiś guardrail Function URL).
+# Dlatego publiczny endpoint = API Gateway HTTP API (API GW woła Lambdę własnym
+# uprawnieniem, nie polega na public-invoke). CORS obsługuje sam handler.
+echo "==> API Gateway HTTP API"
+API_ID=$(aws apigatewayv2 get-apis --region "$REGION" \
+  --query "Items[?Name=='mioduszewsky-contact'].ApiId | [0]" --output text 2>/dev/null)
+if [ -z "$API_ID" ] || [ "$API_ID" = "None" ]; then
+  API_ID=$(aws apigatewayv2 create-api --name mioduszewsky-contact --protocol-type HTTP \
+    --target "arn:aws:lambda:${REGION}:${ACCOUNT}:function:${FN}" --region "$REGION" \
+    --tags Project=mioduszewsky,Env=prod,Owner=Kacper --query ApiId --output text)
 fi
+# Uprawnienie dla API GW (quick-create bywa że go nie dokłada)
+aws lambda add-permission --function-name "$FN" --region "$REGION" \
+  --statement-id apigw-invoke --action lambda:InvokeFunction \
+  --principal apigateway.amazonaws.com \
+  --source-arn "arn:aws:execute-api:${REGION}:${ACCOUNT}:${API_ID}/*/*" >/dev/null 2>&1 || true
 
-URL=$(aws lambda get-function-url-config --function-name "$FN" --region "$REGION" --query FunctionUrl --output text)
+URL="https://${API_ID}.execute-api.${REGION}.amazonaws.com/"
 echo ""
-echo "==> GOTOWE. Function URL:"
+echo "==> GOTOWE. Endpoint (API Gateway):"
 echo "$URL"
