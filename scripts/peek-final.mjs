@@ -1,0 +1,21 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const p = await b.newPage({ viewport:{width:1440,height:900} });
+await p.goto('http://localhost:4337/', { waitUntil:'networkidle' });
+await p.waitForTimeout(1000);
+const op = () => p.evaluate(()=>{const el=document.querySelector('.row-peek'); return el?Math.round(+getComputedStyle(el).opacity*100)/100:-1;});
+const row = p.locator('.mrow[data-thumb]').first();
+await row.hover(); await p.waitForTimeout(500);
+console.log('1) hover wiersza            ->', await op(), '(cel ~1)');
+await p.mouse.wheel(0, 700); await p.waitForTimeout(700);
+console.log('2) scroll 700 bez ruchu     ->', await op(), '(cel 0 — wiersz uciekł spod kursora)');
+await row.hover(); await p.waitForTimeout(500);
+console.log('3) ponowny hover            ->', await op(), '(cel ~1)');
+await p.mouse.move(60, 60); await p.waitForTimeout(500);
+console.log('4) ruch na pusty obszar     ->', await op(), '(cel 0)');
+// mały scroll gdy kursor NADAL nad wierszem — powinno zostać widoczne
+await row.hover(); await p.waitForTimeout(400);
+await p.mouse.wheel(0, 30); await p.waitForTimeout(500);
+const stillOver = await p.evaluate(()=>{const r=document.querySelector('.mrow[data-thumb]').getBoundingClientRect(); return true;});
+console.log('5) mikro-scroll (kursor moze byc nadal nad wierszem) ->', await op());
+await b.close();
