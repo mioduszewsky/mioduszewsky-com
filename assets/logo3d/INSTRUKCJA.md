@@ -139,7 +139,50 @@ Twarde lekcje wariantu futrzanego:
 - Przyjemny plusz = fala (`kink='WAVE'`, mała amplituda), NIE `CURL` (wychodzi
   karakuł/popcorn) i NIE krótki prosty włos (wychodzi proszek/pleśń).
 - Biel = jasny kolor + domieszka Diffuse do Hair BSDF + więcej bounces
-  (max 24 / transmission 16) + mocne ciepłe lampy; bez tego futro szarzeje.
+  (max 24 / transmission 16) + mocne ŚWIATŁO KIERUNKOWE. **Ambient (`world`) NIE
+  liczy się jako „mocne lampy" — patrz sekcja niżej, to była kosztowna pomyłka.**
+
+### Dlaczego futro czytało się jak filc — korekta 17.07.2026
+
+Pierwsza wersja (LIVE 16-17.07) miała fakturę zlaną w filc. Diagnoza: **nie
+rozdzielczość i nie kompresja — oświetlenie.**
+
+**Reguła, o którą tu chodzi:** oko czyta futro wyłącznie przez **cień rzucany
+między włosami**. Zatem:
+
+- **Ambient (`world` Background Strength) niszczy fakturę.** Świeci ze wszystkich
+  stron naraz, więc zasypuje każdy cień między włosami. Było `0.55` → jest `0.12`.
+  To był główny sprawca. Jeśli futro szarzeje, **NIGDY nie podnoś tego z powrotem.**
+- **Światło kierunkowe (`key`, `rim`) jest sojusznikiem, nie wrogiem.** Rozjaśnia
+  futro i JEDNOCZEŚNIE rzeźbi cień. Dziś key = `1150`, czyli WYŻEJ niż pierwotne
+  `820` — i mimo to faktura jest, bo ambient jest ścięty.
+- **Chcesz bielej bez utraty faktury? Podnoś ALBEDO, nie ambient.** Albedo
+  (`WHITE`, jasność skóry, `root To Min`) podnosi ogólny poziom, zostawiając cień
+  relatywnie ciemnym → kontrast lokalny zostaje. Ambient go kasuje.
+- **Mnożniki koloru to pułapka.** `root To Min` (nasada) i jasność skóry mnożą
+  kolor CAŁEGO pasma, a przy gęstym futrze widać głównie środek włosa, nie
+  końcówkę. Historia iteracji: `root` 0.45 → futro szare (odrzucone), 0.62 → wciąż
+  szare (odrzucone), **0.82 = OK**. Skóra: `0.55 × WHITE` (dobrane pod stary
+  ambient) szarzyła futro od spodu przez prześwity → `0.88 × WHITE`.
+- **Denoise rozmazuje włos.** `use_denoising = False` + `samples 128 → 256`.
+  To OIDN robił miękką poświatę wokół liter. Koszt: klatka 5 min zamiast ~4,
+  finał ~15 h zamiast ~12.
+- **Kompresja dobija resztę.** Futro to szum wysokiej częstotliwości i ginie w VP9
+  pierwszy: `crf 34 → 28`, HEVC `q:v 58 → 45`, `alpha_quality 0.7 → 0.9`.
+  Waga stopki rośnie ~3,6 → ~8 MB; nieistotne, bo stopka jest pod foldem
+  (`preload="metadata"` + poster WebP).
+- **NIE kasuj `frames_dal/` automatycznie.** Poprzednio skrypt robił `rm -rf` na
+  końcu, przez co korekta samej kompresji wymagała pełnego re-renderu. Klatki
+  kasuj RĘCZNIE po akceptacji.
+- Ocena stillki **musi iść na czarnym tle** (stopka `.finale` ma `background:
+  #000000`) — na białym miękki obrys wygląda znacznie lepiej, niż jest naprawdę:
+  ```bash
+  ffmpeg -y -f lavfi -i color=c=black:s=2400x700 -i still_fur_0001.png \
+    -filter_complex "[0][1]overlay=(W-w)/2:(H-h)/2" -frames:v 1 black.png
+  ```
+- Czarne łaty leżące na krawędzi liter zlewają się z czarnym tłem stopki i lekko
+  wygryzają sylwetkę. **Świadomie zaakceptowane przez Kacpra 17.07** — nie
+  „naprawiać" tego bez polecenia.
 - Czytelność liter: rura odchudzona globalnie (R 0.165 + futro 0.13 ≈ waga balona
   0.30). Kacper wymaga JEDNOLITEJ grubości liter — bez per-literowych ścienień
   poza `s` (rscale 0.92, poniżej progu percepcji, inaczej pasma S się zlewają).

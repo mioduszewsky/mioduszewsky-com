@@ -80,3 +80,16 @@ Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:30:33)
 02:07.814  render           | Fra: 1 | Remaining: 03:27.12 | Mem: 3459M | Sample 96/256
 02:29.408  render           | Fra: 1 | Remaining: 03:07.54 | Mem: 3459M | Sample 112/256
 02:52.244  render           | Fra: 1 | Remaining: 02:48.70 | Mem: 3459M | Sample 128/256
+03:13.865  render           | Fra: 1 | Remaining: 02:28.03 | Mem: 3459M | Sample 144/256
+03:35.514  render           | Fra: 1 | Remaining: 02:07.18 | Mem: 3459M | Sample 160/256
+03:57.321  render           | Fra: 1 | Remaining: 01:46.26 | Mem: 3459M | Sample 176/256
+04:19.371  render           | Fra: 1 | Remaining: 01:25.27 | Mem: 3459M | Sample 192/256
+04:41.080  render           | Fra: 1 | Remaining: 01:04.04 | Mem: 3459M | Sample 208/256
+05:02.974  render           | Fra: 1 | Remaining: 00:42.77 | Mem: 3459M | Sample 224/256
+05:25.944  render           | Fra: 1 | Remaining: 00:21.49 | Mem: 3459M | Sample 240/256
+05:51.009  render           | Fra: 1 | Mem: 3459M | Sample 256/256
+05:51.009  render           | Fra: 1 | Mem: 3459M | Finished
+05:51.123  render           | Saved: '/Users/kacpermioduszewski/mioduszewsky-com/assets/logo3d/still_fur_v4_0001.png'
+05:51.123  render           | Time: 05:50.54 (Saving: 00:00.05)
+
+Blender quit
