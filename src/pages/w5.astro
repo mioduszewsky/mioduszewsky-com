@@ -416,6 +416,7 @@ const services = [
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add((t) => lenis.raf(t * 1000));
       gsap.ticker.lagSmoothing(0);
+      (window as any).__lenis = lenis;
     }
 
     /* Kurtyna wejściowa + intro hero + „psiknięcie" skreślenia */
@@ -496,22 +497,18 @@ const services = [
       });
     }
 
-    /* Nav chowa się przy scrollu w dół — nic nie nachodzi na ekrany projektów.
-       Dodatkowo: wymuś ukrycie gdy odsłania się finał (żeby żółte logo i „Book a
-       call" z nawigacji nie śmieciły na czystej ciemnej scenie). */
+    /* Nav (żółte logo + „Book a call") jest WIDOCZNY cały czas.
+       Chowa się TYLKO gdy odsłania się finał dalmatyńczyka (żeby nie śmiecił na
+       czystej ciemnej scenie). Poza finałem — zawsze na wierzchu. */
     const navEl = document.querySelector<HTMLElement>('.nav')!;
     const footForNav = document.querySelector<HTMLElement>('.foot');
-    let lastY = 0;
-    addEventListener('scroll', () => {
-      const y = scrollY;
-      const d = y - lastY;
-      const inFinale = !!footForNav && footForNav.getBoundingClientRect().bottom < innerHeight * 0.55;
-      if (inFinale) { navEl.classList.add('nav-hide'); lastY = y; return; }
-      if (Math.abs(d) > 4 || y <= 180) {
-        navEl.classList.toggle('nav-hide', d > 0 && y > 180);
-        lastY = y;
-      }
-    }, { passive: true });
+    const updateNav = () => {
+      const inFinale = !!footForNav && footForNav.getBoundingClientRect().bottom < innerHeight * 0.5;
+      navEl.classList.toggle('nav-hide', inFinale);
+    };
+    addEventListener('scroll', updateNav, { passive: true });
+    addEventListener('resize', updateNav);
+    updateNav();
 
     /* Hover-reveal: miniatura realizacji płynie przy kursorze nad wierszem usługi */
     if (!reduced && matchMedia('(pointer: fine)').matches) {
@@ -564,10 +561,12 @@ const services = [
         else hidePeek();
       };
       document.addEventListener('pointermove', (e) => { lastX = e.clientX; lastY = e.clientY; evaluate(); });
-      (window as any).__lenis?.on?.('scroll', evaluate);
-      addEventListener('wheel', evaluate, { passive: true });
-      addEventListener('scroll', evaluate, { passive: true });
-      addEventListener('touchmove', evaluate, { passive: true });
+      /* Bulletproof: dopóki miniatura jest widoczna, co KLATKĘ sprawdzaj co realnie
+         jest pod kursorem (działa dla każdego scrolla — Lenis, natywny, momentum).
+         Gdy wiersz zjedzie spod nieruchomego kursora przy scrollu → natychmiast chowa.
+         Pokazujemy tylko na realny ruch myszy (pointermove), więc scroll pod
+         nieruchomym kursorem NIE „przyklei" miniatury. */
+      gsap.ticker.add(() => { if (peekOn) evaluate(); });
       addEventListener('blur', hidePeek);
       document.addEventListener('pointerleave', hidePeek);
       document.addEventListener('visibilitychange', () => { if (document.hidden) hidePeek(); });

@@ -21,7 +21,7 @@ SPOT_SCALE = 1.4          # voronoi: komórki na jednostkę (mniejsze = większe
 SPOT_EDGE = (0.30, 0.42)  # smoothstep progu łaty (miękka krawędź jak futro)
 SPOT_ON = 0.22            # R kanału koloru komórki > SPOT_ON => komórka ma łatę (~55%)
 SPOT_DISTORT = 0.16       # zniekształcenie łat noise'em (organiczne brzegi)
-WHITE = (0.98, 0.955, 0.90, 1.0)   # ciepła biel sierści
+WHITE = (1.0, 0.99, 0.96, 1.0)     # ciepła biel sierści
 BLACK = (0.015, 0.014, 0.016, 1.0)
 
 # ── Litery: monoline szkielety, x-height=1, (x, y) ─────────────────
@@ -155,8 +155,10 @@ sb = snt.nodes.get('Principled BSDF')
 sb.inputs['Roughness'].default_value = 0.65
 smask = build_spot_mask(snt)
 smix = snt.nodes.new('ShaderNodeMix'); smix.data_type = 'RGBA'; smix.location = (-200, 300)
-# skóra ciemniejsza od sierści, żeby prześwity nie świeciły
-smix.inputs['A'].default_value = tuple(c * 0.55 for c in WHITE[:3]) + (1.0,)
+# Skóra tylko odrobinę ciemniejsza od sierści. 0.55 było dobrane przy world=0.55,
+# gdzie ambient ją rozjaśniał; po ścięciu ambientu ciemna skóra przebija przez
+# prześwity i szarzy futro od spodu.
+smix.inputs['A'].default_value = tuple(c * 0.88 for c in WHITE[:3]) + (1.0,)
 smix.inputs['B'].default_value = BLACK
 snt.links.new(smask, smix.inputs['Factor'])
 snt.links.new(smix.outputs['Result'], sb.inputs['Base Color'])
@@ -181,7 +183,10 @@ fnt.links.new(fmask, fmix.inputs['Factor'])
 hi = fnt.nodes.new('ShaderNodeHairInfo'); hi.location = (-560, -260)
 root = fnt.nodes.new('ShaderNodeMapRange'); root.location = (-380, -260)
 # Intercept: 0 = nasada, 1 = końcówka. Ciemna nasada daje głębię — bez niej futro jest płaskie.
-root.inputs['To Min'].default_value = 0.45
+# Ale to mnożnik koloru: przy gęstym futrze widać głównie środek pasma, więc za niska
+# wartość szarzy CAŁOŚĆ. Historia: 0.45 = futro szare, 0.62 = wciąż za szare (odrzucone
+# przez Kacpra 17.07). Głębię ma robić CIEŃ RZUCANY między włosami, nie mnożnik koloru.
+root.inputs['To Min'].default_value = 0.82
 root.inputs['To Max'].default_value = 1.05
 fnt.links.new(hi.outputs['Intercept'], root.inputs['Value'])
 rnd = fnt.nodes.new('ShaderNodeMapRange'); rnd.location = (-380, -520)
@@ -373,10 +378,12 @@ def area_light(name, loc, rot, sx, sy, energy, color=(1, 1, 1)):
     lo.rotation_euler = rot
     scene.collection.objects.link(lo)
 
-area_light('key', (0, 2.4, 4.2), (math.radians(-26), 0, 0), W * 1.3, 2.2, 520, (1.0, 0.97, 0.92))
-area_light('fill', (0, -2.6, 2.8), (math.radians(33), 0, 0), W * 1.0, 2.0, 90, (0.9, 0.93, 1.0))
-area_light('rim_l', (-W * 0.7, 0.5, 1.2), (0, math.radians(-58), 0), 1.2, 3.2, 90)
-area_light('rim_r', (W * 0.7, 0.5, 1.2), (0, math.radians(58), 0), 1.2, 3.2, 90)
+# Key WYŻEJ niż w wersji sprzed korekty (820): kierunkowe światło rozjaśnia futro
+# i JEDNOCZEŚNIE rzuca cień między włosy. To ambient (world) je zasypywał, nie key.
+area_light('key', (0, 2.4, 4.2), (math.radians(-26), 0, 0), W * 1.3, 2.2, 1150, (1.0, 0.98, 0.95))
+area_light('fill', (0, -2.6, 2.8), (math.radians(33), 0, 0), W * 1.0, 2.0, 140, (0.9, 0.93, 1.0))
+area_light('rim_l', (-W * 0.7, 0.5, 1.2), (0, math.radians(-58), 0), 1.2, 3.2, 170)
+area_light('rim_r', (W * 0.7, 0.5, 1.2), (0, math.radians(58), 0), 1.2, 3.2, 170)
 
 world = bpy.data.worlds.new('world')
 scene.world = world
