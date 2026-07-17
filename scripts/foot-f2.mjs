@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const p = await b.newPage({ viewport:{width:1440,height:900} });
+await p.goto('http://localhost:4346/', { waitUntil:'domcontentloaded' });
+await p.waitForTimeout(5500);
+await p.evaluate(()=>{ const f=document.querySelector('.foot'); window.scrollTo(0, f.offsetTop); });
+await p.waitForTimeout(1300);
+await p.screenshot({ path:'/tmp/foot-f2.png' });
+const fh = await p.evaluate(()=>Math.round(document.querySelector('.foot').getBoundingClientRect().height));
+console.log('foot height:', fh, '(viewport 900)');
+await b.close();
