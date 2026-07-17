@@ -378,17 +378,21 @@ const services = [
         <a href="/privacy" style="color:inherit">Privacy</a>
       </div>
     </footer>
-
-    <!-- FINAŁ: futrzany wordmark skaluje się i wypełnia ekran na czerni (echo intra) -->
-    <section class="finale" aria-hidden="true">
-      <div class="finale-dal">
-        <video autoplay loop muted playsinline preload="metadata" poster="/logo3d/logo-dalmatian-poster.webp">
-          <source src="/logo3d/logo-dalmatian.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-dalmatian.webm" type="video/webm" />
-        </video>
-      </div>
-    </section>
   </main>
+
+  <!-- STOPKA-FINAŁ (curtain reveal): treść unosi się i naturalnie odsłania ją u dołu -->
+  <footer class="finale" aria-label="Book a call">
+    <div class="finale-dal" aria-hidden="true">
+      <video autoplay loop muted playsinline preload="metadata" poster="/logo3d/logo-dalmatian-poster.webp">
+        <source src="/logo3d/logo-dalmatian.mp4" type="video/mp4;codecs=hvc1" />
+        <source src="/logo3d/logo-dalmatian.webm" type="video/webm" />
+      </video>
+    </div>
+    <div class="finale-cta-wrap">
+      <a class="finale-cta mag" href="/contact"><span class="btn-in">Book a 15-min call</span><i aria-hidden="true">→</i></a>
+      <a class="finale-alt" href="mailto:kacper@mioduszewsky.com">or just write to me</a>
+    </div>
+  </footer>
 
   <script>
     import Lenis from 'lenis';
@@ -620,25 +624,21 @@ const services = [
       });
     }
 
-    /* Sticky CTA: widoczny po zjechaniu z hero, chowany przy stopce i finale */
-    const sticky = document.querySelector('.sticky-cta');
-    const heroEl = document.querySelector('.hero');
-    if (sticky && heroEl) {
-      let pastHero = false;
-      const nearEnd = new Set<Element>();
-      const sync = () => sticky.classList.toggle('show', pastHero && nearEnd.size === 0);
-      new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; sync(); }, { threshold: 0.1 }).observe(heroEl);
-      document.querySelectorAll('.foot, .finale').forEach((el) => {
-        new IntersectionObserver(([e]) => { e.isIntersecting ? nearEnd.add(el) : nearEnd.delete(el); sync(); }, { threshold: 0.05 }).observe(el);
-      });
-    }
-    /* Finał: futrzany wordmark skaluje się w górę i wypełnia ekran przy zjeździe */
-    const finaleDal = document.querySelector<HTMLElement>('.finale-dal');
-    if (finaleDal && !reduced) {
-      gsap.fromTo(finaleDal, { scale: 0.72, opacity: 0.45 }, {
-        scale: 1, opacity: 1, ease: 'none',
-        scrollTrigger: { trigger: '.finale', start: 'top 92%', end: 'center 65%', scrub: 0.6 },
-      });
+    /* Sticky CTA: widoczny po zjechaniu z hero, chowany gdy jasna stopka blisko dołu.
+       Finał (.finale) jest fixed pod treścią — go nie obserwujemy. */
+    const sticky = document.querySelector<HTMLElement>('.sticky-cta');
+    const heroEl = document.querySelector<HTMLElement>('.hero');
+    const footEl = document.querySelector<HTMLElement>('.foot');
+    if (sticky && heroEl && footEl) {
+      const updateSticky = () => {
+        const heroOut = heroEl.getBoundingClientRect().bottom < 0;
+        const footNear = footEl.getBoundingClientRect().top < innerHeight * 0.9;
+        sticky.classList.toggle('show', heroOut && !footNear);
+      };
+      (window as any).__lenis?.on?.('scroll', updateSticky);
+      addEventListener('scroll', updateSticky, { passive: true });
+      addEventListener('resize', updateSticky);
+      updateSticky();
     }
   </script>
 </VariantLayout>
@@ -940,18 +940,40 @@ const services = [
 
   .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 5vh; padding-top: 1.2rem; border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
 
-  /* FINAŁ — futrzany wordmark wypełnia ekran na czerni; skaluje się na scroll (echo intra) */
-  .finale { position: relative; min-height: 100vh; background: var(--ink); display: grid; place-items: center; overflow: clip; padding: 6vh 3vw; }
+  /* FINAŁ jako CURTAIN REVEAL — przypięty do dołu okna, odsłaniany gdy .w5 się unosi.
+     Naturalne, przyjemne zakończenie z głównym CTA „Book a call". */
+  .finale {
+    /* finał jest poza .w5 — własne zmienne palety */
+    --ink: #000000; --ivory: #f8f9f2; --brand: #ffcc33; --dim: #8b8677; --blue: #0522ff;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 0;
+    height: 100vh; background: #000000; color: var(--ivory);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: clamp(3vh, 5vh, 6vh); padding: 8vh 5vw; overflow: clip;
+  }
   .finale::before {
     content: ""; position: absolute; top: 50%; left: 50%; translate: -50% -50%;
     width: min(1300px, 98vw); aspect-ratio: 2 / 1;
-    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--ivory) 12%, transparent) 0%, transparent 62%);
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--ivory) 13%, transparent) 0%, transparent 62%);
   }
-  .finale-dal { position: relative; z-index: 1; width: min(94vw, 1500px); will-change: transform; }
-  .finale-dal video { width: 100%; aspect-ratio: 2048 / 506; height: auto; display: block; filter: drop-shadow(0 34px 70px rgba(0, 0, 0, 0.7)); }
+  .finale-dal { position: relative; z-index: 1; width: min(88vw, 1300px); }
+  .finale-dal video { width: 100%; aspect-ratio: 2048 / 506; height: auto; display: block; filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.7)); }
+  .finale-cta-wrap { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+  .finale-cta {
+    display: inline-flex; align-items: center; gap: 14px; text-decoration: none;
+    background: var(--ivory); color: var(--ink); border-radius: 999px;
+    padding: 20px 42px; font-size: clamp(15px, 1.4vw, 18px); letter-spacing: 0.02em;
+    transition: background 0.3s, color 0.3s;
+  }
+  .finale-cta:hover { background: var(--brand); }
+  .finale-cta i { font-style: normal; transition: translate 0.3s; }
+  .finale-cta:hover i { translate: 5px 0; }
+  .finale-alt { color: color-mix(in srgb, var(--ivory) 55%, transparent); text-decoration: none; font-size: 13px; letter-spacing: 0.04em; border-bottom: 1px solid color-mix(in srgb, var(--ivory) 30%, transparent); padding-bottom: 2px; }
+  .finale-alt:hover { color: var(--ivory); }
+  @media (max-width: 560px) { .finale-cta { padding: 17px 32px; } }
 
   /* ── Warstwa WANDAL: spray, dopiski, splaty ─────────────────── */
-  .w5 { --spray: #c70404; }
+  /* curtain reveal: treść (.w5) unosi się i odsłania fixed .finale pod spodem */
+  .w5 { --spray: #c70404; position: relative; z-index: 1; margin-bottom: 100vh; }
   .tag {
     font-family: 'Shantell Sans Variable', cursive;
     font-weight: 560;
