@@ -1,0 +1,12 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const p = await b.newPage({ viewport:{width:1440,height:900}, deviceScaleFactor:2 });
+await p.goto('http://localhost:4350/', { waitUntil:'domcontentloaded' });
+await p.waitForTimeout(5500);
+await p.evaluate(()=>document.querySelector('.spin-badge').scrollIntoView({block:'center'}));
+await p.waitForTimeout(800);
+await p.evaluate(()=>{ document.querySelector('.spin-badge svg').style.animation='none'; });
+await p.waitForTimeout(200);
+const el = await p.$('.spin-badge');
+await el.screenshot({ path:'/tmp/badge3.png' });
+await b.close(); console.log('ok');
