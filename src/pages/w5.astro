@@ -606,52 +606,73 @@ const services = [
       document.querySelector('.cur')?.remove();
     }
 
-    /* Spray-paint: psiknięcie aerozolem po kliknięciu — TYLKO desktop (pointer: fine).
-       Na dotyku wyłączone (brak kursora, nie ma czego sprayować). Kolory cyklują po
-       palecie marki (żółty → niebieski → czerwony), żeby czytało się jak spray, nie krew. */
+    /* Spray-paint: TRZYMAJ I PRZECIĄGNIJ = malowanie po stronie (jak puszka).
+       TYLKO desktop (pointer: fine) — na dotyku wyłączone. Jeden kolor na pociągnięcie
+       (cyklują po palecie marki), ślad z drobnych psiknięć aerozolu. */
     if (!reduced && matchMedia('(pointer: fine)').matches) {
       const NS = 'http://www.w3.org/2000/svg';
       const COLORS = ['#ffcc33', '#0522ff', '#c70404'];
+      const MAX = 70;
       let ci = Math.floor(Math.random() * COLORS.length);
+      let spraying = false, strokeColor = '', lastX = 0, lastY = 0;
       const drop = (cx: number, cy: number, r: number, fill: string) => {
         const c = document.createElementNS(NS, 'circle');
         c.setAttribute('cx', String(cx)); c.setAttribute('cy', String(cy));
         c.setAttribute('r', String(r)); c.setAttribute('fill', fill);
         return c;
       };
-      addEventListener('pointerdown', (e) => {
-        const t = e.target as HTMLElement;
-        if (t.closest('a, button, input, textarea, label, .phone-screen, .variant-switch')) return;
-        if (document.querySelectorAll('.splat').length > 8) return;
-        const color = COLORS[ci++ % COLORS.length];
+      const puff = (x: number, y: number, color: string, big: boolean) => {
+        const splats = document.querySelectorAll('.splat');
+        if (splats.length >= MAX) splats[0].remove();
+        const size = big ? 150 : 92;
+        const nMist = big ? 24 : 12, nCore = big ? 10 : 5;
+        const spread = big ? 64 : 34, coreSpread = big ? 24 : 13;
         const svg = document.createElementNS(NS, 'svg');
         svg.setAttribute('viewBox', '0 0 160 160');
         svg.classList.add('splat');
-        // overspray: dużo drobnych kropelek szeroko, przygaszone
         const mist = document.createElementNS(NS, 'g');
-        mist.setAttribute('filter', 'url(#sprayMist)');
-        mist.setAttribute('opacity', '0.5');
-        for (let i = 0; i < 24; i++) {
-          const a = Math.random() * Math.PI * 2;
-          const d = 8 + Math.random() * 64;
+        mist.setAttribute('filter', 'url(#sprayMist)'); mist.setAttribute('opacity', '0.5');
+        for (let i = 0; i < nMist; i++) {
+          const a = Math.random() * Math.PI * 2, d = 8 + Math.random() * spread;
           mist.appendChild(drop(80 + Math.cos(a) * d, 80 + Math.sin(a) * d, 0.8 + Math.random() * 2.3, color));
         }
-        // rdzeń: gęstsze średnie kropki blisko środka
         const core = document.createElementNS(NS, 'g');
         core.setAttribute('filter', 'url(#sprayF)');
-        for (let i = 0; i < 10; i++) {
-          const a = Math.random() * Math.PI * 2;
-          const d = i === 0 ? 0 : 5 + Math.random() * 24;
-          core.appendChild(drop(80 + Math.cos(a) * d, 80 + Math.sin(a) * d, i === 0 ? 8 + Math.random() * 5 : 2 + Math.random() * 5, color));
+        for (let i = 0; i < nCore; i++) {
+          const a = Math.random() * Math.PI * 2, d = i === 0 ? 0 : 5 + Math.random() * coreSpread;
+          core.appendChild(drop(80 + Math.cos(a) * d, 80 + Math.sin(a) * d, i === 0 ? (big ? 8 : 5) + Math.random() * 4 : 2 + Math.random() * 4, color));
         }
         svg.append(mist, core);
-        svg.style.left = `${e.clientX}px`;
-        svg.style.top = `${e.clientY}px`;
+        svg.style.left = `${x}px`; svg.style.top = `${y}px`;
+        svg.style.width = svg.style.height = `${size}px`;
         svg.style.rotate = `${Math.random() * 360}deg`;
         document.body.appendChild(svg);
-        gsap.fromTo(svg, { scale: 0.2, opacity: 1 }, { scale: 1, opacity: 0.92, duration: 0.26, ease: 'power4.out' });
-        gsap.to(svg, { opacity: 0, duration: 1.1, delay: 2.2, onComplete: () => svg.remove() });
+        gsap.fromTo(svg, { scale: 0.2, opacity: 1 }, { scale: 1, opacity: 0.92, duration: 0.22, ease: 'power4.out' });
+        gsap.to(svg, { opacity: 0, duration: 1.1, delay: 2.4, onComplete: () => svg.remove() });
+      };
+      const valid = (t: HTMLElement) => !t.closest('a, button, input, textarea, label, .phone-screen, .variant-switch');
+      addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 || !valid(e.target as HTMLElement)) return;
+        spraying = true;
+        strokeColor = COLORS[ci++ % COLORS.length];
+        lastX = e.clientX; lastY = e.clientY;
+        document.body.classList.add('spraying');
+        getSelection()?.removeAllRanges();
+        puff(e.clientX, e.clientY, strokeColor, true);
       });
+      addEventListener('pointermove', (e) => {
+        if (!spraying) return;
+        if (Math.hypot(e.clientX - lastX, e.clientY - lastY) < 15) return;
+        lastX = e.clientX; lastY = e.clientY;
+        getSelection()?.removeAllRanges();
+        puff(e.clientX, e.clientY, strokeColor, false);
+      });
+      /* blokuj zaznaczanie tekstu w trakcie malowania (user-select sam nie wystarcza) */
+      document.addEventListener('selectstart', (e) => { if (spraying) e.preventDefault(); });
+      const stop = () => { spraying = false; document.body.classList.remove('spraying'); };
+      addEventListener('pointerup', stop);
+      addEventListener('pointercancel', stop);
+      addEventListener('blur', stop);
     }
 
     /* Sticky CTA: widoczny po zjechaniu z hero, chowany gdy jasna stopka blisko dołu.
@@ -1150,6 +1171,8 @@ const services = [
     position: fixed; z-index: 250; width: 150px; height: 150px;
     translate: -50% -50%; pointer-events: none;
   }
+  /* podczas malowania sprayem: bez zaznaczania tekstu, kursor „celownik" */
+  :global(body.spraying) { user-select: none; -webkit-user-select: none; cursor: crosshair; }
   .row-peek {
     /* poziomy kadr = hero z desktopu 1:1, bez ściskania strony do pionu */
     position: fixed; left: 0; top: 0; z-index: 80;

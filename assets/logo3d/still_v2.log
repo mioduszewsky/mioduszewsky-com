@@ -1,0 +1,96 @@
+00:00.201  blend            | Read blend: "/Users/kacpermioduszewski/mioduszewsky-com/assets/logo3d/fur.blend"
+00:00.562  render           | Rendering single frame
+00:00.562  render           | Rendering frame 1
+00:00.562  render           | Start rendering: Scene, ViewLayer
+00:00.562  render           | Engine: Cycles
+00:01.405  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_0_m
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:30:33)
+00:01.406  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_1_i
+00:01.406  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_2_o
+00:01.406  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_1_i
+00:01.406  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_3_d
+00:01.406  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_2_o
+00:01.406  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_3_d
+00:01.406  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_4_u
+00:01.407  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_5_s
+00:01.407  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_4_u
+00:01.407  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_6_z
+00:01.407  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_5_s
+00:01.407  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_7_e
+00:01.407  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_6_z
+00:01.408  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_8_w
+00:01.408  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_7_e
+00:01.409  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_9_s
+00:01.409  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_8_w
+00:01.409  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_10_k
+00:01.409  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_11_y
+00:01.410  render           | Fra: 1 | Mem: 0M | Synchronizing object | rim_r
+00:01.410  render           | Fra: 1 | Mem: 0M | Synchronizing object | rim_l
+00:01.410  render           | Fra: 1 | Mem: 0M | Synchronizing object | fill
+00:01.410  render           | Fra: 1 | Mem: 0M | Synchronizing object | key
+00:01.410  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_11_y
+00:01.533  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_9_s
+00:01.551  render           | Fra: 1 | Mem: 0M | Synchronizing object | L_10_k
+00:01.725  render           | Fra: 1 | Mem: 0M | Initializing
+00:01.727  render           | Fra: 1 | Mem: 0M | Waiting for render to start
+00:01.727  render           | Fra: 1 | Mem: 0M | Updating Scene
+00:01.727  render           | Fra: 1 | Mem: 0M | Updating Shaders
+00:01.727  render           | Fra: 1 | Mem: 0M | Loading render kernels (may take a few minutes the first time)
+00:01.727  render           | Fra: 1 | Mem: 1M | Updating Procedurals
+00:01.727  render           | Fra: 1 | Mem: 1M | Updating Background
+00:01.727  render           | Fra: 1 | Mem: 1M | Updating Camera
+00:01.727  render           | Fra: 1 | Mem: 1M | Updating Meshes Flags
+00:01.727  render           | Fra: 1 | Mem: 1M | Updating Objects
+00:01.727  render           | Fra: 1 | Mem: 1M | Updating Objects | Copying Transformations to device
+00:01.727  render           | Fra: 1 | Mem: 1M | Updating Particle Systems
+00:01.727  render           | Fra: 1 | Mem: 1M | Updating Particle Systems | Copying Particles to device
+00:01.727  render           | Fra: 1 | Mem: 1M | Updating Meshes
+00:01.728  render           | Fra: 1 | Mem: 1M | Updating Objects | Applying Static Transformations
+00:01.753  render           | Fra: 1 | Mem: 1M | Updating Mesh | Computing attributes
+00:01.771  render           | Fra: 1 | Mem: 1M | Updating Mesh | Copying Attributes to device
+00:01.827  render           | Fra: 1 | Mem: 105M | Updating Scene BVH | Building
+00:01.828  render           | Fra: 1 | Mem: 105M | Updating Scene BVH | Building BVH
+00:01.873  render           | Fra: 1 | Mem: 1198M | Updating Scene BVH | Building BVH 0%
+00:02.124  render           | Fra: 1 | Mem: 1227M | Updating Scene BVH | Building BVH 2%
+00:02.374  render           | Fra: 1 | Mem: 1601M | Updating Scene BVH | Building BVH 24%
+00:02.624  render           | Fra: 1 | Mem: 1939M | Updating Scene BVH | Building BVH 44%
+00:02.874  render           | Fra: 1 | Mem: 2311M | Updating Scene BVH | Building BVH 66%
+00:03.124  render           | Fra: 1 | Mem: 2627M | Updating Scene BVH | Building BVH 84%
+00:03.309  render           | Fra: 1 | Mem: 2907M | Updating Scene BVH | Copying BVH to device
+00:03.309  render           | Fra: 1 | Mem: 2907M | Updating Mesh | Computing normals
+00:03.310  render           | Fra: 1 | Mem: 2907M | Updating Mesh | Copying Mesh to device
+00:03.310  render           | Fra: 1 | Mem: 2910M | Updating Mesh | Copying Curves to device
+00:03.467  render           | Fra: 1 | Mem: 3424M | Updating Objects Flags
+00:03.467  render           | Fra: 1 | Mem: 3424M | Updating Primitive Offsets
+00:03.468  render           | Fra: 1 | Mem: 3424M | Updating Images
+00:03.468  render           | Fra: 1 | Mem: 3424M | Updating Volume
+00:03.469  render           | Fra: 1 | Mem: 3424M | Updating Camera Volume
+00:03.469  render           | Fra: 1 | Mem: 3424M | Updating Lookup Tables
+00:03.469  render           | Fra: 1 | Mem: 3424M | Updating Lights
+00:03.470  render           | Fra: 1 | Mem: 3424M | Updating Lights | Computing tree
+00:03.470  render           | Fra: 1 | Mem: 3424M | Updating Integrator
+00:03.470  render           | Fra: 1 | Mem: 3425M | Updating Film
+00:03.470  render           | Fra: 1 | Mem: 3425M | Updating Lookup Tables
+00:03.470  render           | Fra: 1 | Mem: 3425M | Updating Baking
+00:03.470  render           | Fra: 1 | Mem: 3425M | Updating Device | Writing constant memory
+00:03.470  render           | Fra: 1 | Mem: 3425M | Sample 0/256
+00:04.638  render           | Fra: 1 | Remaining: 04:57.71 | Mem: 3461M | Sample 1/256
+00:34.429  render           | Fra: 1 | Remaining: 03:29.20 | Mem: 3461M | Sample 33/256
+01:07.635  render           | Fra: 1 | Remaining: 03:08.54 | Mem: 3461M | Sample 65/256
+01:23.065  render           | Fra: 1 | Remaining: 02:55.10 | Mem: 3461M | Sample 80/256
+01:40.189  render           | Fra: 1 | Remaining: 02:41.19 | Mem: 3461M | Sample 96/256
+01:59.132  render           | Fra: 1 | Remaining: 02:28.70 | Mem: 3461M | Sample 112/256
+02:17.116  render           | Fra: 1 | Remaining: 02:13.64 | Mem: 3461M | Sample 128/256
+02:34.165  render           | Fra: 1 | Remaining: 01:57.20 | Mem: 3461M | Sample 144/256
+02:52.475  render           | Fra: 1 | Remaining: 01:41.40 | Mem: 3461M | Sample 160/256
+03:12.907  render           | Fra: 1 | Remaining: 01:26.10 | Mem: 3461M | Sample 176/256
+03:32.788  render           | Fra: 1 | Remaining: 01:09.77 | Mem: 3461M | Sample 192/256
+03:53.160  render           | Fra: 1 | Remaining: 00:53.00 | Mem: 3461M | Sample 208/256
+04:14.591  render           | Fra: 1 | Remaining: 00:35.87 | Mem: 3461M | Sample 224/256
+04:38.234  render           | Fra: 1 | Remaining: 00:18.31 | Mem: 3461M | Sample 240/256
+05:00.044  render           | Fra: 1 | Mem: 3461M | Sample 256/256
+05:00.044  render           | Fra: 1 | Mem: 3461M | Finished
+05:00.187  render           | Saved: '/Users/kacpermioduszewski/mioduszewsky-com/assets/logo3d/still_fur_v2_0001.png'
+05:00.187  render           | Time: 04:59.62 (Saving: 00:00.06)
+
+Blender quit

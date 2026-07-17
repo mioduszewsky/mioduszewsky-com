@@ -73,8 +73,9 @@ JIGGLE = [(5, 0.02, 1.0), (-4, -0.02, 1.0), (3, 0.03, 1.0), (-5, 0.0, 1.0),
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
 scene.render.engine = 'CYCLES'
-scene.cycles.samples = 128
-scene.cycles.use_denoising = True
+scene.cycles.samples = 256
+# Denoise WYŁĄCZONY: OIDN uśrednia cienkie pasma i robi z futra filc (patrz INSTRUKCJA.md).
+scene.cycles.use_denoising = False
 scene.cycles.max_bounces = 24
 scene.cycles.transmission_bounces = 16
 scene.cycles.glossy_bounces = 10
@@ -179,7 +180,8 @@ fnt.links.new(fmask, fmix.inputs['Factor'])
 # głębia futra: ciemniejsza nasada, jaśniejsze końcówki + lekki random per włos
 hi = fnt.nodes.new('ShaderNodeHairInfo'); hi.location = (-560, -260)
 root = fnt.nodes.new('ShaderNodeMapRange'); root.location = (-380, -260)
-root.inputs['To Min'].default_value = 0.93
+# Intercept: 0 = nasada, 1 = końcówka. Ciemna nasada daje głębię — bez niej futro jest płaskie.
+root.inputs['To Min'].default_value = 0.45
 root.inputs['To Max'].default_value = 1.05
 fnt.links.new(hi.outputs['Intercept'], root.inputs['Value'])
 rnd = fnt.nodes.new('ShaderNodeMapRange'); rnd.location = (-380, -520)
@@ -371,17 +373,19 @@ def area_light(name, loc, rot, sx, sy, energy, color=(1, 1, 1)):
     lo.rotation_euler = rot
     scene.collection.objects.link(lo)
 
-area_light('key', (0, 2.4, 4.2), (math.radians(-26), 0, 0), W * 1.3, 2.2, 820, (1.0, 0.97, 0.92))
-area_light('fill', (0, -2.6, 2.8), (math.radians(33), 0, 0), W * 1.0, 2.0, 210, (0.9, 0.93, 1.0))
-area_light('rim_l', (-W * 0.7, 0.5, 1.2), (0, math.radians(-58), 0), 1.2, 3.2, 200)
-area_light('rim_r', (W * 0.7, 0.5, 1.2), (0, math.radians(58), 0), 1.2, 3.2, 200)
+area_light('key', (0, 2.4, 4.2), (math.radians(-26), 0, 0), W * 1.3, 2.2, 520, (1.0, 0.97, 0.92))
+area_light('fill', (0, -2.6, 2.8), (math.radians(33), 0, 0), W * 1.0, 2.0, 90, (0.9, 0.93, 1.0))
+area_light('rim_l', (-W * 0.7, 0.5, 1.2), (0, math.radians(-58), 0), 1.2, 3.2, 90)
+area_light('rim_r', (W * 0.7, 0.5, 1.2), (0, math.radians(58), 0), 1.2, 3.2, 90)
 
 world = bpy.data.worlds.new('world')
 scene.world = world
 world.use_nodes = True
 bg = world.node_tree.nodes['Background']
 bg.inputs['Color'].default_value = (0.96, 0.93, 0.88, 1.0)
-bg.inputs['Strength'].default_value = 0.55
+# Ambient wypełnia cień MIĘDZY włosami — to on zabijał fakturę. Biel futra trzymają
+# bounces (24/16), nie world. Jeśli futro szarzeje: podnieś WHITE albo key, NIE to.
+bg.inputs['Strength'].default_value = 0.12
 
 # ── Kamera ─────────────────────────────────────────────────────────
 pad_x, pad_y = 1.18, 1.55   # ciut więcej luzu niż balon — futro wystaje poza bryłę
