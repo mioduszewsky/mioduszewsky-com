@@ -970,20 +970,26 @@ const services = [
   .finale {
     /* finał jest poza .w5 — własne zmienne palety I czcionka (inaczej serif z przeglądarki) */
     --ink: #000000; --ivory: #f8f9f2; --brand: #ffcc33; --dim: #8b8677; --blue: #0522ff;
+    --dal-w: min(80vw, 1100px);            /* szerokość wordmarku */
     font-family: 'GeneralSansV', sans-serif;
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 0;
     height: 100vh; background: #000000; color: var(--ivory);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: clamp(2.5rem, 5vh, 4rem); padding: 10vh 5vw; overflow: clip;
+    overflow: clip;
   }
   .finale::before {
     content: ""; position: absolute; top: 50%; left: 50%; translate: -50% -50%;
     width: min(1200px, 96vw); aspect-ratio: 2.2 / 1;
     background: radial-gradient(ellipse at center, color-mix(in srgb, var(--ivory) 12%, transparent) 0%, transparent 60%);
   }
-  .finale-dal { position: relative; z-index: 1; width: min(78vw, 1080px); display: flex; justify-content: center; }
+  /* Dalmatyńczyk DOKŁADNIE na środku ekranu (pion + poziom) */
+  .finale-dal { position: absolute; top: 50%; left: 50%; translate: -50% -50%; z-index: 1; width: var(--dal-w); }
   .finale-dal video { width: 100%; aspect-ratio: 2048 / 506; height: auto; display: block; filter: drop-shadow(0 24px 54px rgba(0, 0, 0, 0.7)); }
-  .finale-cta-wrap { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 1.1rem; }
+  /* CTA tuż pod wordmarkiem (offset = ~pół wysokości futra + odstęp) */
+  .finale-cta-wrap {
+    position: absolute; left: 50%; top: 50%; translate: -50% 0;
+    margin-top: calc(var(--dal-w) * 0.106 + 3.5vh);
+    z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 1.1rem;
+  }
   .finale-cta {
     display: inline-flex; align-items: center; gap: 14px; text-decoration: none;
     font-family: 'GeneralSansV', sans-serif; font-weight: 500;
@@ -998,9 +1004,10 @@ const services = [
   .finale-alt:hover { color: var(--ivory); }
   @media (max-width: 560px) { .finale-cta { padding: 16px 30px; } .finale-dal { width: 92vw; } }
   /* Subtelny powrót na górę (zastępuje zabrane żółte logo jako kotwicę) */
+  /* „Back to top" na samej górze, nad wordmarkiem */
   .finale-top {
-    position: absolute; left: 50%; bottom: clamp(24px, 5vh, 48px); translate: -50% 0;
-    z-index: 1; display: inline-flex; flex-direction: column; align-items: center; gap: 6px;
+    position: absolute; left: 50%; top: clamp(26px, 6vh, 60px); translate: -50% 0;
+    z-index: 2; display: inline-flex; flex-direction: column; align-items: center; gap: 6px;
     background: none; border: 0; cursor: pointer; padding: 8px;
     font-family: 'GeneralSansV', sans-serif; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
     color: color-mix(in srgb, var(--ivory) 42%, transparent); transition: color 0.3s;
