@@ -392,6 +392,10 @@ const services = [
       <a class="finale-cta mag" href="/contact"><span class="btn-in">Book a 15-min call</span><i aria-hidden="true">→</i></a>
       <a class="finale-alt" href="mailto:kacper@mioduszewsky.com">or just write to me</a>
     </div>
+    <button class="finale-top" type="button" aria-label="Back to top">
+      <span class="finale-top-arrow" aria-hidden="true">↑</span>
+      <span>Back to top</span>
+    </button>
   </footer>
 
   <script>
@@ -645,6 +649,12 @@ const services = [
       addEventListener('resize', updateSticky);
       updateSticky();
     }
+    /* „Back to top" w finale — płynny powrót na górę (Lenis) */
+    document.querySelector('.finale-top')?.addEventListener('click', () => {
+      const l = (window as any).__lenis;
+      if (l?.scrollTo) l.scrollTo(0, { duration: 1.4 });
+      else scrollTo({ top: 0, behavior: 'smooth' });
+    });
   </script>
 </VariantLayout>
 
@@ -977,6 +987,17 @@ const services = [
   .finale-alt { color: color-mix(in srgb, var(--ivory) 58%, transparent); text-decoration: none; font-size: 13px; letter-spacing: 0.04em; border-bottom: 1px solid color-mix(in srgb, var(--ivory) 28%, transparent); padding-bottom: 2px; transition: color 0.25s; }
   .finale-alt:hover { color: var(--ivory); }
   @media (max-width: 560px) { .finale-cta { padding: 16px 30px; } .finale-dal { width: 92vw; } }
+  /* Subtelny powrót na górę (zastępuje zabrane żółte logo jako kotwicę) */
+  .finale-top {
+    position: absolute; left: 50%; bottom: clamp(24px, 5vh, 48px); translate: -50% 0;
+    z-index: 1; display: inline-flex; flex-direction: column; align-items: center; gap: 6px;
+    background: none; border: 0; cursor: pointer; padding: 8px;
+    font-family: 'GeneralSansV', sans-serif; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--ivory) 42%, transparent); transition: color 0.3s;
+  }
+  .finale-top:hover { color: var(--ivory); }
+  .finale-top-arrow { font-size: 15px; letter-spacing: 0; transition: translate 0.35s cubic-bezier(0.19,1,0.22,1); }
+  .finale-top:hover .finale-top-arrow { translate: 0 -4px; }
 
   /* ── Warstwa WANDAL: spray, dopiski, splaty ─────────────────── */
   /* curtain reveal: treść (.w5) unosi się i odsłania fixed .finale pod spodem */
