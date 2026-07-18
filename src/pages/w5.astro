@@ -382,14 +382,17 @@ const services = [
         <a href="/privacy" style="color:inherit">Privacy</a>
       </div>
     </footer>
+    <!-- Trigger lazy-loadu futra: wchodzi w viewport gdy user dojeżdża do finału -->
+    <div class="finale-trigger" aria-hidden="true"></div>
   </main>
 
   <!-- STOPKA-FINAŁ (curtain reveal): treść unosi się i naturalnie odsłania ją u dołu -->
   <footer class="finale" aria-label="Book a call">
     <div class="finale-dal" aria-hidden="true">
-      <video autoplay loop muted playsinline preload="metadata" poster="/logo3d/logo-dalmatian-poster.webp">
-        <source src="/logo3d/logo-dalmatian.mp4" type="video/mp4;codecs=hvc1" />
-        <source src="/logo3d/logo-dalmatian.webm" type="video/webm" />
+      <!-- Bez autoplay/preload: 11 MB futra dociąga IntersectionObserver dopiero przy stopce (patrz <script> niżej). Poster WebP trzyma miejsce od razu. -->
+      <video class="finale-video" loop muted playsinline preload="none" poster="/logo3d/logo-dalmatian-poster.webp">
+        <source data-src="/logo3d/logo-dalmatian.mp4" type="video/mp4;codecs=hvc1" />
+        <source data-src="/logo3d/logo-dalmatian.webm" type="video/webm" />
       </video>
     </div>
     <div class="finale-cta-wrap">
@@ -696,6 +699,28 @@ const services = [
       if (l?.scrollTo) l.scrollTo(0, { duration: 1.4 });
       else scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    /* Lazy-load futra w stopce: 11 MB webm/mp4 dociąga się dopiero, gdy user
+       dojeżdża do finału. Stopka jest position:fixed (zawsze w DOM), więc nie da
+       się obserwować jej samej — obserwujemy sentinel na końcu <main>. */
+    {
+      const fv = document.querySelector('.finale-video') as HTMLVideoElement | null;
+      const trigger = document.querySelector('.finale-trigger');
+      if (fv && trigger) {
+        const load = () => {
+          fv.querySelectorAll('source[data-src]').forEach((s) => {
+            const el = s as HTMLSourceElement;
+            if (el.dataset.src) { el.src = el.dataset.src; delete el.dataset.src; }
+          });
+          fv.load();
+          fv.play().catch(() => {});
+        };
+        const io = new IntersectionObserver((entries) => {
+          if (entries.some((e) => e.isIntersecting)) { load(); io.disconnect(); }
+        }, { rootMargin: '400px' });
+        io.observe(trigger);
+      }
+    }
   </script>
 </VariantLayout>
 
