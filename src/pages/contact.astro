@@ -145,9 +145,24 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     const success = document.getElementById('ctSuccess');
     const btn = form?.querySelector('button[type="submit"]');
 
+    // Błąd = komunikat + podświetlenie KONKRETNYCH pól + focus na pierwszym z nich.
+    const showError = (text, fields = []) => {
+      form.querySelectorAll('.fld.err').forEach((f) => f.classList.remove('err'));
+      fields.forEach((n) => form.querySelector(`[name="${n}"]`)?.closest('.fld')?.classList.add('err'));
+      msg.textContent = text;
+      msg.classList.remove('err');
+      void msg.offsetWidth; // restart animacji shake przy kolejnym błędzie
+      msg.classList.add('err');
+      form.querySelector('.fld.err input, .fld.err textarea')?.focus();
+    };
+    // pisanie w polu czyści jego stan błędu od razu
+    form?.addEventListener('input', (e) => {
+      e.target.closest('.fld')?.classList.remove('err');
+      if (!form.querySelector('.fld.err')) { msg.textContent = ''; msg.classList.remove('err'); }
+    });
+
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      msg.textContent = '';
       const fd = new FormData(form);
       const name = (fd.get('name') || '').toString().trim();
       const email = (fd.get('email') || '').toString().trim();
@@ -155,9 +170,15 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       const consent = fd.get('consent') === 'on';
       const hp = (fd.get('hp') || '').toString();
 
-      if (!name || !email || !message) { msg.textContent = 'Please fill in all three fields.'; return; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.textContent = 'That email does not look right.'; return; }
-      if (!consent) { msg.textContent = 'Please tick the consent box so I can reply.'; return; }
+      const missing = [];
+      if (!name) missing.push('name');
+      if (!email) missing.push('email');
+      if (!message) missing.push('message');
+      if (missing.length) { showError('Please fill in all three fields.', missing); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('That email does not look right.', ['email']); return; }
+      if (!consent) { showError('Please tick the consent box so I can reply.'); return; }
+      msg.textContent = '';
+      msg.classList.remove('err');
 
       // Bez skonfigurowanego endpointu — fallback do maila (nic nie ginie).
       if (!CONTACT_ENDPOINT) {
@@ -180,7 +201,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
         form.hidden = true;
         success.hidden = false;
       } catch {
-        msg.textContent = 'Something went wrong. Email me directly at kacper@mioduszewsky.com.';
+        showError('Something went wrong. Email me directly at kacper@mioduszewsky.com.');
         btn.disabled = false;
         btn.querySelector('.btn-in').textContent = orig;
       }
@@ -217,11 +238,19 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     .path h2 { font-size: clamp(1.35rem, 2vw, 1.85rem); margin: 0.3rem 0 0.45rem; }
     .pdesc { color: #4c483c; font-size: 14px; line-height: 1.5; margin-bottom: 1.3rem; max-width: 40ch; }
 
-    .btn { display: inline-block; text-decoration: none; color: var(--ink); border: 1px solid var(--ink); border-radius: 999px; padding: 10px 22px; font-size: 12px; letter-spacing: 0.06em; background: var(--ivory); cursor: pointer; transition: background 0.3s, color 0.3s, border-color 0.3s; font-family: inherit; }
-    .btn:hover { background: var(--ink); color: var(--ivory); }
+    .btn { display: inline-block; position: relative; overflow: clip; text-decoration: none; color: var(--ink); border: 1px solid var(--ink); border-radius: 999px; padding: 10px 22px; font-size: 12px; letter-spacing: 0.06em; background: var(--ivory); cursor: pointer; transition: color 0.3s, border-color 0.3s, scale 0.18s ease-out; font-family: inherit; }
+    /* hover: tusz nalewa się od dołu — 1:1 z przyciskami na stronie głównej */
+    .btn::before { content: ""; position: absolute; inset: 0; z-index: 0; background: var(--ink); transform: scaleY(0); transform-origin: bottom; transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1); }
+    .btn .btn-in { display: inline-block; position: relative; z-index: 1; }
+    .btn:hover { color: var(--ivory); }
+    .btn:hover::before { transform: scaleY(1); }
+    .btn:active { scale: 0.96; }
     .btn.big { padding: 16px 34px; font-size: 13px; background: var(--ink); color: var(--ivory); border-color: var(--ink); }
-    .btn.big:hover { background: var(--blue); border-color: var(--blue); }
+    .btn.big::before { background: var(--blue); }
+    .btn.big:hover { border-color: var(--blue); }
     .btn[disabled] { opacity: 0.5; cursor: default; }
+    .btn[disabled]::before { transform: scaleY(0); }
+    .btn[disabled]:active { scale: 1; }
 
     .cal-embed { border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); border-radius: 14px; overflow: hidden; background: #fff; }
     .cal-embed iframe { display: block; }
@@ -233,15 +262,33 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       width: 100%; font-family: inherit; font-size: 16px; color: var(--ink);
       background: #fff; border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
       border-radius: 10px; padding: 10px 14px; resize: vertical;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.25s;
     }
-    .fld input:focus, .fld textarea:focus { outline: none; border-color: var(--blue); }
+    .fld input:focus, .fld textarea:focus {
+      outline: none; border-color: var(--blue);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 14%, transparent);
+    }
+    /* błąd walidacji: podświetlone konkretne pole, nie tylko ogólny komunikat */
+    .fld.err input, .fld.err textarea { border-color: #c70404; }
+    .fld.err span { color: #c70404; }
     .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
     .consent { display: flex; gap: 10px; align-items: flex-start; margin: 0.2rem 0 1.1rem; font-size: 13px; line-height: 1.5; color: #4c483c; }
     .consent input { margin-top: 3px; accent-color: var(--blue); width: 16px; height: 16px; flex: none; }
     .consent a { color: var(--blue); }
     .submit { width: 100%; }
     .formmsg { margin-top: 1rem; font-size: 13px; color: var(--blue); min-height: 1.2em; }
+    .formmsg.err { color: #c70404; animation: ctShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+    @keyframes ctShake {
+      0%, 100% { translate: 0; }
+      20%, 60% { translate: -5px 0; }
+      40%, 80% { translate: 5px 0; }
+    }
+    /* sukces wjeżdża miękko zamiast pojawiać się skokiem */
+    .ct-success:not([hidden]) { animation: ctIn 0.55s cubic-bezier(0.19, 1, 0.22, 1); }
+    @keyframes ctIn { from { opacity: 0; translate: 0 16px; } }
+    @media (prefers-reduced-motion: reduce) {
+      .formmsg.err, .ct-success:not([hidden]) { animation: none; }
+    }
 
     .ct-success h3 { font-size: clamp(1.4rem, 2.2vw, 2rem); margin-bottom: 0.8rem; }
     .ct-success p { color: #4c483c; font-size: 15px; line-height: 1.6; margin-bottom: 1.4rem; max-width: 40ch; }

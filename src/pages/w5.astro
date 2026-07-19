@@ -445,6 +445,7 @@ const services = [
         }, 2.7)
         .fromTo('.nav', { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.8 }, 2.9)
         .fromTo('.hero .rv', { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08 }, 3.0)
+        .add(() => document.querySelectorAll('.hero h1 em').forEach((el) => el.classList.add('lit')), 3.3)
         .to(strikePaths, { strokeDashoffset: 0, duration: 0.42, ease: 'power2.in', stagger: 0.16 }, 3.6)
         .to(strikeMist, { opacity: 1, duration: 0.3 }, 3.85)
         .fromTo('.tag-fix', { scale: 0.7, rotate: -14 }, { opacity: 1, scale: 1, rotate: -7, duration: 0.45, ease: 'back.out(2.4)', immediateRender: false }, 4.1)
@@ -491,6 +492,12 @@ const services = [
           y: -60, ease: 'none',
           scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
         });
+      });
+      /* Żółty marker „maluje się" od lewej, gdy tekst wjeżdża w kadr
+         (hero ma własny moment w timeline intro — patrz wyżej) */
+      document.querySelector('.w5')?.classList.add('em-anim');
+      document.querySelectorAll<HTMLElement>('.proj-d em, .foot-h em, .sec-h em, .lead-close em, .how-why-t em').forEach((el) => {
+        ScrollTrigger.create({ trigger: el, start: 'top 86%', once: true, onEnter: () => el.classList.add('lit') });
       });
       /* Manifest: czarna plama (jak psiknięcie sprayem) rozlewa się na pełny
          ekran w rytmie scrolla — pełny bleed, zero pasków po bokach */
@@ -589,16 +596,29 @@ const services = [
         btn.addEventListener('mouseleave', () => {
           gsap.to([btn, inner], { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.4)' });
         });
+        /* press przez GSAP: magnetyzm wpisuje inline scale:none, więc CSS :active
+           nie działa na .mag — dociśnięcie musi iść tym samym kanałem */
+        btn.addEventListener('pointerdown', () => gsap.to(btn, { scale: 0.96, duration: 0.15, ease: 'power2.out' }));
+        const release = () => gsap.to(btn, { scale: 1, duration: 0.35, ease: 'back.out(2.2)' });
+        btn.addEventListener('pointerup', release);
+        btn.addEventListener('pointerleave', release);
       });
 
-      /* Custom cursor — kropka siedzi DOKŁADNIE na czubku pointera (bez smyczy) */
+      /* Custom cursor — kropka siedzi DOKŁADNIE na czubku pointera (bez smyczy).
+         cursor:none tylko gdy kropka realnie istnieje (klasa has-cur na body) —
+         przy reduced-motion zostaje natywny kursor. */
       const cur = document.querySelector<HTMLElement>('.cur')!;
+      document.body.classList.add('has-cur');
       gsap.set(cur, { x: -200, y: -200 });
       addEventListener('mousemove', (e) => { gsap.set(cur, { x: e.clientX, y: e.clientY }); });
-      document.querySelectorAll('a, button').forEach((el) => {
-        el.addEventListener('mouseenter', () => gsap.to(cur, { scale: 2.6, duration: 0.3 }));
-        el.addEventListener('mouseleave', () => gsap.to(cur, { scale: 1, duration: 0.3 }));
+      let curScale = 1;
+      document.querySelectorAll('a, button, summary').forEach((el) => {
+        el.addEventListener('mouseenter', () => { curScale = 2.6; gsap.to(cur, { scale: curScale, duration: 0.3 }); });
+        el.addEventListener('mouseleave', () => { curScale = 1; gsap.to(cur, { scale: curScale, duration: 0.3 }); });
       });
+      /* tactile press: kropka dociska się przy wciśnięciu i odbija po puszczeniu */
+      addEventListener('pointerdown', () => gsap.to(cur, { scale: curScale * 0.55, duration: 0.15, ease: 'power2.out' }));
+      addEventListener('pointerup', () => gsap.to(cur, { scale: curScale, duration: 0.35, ease: 'back.out(2.2)' }));
       /* nad żywym ekranem iPhone'a kursor przejmuje strona w środku — nasz znika */
       document.querySelectorAll('.phone-live').forEach((s) => {
         s.addEventListener('pointerenter', () => gsap.to(cur, { opacity: 0, duration: 0.2 }));
@@ -699,6 +719,50 @@ const services = [
       if (l?.scrollTo) l.scrollTo(0, { duration: 1.4 });
       else scrollTo({ top: 0, behavior: 'smooth' });
     });
+    /* Logo w nav = też płynny powrót na górę (zamiast skoku i #hash w URL) */
+    document.querySelector('.nav .mark')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const l = (window as any).__lenis;
+      if (l?.scrollTo) l.scrollTo(0, { duration: 1.2 });
+      else scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    /* FAQ: płynne otwieranie/zamykanie <details> — natywnie treść skacze bez
+       przejścia. Reduced motion → natywny toggle. Po zmianie wysokości strony
+       odświeżamy pozycje ScrollTriggerów (sekcje niżej mają swoje reveale). */
+    if (!reduced) {
+      document.querySelectorAll<HTMLDetailsElement>('.faq details').forEach((d) => {
+        const sum = d.querySelector('summary')!;
+        const body = d.querySelector<HTMLElement>('.fbody')!;
+        let busy = false;
+        sum.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (busy) return;
+          busy = true;
+          if (!d.open) {
+            d.open = true;
+            gsap.fromTo(body, { height: 0, paddingBottom: 0, opacity: 0, y: 6 }, {
+              height: 'auto', paddingBottom: 28, opacity: 1, y: 0, duration: 0.55, ease: 'expo.out',
+              clearProps: 'all',
+              onComplete: () => { busy = false; ScrollTrigger.refresh(); },
+            });
+          } else {
+            /* klasa .closing cofa plusik od razu, nie dopiero po animacji */
+            d.classList.add('closing');
+            gsap.to(body, {
+              height: 0, paddingBottom: 0, opacity: 0, duration: 0.38, ease: 'power3.inOut',
+              onComplete: () => {
+                d.open = false;
+                d.classList.remove('closing');
+                gsap.set(body, { clearProps: 'all' });
+                busy = false;
+                ScrollTrigger.refresh();
+              },
+            });
+          }
+        });
+      });
+    }
 
     /* Lazy-load futra w stopce: 11 MB webm/mp4 dociąga się dopiero, gdy user
        dojeżdża do finału. Stopka jest position:fixed (zawsze w DOM), więc nie da
@@ -743,8 +807,11 @@ const services = [
   @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-VariableItalic.woff2') format('woff2'); font-weight: 200 700; font-style: italic; font-display: swap; }
 
   ::selection { background: var(--blue); color: var(--ivory); }
-  .w5 a { cursor: none; }
-  @media (pointer: coarse) { .w5 a { cursor: auto; } }
+  /* kursor systemowy znika TYLKO gdy niebieska kropka realnie działa
+     (klasa has-cur z JS: pointer fine + brak reduced-motion) */
+  :global(body.has-cur) a, :global(body.has-cur) button, :global(body.has-cur) summary { cursor: none; }
+  /* .faq summary { cursor: pointer } ma wyższą specyficzność po scopingu Astro */
+  :global(body.has-cur) .faq summary { cursor: none; }
 
   .veil {
     position: fixed; inset: 0; z-index: 200; background: var(--ink);
@@ -783,13 +850,24 @@ const services = [
     border: 1px solid var(--ink); border-radius: 999px; padding: 10px 22px;
     font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
     background: var(--ivory);
-    transition: background 0.35s, color 0.35s;
+    overflow: clip;
+    transition: color 0.3s, border-color 0.3s, scale 0.18s ease-out;
     will-change: transform;
   }
-  .btn .btn-in { display: inline-block; }
-  .btn:hover { background: var(--ink); color: var(--ivory); }
+  /* hover: tusz nalewa się od dołu (zamiast twardego przełącznika koloru) */
+  .btn::before {
+    content: ""; position: absolute; inset: 0; z-index: 0; background: var(--ink);
+    transform: scaleY(0); transform-origin: bottom;
+    transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .btn .btn-in { display: inline-block; position: relative; z-index: 1; }
+  .btn:hover { color: var(--ivory); }
+  .btn:hover::before { transform: scaleY(1); }
+  /* press: fizyczne dociśnięcie */
+  .btn:active { scale: 0.96; }
   .btn.big { padding: 16px 34px; font-size: 13px; background: var(--ink); color: var(--ivory); }
-  .btn.big:hover { background: var(--blue); border-color: var(--blue); }
+  .btn.big::before { background: var(--blue); }
+  .btn.big:hover { border-color: var(--blue); }
   /* Sticky CTA — powtarzany główny cel konwersji */
   .sticky-cta {
     position: fixed; bottom: 22px; left: 50%; z-index: 120;
@@ -799,10 +877,18 @@ const services = [
     font-size: 13px; letter-spacing: 0.04em;
     box-shadow: 0 10px 30px color-mix(in srgb, var(--ink) 28%, transparent);
     transform: translate(-50%, 130%); opacity: 0;
-    transition: transform 0.5s cubic-bezier(0.19,1,0.22,1), opacity 0.4s, background 0.3s;
+    overflow: clip;
+    transition: transform 0.5s cubic-bezier(0.19,1,0.22,1), opacity 0.4s, scale 0.18s ease-out;
   }
+  .sticky-cta::before {
+    content: ""; position: absolute; inset: 0; z-index: 0; background: var(--blue);
+    transform: scaleY(0); transform-origin: bottom;
+    transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .sticky-cta > * { position: relative; z-index: 1; }
   .sticky-cta.show { transform: translate(-50%, 0); opacity: 1; }
-  .sticky-cta:hover { background: var(--blue); }
+  .sticky-cta:hover::before { transform: scaleY(1); }
+  .sticky-cta:active { scale: 0.96; }
   .sticky-cta i { font-style: normal; transition: translate 0.3s; }
   .sticky-cta:hover i { translate: 4px 0; }
   @media (max-width: 620px) { .sticky-cta { font-size: 12px; padding: 12px 20px; bottom: 16px; } }
@@ -829,6 +915,13 @@ const services = [
       linear-gradient(100deg, transparent 1.5%, color-mix(in srgb, var(--brand) 72%, transparent) 6% 94%, transparent 98.5%)
       no-repeat 0 68% / 100% 56%;
     box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    transition: background-size 0.9s cubic-bezier(0.19, 1, 0.22, 1) 0.15s;
+  }
+  /* marker startuje pusty i „maluje się" od lewej po dodaniu .lit (JS, tylko
+     bez reduced-motion — inaczej .em-anim nie istnieje i marker jest pełny) */
+  .em-anim .hero h1 em:not(.lit), .em-anim .proj-d em:not(.lit), .em-anim .foot-h em:not(.lit),
+  .em-anim .sec-h em:not(.lit), .em-anim .lead-close em:not(.lit), .em-anim .how-why-t em:not(.lit) {
+    background-size: 0% 56%;
   }
   .hero-b { display: flex; justify-content: space-between; align-items: flex-end; gap: 4vw; margin-top: 6vh; }
   .hero-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 1.1rem; }
@@ -990,7 +1083,9 @@ const services = [
   .fmark::before { width: 15px; height: 2px; }
   .fmark::after { width: 2px; height: 15px; }
   .faq details[open] .fmark::after { rotate: 90deg; }
-  .fbody { padding: 0 6px 28px; }
+  /* przy animowanym zamykaniu plusik wraca od razu, nie po animacji */
+  .faq details.closing .fmark::after { rotate: 0deg; }
+  .fbody { padding: 0 6px 28px; overflow: hidden; }
   .fbody p { max-width: 68ch; font-size: 15px; line-height: 1.7; color: #4c483c; margin: 0; }
 
   /* STOPKA — jasna, pełnoekranowa sekcja domykająca (decyzja).
@@ -1057,9 +1152,17 @@ const services = [
     font-family: 'GeneralSansV', sans-serif; font-weight: 500;
     background: var(--ivory); color: var(--ink); border-radius: 999px;
     padding: 19px 40px; font-size: clamp(15px, 1.3vw, 17px); letter-spacing: 0.01em;
-    transition: background 0.3s, color 0.3s;
+    position: relative; overflow: clip;
+    transition: color 0.3s, scale 0.18s ease-out;
   }
-  .finale-cta:hover { background: var(--brand); }
+  .finale-cta::before {
+    content: ""; position: absolute; inset: 0; z-index: 0; background: var(--brand);
+    transform: scaleY(0); transform-origin: bottom;
+    transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .finale-cta > * { position: relative; z-index: 1; }
+  .finale-cta:hover::before { transform: scaleY(1); }
+  .finale-cta:active { scale: 0.96; }
   .finale-cta i { font-style: normal; transition: translate 0.3s; }
   .finale-cta:hover i { translate: 5px 0; }
   .finale-alt { color: color-mix(in srgb, var(--ivory) 58%, transparent); text-decoration: none; font-size: 13px; letter-spacing: 0.04em; border-bottom: 1px solid color-mix(in srgb, var(--ivory) 28%, transparent); padding-bottom: 2px; transition: color 0.25s; }
@@ -1131,10 +1234,17 @@ const services = [
   .tag-foot { font-size: 0.34em; rotate: -6deg; display: inline-block; vertical-align: middle; margin-left: 0.3em; }
 
 
-  a:focus-visible, .btn:focus-visible {
+  a:focus-visible, .btn:focus-visible, button:focus-visible, summary:focus-visible {
     outline: 2px solid var(--blue); outline-offset: 4px; border-radius: 4px;
   }
   .btn:focus-visible { border-radius: 999px; }
+
+  /* Dotyk: hover nie istnieje, więc tap dostaje własny feedback */
+  @media (pointer: coarse) {
+    .srow:active, .mrow:active, .faq summary:active {
+      background: color-mix(in srgb, var(--ink) 5%, transparent);
+    }
+  }
 
   @media (max-width: 860px) {
     .nav { padding: 14px 5vw; }
