@@ -153,19 +153,26 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
 
     // Błąd = komunikat + podświetlenie KONKRETNYCH pól + focus na pierwszym z nich.
     const showError = (text, fields = []) => {
-      form.querySelectorAll('.fld.err').forEach((f) => f.classList.remove('err'));
-      fields.forEach((n) => form.querySelector(`[name="${n}"]`)?.closest('.fld')?.classList.add('err'));
+      form.querySelectorAll('.err').forEach((f) => f.classList.remove('err'));
+      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+      fields.forEach((n) => {
+        const input = form.querySelector(`[name="${n}"]`);
+        input?.setAttribute('aria-invalid', 'true');
+        // consent leży w label.consent, nie w .fld — closest łapie oba przypadki
+        input?.closest('.fld, .consent')?.classList.add('err');
+      });
       msg.textContent = text;
       msg.classList.remove('err');
       void msg.offsetWidth; // restart animacji shake przy kolejnym błędzie
       msg.classList.add('err');
       buzz([12, 60, 12]); // podwójny impuls = „coś nie tak" (Android)
-      form.querySelector('.fld.err input, .fld.err textarea')?.focus();
+      form.querySelector('.err input, .err textarea')?.focus();
     };
-    // pisanie w polu czyści jego stan błędu od razu
+    // interakcja z polem czyści jego stan błędu od razu (dotyczy też checkboxa)
     form?.addEventListener('input', (e) => {
-      e.target.closest('.fld')?.classList.remove('err');
-      if (!form.querySelector('.fld.err')) { msg.textContent = ''; msg.classList.remove('err'); }
+      e.target.removeAttribute?.('aria-invalid');
+      e.target.closest('.fld, .consent')?.classList.remove('err');
+      if (!form.querySelector('.err')) { msg.textContent = ''; msg.classList.remove('err'); }
     });
 
     form?.addEventListener('submit', async (e) => {
@@ -183,7 +190,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       if (!message) missing.push('message');
       if (missing.length) { showError('Please fill in all three fields.', missing); return; }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('That email does not look right.', ['email']); return; }
-      if (!consent) { showError('Please tick the consent box so I can reply.'); return; }
+      if (!consent) { showError('Please tick the consent box so I can reply.', ['consent']); return; }
       msg.textContent = '';
       msg.classList.remove('err');
 
@@ -284,6 +291,8 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     /* błąd walidacji: podświetlone konkretne pole, nie tylko ogólny komunikat */
     .fld.err input, .fld.err textarea { border-color: #c70404; }
     .fld.err span { color: #c70404; }
+    .consent.err { color: #c70404; }
+    .consent.err input { outline: 2px solid #c70404; outline-offset: 2px; border-radius: 3px; }
     .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
     .consent { display: flex; gap: 10px; align-items: flex-start; margin: 0.2rem 0 1.1rem; font-size: 13px; line-height: 1.5; color: #4c483c; cursor: pointer; }
     .consent input { margin-top: 3px; accent-color: var(--blue); width: 16px; height: 16px; flex: none; }

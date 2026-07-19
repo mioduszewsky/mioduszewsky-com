@@ -429,7 +429,6 @@ const services = [
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
     gsap.registerPlugin(ScrollTrigger);
-    (window as any).__w5ok = true; // moduł wstał — watchdog kurtyny odwołany
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const EASE = 'cubic-bezier(0.19, 1, 0.22, 1)';
     const coarse = matchMedia('(pointer: coarse)').matches;
@@ -496,6 +495,9 @@ const services = [
     } else {
       intro();
     }
+    /* Watchdog odwołany DOPIERO gdy los kurtyny jest przesądzony (intro
+       zaplanowane albo veil usunięty) — wcześniejszy throw = kurtyna znika po 5 s */
+    (window as any).__w5ok = true;
 
     /* Kółko sprayem na 001 — rysuje się gdy wjedzie w kadr */
     const circlePath = document.querySelector<SVGPathElement>('.spray-circle .draw');
@@ -1221,9 +1223,6 @@ const services = [
   .finale-alt:hover { color: var(--ivory); }
   @media (max-width: 560px) { .finale-cta { padding: 16px 30px; } .finale-dal { width: 92vw; } }
   @media (max-width: 640px) {
-    /* pasek URL Safari przycina górę 100vh finału (box kotwiczony do dołu) —
-       zsuwamy „Back to top" o maksymalną różnicę viewportów, żeby nigdy nie znikał */
-    .finale-top { top: calc(clamp(26px, 6vh, 60px) + (100lvh - 100svh)); }
     /* hero skaluje się z vw zamiast twardego floora — „send people to·"
        mieści się w jednej linii na każdej szerokości (zmierzone 360-640px) */
     .hero h1 { font-size: clamp(2.2rem, 12.3vw, 3.6rem); }
@@ -1240,6 +1239,12 @@ const services = [
   .finale-top:hover { color: var(--ivory); }
   .finale-top-arrow { font-size: 15px; letter-spacing: 0; transition: translate 0.35s cubic-bezier(0.19,1,0.22,1); }
   .finale-top:hover .finale-top-arrow { translate: 0 -4px; }
+  @media (max-width: 640px) {
+    /* pasek URL Safari przycina górę 100vh finału (box kotwiczony do dołu) —
+       zsuwamy „Back to top" o maksymalną różnicę viewportów, żeby nigdy nie znikał.
+       MUSI stać PO bazowej regule .finale-top (ta sama specyficzność). */
+    .finale-top { top: calc(clamp(26px, 6vh, 60px) + (100lvh - 100svh)); }
+  }
 
   /* ── Warstwa WANDAL: spray, dopiski, splaty ─────────────────── */
   /* curtain reveal: treść (.w5) unosi się i odsłania fixed .finale pod spodem */
