@@ -51,7 +51,11 @@ const services = [
 
     <!-- Kurtyna wejściowa -->
     <div class="veil" aria-hidden="true">
+      <!-- Mobile bierze mały wariant nav (200-560 KB zamiast 1.3-2 MB) — na
+           ~370px szerokości kurtyny pełna rozdzielczość i tak się nie przydaje -->
       <video class="veil-word" autoplay loop muted playsinline preload="auto" poster="/logo3d/logo-poster.webp">
+        <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" media="(max-width: 640px)" />
+        <source src="/logo3d/logo-nav.webm" type="video/webm" media="(max-width: 640px)" />
         <source src="/logo3d/logo.mp4" type="video/mp4;codecs=hvc1" />
         <source src="/logo3d/logo.webm" type="video/webm" />
       </video>
@@ -59,6 +63,20 @@ const services = [
 
     <!-- Custom cursor -->
     <div class="cur" aria-hidden="true"></div>
+
+    <!-- Watchdog: gdy główny moduł JS nie wstanie (błąd sieci, stary browser),
+         kurtyna NIE może zostać na ekranie na zawsze. Inline = działa zawsze. -->
+    <script is:inline>
+      setTimeout(function () {
+        if (!window.__w5ok) document.documentElement.classList.add('js-stalled');
+      }, 5000);
+    </script>
+    <noscript>
+      <style>
+        .veil { display: none !important; }
+        .cur { display: none !important; }
+      </style>
+    </noscript>
 
     <header class="nav">
       <a class="mark" href="#" aria-label="mioduszewsky">
@@ -82,7 +100,7 @@ const services = [
       <h1>
         <span class="ln"><span class="ln-in">A <span class="fix">generic<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix" aria-hidden="true">working!</span></span> website</span></span>
         <span class="ln"><span class="ln-in">you can <em>finally</em></span></span>
-        <span class="ln"><span class="ln-in">send people to<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span>
+        <span class="ln"><span class="ln-in">send people <span class="hero-end">to<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span></span>
       </h1>
       <div class="hero-b">
         <div class="hero-cta rv">
@@ -411,8 +429,26 @@ const services = [
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
     gsap.registerPlugin(ScrollTrigger);
+    (window as any).__w5ok = true; // moduł wstał — watchdog kurtyny odwołany
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const EASE = 'cubic-bezier(0.19, 1, 0.22, 1)';
+    const coarse = matchMedia('(pointer: coarse)').matches;
+
+    /* iOS Safari nie odpala :active bez JAKIEGOKOLWIEK listenera touchstart —
+       bez tej linii cały tap-feedback (scale 0.96, tła wierszy) nie działa na iPhone */
+    addEventListener('touchstart', () => {}, { passive: true });
+
+    /* Haptyka: krótki impuls na realnych akcjach. Android ma navigator.vibrate;
+       iOS nie wystawia żadnego API (hack z input switch załatany w iOS 26.5),
+       tam zostaje wizualny press-feedback. */
+    const buzz = (pattern: number | number[] = 8) => {
+      if (coarse) try { navigator.vibrate?.(pattern); } catch {}
+    };
+    if (coarse) {
+      document.querySelectorAll('.btn, .sticky-cta, .finale-cta, .finale-top, .srow, .mrow[href], .tlink').forEach((el) => {
+        el.addEventListener('pointerdown', () => buzz(8), { passive: true });
+      });
+    }
 
     if (!reduced) {
       const lenis = new Lenis({ duration: 1.25, smoothWheel: true });
@@ -437,19 +473,21 @@ const services = [
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
       // Kurtyna trzyma logo ~1.9 s w pełnej widoczności (decyzja Kacpra 16.07:
       // widz ma zdążyć przeczytać i obejrzeć logo, zanim się odsłoni).
+      // Mobile: trzymanie skrócone do ~1 s (decyzja 19.07 — szybciej do treści).
+      const M = matchMedia('(max-width: 640px)').matches ? -0.9 : 0;
       tl.fromTo('.veil-word', { opacity: 0, y: 24, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.55 })
-        .to(veil, { yPercent: -100, duration: 0.9, ease: 'expo.inOut' }, 2.4)
+        .to(veil, { yPercent: -100, duration: 0.9, ease: 'expo.inOut' }, 2.4 + M)
         .fromTo('.hero .ln-in', { y: '112%' }, {
           y: 0, duration: 1.2, stagger: 0.09,
           onComplete: () => document.querySelectorAll<HTMLElement>('.hero .ln').forEach((l) => (l.style.overflow = 'visible')),
-        }, 2.7)
-        .fromTo('.nav', { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.8 }, 2.9)
-        .fromTo('.hero .rv', { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08 }, 3.0)
-        .add(() => document.querySelectorAll('.hero h1 em').forEach((el) => el.classList.add('lit')), 3.3)
-        .to(strikePaths, { strokeDashoffset: 0, duration: 0.42, ease: 'power2.in', stagger: 0.16 }, 3.6)
-        .to(strikeMist, { opacity: 1, duration: 0.3 }, 3.85)
-        .fromTo('.tag-fix', { scale: 0.7, rotate: -14 }, { opacity: 1, scale: 1, rotate: -7, duration: 0.45, ease: 'back.out(2.4)', immediateRender: false }, 4.1)
-        .fromTo('.spray-dot svg', { scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'power4.out', immediateRender: false }, 4.3);
+        }, 2.7 + M)
+        .fromTo('.nav', { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.8 }, 2.9 + M)
+        .fromTo('.hero .rv', { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08 }, 3.0 + M)
+        .add(() => document.querySelectorAll('.hero h1 em').forEach((el) => el.classList.add('lit')), 3.3 + M)
+        .to(strikePaths, { strokeDashoffset: 0, duration: 0.42, ease: 'power2.in', stagger: 0.16 }, 3.6 + M)
+        .to(strikeMist, { opacity: 1, duration: 0.3 }, 3.85 + M)
+        .fromTo('.tag-fix', { scale: 0.7, rotate: -14 }, { opacity: 1, scale: 1, rotate: -7, duration: 0.45, ease: 'back.out(2.4)', immediateRender: false }, 4.1 + M)
+        .fromTo('.spray-dot svg', { scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'power4.out', immediateRender: false }, 4.3 + M);
     };
     if (reduced) {
       veil.remove();
@@ -739,6 +777,7 @@ const services = [
           e.preventDefault();
           if (busy) return;
           busy = true;
+          buzz(8);
           if (!d.open) {
             d.open = true;
             gsap.fromTo(body, { height: 0, paddingBottom: 0, opacity: 0, y: 6 }, {
@@ -770,7 +809,10 @@ const services = [
     {
       const fv = document.querySelector('.finale-video') as HTMLVideoElement | null;
       const trigger = document.querySelector('.finale-trigger');
-      if (fv && trigger) {
+      /* Save-Data / 2G: 6-12 MB futra zostaje na posterze, nie dociągamy */
+      const conn = (navigator as any).connection;
+      const skipHeavy = !!(conn?.saveData || /(^|\b)2g/.test(conn?.effectiveType || ''));
+      if (fv && trigger && !skipHeavy) {
         const load = () => {
           fv.querySelectorAll('source[data-src]').forEach((s) => {
             const el = s as HTMLSourceElement;
@@ -817,6 +859,10 @@ const services = [
     position: fixed; inset: 0; z-index: 200; background: var(--ink);
     display: grid; place-items: center;
   }
+  /* watchdog: moduł JS nie wstał → kurtyna znika, treść widoczna od razu */
+  :global(html.js-stalled) .veil { display: none; }
+  :global(html.js-stalled) .ln-in { transform: none !important; }
+  :global(html.js-stalled) .rv, :global(html.js-stalled) .nav { opacity: 1 !important; transform: none !important; }
   .veil-word {
     width: clamp(260px, 50vw, 680px); height: auto; display: block;
     opacity: 0;
@@ -878,6 +924,7 @@ const services = [
     box-shadow: 0 10px 30px color-mix(in srgb, var(--ink) 28%, transparent);
     transform: translate(-50%, 130%); opacity: 0;
     overflow: clip;
+    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
     transition: transform 0.5s cubic-bezier(0.19,1,0.22,1), opacity 0.4s, scale 0.18s ease-out;
   }
   .sticky-cta::before {
@@ -891,7 +938,9 @@ const services = [
   .sticky-cta:active { scale: 0.96; }
   .sticky-cta i { font-style: normal; transition: translate 0.3s; }
   .sticky-cta:hover i { translate: 4px 0; }
-  @media (max-width: 620px) { .sticky-cta { font-size: 12px; padding: 12px 20px; bottom: 16px; } }
+  @media (max-width: 620px) {
+    .sticky-cta { font-size: 12px; padding: 12px 20px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  }
   .btn.ghost { color: var(--ink); }
 
   .label { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dim); }
@@ -1146,6 +1195,9 @@ const services = [
     position: absolute; left: 50%; top: 50%; translate: -50% 0;
     margin-top: calc(var(--dal-w) * 0.106 + 3.5vh);
     z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 1.1rem;
+    /* absolute + left:50% liczy dostępną szerokość od połowy — bez tego CTA
+       łamie się do dwóch linii na wąskich ekranach */
+    width: max-content; max-width: 92vw;
   }
   .finale-cta {
     display: inline-flex; align-items: center; gap: 14px; text-decoration: none;
@@ -1168,6 +1220,14 @@ const services = [
   .finale-alt { color: color-mix(in srgb, var(--ivory) 58%, transparent); text-decoration: none; font-size: 13px; letter-spacing: 0.04em; border-bottom: 1px solid color-mix(in srgb, var(--ivory) 28%, transparent); padding-bottom: 2px; transition: color 0.25s; }
   .finale-alt:hover { color: var(--ivory); }
   @media (max-width: 560px) { .finale-cta { padding: 16px 30px; } .finale-dal { width: 92vw; } }
+  @media (max-width: 640px) {
+    /* pasek URL Safari przycina górę 100vh finału (box kotwiczony do dołu) —
+       zsuwamy „Back to top" o maksymalną różnicę viewportów, żeby nigdy nie znikał */
+    .finale-top { top: calc(clamp(26px, 6vh, 60px) + (100lvh - 100svh)); }
+    /* hero skaluje się z vw zamiast twardego floora — „send people to·"
+       mieści się w jednej linii na każdej szerokości (zmierzone 360-640px) */
+    .hero h1 { font-size: clamp(2.2rem, 12.3vw, 3.6rem); }
+  }
   /* Subtelny powrót na górę (zastępuje zabrane żółte logo jako kotwicę) */
   /* „Back to top" na samej górze, nad wordmarkiem */
   .finale-top {
@@ -1207,6 +1267,8 @@ const services = [
     position: absolute; left: 10%; top: -0.68em; rotate: -7deg; display: inline-block;
     transform-origin: 20% 80%;
   }
+  /* kropka nie może odpaść do własnej linii przy zawijaniu (mobile) */
+  .hero-end { white-space: nowrap; }
   .spray-dot { display: inline-block; width: 0.4em; height: 0.4em; margin-left: 0.08em; }
   .spray-dot svg { width: 100%; height: 100%; overflow: visible; }
   .spray-dot circle { fill: var(--spray); }
@@ -1239,11 +1301,23 @@ const services = [
   }
   .btn:focus-visible { border-radius: 999px; }
 
-  /* Dotyk: hover nie istnieje, więc tap dostaje własny feedback */
+  /* Dotyk: hover nie istnieje, więc tap dostaje własny feedback.
+     Szary systemowy flash iOS wyłączony — feedback dają nasze stany. */
+  .w5 a, .w5 button, .w5 summary, .finale a, .finale button {
+    -webkit-tap-highlight-color: transparent;
+  }
   @media (pointer: coarse) {
     .srow:active, .mrow:active, .faq summary:active {
       background: color-mix(in srgb, var(--ink) 5%, transparent);
     }
+    .tlink:active, .fcol a:active, .foot-write:active { color: var(--blue); }
+    .tlink:active i { translate: 4px -4px; }
+    .finale-top:active, .finale-alt:active { color: var(--ivory); }
+    /* tap targets: te same wymiary wizualne, większe pole reakcji */
+    .nav .btn { padding: 13px 24px; }
+    .fcol a, .foot-write, .finale-alt, .meta a { padding-block: 6px; }
+    .tlink { padding-block: 10px; }
+    .finale-top { padding: 14px 16px; }
   }
 
   @media (max-width: 860px) {
@@ -1282,6 +1356,13 @@ const services = [
     .sprice { grid-column: 2 / -1; grid-row: 2; justify-self: start; }
     .sdesc { display: block; grid-column: 2 / -1; grid-row: 3; font-size: 13.5px; }
     .tag-row { display: none; }
+    /* kółko sprayu wokół „03" wystaje poza ekran przy wąskiej kolumnie idx */
+    .spray-circle { display: none; }
+    /* podkreślenie tlink ma siedzieć przy tekście, nie przy krawędzi tap-paddingu */
+    .tlink::after { bottom: 5px; }
+    /* sieroty w nagłówkach sekcji: balansuj linie przy zawijaniu */
+    .sec-h .ln-in, .manif-t .ln-in, .foot-h .ln-in { text-wrap: balance; }
+    .manif-in { padding-block: 13vh; }
     .step { grid-template-columns: 44px 1fr; grid-template-rows: auto auto; row-gap: 6px; padding: 18px 2px; }
     .step .idx { grid-row: 1; }
     .step h3 { grid-column: 2; grid-row: 1; }

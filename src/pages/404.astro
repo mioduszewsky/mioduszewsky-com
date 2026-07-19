@@ -13,6 +13,10 @@ import VariantLayout from '../layouts/VariantLayout.astro';
       <a class="btn" href="/contact"><span>Book a 15-min call</span></a>
     </div>
   </main>
+  <script is:inline>
+    // :active na iOS wymaga listenera touchstart
+    addEventListener('touchstart', function () {}, { passive: true });
+  </script>
 
   <style>
     @font-face { font-family:'NohemiV'; src:url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight:100 900; font-display:swap; }
@@ -29,9 +33,15 @@ import VariantLayout from '../layouts/VariantLayout.astro';
     .msg { max-width:42ch; font-size:clamp(1rem,1.6vw,1.25rem); line-height:1.6; color:#4c483c; margin-bottom:2rem; }
     .msg em { font-style:normal; background:linear-gradient(100deg,transparent 2%,color-mix(in srgb,var(--brand) 80%,transparent) 6% 94%,transparent 98%); padding:0 0.1em; }
     .nf-cta { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
-    .btn { display:inline-block; text-decoration:none; color:var(--ink); border:1px solid var(--ink); border-radius:999px; padding:12px 26px; font-size:12px; letter-spacing:0.06em; transition:background 0.3s,color 0.3s,border-color 0.3s; }
-    .btn:hover { background:var(--ink); color:var(--ivory); }
+    /* przyciski 1:1 z językiem strony głównej: wipe od dołu + press */
+    .btn { display:inline-block; position:relative; overflow:clip; text-decoration:none; color:var(--ink); border:1px solid var(--ink); border-radius:999px; padding:12px 26px; font-size:12px; letter-spacing:0.06em; transition:color 0.3s,border-color 0.3s,scale 0.18s ease-out; -webkit-tap-highlight-color:transparent; }
+    .btn::before { content:""; position:absolute; inset:0; z-index:0; background:var(--ink); transform:scaleY(0); transform-origin:bottom; transition:transform 0.45s cubic-bezier(0.19,1,0.22,1); }
+    .btn span { position:relative; z-index:1; display:inline-block; }
+    .btn:hover { color:var(--ivory); }
+    .btn:hover::before { transform:scaleY(1); }
+    .btn:active { scale:0.96; }
     .btn.big { background:var(--ink); color:var(--ivory); padding:14px 30px; }
-    .btn.big:hover { background:var(--blue); border-color:var(--blue); }
+    .btn.big::before { background:var(--blue); }
+    .btn.big:hover { border-color:var(--blue); }
   </style>
 </VariantLayout>
