@@ -190,3 +190,20 @@ między włosami**. Zatem:
   (prześwit przed y), `s` minimalnie rozciągnięte (1.14 / -0.12).
 - Łaty: voronoi + noise w coords lokalnych obiektu, per-litera offset z Object
   Info Random — reroll układu = zmiana mnożników 21.4/11.9/15.3 w `build_spot_mask`.
+
+## Favicon — pojedyncze „m" (20.07.2026)
+
+`tube_favicon_m.py` — wariant sceny z TEXT="m" pod favicon (wybór Kacpra: opcja A).
+Światła ściszone ~4,5× względem pełnego napisu i przesunięte w bok (+2.4 x), bo
+pojedyncza litera w centrum kadru przepalała się na cytrynowo — w napisie „m" stoi
+na lewym skraju i dostaje światło pod kątem. Dobrane iteracyjnie na stillkach
+porównywanych z posterem nav na tle ivory (key 150, fill 34, rimy 50).
+
+Regeneracja kompletu (public/):
+```bash
+cd ~/mioduszewsky-com/assets/logo3d
+blender -b -P tube_favicon_m.py -- FFCC33 "$PWD/tube_m.blend"
+blender -b tube_m.blend -o "$PWD/still_m_####" -F PNG -f 1
+# master: crop + kwadrat; potem scale 96/32/16, ico z 32, apple-touch 180 na 0xf8f9f2,
+# favicon.svg = wrapper <image> na PNG 128 — komendy 1:1 w memory sesji 19-20.07.
+```
