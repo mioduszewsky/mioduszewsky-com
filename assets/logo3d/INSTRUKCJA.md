@@ -207,3 +207,15 @@ blender -b tube_m.blend -o "$PWD/still_m_####" -F PNG -f 1
 # master: crop + kwadrat; potem scale 96/32/16, ico z 32, apple-touch 180 na 0xf8f9f2,
 # favicon.svg = wrapper <image> na PNG 128 — komendy 1:1 w memory sesji 19-20.07.
 ```
+
+Archiwum porównania 6 opcji (offline HTML, bez zależności od artifactu claude.ai):
+`docs/brand/favicon-opcje-20-07-2026.html` (Drive, projekt mioduszewsky.com).
+
+**ODRZUCONE 20.07: wariant dalmatyńczyka jako favicon.** Ta sama litera „m" w
+fakturze futra (`tube_logo_fur.py` z TEXT="m") wyglądała dobrze na czarnym tle,
+ale na jasnym pasku kart (domyślny motyw większości przeglądarek) białe futro
+prawie znikało — nawet po dodaniu dylatowanego ciemnego konturu pod spodem.
+Werdykt Kacpra: „lipa, nie działa". **Nie podchodzić do tego ponownie** bez
+nowego pomysłu na kontrast — na stronie dalmatyńczyk działa wyłącznie dlatego,
+że stoi na kontrolowanej czystej czerni (`.finale` tło #000000), a favicon tej
+kontroli nad tłem nie ma.
