@@ -15,12 +15,14 @@ const { prod = false, title = 'W5 — ATELIER · mioduszewsky' } = Astro.props;
 
 // Copy EN wg docs/strategy/LANDING_COPY_DRAFT.md (decyzja Kacpra 16.07.2026:
 // strona po angielsku, ceny USD jak na Contrze).
-const services = [
-  { nr: '01', n: 'Landing page', p: 'from $1,000', d: 'One page built around one clear goal: a service, product, campaign, launch or lead-generation offer. Offer structure, copy, design, build and launch.' },
-  { nr: '02', n: 'Company website', p: 'from $1,500', d: 'A complete website for a company, personal brand or project. A credible place to send customers, partners and leads.' },
-  { nr: '03', n: 'Project plan', p: 'from $1,000', d: 'For people who have an idea but do not yet know what should be built first. A defined direction, scope and order of work before you spend money on the build.', tag: true },
-  { nr: '04', n: 'AI implementation', p: 'from $1,200', d: 'For companies that already have customers and want to improve a specific process. I map it, define what to automate and build the workflow, agent, integration or dashboard.' },
-  { nr: '05', n: 'Application or system', p: 'from $3,000', d: 'A first working version of a product, application, dashboard or business system. Something that works for the business from day one.' },
+// Flagowy produkt „Complete Website Build" = JEDEN produkt (decyzja 21.07.2026).
+// Klient NIE wybiera landing vs company — to Kacper decyduje na rozmowie o zakresie.
+// Landing/company to tylko widełki-przewodnik ceny, nie dwie osobne oferty do wyboru.
+// Plan projektu zdjęty ze strony (zostaje na Contrze); reszta = dodatki „beyond the website".
+const beyond = [
+  { nr: '01', n: 'AI implementation', p: 'from $1,200', d: 'For companies that already have customers and want to improve a specific process. I map it, define what to automate and build the workflow, agent, integration or dashboard.' },
+  { nr: '02', n: 'Application or system', p: 'from $3,000', d: 'A first working version of a product, application, dashboard or business system. Something that works for the business from day one.' },
+  { nr: '03', n: 'Build + Iterate', p: '$1,500 / mo', d: 'Ongoing development after launch for selected projects: maintenance, iterations, product decisions and new versions.' },
 ];
 ---
 
@@ -96,7 +98,7 @@ const services = [
 
     <!-- HERO -->
     <section class="hero">
-      <p class="label rv">( Websites · Apps · Project plans )</p>
+      <p class="label rv">( Websites · AI · Apps )</p>
       <h1>
         <span class="ln"><span class="ln-in">A <span class="fix">generic<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix" aria-hidden="true">working!</span></span> website</span></span>
         <span class="ln"><span class="ln-in">you can <em>finally</em></span></span>
@@ -261,32 +263,60 @@ const services = [
       </div>
     </section>
 
-    <!-- USŁUGI -->
+    <!-- OFERTA: flagowy „Complete website build" (2 poziomy) + dodatki -->
     <section class="serv">
-      <p class="label rv">( Services )</p>
-      <h2 class="sec-h">
-        <span class="ln"><span class="ln-in">Choose what needs</span></span>
-        <span class="ln"><span class="ln-in">to <em>exist first</em>.</span></span>
-      </h2>
-      <div class="rows">
-        {services.map((u) => (
-          <a class="srow" href={`/contact?service=${encodeURIComponent(u.n)}`}>
-            <span class="idx idx-wrap">
-              {u.nr}
-              {u.tag && (
-                <svg class="spray-circle" viewBox="0 0 90 60" aria-hidden="true">
-                  <path class="draw" d="M22 14 C 48 4, 84 12, 85 29 C 86 46, 56 56, 30 52 C 8 48, 2 34, 14 22 C 20 16, 30 12, 38 11" filter="url(#sprayF)" />
-                </svg>
-              )}
-            </span>
-            <span class="sname">{u.n}</span>
-            <span class="sdesc">{u.d}</span>
-            <span class="sprice">{u.p}</span>
-            <span class="sarr">↗</span>
-            {u.tag && <span class="tag tag-row" aria-hidden="true">where I'd start</span>}
-          </a>
-        ))}
+      <p class="label rv">( The offer )</p>
+
+      <div class="deal">
+        <span class="deal-grain" aria-hidden="true"></span>
+
+        <div class="deal-top">
+          <div class="deal-main">
+            <span class="deal-badge rv">30-day launch warranty</span>
+            <h2 class="deal-h">
+              <span class="ln"><span class="ln-in deal-h1">Complete website</span></span>
+              <span class="ln"><span class="ln-in deal-h2">build<span class="spray-dot deal-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="16" filter="url(#sprayMist)" /></svg></span><svg class="deal-strike" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M8 17 C 82 9, 214 22, 292 12" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M8 17 C 82 9, 214 22, 292 12" /><path class="draw" d="M12 23 C 90 15, 206 25, 288 17" /></g></svg></span></span>
+            </h2>
+            <p class="deal-price rv">from <b>$1,000</b></p>
+            <p class="deal-say rv">A website that makes your offer clear and looks professional enough to put in front of customers, partners or investors. On our first call I tell you whether you need a landing page or a full company site, so you do not have to figure that out yourself.</p>
+            <div class="deal-cta-wrap rv">
+              <a class="deal-cta mag" href="/contact?service=Complete%20website%20build"><span class="btn-in">Book a 15-min call</span><i aria-hidden="true">→</i></a>
+            </div>
+            <p class="deal-assure rv">Scope and price are agreed before I build. If a website is not the right move, I will tell you, and you still leave the call with a clear next step.</p>
+          </div>
+
+          <div class="deal-inc rv">
+            <p class="deal-inc-label">What you walk away with</p>
+            <ul class="deal-list">
+              <li>An offer that is clear, in words your customers understand</li>
+              <li>A design that looks like a real business, not a template</li>
+              <li>One person from first call to launch, no agency handoffs</li>
+              <li>Mobile, forms, domain and SSL, all handled</li>
+              <li>A live page you can measure from day one</li>
+              <li>30 days of fixes after launch, at no extra cost</li>
+            </ul>
+            <div class="deal-for">
+              <p>Built for founders, owners and teams who need to look credible online and start getting customers.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="deal-beyond">
+          <p class="deal-beyond-intro rv">The website is where most projects start. When the work goes further, these build on the same system.</p>
+          <div class="deal-beyond-grid">
+            {beyond.map((u) => (
+              <a class="deal-bcard rv" href={`/contact?service=${encodeURIComponent(u.n)}`}>
+                <span class="deal-bn">{u.n}</span>
+                <span class="deal-bd">{u.d}</span>
+                <span class="deal-bp">{u.p}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <p class="deal-fine rv">Landing from $1,000 · full company website from $1,500 · a maximum of three projects at a time.</p>
       </div>
+
       <p class="serv-note rv">Long-term advertising, ongoing SEO and guaranteed sales results are not part of the scope.</p>
     </section>
 
@@ -350,6 +380,10 @@ const services = [
         <details class="rv">
           <summary>Are you an agency?<span class="fmark" aria-hidden="true"></span></summary>
           <div class="fbody"><p>No. You work directly with one person from the first conversation to implementation. I currently take on a maximum of three active projects at the same time.</p></div>
+        </details>
+        <details class="rv">
+          <summary>What does the 30-day launch warranty cover?<span class="fmark" aria-hidden="true"></span></summary>
+          <div class="fbody"><p>For 30 days after launch, I fix anything within the agreed scope that does not work as intended, at no extra cost. If you want to change or add something beyond what we agreed, we scope that separately. This covers the work being delivered as promised. It is not a guarantee of business results.</p></div>
         </details>
         <details class="rv">
           <summary>Do you guarantee results?<span class="fmark" aria-hidden="true"></span></summary>
@@ -533,12 +567,40 @@ const services = [
           scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
         });
       });
+      /* Proces na dotyku: brak hovera, więc numer podświetla się na niebiesko, gdy
+         krok mija środek ekranu — 1..6 zapalają się w rytmie czytania na scrollu */
+      if (matchMedia('(hover: none)').matches) {
+        document.querySelectorAll<HTMLElement>('.pstep').forEach((step) => {
+          const pn = step.querySelector<HTMLElement>('.pn');
+          if (!pn) return;
+          ScrollTrigger.create({
+            trigger: step, start: 'top center', end: 'bottom center',
+            onToggle: (self) => pn.classList.toggle('pn-lit', self.isActive),
+          });
+        });
+      }
       /* Żółty marker „maluje się" od lewej, gdy tekst wjeżdża w kadr
          (hero ma własny moment w timeline intro — patrz wyżej) */
       document.querySelector('.w5')?.classList.add('em-anim');
       document.querySelectorAll<HTMLElement>('.proj-d em, .foot-h em, .sec-h em, .lead-close em, .how-why-t em').forEach((el) => {
         ScrollTrigger.create({ trigger: el, start: 'top 86%', once: true, onEnter: () => el.classList.add('lit') });
       });
+      /* OFERTA: spray-podkreślenie rysuje się, kropka i dopisek „psikają" — ten sam
+         język gestów co hero (te same filtry sprayF/sprayMist, kolor --spray). */
+      const dealDraw = gsap.utils.toArray<SVGPathElement>('.deal-strike .draw');
+      if (dealDraw.length) {
+        dealDraw.forEach((p) => { const len = p.getTotalLength(); p.style.strokeDasharray = `${len}`; p.style.strokeDashoffset = `${len}`; });
+        gsap.set(['.deal-dot svg', '.deal-strike .strike-mist'], { opacity: 0 });
+        ScrollTrigger.create({
+          trigger: '.deal-h2', start: 'top 80%', once: true,
+          onEnter: () => {
+            gsap.timeline()
+              .to('.deal-strike .draw', { strokeDashoffset: 0, duration: 0.5, ease: 'power2.in', stagger: 0.14 })
+              .to('.deal-strike .strike-mist', { opacity: 1, duration: 0.3 }, '-=0.15')
+              .fromTo('.deal-dot svg', { scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'power4.out' }, '-=0.25');
+          },
+        });
+      }
       /* Manifest: czarna plama (jak psiknięcie sprayem) rozlewa się na pełny
          ekran w rytmie scrolla — pełny bleed, zero pasków po bokach */
       gsap.fromTo('.manif-in', { clipPath: 'circle(9% at 50% 52%)' }, {
@@ -713,8 +775,9 @@ const services = [
         gsap.to(svg, { opacity: 0, duration: 1.1, delay: 2.4, onComplete: () => svg.remove() });
       };
       const valid = (t: HTMLElement) => !t.closest('a, button, input, textarea, label, .phone-screen, .variant-switch');
+      /* spray tylko z wciśniętym Alt/Option — normalny drag ma zaznaczać tekst */
       addEventListener('pointerdown', (e) => {
-        if (e.button !== 0 || !valid(e.target as HTMLElement)) return;
+        if (e.button !== 0 || !e.altKey || !valid(e.target as HTMLElement)) return;
         spraying = true;
         strokeColor = COLORS[ci++ % COLORS.length];
         lastX = e.clientX; lastY = e.clientY;
@@ -1072,7 +1135,7 @@ const services = [
   .how-why-full { grid-column: 1 / -1; max-width: 70ch; margin-top: 1rem; }
   .dim2 { color: var(--dim); }
 
-  .serv { padding: 14vh 3vw; }
+  .serv { padding: 9vh 3vw 10vh; }
   .rows { margin-top: 5vh; }
   .srow {
     display: grid; grid-template-columns: 60px 1fr 1.2fr max-content 40px; gap: 3vw; align-items: baseline;
@@ -1089,6 +1152,67 @@ const services = [
   .srow:hover .sarr { opacity: 1; translate: 0 0; }
   .sprice { font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); white-space: nowrap; justify-self: end; }
   .serv-note { margin-top: 3vh; font-size: 12px; line-height: 1.6; color: var(--dim); }
+  /* OFERTA jako kontrastowy ciemny panel-zlecenie (fokus konwersji na jasnej stronie).
+     Lewa = tytuł/cena/pitch/CTA; prawa = co dostajesz. Żółte CTA = jedyny mocny akcent. */
+  /* OFERTA: czarna bryła-zlecenie mówiąca językiem strony — spray (#c70404) jak w hero,
+     żółć (--brand) jako cena/CTA, spray-dot + spray-strike rysowany na scrollu, tag Shantell.
+     Beyond WEWNĄTRZ bryły (zero przeskoku). */
+  .deal {
+    position: relative; overflow: hidden; margin-top: 3.4vh;
+    background: #0c0b0a; color: var(--ivory); border-radius: 8px;
+    box-shadow: 0 34px 80px -46px rgba(0, 0, 0, 0.85);
+  }
+  .deal-grain {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.06; mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .deal-top { position: relative; display: grid; grid-template-columns: 1.28fr 1fr; }
+  .deal-main { padding: clamp(2.3rem, 3.6vw, 3.6rem); }
+  .deal-inc { padding: clamp(2.3rem, 3.6vw, 3.6rem); border-left: 1px solid rgba(248, 249, 242, 0.16); display: flex; flex-direction: column; }
+  .deal-badge {
+    display: inline-flex; align-items: center; gap: 0.6em; font-size: 10.5px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--ivory); padding: 0.55em 1em;
+    border: 1px solid rgba(248, 249, 242, 0.3); border-radius: 999px;
+  }
+  .deal-badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
+  .deal-h { font-family: 'NohemiV', 'ClashV', sans-serif; font-size: clamp(2.3rem, 4.2vw, 3.9rem); letter-spacing: -0.03em; line-height: 0.95; margin: 3.2vh 0 0; color: var(--ivory); }
+  .deal-h1 { font-weight: 460; }
+  .deal-h2 { position: relative; font-weight: 660; font-size: 1.14em; }
+  .deal-dot { width: 0.3em; height: 0.3em; }
+  .deal-strike {
+    position: absolute; left: -3%; bottom: -0.34em; width: 108%; height: 0.34em;
+    fill: none; stroke: var(--spray); stroke-linecap: round; pointer-events: none; overflow: visible;
+  }
+  .deal-price { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 420; font-size: clamp(1.6rem, 2.6vw, 2.4rem); letter-spacing: -0.01em; color: rgba(248, 249, 242, 0.5); margin-top: 3.8vh; }
+  .deal-price b { font-weight: 640; color: var(--brand); font-variant-numeric: lining-nums tabular-nums; letter-spacing: -0.02em; }
+  .deal-say { margin-top: 2.4vh; max-width: 44ch; font-size: 15.5px; line-height: 1.62; color: rgba(248, 249, 242, 0.76); }
+  .deal-cta-wrap { margin-top: 3.6vh; display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+  .deal-cta {
+    display: inline-flex; align-items: center; gap: 0.6em; background: var(--brand); color: #0d0d0d;
+    text-decoration: none; font-family: 'GeneralSansV', sans-serif; font-weight: 560; font-size: 14.5px;
+    padding: 1.1em 1.9em; border-radius: 999px; overflow: visible;
+    box-shadow: 0 10px 26px -12px rgba(255, 204, 51, 0.7); transition: box-shadow 0.25s;
+  }
+  .deal-cta:hover { box-shadow: 0 16px 32px -12px rgba(255, 204, 51, 0.85); }
+  .deal-cta .btn-in { display: inline-block; }
+  .deal-cta i { font-style: normal; transition: translate 0.3s cubic-bezier(0.19, 1, 0.22, 1); }
+  .deal-cta:hover i { translate: 5px 0; }
+  .deal-assure { margin-top: 2.6vh; max-width: 44ch; font-size: 12.5px; line-height: 1.55; color: rgba(248, 249, 242, 0.55); }
+  .deal-inc-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(248, 249, 242, 0.55); margin-bottom: 2.6vh; }
+  .deal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+  .deal-list li { position: relative; padding-left: 1.6em; font-size: 14.5px; line-height: 1.45; color: rgba(248, 249, 242, 0.9); }
+  .deal-list li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 0.7em; height: 3px; border-radius: 2px; background: var(--spray); }
+  .deal-for { margin-top: auto; padding-top: 2.8vh; border-top: 1px solid rgba(248, 249, 242, 0.16); }
+  .deal-for p { font-size: 13px; line-height: 1.55; color: rgba(248, 249, 242, 0.62); max-width: 36ch; }
+  .deal-beyond { position: relative; border-top: 1px solid rgba(248, 249, 242, 0.16); padding: clamp(2.2rem, 3.2vw, 3rem) clamp(2.3rem, 3.6vw, 3.6rem) 0; }
+  .deal-beyond-intro { font-size: 13px; line-height: 1.55; color: rgba(248, 249, 242, 0.6); max-width: 62ch; }
+  .deal-beyond-grid { margin-top: 2.6vh; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 3vw; }
+  .deal-bcard { display: flex; flex-direction: column; gap: 0.55rem; padding: 1.5rem 0 2.2rem; text-decoration: none; color: var(--ivory); border-top: 2px solid rgba(248, 249, 242, 0.22); transition: border-color 0.3s; }
+  .deal-bcard:hover { border-color: var(--brand); }
+  .deal-bn { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: 1.15rem; }
+  .deal-bd { font-size: 12.5px; line-height: 1.5; color: rgba(248, 249, 242, 0.6); max-width: 30ch; }
+  .deal-bp { font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(248, 249, 242, 0.78); margin-top: auto; }
+  .deal-fine { position: relative; padding: 2.6vh clamp(2.3rem, 3.6vw, 3.6rem); border-top: 1px solid rgba(248, 249, 242, 0.16); font-size: 12px; color: rgba(248, 249, 242, 0.5); }
 
   /* PROCES — kompaktowe wiersze: numer | krok | opis (jedna linia wysokości) */
   .proc { padding: 8vh 3vw; }
@@ -1106,6 +1230,8 @@ const services = [
     margin-bottom: 0.7rem; transition: color 0.4s, -webkit-text-stroke-color 0.4s;
   }
   .pstep:hover .pn { color: var(--blue); -webkit-text-stroke-color: var(--blue); }
+  /* dotyk: cyfra podświetla się na niebiesko, gdy krok jest przy środku ekranu (scroll) */
+  .pn.pn-lit { color: var(--blue); -webkit-text-stroke-color: var(--blue); }
   .pstep h3 { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.15rem, 1.8vw, 1.5rem); letter-spacing: -0.015em; margin: 0 0 0.5rem; }
   .pstep p { font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 36ch; margin: 0; }
   .hl-y { background: linear-gradient(100deg, transparent 2%, color-mix(in srgb, var(--brand) 80%, transparent) 6% 94%, transparent 98%); padding: 0 0.08em; }
@@ -1361,8 +1487,13 @@ const services = [
     .sprice { grid-column: 2 / -1; grid-row: 2; justify-self: start; }
     .sdesc { display: block; grid-column: 2 / -1; grid-row: 3; font-size: 13.5px; }
     .tag-row { display: none; }
-    /* kółko sprayu wokół „03" wystaje poza ekran przy wąskiej kolumnie idx */
+    /* kółko sprayu wokół „01" wystaje poza ekran przy wąskiej kolumnie idx */
     .spray-circle { display: none; }
+    /* oferta: bryła stackuje pitch, „co dostajesz" i beyond w pion */
+    .deal-top { grid-template-columns: 1fr; }
+    .deal-inc { border-left: none; border-top: 1px solid rgba(248, 249, 242, 0.16); }
+    .deal-beyond-grid { grid-template-columns: 1fr; }
+    .deal-bcard { padding: 1.4rem 0; }
     /* podkreślenie tlink ma siedzieć przy tekście, nie przy krawędzi tap-paddingu */
     .tlink::after { bottom: 5px; }
     /* sieroty w nagłówkach sekcji: balansuj linie przy zawijaniu */
