@@ -1230,7 +1230,12 @@ const beyond = [
     color: transparent; -webkit-text-stroke: 1.4px color-mix(in srgb, var(--ink) 32%, transparent);
     margin-bottom: 0.7rem; transition: color 0.4s, -webkit-text-stroke-color 0.4s;
   }
-  .pstep:hover .pn { color: var(--blue); -webkit-text-stroke-color: var(--blue); }
+  /* hover tylko na urządzeniach z realnym hoverem — na dotyku iOS „przykleja"
+     :hover do dotkniętego kroku i świeciłyby się DWA numery naraz (dotknięty + ten
+     na środku ze scrolla). Na dotyku podświetla wyłącznie scroll (.pn-lit). */
+  @media (hover: hover) {
+    .pstep:hover .pn { color: var(--blue); -webkit-text-stroke-color: var(--blue); }
+  }
   /* dotyk: cyfra podświetla się na niebiesko, gdy krok jest przy środku ekranu (scroll) */
   .pn.pn-lit { color: var(--blue); -webkit-text-stroke-color: var(--blue); }
   .pstep h3 { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.15rem, 1.8vw, 1.5rem); letter-spacing: -0.015em; margin: 0 0 0.5rem; }
