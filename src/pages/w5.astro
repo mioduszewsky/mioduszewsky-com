@@ -1190,7 +1190,7 @@ const beyond = [
   .deal-cta {
     display: inline-flex; align-items: center; gap: 0.6em; background: var(--brand); color: #0d0d0d;
     text-decoration: none; font-family: 'GeneralSansV', sans-serif; font-weight: 560; font-size: 14.5px;
-    padding: 1.1em 1.9em; border-radius: 999px; overflow: visible;
+    white-space: nowrap; padding: 1.1em 1.9em; border-radius: 999px; overflow: visible;
     box-shadow: 0 10px 26px -12px rgba(255, 204, 51, 0.7); transition: box-shadow 0.25s;
   }
   .deal-cta:hover { box-shadow: 0 16px 32px -12px rgba(255, 204, 51, 0.85); }
@@ -1204,7 +1204,8 @@ const beyond = [
   .deal-list li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 0.7em; height: 3px; border-radius: 2px; background: var(--spray); }
   .deal-for { margin-top: auto; padding-top: 2.8vh; border-top: 1px solid rgba(248, 249, 242, 0.16); }
   .deal-for p { font-size: 13px; line-height: 1.55; color: rgba(248, 249, 242, 0.62); max-width: 36ch; }
-  .deal-beyond { position: relative; border-top: 1px solid rgba(248, 249, 242, 0.16); padding: clamp(2.2rem, 3.2vw, 3rem) clamp(2.3rem, 3.6vw, 3.6rem) 0; }
+  /* niebieska hairline: delikatnie oddziela front oferty od „beyond the website" */
+  .deal-beyond { position: relative; border-top: 1px solid var(--blue); padding: clamp(2.2rem, 3.2vw, 3rem) clamp(2.3rem, 3.6vw, 3.6rem) 0; }
   .deal-beyond-intro { font-size: 13px; line-height: 1.55; color: rgba(248, 249, 242, 0.6); max-width: 62ch; }
   .deal-beyond-grid { margin-top: 2.6vh; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 3vw; }
   .deal-bcard { display: flex; flex-direction: column; gap: 0.55rem; padding: 1.5rem 0 2.2rem; text-decoration: none; color: var(--ivory); border-top: 2px solid rgba(248, 249, 242, 0.22); transition: border-color 0.3s; }
@@ -1491,6 +1492,7 @@ const beyond = [
     .spray-circle { display: none; }
     /* oferta: bryła stackuje pitch, „co dostajesz" i beyond w pion */
     .deal-top { grid-template-columns: 1fr; }
+    .deal-cta { padding: 1em 1.55em; font-size: 13.5px; }
     .deal-inc { border-left: none; border-top: 1px solid rgba(248, 249, 242, 0.16); }
     .deal-beyond-grid { grid-template-columns: 1fr; }
     .deal-bcard { padding: 1.4rem 0; }
