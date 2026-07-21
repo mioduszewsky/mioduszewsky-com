@@ -107,7 +107,6 @@ const beyond = [
       <div class="hero-b">
         <div class="hero-cta rv">
           <a class="btn mag big" href="/contact"><span class="btn-in">Book a 15-min call</span></a>
-          <p class="hero-price">Landing pages from $1,000 · Company websites from $1,500</p>
         </div>
         <p class="hero-sub rv">
           I plan, write, design and build landing pages and company websites.
@@ -124,29 +123,30 @@ const beyond = [
         <span class="ln"><span class="ln-in">Having a website is not the same</span></span>
         <span class="ln"><span class="ln-in">as having one you <em>trust</em>.</span></span>
       </h2>
+      <p class="lead-intro rv">Maybe you have not started yet. Maybe you tried and it stalled somewhere. It usually goes one of these ways:</p>
       <div class="lead-rows">
         <div class="lrow rv">
           <span class="idx">01</span>
           <h3>You do not know where to start</h3>
-          <p>Is that a developer, a designer, a copywriter, or all three?</p>
+          <p>A developer, a designer, a copywriter, or all three? So the idea stays an idea.</p>
         </div>
         <div class="lrow rv">
           <span class="idx">02</span>
           <h3>You tried AI</h3>
-          <p>It generated a page, but customers may not understand the offer.</p>
+          <p>It gave you a page fast, but it does not make your offer clear to a real customer.</p>
         </div>
         <div class="lrow rv">
           <span class="idx">03</span>
           <h3>Someone technical built it</h3>
-          <p>It works. It also looks like something made by someone technical.</p>
+          <p>It works. It also looks like it was built by someone technical.</p>
         </div>
         <div class="lrow rv">
           <span class="idx">04</span>
           <h3>A designer sent polished screens</h3>
-          <p>The project stopped before the website became part of the business.</p>
+          <p>Beautiful files that never became a working part of the business.</p>
         </div>
       </div>
-      <p class="lead-close rv">The problem is rarely access to another tool. It is knowing what to build and whether the result is ready to meet customers. <em>That is the part I take responsibility for.</em></p>
+      <p class="lead-close rv">So the problem is rarely another tool. It is knowing what to build, and whether the result is ready to meet customers. <em>That is the part I take off your plate.</em></p>
     </section>
 
     <!-- REALIZACJE -->
@@ -302,7 +302,8 @@ const beyond = [
         </div>
 
         <div class="deal-beyond">
-          <p class="deal-beyond-intro rv">The website is where most projects start. When the work goes further, these build on the same system.</p>
+          <p class="deal-beyond-label rv">Other services</p>
+          <p class="deal-beyond-intro rv">Separate from the website build, each priced on its own. Most people start with a website, but you can come straight here if this is the actual job.</p>
           <div class="deal-beyond-grid">
             {beyond.map((u) => (
               <a class="deal-bcard rv" href={`/contact?service=${encodeURIComponent(u.n)}`}>
@@ -403,7 +404,7 @@ const beyond = [
         <p class="foot-sub rv">Tell me what you have now, even if it is nothing yet. I will tell you whether the project is a fit and what I would build first.</p>
         <div class="foot-b rv">
           <a class="btn mag big" href="/contact"><span class="btn-in">Book a 15-min call</span></a>
-          <a class="foot-write" href="mailto:kacper@mioduszewsky.com">or just write to me</a>
+          <a class="foot-write" href="/contact#ctForm">or just write to me</a>
         </div>
       </div>
       <div class="foot-bar">
@@ -428,11 +429,6 @@ const beyond = [
           <span>One honest conversation, always</span>
         </div>
       </div>
-      <div class="meta">
-        <span>© 2026 Kacper Mioduszewski</span>
-        <span>Designed and built by one person</span>
-        <a href="/privacy" style="color:inherit">Privacy</a>
-      </div>
     </footer>
     <!-- Trigger lazy-loadu futra: wchodzi w viewport gdy user dojeżdża do finału -->
     <div class="finale-trigger" aria-hidden="true"></div>
@@ -449,12 +445,17 @@ const beyond = [
     </div>
     <div class="finale-cta-wrap">
       <a class="finale-cta mag" href="/contact"><span class="btn-in">Book a 15-min call</span><i aria-hidden="true">→</i></a>
-      <a class="finale-alt" href="mailto:kacper@mioduszewsky.com">or just write to me</a>
+      <a class="finale-alt" href="/contact#ctForm">or just write to me</a>
     </div>
     <button class="finale-top" type="button" aria-label="Back to top">
       <span class="finale-top-arrow" aria-hidden="true">↑</span>
       <span>Back to top</span>
     </button>
+    <div class="finale-meta">
+      <span>© 2026 Kacper Mioduszewski</span>
+      <span>Designed and built by one person</span>
+      <a href="/privacy">Privacy</a>
+    </div>
   </footer>
 
   <script>
@@ -979,6 +980,9 @@ const beyond = [
   .btn.big { padding: 16px 34px; font-size: 13px; background: var(--ink); color: var(--ivory); }
   .btn.big::before { background: var(--blue); }
   .btn.big:hover { border-color: var(--blue); }
+  /* nav „Book a call": nalewa się niebieskim (ujednolicenie z resztą niebieskich akcentów) */
+  .nav .btn::before { background: var(--blue); }
+  .nav .btn:hover { border-color: var(--blue); }
   /* Sticky CTA — powtarzany główny cel konwersji */
   .sticky-cta {
     position: fixed; bottom: 22px; left: 50%; z-index: 120;
@@ -1052,7 +1056,8 @@ const beyond = [
 
   /* LEAD */
   .lead { padding: 12vh 3vw 4vh; }
-  .lead-rows { margin-top: 5vh; }
+  .lead-intro { margin-top: 3vh; max-width: 52ch; font-size: clamp(1rem, 1.35vw, 1.2rem); line-height: 1.55; color: #4c483c; }
+  .lead-rows { margin-top: 4vh; }
   .lrow {
     display: grid; grid-template-columns: 60px 1fr 1.4fr; gap: 3vw; align-items: baseline;
     padding: 22px 6px; border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
@@ -1206,7 +1211,8 @@ const beyond = [
   .deal-for p { font-size: 13px; line-height: 1.55; color: rgba(248, 249, 242, 0.62); max-width: 36ch; }
   /* niebieska hairline: delikatnie oddziela front oferty od „beyond the website" */
   .deal-beyond { position: relative; border-top: 1px solid var(--blue); padding: clamp(2.2rem, 3.2vw, 3rem) clamp(2.3rem, 3.6vw, 3.6rem) 0; }
-  .deal-beyond-intro { font-size: 13px; line-height: 1.55; color: rgba(248, 249, 242, 0.6); max-width: 62ch; }
+  .deal-beyond-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: color-mix(in srgb, var(--blue) 78%, var(--ivory)); margin-bottom: 1.4vh; }
+  .deal-beyond-intro { font-size: 13.5px; line-height: 1.6; color: rgba(248, 249, 242, 0.72); max-width: 60ch; }
   .deal-beyond-grid { margin-top: 2.6vh; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 3vw; }
   .deal-bcard { display: flex; flex-direction: column; gap: 0.55rem; padding: 1.5rem 0 2.2rem; text-decoration: none; color: var(--ivory); border-top: 2px solid rgba(248, 249, 242, 0.22); transition: border-color 0.3s; }
   .deal-bcard:hover { border-color: var(--brand); }
@@ -1335,14 +1341,15 @@ const beyond = [
   }
   .finale-cta {
     display: inline-flex; align-items: center; gap: 14px; text-decoration: none;
-    font-family: 'GeneralSansV', sans-serif; font-weight: 500;
-    background: var(--ivory); color: var(--ink); border-radius: 999px;
+    font-family: 'GeneralSansV', sans-serif; font-weight: 560;
+    background: var(--brand); color: #0d0d0d; border-radius: 999px;
     padding: 19px 40px; font-size: clamp(15px, 1.3vw, 17px); letter-spacing: 0.01em;
     position: relative; overflow: clip;
-    transition: color 0.3s, scale 0.18s ease-out;
+    box-shadow: 0 16px 40px -16px rgba(255, 204, 51, 0.65);
+    transition: box-shadow 0.3s, scale 0.18s ease-out;
   }
   .finale-cta::before {
-    content: ""; position: absolute; inset: 0; z-index: 0; background: var(--brand);
+    content: ""; position: absolute; inset: 0; z-index: 0; background: #ffdb5c;
     transform: scaleY(0); transform-origin: bottom;
     transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1);
   }
@@ -1353,6 +1360,15 @@ const beyond = [
   .finale-cta:hover i { translate: 5px 0; }
   .finale-alt { color: color-mix(in srgb, var(--ivory) 58%, transparent); text-decoration: none; font-size: 13px; letter-spacing: 0.04em; border-bottom: 1px solid color-mix(in srgb, var(--ivory) 28%, transparent); padding-bottom: 2px; transition: color 0.25s; }
   .finale-alt:hover { color: var(--ivory); }
+  /* meta na samym dole strony (czarny finał) */
+  .finale-meta {
+    position: absolute; left: 0; right: 0; bottom: calc(2.5vh + env(safe-area-inset-bottom, 0px));
+    z-index: 2; display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem 2rem; padding: 0 5vw;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--ivory) 38%, transparent); text-align: center;
+  }
+  .finale-meta a { color: inherit; text-decoration: none; transition: color 0.25s; }
+  .finale-meta a:hover { color: var(--ivory); }
   @media (max-width: 560px) { .finale-cta { padding: 16px 30px; } .finale-dal { width: 92vw; } }
   @media (max-width: 640px) {
     /* hero skaluje się z vw zamiast twardego floora — „send people to·"
@@ -1516,8 +1532,8 @@ const beyond = [
     .foot { min-height: auto; padding: 12vh 5vw 5vh; }
     .foot-b .btn { width: 100%; text-align: center; }
     .foot-b { gap: 18px; }
-    .foot-bar { grid-template-columns: 1fr; gap: 2.4rem; margin-top: 6vh; text-align: left; }
-    .fcol-right { text-align: left; align-items: flex-start; }
+    .foot-bar { grid-template-columns: 1fr auto; gap: 1.6rem 2rem; margin-top: 6vh; text-align: left; align-items: center; }
+    .fcol-right { display: none; }
     .fcol-badge { align-items: flex-start; }
     .meta { flex-direction: column; gap: 6px; }
   }
