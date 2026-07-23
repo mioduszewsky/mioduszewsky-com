@@ -253,13 +253,14 @@ const beyond = [
             <li>What must be included and what can be removed?</li>
             <li>Only then do I write, design and build.</li>
           </ol>
-          <p class="how-out">You speak directly with the person doing the work, from the first conversation to launch.</p>
+          <p class="how-out">You speak directly with the person doing the work, the whole way through.</p>
         </div>
       </div>
       <div class="how-why">
-        <p class="how-why-t rv">I am not the best specialist in every single discipline. <span class="dim2">A dedicated designer may draw a prettier system. A specialist developer may write more advanced code.</span> That is not the comparison I am trying to win.</p>
+        <p class="how-why-t rv how-why-full how-me">Behind mioduszewsky there is one person, not an agency. I am <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>, and I build from <span class="lp" data-lp="/about/wroclaw.jpg" data-tilt="3">Wrocław</span>. I build things to keep working long after the first impression fades.</p>
+        <p class="how-why-t rv">I am not the best specialist in every single discipline. <span class="dim2">A dedicated designer may draw a prettier system. A specialist developer may write more advanced code.</span> But depth in one craft is not what makes the whole thing work.</p>
         <p class="how-why-t rv">I work across the points where projects usually break: <em>the decision, the offer, the design, the build, the launch</em>. One system, by one person.</p>
-        <p class="how-why-t rv how-why-full">eskapizm and Cannversity, shown above, are not client work. <span class="dim2">They are my own companies.</span> I run this exact system on my own business before I ever run it on yours.</p>
+        <p class="how-why-t rv how-why-full"><span class="lp" data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> and Cannversity, shown above, are not client work. <span class="dim2">They are my own projects.</span> I run this exact system on <span class="lp" data-lp="/about/building.jpg" data-tilt="-3">my own business</span> before I ever run it on yours.</p>
       </div>
     </section>
 
@@ -894,6 +895,61 @@ const beyond = [
       }
     }
   </script>
+
+  <script>
+    // LINK-PREVIEW: hover na słowie odsłania zdjęcie Kacpra (native, bez React).
+    // Zdjęcia ładują się leniwie dopiero przy pierwszym najechaniu.
+    {
+      const finePointer = matchMedia('(pointer: fine)').matches;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (finePointer) {
+        document.querySelectorAll<HTMLElement>('.lp').forEach((el) => {
+          let card: HTMLElement | null = null;
+          let raf = 0;
+          let curX = 0;
+          let tgtX = 0;
+          const tilt = parseFloat(el.dataset.tilt || '0');
+          const src = el.dataset.lp || '';
+
+          const build = () => {
+            card = document.createElement('span');
+            card.className = 'lp-card';
+            card.style.setProperty('--tilt', tilt + 'deg');
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = '';
+            img.decoding = 'async';
+            card.appendChild(img);
+            el.appendChild(card);
+          };
+          const loop = () => {
+            curX += (tgtX - curX) * 0.15;
+            if (card) card.style.setProperty('--lp-x', curX.toFixed(1) + 'px');
+            if (Math.abs(tgtX - curX) > 0.3) { raf = requestAnimationFrame(loop); }
+            else { curX = tgtX; if (card) card.style.setProperty('--lp-x', curX + 'px'); raf = 0; }
+          };
+
+          el.addEventListener('pointerenter', () => {
+            if (!card) build();
+            requestAnimationFrame(() => el.classList.add('lp-on'));
+          });
+          el.addEventListener('pointerleave', () => {
+            el.classList.remove('lp-on');
+            tgtX = 0;
+            if (!reduce && !raf) raf = requestAnimationFrame(loop);
+          });
+          if (!reduce) {
+            el.addEventListener('pointermove', (e) => {
+              const r = el.getBoundingClientRect();
+              const off = (e.clientX - (r.left + r.width / 2)) / 3;
+              tgtX = Math.max(-42, Math.min(42, off));
+              if (!raf) raf = requestAnimationFrame(loop);
+            });
+          }
+        });
+      }
+    }
+  </script>
 </VariantLayout>
 
 <style>
@@ -1138,7 +1194,43 @@ const beyond = [
     color: var(--ink); max-width: 44ch;
   }
   .how-why-full { grid-column: 1 / -1; max-width: 70ch; margin-top: 1rem; }
+  .how-me { margin-bottom: 0.2rem; }
   .dim2 { color: var(--dim); }
+
+  /* LINK-PREVIEW: słowa, które po najechaniu odsłaniają zdjęcie Kacpra.
+     Świadomie inne od żółtego markera (em) — cienkie podkreślenie = "tu jest coś do zobaczenia". */
+  .lp {
+    position: relative; color: var(--ink); cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--ink) 30%, transparent);
+    text-decoration-thickness: 1.5px; text-underline-offset: 4px;
+    transition: text-decoration-color 0.28s ease;
+  }
+  .lp:hover, .lp.lp-on { text-decoration-color: var(--ink); }
+  :global(body.has-cur) .lp { cursor: none; }
+  /* Karta jest tworzona w JS runtime, więc scoped selektory Astro jej nie łapią.
+     Dlatego reguły karty muszą być :global (patrz lekcja: Astro scope'uje statyczne elementy). */
+  :global(.lp-card) {
+    position: absolute; left: 50%; bottom: calc(100% + 12px);
+    width: 190px; height: 234px; padding: 5px; border-radius: 9px;
+    background: var(--ivory, #f8f9f2);
+    box-shadow:
+      0 20px 44px -14px color-mix(in srgb, #000 46%, transparent),
+      0 2px 8px color-mix(in srgb, #000 18%, transparent);
+    pointer-events: none; z-index: 40; opacity: 0;
+    transform: translate(-50%, 8px) translateX(var(--lp-x, 0px)) rotate(var(--tilt, 0deg)) scale(0.82);
+    transform-origin: bottom center;
+    transition: opacity 0.26s ease, transform 0.44s cubic-bezier(0.34, 1.4, 0.5, 1);
+  }
+  :global(.lp.lp-on .lp-card) {
+    opacity: 1;
+    transform: translate(-50%, 0) translateX(var(--lp-x, 0px)) rotate(var(--tilt, 0deg)) scale(1);
+  }
+  :global(.lp-card img) { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; display: block; }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.lp-card) { transition: opacity 0.2s ease; }
+    :global(.lp.lp-on .lp-card) { transform: translate(-50%, 0) rotate(var(--tilt, 0deg)); }
+  }
 
   .serv { padding: 9vh 3vw 10vh; }
   .rows { margin-top: 5vh; }
