@@ -90,11 +90,15 @@ const beyond = [
       <a class="btn mag" href="/contact"><span class="btn-in">Book a call</span></a>
     </header>
 
-    <!-- Sticky CTA (pojawia się po zjechaniu z hero) -->
-    <a class="sticky-cta" href="/contact" aria-label="Book a 15-minute call">
-      <span>Book a 15-min call</span>
-      <i aria-hidden="true">→</i>
-    </a>
+    <!-- Sticky CTA (pojawia się po zjechaniu z hero). Wrapper trzyma slide-in/centrowanie
+         (transform), .sticky-cta w środku jest .mag i dostaje SWÓJ własny transform od
+         magnetyzmu — rozdzielone, żeby oba się nie nadpisywały. -->
+    <div class="sticky-cta-wrap">
+      <a class="sticky-cta mag" href="/contact" aria-label="Book a 15-minute call">
+        <span class="btn-in">Book a 15-min call</span>
+        <i aria-hidden="true">→</i>
+      </a>
+    </div>
 
     <!-- HERO -->
     <section class="hero">
@@ -109,9 +113,8 @@ const beyond = [
           <a class="btn mag big" href="/contact"><span class="btn-in">Book a 15-min call</span></a>
         </div>
         <p class="hero-sub rv">
-          I plan, write, design and build landing pages and company websites.
+          I plan, write, design and build your website, start to finish.
           One person takes the project from an idea to a working page.
-          No agency handovers. No design made in isolation.
         </p>
       </div>
     </section>
@@ -123,7 +126,7 @@ const beyond = [
         <span class="ln"><span class="ln-in">Having a website is not the same</span></span>
         <span class="ln"><span class="ln-in">as having one you <em>trust</em>.</span></span>
       </h2>
-      <p class="lead-intro rv">Maybe you have not started yet. Maybe you tried and it stalled somewhere. It usually goes one of these ways:</p>
+      <p class="lead-intro rv">Maybe you have not started yet. Maybe it stalled somewhere. Or maybe it works, just not hard enough. It usually goes one of these ways:</p>
       <div class="lead-rows">
         <div class="lrow rv">
           <span class="idx">01</span>
@@ -132,18 +135,13 @@ const beyond = [
         </div>
         <div class="lrow rv">
           <span class="idx">02</span>
-          <h3>You tried AI</h3>
-          <p>It gave you a page fast, but it does not make your offer clear to a real customer.</p>
+          <h3>The website stayed behind</h3>
+          <p>Your business grew, the website did not.</p>
         </div>
         <div class="lrow rv">
           <span class="idx">03</span>
-          <h3>Someone technical built it</h3>
-          <p>It works. It also looks like it was built by someone technical.</p>
-        </div>
-        <div class="lrow rv">
-          <span class="idx">04</span>
-          <h3>A designer sent polished screens</h3>
-          <p>Beautiful files that never became a working part of the business.</p>
+          <h3>You tried AI</h3>
+          <p>It gave you a page fast, but the offer stayed unclear.</p>
         </div>
       </div>
       <p class="lead-close rv">So the problem is rarely another tool. It is knowing what to build, and whether the result is ready to meet customers. <em>That is the part I take off your plate.</em></p>
@@ -183,7 +181,7 @@ const beyond = [
           <span class="ln"><span class="ln-in idx">№ 02</span></span>
           <h2 class="ln"><span class="ln-in">aigor.grabowski</span></h2>
           <p class="proj-d rv">
-            A website for an AI-art collection: works, artists and acquisition
+            A website for an art collection: works, artists and acquisition
             history. <em>Designed to sell a story.</em>
           </p>
         </div>
@@ -206,8 +204,8 @@ const beyond = [
         </a>
         <!-- Wewnętrzny dokument, nie strona publiczna: bez linku, tylko podgląd na hover -->
         <div class="mrow mrow-static rv" data-thumb={thumbWoodspot.src}>
-          <span class="mname">Private event platform</span>
-          <span class="mdesc">An internal deck prepared to start the project: interactive presentation and a financial model connecting the event concept, operational limits and business decisions.</span>
+          <span class="mname">Internal project decks</span>
+          <span class="mdesc">Interactive presentations and financial models connecting an idea to real limits and a business decision.</span>
         </div>
         <p class="work-note rv">These examples show the scope and type of work delivered, not proof of guaranteed revenue, conversion or cost savings.</p>
       </div>
@@ -217,9 +215,9 @@ const beyond = [
     <section class="manif">
       <div class="manif-in">
         <p class="manif-t">
-          <span class="ln"><span class="ln-in">The goal is not to give you</span></span>
-          <span class="ln"><span class="ln-in"><em>more files.</em></span></span>
-          <span class="ln"><span class="ln-in">It is a page you can use. <span class="tag tag-manif" aria-hidden="true">for real.</span></span></span>
+          <span class="ln"><span class="ln-in">The goal is not another step.</span></span>
+          <span class="ln"><span class="ln-in">It is the <em>last</em> one.</span></span>
+          <span class="ln"><span class="ln-in">You go live. <span class="tag tag-manif" aria-hidden="true">for real.</span></span></span>
         </p>
         <p class="manif-sub rv">Send it in an email. Run a campaign to it. Show it to a customer. Build on it after launch.</p>
       </div>
@@ -257,10 +255,10 @@ const beyond = [
         </div>
       </div>
       <div class="how-why">
-        <p class="how-why-t rv how-why-full how-me">Behind mioduszewsky there is one person, not an agency. I am <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>, and I build from <span class="lp" data-lp="/about/wroclaw.jpg" data-tilt="3">Wrocław</span>. I build things to keep working long after the first impression fades.</p>
+        <p class="how-why-t rv how-why-full how-me">Behind mioduszewsky there is one person, not an agency. I am <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>, and I build from Wrocław. I build things to keep working long after the first impression fades.</p>
         <p class="how-why-t rv">I am not the best specialist in every single discipline. <span class="dim2">A dedicated designer may draw a prettier system. A specialist developer may write more advanced code.</span> But depth in one craft is not what makes the whole thing work.</p>
         <p class="how-why-t rv">I work across the points where projects usually break: <em>the decision, the offer, the design, the build, the launch</em>. One system, by one person.</p>
-        <p class="how-why-t rv how-why-full"><span class="lp" data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> and Cannversity, shown above, are not client work. <span class="dim2">They are my own projects.</span> I run this exact system on <span class="lp" data-lp="/about/building.jpg" data-tilt="-3">my own business</span> before I ever run it on yours.</p>
+        <p class="how-why-t rv how-why-full"><span class="lp" data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> and <span class="lp" data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span>, shown above, are not client work. <span class="dim2">They are my own projects.</span> I run this exact system on <span class="lp" data-lp="/about/building.jpg" data-tilt="-3">my own business</span> before I ever run it on yours.</p>
       </div>
     </section>
 
@@ -297,7 +295,7 @@ const beyond = [
               <li>30 days of fixes after launch, at no extra cost</li>
             </ul>
             <div class="deal-for">
-              <p>Built for founders, owners and teams who need to look credible online and start getting customers.</p>
+              <p>Built for <b>founders, owners and teams</b> who need to look credible online and start getting customers.</p>
             </div>
           </div>
         </div>
@@ -333,7 +331,7 @@ const beyond = [
         <article class="pstep rv">
           <span class="pn">01</span>
           <h3>We talk about the business</h3>
-          <p>What exists today, what needs to change and what the project should achieve.</p>
+          <p>What exists today, what needs to change, starting with a <a class="ilink" href="/contact">15-min call</a>.</p>
         </article>
         <article class="pstep rv">
           <span class="pn">02</span>
@@ -804,14 +802,16 @@ const beyond = [
 
     /* Sticky CTA: widoczny po zjechaniu z hero, chowany gdy jasna stopka blisko dołu.
        Finał (.finale) jest fixed pod treścią — go nie obserwujemy. */
-    const sticky = document.querySelector<HTMLElement>('.sticky-cta');
+    const sticky = document.querySelector<HTMLElement>('.sticky-cta-wrap');
+    const navBtn = document.querySelector<HTMLElement>('.nav .btn');
     const heroEl = document.querySelector<HTMLElement>('.hero');
     const footEl = document.querySelector<HTMLElement>('.foot');
     if (sticky && heroEl && footEl) {
       const updateSticky = () => {
         const heroOut = heroEl.getBoundingClientRect().bottom < 0;
-        const footNear = footEl.getBoundingClientRect().top < innerHeight * 0.9;
+        const footNear = footEl.getBoundingClientRect().top < innerHeight * 0.5;
         sticky.classList.toggle('show', heroOut && !footNear);
+        navBtn?.classList.toggle('hide', heroOut);
       };
       (window as any).__lenis?.on?.('scroll', updateSticky);
       addEventListener('scroll', updateSticky, { passive: true });
@@ -1039,18 +1039,30 @@ const beyond = [
   /* nav „Book a call": nalewa się niebieskim (ujednolicenie z resztą niebieskich akcentów) */
   .nav .btn::before { background: var(--blue); }
   .nav .btn:hover { border-color: var(--blue); }
-  /* Sticky CTA — powtarzany główny cel konwersji */
+  /* chowa się, gdy poza hero — sticky-cta albo CTA stopki i tak są wtedy widoczne */
+  .nav .btn { transition: opacity 0.3s, translate 0.3s, color 0.3s, border-color 0.3s, scale 0.18s ease-out; }
+  .nav .btn.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
+  /* Sticky CTA — powtarzany główny cel konwersji.
+     Wrapper = fixed + centrowanie + slide-in/out (swój transform).
+     .sticky-cta w środku = .mag, dostaje x/y od magnetyzmu na WŁASNYM transformie. */
+  .sticky-cta-wrap {
+    position: fixed; left: 0; right: 0; z-index: 120;
+    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+    display: flex; justify-content: center;
+    pointer-events: none;
+    transform: translateY(130%); opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.19,1,0.22,1), opacity 0.4s;
+  }
+  .sticky-cta-wrap.show { transform: translateY(0); opacity: 1; }
   .sticky-cta {
-    position: fixed; bottom: 22px; left: 50%; z-index: 120;
+    position: relative; pointer-events: auto;
     display: inline-flex; align-items: center; gap: 10px;
     padding: 13px 24px; border-radius: 999px;
     background: var(--ink); color: var(--ivory); text-decoration: none;
     font-size: 13px; letter-spacing: 0.04em;
     box-shadow: 0 10px 30px color-mix(in srgb, var(--ink) 28%, transparent);
-    transform: translate(-50%, 130%); opacity: 0;
     overflow: clip;
-    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
-    transition: transform 0.5s cubic-bezier(0.19,1,0.22,1), opacity 0.4s, scale 0.18s ease-out;
+    transition: scale 0.18s ease-out;
   }
   .sticky-cta::before {
     content: ""; position: absolute; inset: 0; z-index: 0; background: var(--blue);
@@ -1058,13 +1070,13 @@ const beyond = [
     transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1);
   }
   .sticky-cta > * { position: relative; z-index: 1; }
-  .sticky-cta.show { transform: translate(-50%, 0); opacity: 1; }
   .sticky-cta:hover::before { transform: scaleY(1); }
   .sticky-cta:active { scale: 0.96; }
   .sticky-cta i { font-style: normal; transition: translate 0.3s; }
   .sticky-cta:hover i { translate: 4px 0; }
   @media (max-width: 620px) {
-    .sticky-cta { font-size: 12px; padding: 12px 20px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+    .sticky-cta { font-size: 12px; padding: 12px 20px; }
+    .sticky-cta-wrap { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   }
   .btn.ghost { color: var(--ink); }
 
@@ -1161,7 +1173,9 @@ const beyond = [
     /* pełny bleed; bez JS / reduced-motion po prostu czarna sekcja,
        z JS clip-path rozlewa ją jak psiknięcie sprayem */
     background: var(--ink); color: var(--ivory); text-align: center;
-    padding: 18vh 3vw;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 6vh 3vw;
     will-change: clip-path;
   }
   .manif-t { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 460; font-size: clamp(1.9rem, 4.6vw, 4.4rem); line-height: 1.12; letter-spacing: -0.02em; }
@@ -1196,6 +1210,14 @@ const beyond = [
   .how-why-full { grid-column: 1 / -1; max-width: 70ch; margin-top: 1rem; }
   .how-me { margin-bottom: 0.2rem; }
   .dim2 { color: var(--dim); }
+
+  /* Subtelny link inline w treści (np. proces krok 01) — nie button, nie hover-preview */
+  .ilink {
+    color: var(--blue); text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--blue) 40%, transparent);
+    text-underline-offset: 3px; transition: text-decoration-color 0.28s ease;
+  }
+  .ilink:hover { text-decoration-color: var(--blue); }
 
   /* LINK-PREVIEW: słowa, które po najechaniu odsłaniają zdjęcie Kacpra.
      Świadomie inne od żółtego markera (em) — cienkie podkreślenie = "tu jest coś do zobaczenia". */
@@ -1296,11 +1318,12 @@ const beyond = [
   .deal-cta:hover i { translate: 5px 0; }
   .deal-assure { margin-top: 2.6vh; max-width: 44ch; font-size: 12.5px; line-height: 1.55; color: rgba(248, 249, 242, 0.55); }
   .deal-inc-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(248, 249, 242, 0.55); margin-bottom: 2.6vh; }
-  .deal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+  .deal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: clamp(1.3rem, 2.4vh, 2.1rem); }
   .deal-list li { position: relative; padding-left: 1.6em; font-size: 14.5px; line-height: 1.45; color: rgba(248, 249, 242, 0.9); }
   .deal-list li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 0.7em; height: 3px; border-radius: 2px; background: var(--spray); }
-  .deal-for { margin-top: auto; padding-top: 2.8vh; border-top: 1px solid rgba(248, 249, 242, 0.16); }
-  .deal-for p { font-size: 13px; line-height: 1.55; color: rgba(248, 249, 242, 0.62); max-width: 36ch; }
+  .deal-for { margin-top: 6vh; padding-top: 2.8vh; border-top: 1px solid rgba(248, 249, 242, 0.16); }
+  .deal-for p { font-size: clamp(15px, 1.3vw, 18px); line-height: 1.6; color: rgba(248, 249, 242, 0.8); max-width: 32ch; }
+  .deal-for p b { color: var(--brand); font-weight: 640; }
   /* niebieska hairline: delikatnie oddziela front oferty od „beyond the website" */
   .deal-beyond { position: relative; border-top: 1px solid var(--blue); padding: clamp(2.2rem, 3.2vw, 3rem) clamp(2.3rem, 3.6vw, 3.6rem) 0; }
   .deal-beyond-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: color-mix(in srgb, var(--blue) 78%, var(--ivory)); margin-bottom: 1.4vh; }
