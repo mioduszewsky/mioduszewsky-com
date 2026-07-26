@@ -38,7 +38,7 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
     </div>
     {url ? (
       <div class="phone-screen phone-live" style={`background:${screenbg}`}>
-        <iframe src={url} title={alt} loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        <iframe data-src={url} title={alt} referrerpolicy="strict-origin-when-cross-origin"></iframe>
         <!-- Fallback: żywa strona nie wstała (sieć/awaria) → link zamiast pustego ekranu -->
         <a class="live-fail" href={url} target="_blank" rel="noopener">
           <span>the live site is being shy</span>
@@ -75,13 +75,26 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
     fit();
     new ResizeObserver(fit).observe(screen);
 
+    // Żywa strona ładuje się w tle zaraz po tym, jak reszta strony jest gotowa —
+    // NIE czeka na scroll. Ma stać gotowa, zanim user tam dojedzie, zamiast
+    // ładować się na jego oczach w trakcie dojazdu do sekcji.
+    const startLoad = () => {
+      if (frame.src) return;
+      const s = frame.dataset.src;
+      if (s) frame.src = s;
+    };
+    if (document.readyState === 'complete') startLoad();
+    else addEventListener('load', startLoad, { once: true });
+
     // Awaria żywej strony (host nie odpowiada, brak sieci): iframe ZAWSZE odpala
     // `load` (nawet dla błędu nawigacji), więc jedyny wiarygodny sygnał to probe
-    // fetch no-cors — odrzuca wyłącznie przy realnym błędzie sieciowym.
-    // Odpalamy dopiero przy wejściu makiety w okolice viewportu (iframe jest lazy).
+    // fetch no-cors — odrzuca wyłącznie przy realnym błędzie sieciowym. Sprawdzamy
+    // dopiero przy wejściu makiety w okolice viewportu (wtedy src jest już ustawiony
+    // od dawna; startLoad() tu tylko jako zabezpieczenie na wypadek bardzo wolnej sieci).
     const io = new IntersectionObserver((entries) => {
       if (entries.some((e) => e.isIntersecting)) {
         io.disconnect();
+        startLoad();
         fetch(frame.src, { mode: 'no-cors' }).catch(() => screen.classList.add('live-failed'));
       }
     }, { rootMargin: '300px' });

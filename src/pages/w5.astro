@@ -258,7 +258,7 @@ const beyond = [
         <p class="how-why-t rv how-why-full how-me">Behind mioduszewsky there is one person, not an agency. I am <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>, and I build from Wrocław. I build things to keep working long after the first impression fades.</p>
         <p class="how-why-t rv">I am not the best specialist in every single discipline. <span class="dim2">A dedicated designer may draw a prettier system. A specialist developer may write more advanced code.</span> But depth in one craft is not what makes the whole thing work.</p>
         <p class="how-why-t rv">I work across the points where projects usually break: <em>the decision, the offer, the design, the build, the launch</em>. One system, by one person.</p>
-        <p class="how-why-t rv how-why-full"><span class="lp" data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> and <span class="lp" data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span>, shown above, are not client work. <span class="dim2">They are my own projects.</span> I run this exact system on <span class="lp" data-lp="/about/building.jpg" data-tilt="-3">my own business</span> before I ever run it on yours.</p>
+        <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> and <span class="lp" data-tap data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span>, shown above, are not client work. <span class="dim2">They are my own projects.</span> I run this exact system on <span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">my own business</span> before I ever run it on yours.</p>
       </div>
     </section>
 
@@ -411,6 +411,7 @@ const beyond = [
           <p class="flabel">Contact</p>
           <a href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com</a>
           <a href="https://instagram.com/mioduszewsky" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.linkedin.com/in/kacper-mioduszewski/" target="_blank" rel="noopener">LinkedIn</a>
           <a href="https://contra.com/kacper_mioduszewski_i7ytzt28" target="_blank" rel="noopener">Contra</a>
         </div>
         <div class="fcol fcol-badge rv">
@@ -429,8 +430,6 @@ const beyond = [
         </div>
       </div>
     </footer>
-    <!-- Trigger lazy-loadu futra: wchodzi w viewport gdy user dojeżdża do finału -->
-    <div class="finale-trigger" aria-hidden="true"></div>
   </main>
 
   <!-- STOPKA-FINAŁ (curtain reveal): treść unosi się i naturalnie odsłania ją u dołu -->
@@ -870,16 +869,15 @@ const beyond = [
       });
     }
 
-    /* Lazy-load futra w stopce: 11 MB webm/mp4 dociąga się dopiero, gdy user
-       dojeżdża do finału. Stopka jest position:fixed (zawsze w DOM), więc nie da
-       się obserwować jej samej — obserwujemy sentinel na końcu <main>. */
+    /* Futro w stopce (11 MB webm/mp4) ładuje się w tle zaraz po tym, jak reszta
+       strony jest gotowa — NIE czeka aż user dojedzie do finału scrollem. Ma stać
+       gotowe na czas, zamiast ładować się na jego oczach w trakcie dojazdu. */
     {
       const fv = document.querySelector('.finale-video') as HTMLVideoElement | null;
-      const trigger = document.querySelector('.finale-trigger');
       /* Save-Data / 2G: 6-12 MB futra zostaje na posterze, nie dociągamy */
       const conn = (navigator as any).connection;
       const skipHeavy = !!(conn?.saveData || /(^|\b)2g/.test(conn?.effectiveType || ''));
-      if (fv && trigger && !skipHeavy) {
+      if (fv && !skipHeavy) {
         const load = () => {
           fv.querySelectorAll('source[data-src]').forEach((s) => {
             const el = s as HTMLSourceElement;
@@ -888,15 +886,17 @@ const beyond = [
           fv.load();
           fv.play().catch(() => {});
         };
-        const io = new IntersectionObserver((entries) => {
-          if (entries.some((e) => e.isIntersecting)) { load(); io.disconnect(); }
-        }, { rootMargin: '400px' });
-        io.observe(trigger);
+        if (document.readyState === 'complete') load();
+        else addEventListener('load', load, { once: true });
       }
     }
   </script>
 
   <script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    gsap.registerPlugin(ScrollTrigger);
+
     // LINK-PREVIEW: hover na słowie odsłania zdjęcie Kacpra (native, bez React).
     // Zdjęcia ładują się leniwie dopiero przy pierwszym najechaniu.
     {
@@ -947,6 +947,66 @@ const beyond = [
             });
           }
         });
+      } else {
+        // Dotyk: bez hovera. Domyślnie karta odsłania się na scrollu — dokładnie ten
+        // sam moment co podświetlenie numerów w Process (słowo mija środek ekranu),
+        // żeby pojawiało się w rytmie czytania, a nie akurat w trakcie tapa. Słowa
+        // oznaczone [data-tap] (eskapizm/Cannversity/my own business — trzy w tym
+        // samym zdaniu na tej samej linijce, ich okna scrolla zawsze by się pokryły)
+        // dostają zamiast tego tap. Tylko JEDNA karta otwarta naraz w obu trybach.
+        let openEl: HTMLElement | null = null;
+        const closeOpen = () => { if (openEl) { openEl.classList.remove('lp-on'); openEl = null; } };
+        document.querySelectorAll<HTMLElement>('.lp').forEach((el) => {
+          let card: HTMLElement | null = null;
+          const tilt = parseFloat(el.dataset.tilt || '0');
+          const src = el.dataset.lp || '';
+          const build = () => {
+            card = document.createElement('span');
+            card.className = 'lp-card';
+            card.style.setProperty('--tilt', tilt + 'deg');
+            card.style.setProperty('--lp-x', '0px');
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = '';
+            img.decoding = 'async';
+            card.appendChild(img);
+            el.appendChild(card);
+            // karta wyśrodkowana na słowie — przy krawędzi ekranu dogięta z powrotem w kadr
+            requestAnimationFrame(() => {
+              const r = card!.getBoundingClientRect();
+              let shift = 0;
+              if (r.left < 10) shift = 10 - r.left;
+              else if (r.right > innerWidth - 10) shift = innerWidth - 10 - r.right;
+              if (shift) card!.style.setProperty('--lp-x', shift + 'px');
+            });
+          };
+          const open = () => {
+            if (openEl && openEl !== el) openEl.classList.remove('lp-on');
+            if (!card) build();
+            el.classList.add('lp-on');
+            openEl = el;
+          };
+          if (el.hasAttribute('data-tap')) {
+            el.addEventListener('click', (e) => {
+              e.stopPropagation();
+              if (openEl === el) { closeOpen(); return; }
+              open();
+            });
+          } else {
+            ScrollTrigger.create({
+              // Słowo samo w sobie ma ~17px wysokości — "top center/bottom center" dałoby
+              // okno aktywne tylko na te 17px scrolla (mignięcie, nie efekt). Pasmo liczone
+              // od procentu wysokości ekranu (nie od wysokości słowa) daje spokojny czas na
+              // przeczytanie, zanim karta zniknie.
+              trigger: el, start: 'top 65%', end: 'top 35%',
+              onToggle: (self) => {
+                if (self.isActive) open();
+                else { el.classList.remove('lp-on'); if (openEl === el) openEl = null; }
+              },
+            });
+          }
+        });
+        document.addEventListener('click', () => closeOpen());
       }
     }
   </script>
@@ -1645,8 +1705,8 @@ const beyond = [
     .faq summary:hover { padding-left: 2px; }
     .fbody { padding: 0 2px 24px; }
     .foot { min-height: auto; padding: 12vh 5vw 5vh; }
+    .foot-b { flex-direction: column; align-items: center; gap: 18px; }
     .foot-b .btn { width: 100%; text-align: center; }
-    .foot-b { gap: 18px; }
     .foot-bar { grid-template-columns: 1fr auto; gap: 1.6rem 2rem; margin-top: 6vh; text-align: left; align-items: center; }
     .fcol-right { display: none; }
     .fcol-badge { align-items: flex-start; }
