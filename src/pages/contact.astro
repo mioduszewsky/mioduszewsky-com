@@ -57,15 +57,11 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
         <h2>Book a call</h2>
         <p class="pdesc">Pick a slot that works for you. 15 minutes, video, no obligation.</p>
         {GOOGLE_BOOKING_URL ? (
-          <div class="cal-embed">
-            <iframe
-              src={GOOGLE_BOOKING_URL}
-              title="Book a 15-minute call"
-              loading="lazy"
-              style="border:0"
-              width="100%"
-              height="560"
-            ></iframe>
+          <div class="cal-embed" id="calEmbed" data-src={GOOGLE_BOOKING_URL}>
+            <div class="cal-consent" id="calConsent">
+              <p>The booking calendar is provided by Google and, once shown, sets a cookie on your device to display available times.</p>
+              <button type="button" class="btn" id="calLoadBtn"><span class="btn-in">Show calendar</span></button>
+            </div>
           </div>
           <p class="cal-note">Calendar being shy? <a href="mailto:kacper@mioduszewsky.com?subject=Book%20a%20call">Email me</a> and we will find a slot.</p>
         ) : (
@@ -142,6 +138,32 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
   </main>
 
   <script define:vars={{ CONTACT_ENDPOINT }}>
+    // Cookie consent gate dla osadzonego kalendarza Google: NIE tworzymy iframe
+    // (i nie ładujemy cookie NID Google) dopóki user świadomie nie kliknie. Zgoda
+    // pamiętana w localStorage (nie cookie) — kolejna wizyta ładuje kalendarz od razu.
+    const CAL_CONSENT_KEY = 'mioduszewsky_cal_consent';
+    const calEmbed = document.getElementById('calEmbed');
+    const calConsent = document.getElementById('calConsent');
+    const calLoadBtn = document.getElementById('calLoadBtn');
+    function loadCalendar() {
+      if (!calEmbed || calEmbed.querySelector('iframe')) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = calEmbed.dataset.src;
+      iframe.title = 'Book a 15-minute call';
+      iframe.style.border = '0';
+      iframe.width = '100%';
+      iframe.height = '560';
+      calConsent?.remove();
+      calEmbed.appendChild(iframe);
+      try { localStorage.setItem(CAL_CONSENT_KEY, '1'); } catch {}
+    }
+    if (calEmbed) {
+      let alreadyConsented = false;
+      try { alreadyConsented = localStorage.getItem(CAL_CONSENT_KEY) === '1'; } catch {}
+      if (alreadyConsented) loadCalendar();
+      calLoadBtn?.addEventListener('click', loadCalendar);
+    }
+
     const form = document.getElementById('ctForm');
     const msg = document.getElementById('ctMsg');
     const success = document.getElementById('ctSuccess');
@@ -270,6 +292,8 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
 
     .cal-embed { border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); border-radius: 14px; overflow: hidden; background: #fff; }
     .cal-embed iframe { display: block; }
+    .cal-consent { min-height: 560px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1.1rem; padding: 2.4rem; }
+    .cal-consent p { font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 34ch; margin: 0; }
     .cal-note { margin-top: 0.7rem; font-size: 12px; color: var(--dim); }
     .cal-note a { color: var(--blue); }
     .cal-fallback .note { margin-top: 1rem; font-size: 12px; color: var(--dim); line-height: 1.5; max-width: 36ch; }
