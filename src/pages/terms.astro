@@ -1,0 +1,146 @@
+---
+// /terms — regulamin świadczenia usług drogą elektroniczną (Art. 8 ustawy z 18.07.2002
+// o świadczeniu usług drogą elektroniczną). Zakres celowo ograniczony do usług REALNIE
+// działających dziś na stronie (formularz kontaktowy + booking rozmowy) — żadna płatna
+// umowa nie jest jeszcze zawierana przez stronę, więc nie ma tu klauzul sprzedażowych ani
+// prawa odstąpienia. Rozszerzyć o warunki sprzedaży dopiero gdy powstanie płatny checkout
+// na stronie. Usługodawca = Kacper Mioduszewski jako osoba fizyczna (JDG zawieszona,
+// patrz mioduszewsky-com/STATUS.md — gate prawny 27.07.2026). Aktualizować przy każdej
+// zmianie zakresu usług elektronicznych na stronie lub przy reaktywacji działalności.
+import VariantLayout from '../layouts/VariantLayout.astro';
+const updated = '27 July 2026';
+---
+
+<VariantLayout
+  title="Terms of service · mioduszewsky"
+  bg="#f8f9f2"
+  fg="#000000"
+  switcher={false}
+  robots="index, follow"
+  description="Terms for using the contact form and call booking on mioduszewsky.com."
+>
+  <main class="doc">
+    <header class="doc-nav">
+      <a class="mark" href="/" aria-label="mioduszewsky — back home">
+        <video autoplay loop muted playsinline preload="auto" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+      </a>
+      <a class="back" href="/">← Back</a>
+    </header>
+
+    <article class="doc-body">
+      <p class="label">( Legal )</p>
+      <h1>Terms of service</h1>
+      <p class="upd">Last updated: {updated}</p>
+
+      <p>
+        These terms cover the electronic services currently provided on
+        <strong>mioduszewsky.com</strong>: the contact form and call-booking tool. They
+        follow the Polish Act on Providing Services by Electronic Means (18 July 2002).
+        They do not cover paid project work — any paid engagement is agreed separately,
+        in writing, before it begins.
+      </p>
+
+      <h2>1. Who provides this service</h2>
+      <p>
+        <strong>Kacper Mioduszewski</strong>, a private individual, ul. Fromborska 66,
+        54-111 Wrocław, Poland. Contact:
+        <a href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com</a>.
+      </p>
+
+      <h2>2. What these terms cover</h2>
+      <ul>
+        <li><strong>Contact form</strong> — sending a message through the form on <a href="/contact">/contact</a>.</li>
+        <li><strong>Call booking</strong> — scheduling a call through the embedded Google Calendar booking tool.</li>
+      </ul>
+      <p>
+        Both are free, informational services meant to start a conversation. Neither
+        creates a paid contract by itself. If we agree to work together, that is a
+        separate agreement with its own scope, price and schedule.
+      </p>
+
+      <h2>3. Technical requirements</h2>
+      <p>
+        To use these services you need a modern web browser with JavaScript enabled, an
+        internet connection, and a valid email address you can access.
+      </p>
+
+      <h2>4. Rules of use</h2>
+      <p>
+        You agree not to submit unlawful, abusive or fraudulent content through the
+        contact form, and not to use it to send unsolicited advertising (spam).
+        Messages that look automated or abusive may be ignored or blocked.
+      </p>
+
+      <h2>5. How the service starts and ends</h2>
+      <p>
+        Submitting the contact form, or booking a call, is a request to use the
+        service — it is accepted the moment you send it, and it ends once I have
+        replied to your message or the booked call has taken place. You can stop using
+        either service at any time simply by not using it again; there is nothing to
+        cancel.
+      </p>
+
+      <h2>6. Complaints</h2>
+      <p>
+        If something about the form or booking tool does not work as expected (for
+        example, you get an error, or never receive a reply), email
+        <a href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com</a> describing
+        what happened. I aim to respond within 5 business days.
+      </p>
+
+      <h2>7. Data and privacy</h2>
+      <p>
+        What data is collected through these services and how it is used is explained
+        in the <a href="/privacy">privacy policy</a>.
+      </p>
+
+      <h2>8. Governing law</h2>
+      <p>These terms are governed by Polish law.</p>
+
+      <h2>9. Changes</h2>
+      <p>
+        If the scope of these services changes (for example, if a paid checkout is
+        added to the site), these terms will be updated first and the “last updated”
+        date above will change.
+      </p>
+    </article>
+
+    <footer class="doc-foot">
+      <span>© 2026 mioduszewsky</span>
+      <a href="/privacy">Privacy</a>
+      <a href="/contact">Contact</a>
+      <a href="/">Home</a>
+    </footer>
+  </main>
+
+  <style>
+    @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+    @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+
+    .doc {
+      --ink:#000; --ivory:#f8f9f2; --dim:#8b8677; --blue:#0522ff;
+      font-family:'GeneralSansV',sans-serif; background:var(--ivory); color:var(--ink);
+      min-height:100svh; padding:0 6vw 6vh; display:flex; flex-direction:column;
+    }
+    .doc-nav { display:flex; align-items:center; justify-content:space-between; padding:20px 0; }
+    .doc-nav .mark { display:inline-block; width:54px; height:54px; }
+    .doc-nav .mark video { width:100%; height:100%; object-fit:contain; }
+    .back { text-decoration:none; color:var(--ink); font-size:13px; letter-spacing:0.16em; text-transform:uppercase; }
+    .back:hover { color:var(--blue); }
+    .label { font-size:11px; letter-spacing:0.26em; text-transform:uppercase; color:var(--dim); }
+    .doc-body { max-width:66ch; margin:5vh 0; }
+    .doc-body h1 { font-family:'NohemiV',sans-serif; font-weight:520; letter-spacing:-0.025em; font-size:clamp(2.2rem,5vw,3.6rem); margin:1rem 0 0.4rem; }
+    .upd { color:var(--dim); font-size:13px; margin-bottom:2.5rem; }
+    .doc-body h2 { font-family:'NohemiV',sans-serif; font-weight:540; letter-spacing:-0.015em; font-size:clamp(1.2rem,2vw,1.5rem); margin:2.4rem 0 0.8rem; }
+    .doc-body p, .doc-body li { font-size:16px; line-height:1.7; color:#3a382f; }
+    .doc-body ul { margin:0.4rem 0 0.4rem 1.2rem; }
+    .doc-body li { margin-bottom:0.5rem; }
+    .doc-body a { color:var(--blue); }
+    .doc-foot { display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:auto; padding-top:6vh; font-size:12px; color:var(--dim); letter-spacing:0.04em; }
+    .doc-foot a { color:var(--dim); text-decoration:none; }
+    .doc-foot a:hover { color:var(--ink); }
+  </style>
+</VariantLayout>
