@@ -8,8 +8,8 @@ export const POSTHOG_HOST = 'https://eu.i.posthog.com';
 
 export const GA4_ID = ''; // np. G-XXXXXXXXXX
 
-export const GOOGLE_ADS_ID = ''; // np. AW-XXXXXXXXX
-export const GOOGLE_ADS_LABEL = ''; // conversion label dla eventu "Lead"
+export const GOOGLE_ADS_ID = 'AW-18337997825';
+export const GOOGLE_ADS_LABEL = '9E3oCK6Qu9ccEIHInqhE'; // conversion action "Lead", utworzona 27.07.2026
 
 // Google Ads jest kompletne dopiero jako para ID + label. Dzięki temu przypadkowe
 // wpisanie samego ID nie pokaże bannera ani nie załaduje tagu bez działającego celu.
