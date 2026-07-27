@@ -8,6 +8,7 @@ import '@fontsource-variable/fraunces';
 import '@fontsource-variable/space-grotesk';
 import '@fontsource-variable/syne';
 import '@fontsource-variable/archivo';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title: string;
@@ -84,7 +85,7 @@ const current = Astro.url.pathname.replace(/\/$/, '');
     <meta name="twitter:image" content={ogImage} />
 
     {indexable && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
-    <script defer src="/_vercel/insights/script.js"></script>
+    <Analytics />
     <style define:vars={{ bg, fg }}>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html { background: var(--bg); color: var(--fg); }
