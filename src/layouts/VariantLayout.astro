@@ -9,6 +9,7 @@ import '@fontsource-variable/space-grotesk';
 import '@fontsource-variable/syne';
 import '@fontsource-variable/archivo';
 import Analytics from '@vercel/analytics/astro';
+import { POSTHOG_KEY, POSTHOG_HOST, GA4_ID, GOOGLE_ADS_ID, TRACKING_ENABLED } from '../config/tracking';
 
 interface Props {
   title: string;
@@ -126,5 +127,100 @@ const current = Astro.url.pathname.replace(/\/$/, '');
         ))}
       </nav>
     )}
+
+    {TRACKING_ENABLED && (
+      <div class="cookie-banner" id="cookieBanner" hidden>
+        <p>
+          I use analytics (PostHog) and, for paid campaigns, Google conversion tracking
+          to see what is working — no data is sold or shared beyond that. Read the
+          <a href="/privacy">privacy policy</a>.
+        </p>
+        <div class="cookie-actions">
+          <button type="button" class="cb-reject" id="cookieReject">Reject</button>
+          <button type="button" class="cb-accept" id="cookieAccept">Accept</button>
+        </div>
+      </div>
+    )}
+
+    <script define:vars={{ POSTHOG_KEY, POSTHOG_HOST, GA4_ID, GOOGLE_ADS_ID, TRACKING_ENABLED }}>
+      // Bramka zgody: PostHog/GA4/Google Ads NIE ładują się dopóki user nie kliknie
+      // Accept. Decyzja pamiętana w localStorage, nie w cookie same w sobie.
+      // Spec: systemy/ads/docs/TRACKING-GATE.md.
+      const CONSENT_KEY = 'mioduszewsky_consent';
+
+      function initTracking() {
+        if (window.__trackingConsent) return;
+        window.__trackingConsent = true;
+
+        if (POSTHOG_KEY && !window.posthog) {
+          const s = document.createElement('script');
+          s.src = POSTHOG_HOST + '/static/array.js';
+          s.onload = function () {
+            window.posthog.init(POSTHOG_KEY, { api_host: POSTHOG_HOST, person_profiles: 'identified_only' });
+          };
+          document.head.appendChild(s);
+        }
+
+        if ((GA4_ID || GOOGLE_ADS_ID) && !window.gtag) {
+          const id = GA4_ID || GOOGLE_ADS_ID;
+          const s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { window.dataLayer.push(arguments); };
+          window.gtag('js', new Date());
+          if (GA4_ID) window.gtag('config', GA4_ID);
+          if (GOOGLE_ADS_ID) window.gtag('config', GOOGLE_ADS_ID);
+        }
+
+        document.dispatchEvent(new CustomEvent('mioduszewsky:trackingReady'));
+      }
+
+      if (TRACKING_ENABLED) {
+        let consent;
+        try { consent = localStorage.getItem(CONSENT_KEY); } catch {}
+
+        if (consent === 'accepted') {
+          initTracking();
+        } else if (consent !== 'rejected') {
+          const banner = document.getElementById('cookieBanner');
+          if (banner) banner.hidden = false;
+        }
+
+        document.getElementById('cookieAccept')?.addEventListener('click', () => {
+          try { localStorage.setItem(CONSENT_KEY, 'accepted'); } catch {}
+          document.getElementById('cookieBanner').hidden = true;
+          initTracking();
+        });
+        document.getElementById('cookieReject')?.addEventListener('click', () => {
+          try { localStorage.setItem(CONSENT_KEY, 'rejected'); } catch {}
+          document.getElementById('cookieBanner').hidden = true;
+        });
+      }
+    </script>
+
+    <style>
+      .cookie-banner {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 1000;
+        display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+        gap: 1rem; padding: 14px 20px; background: #100f0c; color: #f8f9f2;
+        font-family: 'GeneralSansV', sans-serif; font-size: 13px; line-height: 1.5;
+      }
+      .cookie-banner p { margin: 0; max-width: 62ch; }
+      .cookie-banner a { color: #ffcc33; }
+      .cookie-actions { display: flex; gap: 10px; flex: none; }
+      .cookie-actions button {
+        font-family: inherit; font-size: 12px; letter-spacing: 0.04em; cursor: pointer;
+        border-radius: 999px; padding: 8px 18px; border: 1px solid rgba(248, 249, 242, 0.4);
+        background: transparent; color: #f8f9f2;
+      }
+      .cb-accept { background: #ffcc33; border-color: #ffcc33; color: #100f0c; font-weight: 600; }
+      @media (max-width: 640px) {
+        .cookie-banner { flex-direction: column; align-items: flex-start; }
+        .cookie-actions { width: 100%; }
+        .cookie-actions button { flex: 1; }
+      }
+    </style>
   </body>
 </html>

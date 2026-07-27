@@ -3,6 +3,7 @@
 // „umów rozmowę" + krótki formularz konwertuje najlepiej dla high-ticket
 // founder-led). Styl 1:1 z W5 (ivory/ink/blue/brand, Nohemi + General Sans).
 import VariantLayout from '../layouts/VariantLayout.astro';
+import { TRACKING_ENABLED, GOOGLE_ADS_ID, GOOGLE_ADS_LABEL } from '../config/tracking';
 
 // === DO UZUPEŁNIENIA ===
 // Link z Google Calendar → „Umów termin" (Appointment schedule). Pusty = pokazujemy
@@ -137,11 +138,15 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     </footer>
   </main>
 
-  <script define:vars={{ CONTACT_ENDPOINT }}>
-    // Cookie consent gate dla osadzonego kalendarza Google: NIE tworzymy iframe
-    // (i nie ładujemy cookie NID Google) dopóki user świadomie nie kliknie. Zgoda
-    // pamiętana w localStorage (nie cookie) — kolejna wizyta ładuje kalendarz od razu.
+  <script define:vars={{ CONTACT_ENDPOINT, TRACKING_ENABLED, GOOGLE_ADS_ID, GOOGLE_ADS_LABEL }}>
+    // Kalendarz Google ustawia cookie NID gdy się ładuje. Dwie ścieżki zgody:
+    // 1) TRACKING_ENABLED (baner site-wide w VariantLayout skonfigurowany): jeśli user
+    //    kliknął Accept w bannerze (mioduszewsky_consent), kalendarz ładuje się od razu,
+    //    bez dodatkowego klika — zgoda już jest załatwiona wcześniej w wizycie.
+    // 2) Bez tego (TRACKING_ENABLED=false, stan obecny — żadne ID jeszcze nie ustawione,
+    //    więc bannera nie ma): zostaje lokalny gate "Show calendar" per-widget.
     const CAL_CONSENT_KEY = 'mioduszewsky_cal_consent';
+    const SITE_CONSENT_KEY = 'mioduszewsky_consent';
     const calEmbed = document.getElementById('calEmbed');
     const calConsent = document.getElementById('calConsent');
     const calLoadBtn = document.getElementById('calLoadBtn');
@@ -159,9 +164,38 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     }
     if (calEmbed) {
       let alreadyConsented = false;
-      try { alreadyConsented = localStorage.getItem(CAL_CONSENT_KEY) === '1'; } catch {}
+      try {
+        alreadyConsented = TRACKING_ENABLED
+          ? localStorage.getItem(SITE_CONSENT_KEY) === 'accepted'
+          : localStorage.getItem(CAL_CONSENT_KEY) === '1';
+      } catch {}
       if (alreadyConsented) loadCalendar();
       calLoadBtn?.addEventListener('click', loadCalendar);
+      // Jeśli user klika Accept w bannerze PO wejściu na tę stronę (bez przeładowania).
+      document.addEventListener('mioduszewsky:trackingReady', loadCalendar);
+    }
+
+    // Przechwyt UTM z URL-a, żeby atrybucja przeżyła do maila (patrz TRACKING-GATE.md).
+    const utmParams = new URLSearchParams(location.search);
+    const utm = {
+      utm_source: utmParams.get('utm_source') || '',
+      utm_medium: utmParams.get('utm_medium') || '',
+      utm_campaign: utmParams.get('utm_campaign') || '',
+      utm_content: utmParams.get('utm_content') || '',
+      utm_term: utmParams.get('utm_term') || '',
+    };
+    const utmSuffix = Object.values(utm).some(Boolean)
+      ? '\n\n[utm] ' + Object.entries(utm).filter(([, v]) => v).map(([k, v]) => k + '=' + v).join(' ')
+      : '';
+
+    // Event celu "Lead" po realnym wysłaniu formularza — patrz TRACKING-GATE.md.
+    function fireLeadConversion() {
+      try {
+        if (window.gtag && GOOGLE_ADS_ID && GOOGLE_ADS_LABEL) {
+          window.gtag('event', 'conversion', { send_to: GOOGLE_ADS_ID + '/' + GOOGLE_ADS_LABEL });
+        }
+      } catch {}
+      try { window.posthog?.capture('Lead'); } catch {}
     }
 
     const form = document.getElementById('ctForm');
@@ -217,11 +251,14 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       msg.textContent = '';
       msg.classList.remove('err');
 
+      const messageWithUtm = message + utmSuffix;
+
       // Bez skonfigurowanego endpointu — fallback do maila (nic nie ginie).
       if (!CONTACT_ENDPOINT) {
         window.location.href =
           'mailto:kacper@mioduszewsky.com?subject=' + encodeURIComponent('Contact from ' + name) +
-          '&body=' + encodeURIComponent(message + '\n\n— ' + name + ' (' + email + ')');
+          '&body=' + encodeURIComponent(messageWithUtm + '\n\n— ' + name + ' (' + email + ')');
+        fireLeadConversion();
         return;
       }
 
@@ -232,12 +269,13 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
         const res = await fetch(CONTACT_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, message, consent, hp }),
+          body: JSON.stringify({ name, email, message: messageWithUtm, consent, hp }),
         });
         if (!res.ok) throw new Error('bad_status');
         form.hidden = true;
         success.hidden = false;
         buzz(16); // pojedynczy dłuższy impuls = sukces (Android)
+        fireLeadConversion();
       } catch {
         showError('Something went wrong. Email me directly at kacper@mioduszewsky.com.');
         btn.disabled = false;
