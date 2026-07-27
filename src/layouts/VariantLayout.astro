@@ -185,7 +185,18 @@ const current = Astro.url.pathname.replace(/\/$/, '');
           initTracking();
         } else if (consent !== 'rejected') {
           const banner = document.getElementById('cookieBanner');
-          if (banner) banner.hidden = false;
+          const reveal = () => { if (banner) banner.hidden = false; };
+          // Strony z kurtyną wejściową (.veil, np. w5) nie mogą pokazać bannera
+          // na kurtynie — czekamy na koniec animacji (event z GSAP timeline)
+          // albo na watchdog 4.5s, gdyby event się nie doczekał.
+          if (document.querySelector('.veil')) {
+            let curtainDone = false;
+            const onCurtainDone = () => { if (curtainDone) return; curtainDone = true; reveal(); };
+            document.addEventListener('mioduszewsky:curtainDone', onCurtainDone, { once: true });
+            setTimeout(onCurtainDone, 4500);
+          } else {
+            reveal();
+          }
         }
 
         document.getElementById('cookieAccept')?.addEventListener('click', () => {

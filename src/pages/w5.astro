@@ -509,7 +509,10 @@ const beyond = [
       // Mobile: trzymanie skrócone do ~1 s (decyzja 19.07 — szybciej do treści).
       const M = matchMedia('(max-width: 640px)').matches ? -0.9 : 0;
       tl.fromTo('.veil-word', { opacity: 0, y: 24, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.55 })
-        .to(veil, { yPercent: -100, duration: 0.9, ease: 'expo.inOut' }, 2.4 + M)
+        .to(veil, {
+          yPercent: -100, duration: 0.9, ease: 'expo.inOut',
+          onComplete: () => document.dispatchEvent(new CustomEvent('mioduszewsky:curtainDone')),
+        }, 2.4 + M)
         .fromTo('.hero .ln-in', { y: '112%' }, {
           y: 0, duration: 1.2, stagger: 0.09,
           onComplete: () => document.querySelectorAll<HTMLElement>('.hero .ln').forEach((l) => (l.style.overflow = 'visible')),
@@ -526,6 +529,7 @@ const beyond = [
       veil.remove();
       document.querySelectorAll<HTMLElement>('.ln-in, .rv, .nav').forEach((el) => { el.style.transform = 'none'; el.style.opacity = '1'; });
       document.querySelectorAll<HTMLElement>('.ln').forEach((l) => (l.style.overflow = 'visible'));
+      document.dispatchEvent(new CustomEvent('mioduszewsky:curtainDone'));
     } else {
       intro();
     }
