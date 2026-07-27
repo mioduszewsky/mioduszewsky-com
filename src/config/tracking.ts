@@ -6,7 +6,7 @@
 export const POSTHOG_KEY = 'phc_nf8ejaUCGGeuQE4Vav2QWv64eqPwnN5wnkL2vfpKBJb7';
 export const POSTHOG_HOST = 'https://eu.i.posthog.com';
 
-export const GA4_ID = ''; // np. G-XXXXXXXXXX
+export const GA4_ID = 'G-GP28BXV0BF'; // property "mioduszewsky" pod kacper@mioduszewsky.com, Google Signals ON, połączone z Google Ads (27.07.2026)
 
 export const GOOGLE_ADS_ID = 'AW-18337997825';
 export const GOOGLE_ADS_LABEL = '9E3oCK6Qu9ccEIHInqhE'; // conversion action "Lead", utworzona 27.07.2026
