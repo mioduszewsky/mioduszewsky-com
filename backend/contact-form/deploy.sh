@@ -14,6 +14,9 @@ ROLE="mioduszewsky-contact-form-role"
 IDENTITY_ARN="arn:aws:ses:${REGION}:${ACCOUNT}:identity/mioduszewsky.com"
 TAGS="Project=mioduszewsky,Env=prod,Owner=Kacper"
 DIR="$(cd "$(dirname "$0")" && pwd)"
+SNS_ALERTS="arn:aws:sns:${REGION}:${ACCOUNT}:autofirma-dev-alerts"
+LAMBDA_LOG_GROUP="/aws/lambda/${FN}"
+API_LOG_GROUP="/aws/apigateway/mioduszewsky-contact"
 
 echo "==> Pakowanie kodu"
 cd "$DIR"
@@ -53,8 +56,11 @@ else
 fi
 
 echo "==> Log retention 14 dni"
-aws logs put-retention-policy --log-group-name "/aws/lambda/${FN}" \
-  --retention-in-days 14 --region "$REGION" 2>/dev/null || true
+# Lambda tworzy grupę logów dopiero przy pierwszym wywołaniu. Tworzymy ją
+# jawnie, żeby retencja nie była pomijana przy pierwszym deployu.
+aws logs create-log-group --log-group-name "$LAMBDA_LOG_GROUP" --region "$REGION" 2>/dev/null || true
+aws logs put-retention-policy --log-group-name "$LAMBDA_LOG_GROUP" \
+  --retention-in-days 14 --region "$REGION"
 
 # UWAGA: Lambda Function URL z auth=NONE NIE działa publicznie na tym koncie
 # (uporczywe 403 AccessDeniedException mimo poprawnej resource-policy; konto NIE
@@ -74,6 +80,45 @@ aws lambda add-permission --function-name "$FN" --region "$REGION" \
   --statement-id apigw-invoke --action lambda:InvokeFunction \
   --principal apigateway.amazonaws.com \
   --source-arn "arn:aws:execute-api:${REGION}:${ACCOUNT}:${API_ID}/*/*" >/dev/null 2>&1 || true
+
+echo "==> API Gateway: throttling, access logs i metryki"
+aws logs create-log-group --log-group-name "$API_LOG_GROUP" --region "$REGION" 2>/dev/null || true
+aws logs put-retention-policy --log-group-name "$API_LOG_GROUP" \
+  --retention-in-days 14 --region "$REGION"
+API_LOG_ARN="arn:aws:logs:${REGION}:${ACCOUNT}:log-group:${API_LOG_GROUP}"
+ACCESS_LOG_SETTINGS=$(python3 - "$API_LOG_ARN" <<'PY'
+import json
+import sys
+print(json.dumps({
+    "DestinationArn": sys.argv[1],
+    "Format": json.dumps({
+        "requestId": "$context.requestId",
+        "status": "$context.status",
+        "method": "$context.httpMethod",
+        "route": "$context.routeKey",
+        "integrationStatus": "$context.integrationStatus",
+        "integrationError": "$context.integrationErrorMessage",
+    }, separators=(",", ":")),
+}))
+PY
+)
+aws apigatewayv2 update-stage --api-id "$API_ID" --stage-name '$default' --region "$REGION" \
+  --default-route-settings 'ThrottlingBurstLimit=20,ThrottlingRateLimit=10,DetailedMetricsEnabled=true' \
+  --access-log-settings "$ACCESS_LOG_SETTINGS" >/dev/null
+
+echo "==> Alarmy CloudWatch"
+aws cloudwatch put-metric-alarm --alarm-name "mioduszewsky-contact-form-errors" --region "$REGION" \
+  --alarm-description "Kontakt: Lambda Errors >= 1 w 5 minut" \
+  --namespace AWS/Lambda --metric-name Errors --statistic Sum --period 300 --evaluation-periods 1 \
+  --threshold 1 --comparison-operator GreaterThanOrEqualToThreshold \
+  --dimensions "Name=FunctionName,Value=${FN}" --treat-missing-data notBreaching \
+  --alarm-actions "$SNS_ALERTS" --tags Key=Project,Value=mioduszewsky Key=Env,Value=prod Key=Owner,Value=Kacper >/dev/null
+aws cloudwatch put-metric-alarm --alarm-name "mioduszewsky-contact-api-5xx" --region "$REGION" \
+  --alarm-description "Kontakt: API Gateway 5xx >= 1 w 5 minut" \
+  --namespace AWS/ApiGateway --metric-name 5xx --statistic Sum --period 300 --evaluation-periods 1 \
+  --threshold 1 --comparison-operator GreaterThanOrEqualToThreshold \
+  --dimensions "Name=ApiId,Value=${API_ID}" 'Name=Stage,Value=$default' --treat-missing-data notBreaching \
+  --alarm-actions "$SNS_ALERTS" --tags Key=Project,Value=mioduszewsky Key=Env,Value=prod Key=Owner,Value=Kacper >/dev/null
 
 URL="https://${API_ID}.execute-api.${REGION}.amazonaws.com/"
 echo ""
