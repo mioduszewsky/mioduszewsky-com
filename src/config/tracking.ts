@@ -11,7 +11,12 @@ export const GA4_ID = 'G-GP28BXV0BF'; // property "mioduszewsky" pod kacper@miod
 export const GOOGLE_ADS_ID = 'AW-18337997825';
 export const GOOGLE_ADS_LABEL = '9E3oCK6Qu9ccEIHInqhE'; // conversion action "Lead", utworzona 27.07.2026
 
+// Meta Pixel — zestaw danych "mioduszewsky.com" w portfolio 1505850470627052,
+// utworzony 01.08.2026 po zdjęciu blokady antyfraudowej z konta 1046984581251618.
+// Ładowany wyłącznie po zgodzie, tak samo jak PostHog/GA4/Ads.
+export const META_PIXEL_ID = '1367848401377087';
+
 // Google Ads jest kompletne dopiero jako para ID + label. Dzięki temu przypadkowe
 // wpisanie samego ID nie pokaże bannera ani nie załaduje tagu bez działającego celu.
 export const GOOGLE_ADS_LEAD_CONFIGURED = Boolean(GOOGLE_ADS_ID && GOOGLE_ADS_LABEL);
-export const TRACKING_ENABLED = Boolean(POSTHOG_KEY || GA4_ID || GOOGLE_ADS_LEAD_CONFIGURED);
+export const TRACKING_ENABLED = Boolean(POSTHOG_KEY || GA4_ID || GOOGLE_ADS_LEAD_CONFIGURED || META_PIXEL_ID);

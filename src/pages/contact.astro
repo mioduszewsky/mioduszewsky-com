@@ -196,6 +196,8 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
         }
       } catch {}
       try { window.posthog?.capture('Lead'); } catch {}
+      // Meta: ten sam event celu co Google. fbq istnieje tylko po zgodzie (VariantLayout).
+      try { window.fbq?.('track', 'Lead'); } catch {}
     }
 
     const form = document.getElementById('ctForm');

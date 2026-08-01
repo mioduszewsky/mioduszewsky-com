@@ -9,7 +9,7 @@ import '@fontsource-variable/space-grotesk';
 import '@fontsource-variable/syne';
 import '@fontsource-variable/archivo';
 import Analytics from '@vercel/analytics/astro';
-import { POSTHOG_KEY, POSTHOG_HOST, GA4_ID, GOOGLE_ADS_ID, TRACKING_ENABLED } from '../config/tracking';
+import { POSTHOG_KEY, POSTHOG_HOST, GA4_ID, GOOGLE_ADS_ID, META_PIXEL_ID, TRACKING_ENABLED } from '../config/tracking';
 
 interface Props {
   title: string;
@@ -131,8 +131,8 @@ const current = Astro.url.pathname.replace(/\/$/, '');
     {TRACKING_ENABLED && (
       <div class="cookie-banner" id="cookieBanner" hidden>
         <p>
-          I use analytics (PostHog) and, for paid campaigns, Google conversion tracking
-          to see what is working — no data is sold or shared beyond that. Read the
+          I use analytics (PostHog) and, for paid campaigns, Google and Meta conversion
+          tracking to see what is working — no data is sold or shared beyond that. Read the
           <a href="/privacy">privacy policy</a>.
         </p>
         <div class="cookie-actions">
@@ -142,7 +142,7 @@ const current = Astro.url.pathname.replace(/\/$/, '');
       </div>
     )}
 
-    <script define:vars={{ POSTHOG_KEY, POSTHOG_HOST, GA4_ID, GOOGLE_ADS_ID, TRACKING_ENABLED }}>
+    <script define:vars={{ POSTHOG_KEY, POSTHOG_HOST, GA4_ID, GOOGLE_ADS_ID, META_PIXEL_ID, TRACKING_ENABLED }}>
       // Bramka zgody: PostHog/GA4/Google Ads NIE ładują się dopóki user nie kliknie
       // Accept. Decyzja pamiętana w localStorage, nie w cookie same w sobie.
       // Spec: systemy/ads/docs/TRACKING-GATE.md.
@@ -172,6 +172,21 @@ const current = Astro.url.pathname.replace(/\/$/, '');
           window.gtag('js', new Date());
           if (GA4_ID) window.gtag('config', GA4_ID);
           if (GOOGLE_ADS_ID) window.gtag('config', GOOGLE_ADS_ID);
+        }
+
+        // Meta Pixel. Świadomie BEZ fallbacku <noscript><img> z Meta Pixel Code:
+        // ten obrazek strzeliłby do Meta bez JS, czyli z pominięciem tej bramki zgody.
+        if (META_PIXEL_ID && !window.fbq) {
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          window.fbq('init', META_PIXEL_ID);
+          window.fbq('track', 'PageView');
         }
 
         document.dispatchEvent(new CustomEvent('mioduszewsky:trackingReady'));
