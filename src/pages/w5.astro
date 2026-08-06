@@ -22,7 +22,7 @@ const { prod = false, title = 'W5 — ATELIER · mioduszewsky' } = Astro.props;
 const beyond = [
   { nr: '01', n: 'AI implementation', p: 'from $1,200', d: 'For companies that already have customers and want to improve a specific process. I map it, define what to automate and build the workflow, agent, integration or dashboard.' },
   { nr: '02', n: 'Application or system', p: 'from $3,000', d: 'A first working version of a product, application, dashboard or business system. Something that works for the business from day one.' },
-  { nr: '03', n: 'Build + Iterate', p: '$1,500 / mo', d: 'Ongoing development after launch for selected projects: maintenance, iterations, product decisions and new versions.' },
+  { nr: '03', n: 'Build + Iterate', p: 'from $1,500 / mo', d: 'Ongoing development after launch for selected projects: maintenance, iterations, product decisions and new versions.' },
 ];
 ---
 
@@ -305,7 +305,7 @@ const beyond = [
           <p class="deal-beyond-intro rv">Separate from the website build, each priced on its own. Most people start with a website, but you can come straight here if this is the actual job.</p>
           <div class="deal-beyond-grid">
             {beyond.map((u) => (
-              <a class="deal-bcard rv" href={`/contact?service=${encodeURIComponent(u.n)}`}>
+              <a class="deal-bcard rv" href={`/contact/?service=${encodeURIComponent(u.n)}`}>
                 <span class="deal-bn">{u.n}</span>
                 <span class="deal-bd">{u.d}</span>
                 <span class="deal-bp">{u.p}</span>
@@ -452,8 +452,8 @@ const beyond = [
     <div class="finale-meta">
       <span>© 2026 Kacper Mioduszewski</span>
       <span>Designed and built by one person</span>
-      <a href="/terms">Terms</a>
-      <a href="/privacy">Privacy</a>
+      <a href="/terms/">Terms</a>
+      <a href="/privacy/">Privacy</a>
     </div>
   </footer>
 
