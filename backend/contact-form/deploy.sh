@@ -8,7 +8,9 @@ set -euo pipefail
 export AWS_PAGER=""
 
 REGION="eu-central-1"
-ACCOUNT="068765434892"
+# Account ID czytany z aktywnych poświadczeń, nie hardkodowany:
+# skrypt jest w publicznym repo, a numer konta ułatwia enumerację nazw ról.
+ACCOUNT="$(aws sts get-caller-identity --query Account --output text)"
 FN="mioduszewsky-contact-form"
 ROLE="mioduszewsky-contact-form-role"
 IDENTITY_ARN="arn:aws:ses:${REGION}:${ACCOUNT}:identity/mioduszewsky.com"
