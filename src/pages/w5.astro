@@ -163,7 +163,7 @@ const beyond = [
             application, content management and operational tools.
             <em>Designed and built from zero, as one connected system.</em>
           </p>
-          <a class="tlink rv" href="https://eskapizm.com" target="_blank" rel="noopener">eskapizm.com<i>↗</i></a>
+          <a class="tlink rv" href="https://eskapizm.com" target="_blank" rel="noopener">eskapizm.com<i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></i></a>
         </div>
         <div class="proj-f" data-parallax>
           <div class="phone-hold">
@@ -195,12 +195,12 @@ const beyond = [
         <a class="mrow rv" href="https://glassstone.pl" target="_blank" rel="noopener" data-thumb={thumbGlassstone.src}>
           <span class="mname">GlassStone</span>
           <span class="mdesc">Company website with a portfolio gallery, publishing tools and an admin panel. A system the business keeps using after launch.</span>
-          <span class="sarr">↗</span>
+          <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
         </a>
         <a class="mrow rv" href="https://www.cannversity.com" target="_blank" rel="noopener" data-thumb={thumbCannversity.src}>
           <span class="mname">Cannversity</span>
           <span class="mdesc">A platform translating a complex offer and a broader strategy into a structure people can understand and navigate.</span>
-          <span class="sarr">↗</span>
+          <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
         </a>
         <!-- Wewnętrzny dokument, nie strona publiczna: bez linku, tylko podgląd na hover -->
         <div class="mrow mrow-static rv" data-thumb={thumbWoodspot.src}>
@@ -452,8 +452,10 @@ const beyond = [
     <div class="finale-meta">
       <span>© 2026 Kacper Mioduszewski</span>
       <span>Designed and built by one person</span>
-      <a href="/terms/">Terms</a>
-      <a href="/privacy/">Privacy</a>
+      <span class="finale-legal">
+        <a href="/terms/">Terms</a>
+        <a href="/privacy/">Privacy</a>
+      </span>
     </div>
   </footer>
 
@@ -1079,6 +1081,9 @@ const beyond = [
   .mark:hover video { scale: 1.05; }
 
   .btn {
+    /* reset `*` z VariantLayout jest scope'owany przez Astro i nie sięga tu:
+       bez tego `width:100%` w stopce dokłada 68px paddingu i baton wychodzi poza ekran */
+    box-sizing: border-box;
     display: inline-block; position: relative; text-decoration: none; color: var(--ink);
     border: 1px solid var(--ink); border-radius: 999px; padding: 10px 22px;
     font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
@@ -1213,6 +1218,8 @@ const beyond = [
   .proj-d { max-width: 40ch; font-size: clamp(1rem, 1.35vw, 1.15rem); line-height: 1.65; color: #4c483c; }
   .tlink { display: inline-block; margin-top: 1.6rem; color: var(--ink); text-decoration: none; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; position: relative; }
   .tlink i { font-style: normal; margin-left: 8px; color: var(--blue); display: inline-block; transition: translate 0.3s; }
+  /* strzałki jako SVG, nie znak „↗" — iOS podmienia go na emoji i psuje branding */
+  .tlink i svg { display: block; width: 14px; height: 14px; }
   .tlink::after { content: ""; position: absolute; left: 0; bottom: -5px; height: 1px; width: 100%; background: var(--ink); transform-origin: right; transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1); }
   .tlink:hover::after { transform: scaleX(0.2); }
   .tlink:hover i { translate: 4px -4px; }
@@ -1332,7 +1339,8 @@ const beyond = [
   .srow .idx { font-size: 12px; letter-spacing: 0.24em; color: var(--dim); }
   .sname { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.5rem, 3vw, 2.6rem); letter-spacing: -0.015em; }
   .sdesc { font-size: 14.5px; line-height: 1.6; color: #4c483c; max-width: 52ch; }
-  .sarr { font-size: 1.3rem; color: var(--blue); opacity: 0; translate: -8px 4px; transition: opacity 0.3s, translate 0.35s; }
+  .sarr { display: inline-flex; color: var(--blue); opacity: 0; translate: -8px 4px; transition: opacity 0.3s, translate 0.35s; }
+  .sarr svg { display: block; width: 19px; height: 19px; }
   .srow:hover .sarr { opacity: 1; translate: 0 0; }
   .sprice { font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); white-space: nowrap; justify-self: end; }
   .serv-note { margin-top: 3vh; font-size: 12px; line-height: 1.6; color: var(--dim); }
@@ -1549,6 +1557,13 @@ const beyond = [
   }
   .finale-meta a { color: inherit; text-decoration: none; transition: color 0.25s; }
   .finale-meta a:hover { color: var(--ivory); }
+  .finale-legal { display: inline-flex; gap: 2rem; }
+  /* poniżej ~800px jeden rząd łamie się na 2,5 linii z osieroconym „Privacy" —
+     wymuszamy czyste trzy wiersze: copyright / autorstwo / Terms + Privacy */
+  @media (max-width: 800px) {
+    /* w kolumnie `justify-content` steruje osią pionową — centrowanie robi `align-items` */
+    .finale-meta { flex-direction: column; align-items: center; gap: 0.55rem; }
+  }
   @media (max-width: 560px) { .finale-cta { padding: 16px 30px; } .finale-dal { width: 92vw; } }
   @media (max-width: 640px) {
     /* hero skaluje się z vw zamiast twardego floora — „send people to·"
@@ -1665,8 +1680,11 @@ const beyond = [
     .lrow h3 { grid-column: 2; grid-row: 1; }
     .lrow p { grid-column: 2; grid-row: 2; }
     .lead-close { margin-top: 5vh; }
-    .spray-note { left: auto; right: 0; bottom: -9%; width: 62%; }
+    /* dopisek po LEWEJ (jak na desktopie): przy prawej krawędzi strzałka celowała
+       prosto w pływający przycisk WhatsApp w środku iframe'a i ludzie w niego klikali */
+    .spray-note { left: 0; right: auto; bottom: -9%; width: 62%; }
     .spray-note svg { width: 56%; }
+    .spray-note .tag { margin-left: 6%; }
     .proj { grid-template-columns: 1fr; gap: 6vh; margin-bottom: 12vh; }
     .proj.flip .proj-t { order: 0; }
     .more { margin-top: 0; }
