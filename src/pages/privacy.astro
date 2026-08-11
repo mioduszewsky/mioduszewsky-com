@@ -3,7 +3,7 @@
 // jako osoba fizyczna (decyzja 16.07.2026: bez zawieszonej działalności).
 // Aktualizować przy każdej zmianie procesorów (hosting, mail, kalendarz, analityka).
 import VariantLayout from '../layouts/VariantLayout.astro';
-const updated = '16 July 2026';
+const updated = '11 August 2026';
 ---
 
 <VariantLayout
@@ -68,12 +68,22 @@ const updated = '16 July 2026';
           to real enquiries). These only run <strong>after you accept the cookie
           banner</strong> — see section 6.
         </li>
+        <li>
+          <strong>Optional session recordings</strong> — if you accept the cookie
+          banner, PostHog also records your visit: the pages you move through, clicks,
+          scrolling and mouse movement, played back later as a video-like replay. I use
+          this to find out where the site confuses people. <strong>Anything you type
+          into a form field is masked and never recorded</strong>, passwords included.
+          Recordings are automatically deleted after 30 days. This does not run if you
+          reject the banner.
+        </li>
       </ul>
 
       <h2>3. Legal basis (GDPR Art. 6)</h2>
       <ul>
         <li>Your <strong>consent</strong> for processing the contact form (Art. 6(1)(a)) — given by ticking the consent box.</li>
         <li>Your <strong>consent</strong> for PostHog, Google and Meta analytics/ad tracking (Art. 6(1)(a)) — given by accepting the cookie banner. Nothing loads before that.</li>
+        <li>Your <strong>consent</strong> for session recordings (Art. 6(1)(a)) — the same banner. Reject it, or simply do not accept, and nothing is recorded.</li>
         <li>Taking <strong>steps at your request before entering a contract</strong> (Art. 6(1)(b)).</li>
         <li>My <strong>legitimate interest</strong> in understanding, in aggregate, how the site is used (Art. 6(1)(f)) — for the cookieless basic analytics only.</li>
       </ul>
@@ -84,8 +94,9 @@ const updated = '16 July 2026';
         <li><strong>Vercel Inc.</strong> — website hosting and cookieless Web Analytics.</li>
         <li><strong>Amazon Web Services (AWS SES)</strong> — delivery of contact-form emails. Data is processed in the EU (Frankfurt, eu-central-1).</li>
         <li><strong>Google (Google Workspace)</strong> — my email inbox and, if you book a call, the appointment scheduling.</li>
-        <li><strong>PostHog</strong> (EU servers) — product analytics, only after you accept the cookie banner.</li>
+        <li><strong>PostHog</strong> (EU servers) — product analytics and session recordings, only after you accept the cookie banner.</li>
         <li><strong>Google Analytics / Google Ads</strong> — traffic and ad-conversion measurement, only after you accept the cookie banner.</li>
+        <li><strong>Meta Platforms Ireland</strong> — the Meta Pixel, used to measure whether paid ads lead to real enquiries, only after you accept the cookie banner.</li>
       </ul>
       <p>
         Some providers are based outside the EU. Where that applies, transfers rely on
@@ -98,6 +109,9 @@ const updated = '16 July 2026';
         resulting collaboration, and then for a reasonable period in case of follow-up.
         You can ask me to delete them sooner at any time.
       </p>
+      <p>
+        <strong>Session recordings are deleted automatically after 30 days.</strong>
+      </p>
 
       <h2>6. Cookies</h2>
       <p>
@@ -107,7 +121,8 @@ const updated = '16 July 2026';
       <p>
         If a <strong>cookie banner</strong> is shown on the site, it is asking your
         consent to run two additional tools: <strong>PostHog</strong> (product
-        analytics) and <strong>Google Analytics / Google Ads</strong> (traffic and
+        analytics <strong>and session recordings</strong>, described in section 2) and
+        <strong>Google Analytics / Google Ads</strong> (traffic and
         ad-conversion measurement). Neither loads before you click “Accept” — if you
         click “Reject”, or never see a banner because these tools are not active yet,
         none of this runs and no related cookie is set. Your choice is remembered on
