@@ -1,13 +1,5 @@
 {
   "trailingSlash": true,
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.mioduszewsky.com" }],
-      "destination": "https://mioduszewsky.com/:path*",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
