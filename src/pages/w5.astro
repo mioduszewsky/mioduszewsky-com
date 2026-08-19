@@ -508,6 +508,12 @@ const beyond = p?.offer.beyond || beyondEn;
     const veil = document.querySelector<HTMLElement>('.veil')!;
     const strikePaths = gsap.utils.toArray<SVGPathElement>('.strike .draw');
     const strikeMist = document.querySelector<SVGGElement>('.strike-mist');
+    let afterLanguageSwitch = false;
+    try {
+      const switchedAt = Number(sessionStorage.getItem('mioduszewsky:language-switch'));
+      sessionStorage.removeItem('mioduszewsky:language-switch');
+      afterLanguageSwitch = Number.isFinite(switchedAt) && switchedAt > 0 && Date.now() - switchedAt < 10_000;
+    } catch {}
     const intro = () => {
       strikePaths.forEach((p) => {
         const len = p.getTotalLength();
@@ -517,26 +523,30 @@ const beyond = p?.offer.beyond || beyondEn;
       gsap.set(['.tag-fix', '.spray-dot svg'], { opacity: 0 });
       if (strikeMist) gsap.set(strikeMist, { opacity: 0 });
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-      // Kurtyna trzyma logo ~1.9 s w pełnej widoczności (decyzja Kacpra 16.07:
-      // widz ma zdążyć przeczytać i obejrzeć logo, zanim się odsłoni).
-      // Mobile: trzymanie skrócone do ~1 s (decyzja 19.07 — szybciej do treści).
+      // Pełne intro zostaje przy pierwszym wejściu. Po zmianie języka kurtyna
+      // jest tylko krótkim łącznikiem marki i odsłania treść po ~0.6 s.
       const M = matchMedia('(max-width: 640px)').matches ? -0.9 : 0;
-      tl.fromTo('.veil-word', { opacity: 0, y: 24, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.55 })
+      const curtainAt = afterLanguageSwitch ? 0.18 : 2.4 + M;
+      const heroAt = afterLanguageSwitch ? 0.3 : 2.7 + M;
+      const navAt = afterLanguageSwitch ? 0.38 : 2.9 + M;
+      const detailsAt = afterLanguageSwitch ? 0.42 : 3.0 + M;
+      const accentAt = afterLanguageSwitch ? 0.72 : 3.3 + M;
+      tl.fromTo('.veil-word', { opacity: 0, y: 24, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: afterLanguageSwitch ? 0.16 : 0.55 })
         .to(veil, {
-          yPercent: -100, duration: 0.9, ease: 'expo.inOut',
+          yPercent: -100, duration: afterLanguageSwitch ? 0.42 : 0.9, ease: 'expo.inOut',
           onComplete: () => document.dispatchEvent(new CustomEvent('mioduszewsky:curtainDone')),
-        }, 2.4 + M)
+        }, curtainAt)
         .fromTo('.hero .ln-in', { y: '112%' }, {
-          y: 0, duration: 1.2, stagger: 0.09,
+          y: 0, duration: afterLanguageSwitch ? 0.55 : 1.2, stagger: afterLanguageSwitch ? 0.04 : 0.09,
           onComplete: () => document.querySelectorAll<HTMLElement>('.hero .ln').forEach((l) => (l.style.overflow = 'visible')),
-        }, 2.7 + M)
-        .fromTo('.nav', { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.8 }, 2.9 + M)
-        .fromTo('.hero .rv', { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08 }, 3.0 + M)
-        .add(() => document.querySelectorAll('.hero h1 em').forEach((el) => el.classList.add('lit')), 3.3 + M)
-        .to(strikePaths, { strokeDashoffset: 0, duration: 0.42, ease: 'power2.in', stagger: 0.16 }, 3.6 + M)
-        .to(strikeMist, { opacity: 1, duration: 0.3 }, 3.85 + M)
-        .fromTo('.tag-fix', { scale: 0.7, rotate: -14 }, { opacity: 1, scale: 1, rotate: -7, duration: 0.45, ease: 'back.out(2.4)', immediateRender: false }, 4.1 + M)
-        .fromTo('.spray-dot svg', { scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'power4.out', immediateRender: false }, 4.3 + M);
+        }, heroAt)
+        .fromTo('.nav', { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: afterLanguageSwitch ? 0.4 : 0.8 }, navAt)
+        .fromTo('.hero .rv', { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: afterLanguageSwitch ? 0.5 : 0.9, stagger: afterLanguageSwitch ? 0.04 : 0.08 }, detailsAt)
+        .add(() => document.querySelectorAll('.hero h1 em').forEach((el) => el.classList.add('lit')), accentAt)
+        .to(strikePaths, { strokeDashoffset: 0, duration: afterLanguageSwitch ? 0.3 : 0.42, ease: 'power2.in', stagger: afterLanguageSwitch ? 0.08 : 0.16 }, accentAt + 0.3)
+        .to(strikeMist, { opacity: 1, duration: 0.3 }, accentAt + 0.55)
+        .fromTo('.tag-fix', { scale: 0.7, rotate: -14 }, { opacity: 1, scale: 1, rotate: -7, duration: 0.45, ease: 'back.out(2.4)', immediateRender: false }, accentAt + 0.8)
+        .fromTo('.spray-dot svg', { scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'power4.out', immediateRender: false }, accentAt + 1);
     };
     if (reduced) {
       veil.remove();

@@ -3,6 +3,36 @@ import { chromium, devices } from 'playwright';
 const base = process.argv[2] ?? 'http://127.0.0.1:4321';
 const browser = await chromium.launch();
 
+async function checkLanguageCurtain() {
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
+  await context.addInitScript(() => localStorage.setItem('mioduszewsky_consent', 'rejected'));
+  const page = await context.newPage();
+  const curtainGone = () => page.waitForFunction(() => {
+    const veil = document.querySelector('.veil');
+    return !veil || veil.getBoundingClientRect().bottom <= 1;
+  });
+
+  const initialStartedAt = Date.now();
+  await page.goto(`${base}/?utm_source=curtain-qa#oferta`, { waitUntil: 'domcontentloaded' });
+  await curtainGone();
+  const initialCurtainMs = Date.now() - initialStartedAt;
+
+  const switchStartedAt = Date.now();
+  await Promise.all([
+    page.waitForURL(`${base}/pl/?utm_source=curtain-qa#oferta`),
+    page.locator('[data-language-switch]').click(),
+  ]);
+  await curtainGone();
+  const languageSwitchCurtainMs = Date.now() - switchStartedAt;
+
+  if (languageSwitchCurtainMs > 2000 || languageSwitchCurtainMs >= initialCurtainMs * 0.65) {
+    throw new Error(`Language curtain regression: initial=${initialCurtainMs}ms switch=${languageSwitchCurtainMs}ms`);
+  }
+
+  console.log(JSON.stringify({ initialCurtainMs, languageSwitchCurtainMs, languageCurtain: 'PASS' }, null, 2));
+  await context.close();
+}
+
 async function check(label, options) {
   const context = await browser.newContext(options);
   await context.addInitScript(() => localStorage.setItem('mioduszewsky_consent', 'rejected'));
@@ -40,6 +70,7 @@ async function check(label, options) {
   await context.close();
 }
 
+await checkLanguageCurtain();
 await check('desktop', { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
 await check('mobile', { ...devices['iPhone 13'] });
 await browser.close();
