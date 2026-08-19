@@ -1,0 +1,68 @@
+---
+import LegalDocumentLayout from '../../components/LegalDocumentLayout.astro';
+const updated = '11 sierpnia 2026';
+---
+
+<LegalDocumentLayout locale="pl" title="Polityka prywatności · mioduszewsky" description="Jak mioduszewsky.com przetwarza dane osobowe zgodnie z RODO." alternatePath="/privacy/">
+  <p class="label">( Dokumenty )</p>
+  <h1>Polityka prywatności</h1>
+  <p class="upd">Ostatnia aktualizacja: {updated}</p>
+
+  <p>Ta polityka wyjaśnia, jakie dane osobowe zbieram za pośrednictwem <strong>mioduszewsky.com</strong>, w jakim celu je przetwarzam i jakie masz prawa. Dokument uwzględnia wymagania ogólnego rozporządzenia o ochronie danych (RODO).</p>
+
+  <h2>1. Kto odpowiada za twoje dane</h2>
+  <p>Administratorem danych jest <strong>Kacper Mioduszewski</strong>, osoba fizyczna, ul. Fromborska 66, 54-111 Wrocław. Kontakt: <a href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com</a>.</p>
+
+  <h2>2. Jakie dane zbieram i po co</h2>
+  <ul>
+    <li><strong>Formularz kontaktowy</strong> — imię, adres e-mail, treść wiadomości oraz zapisane w adresie strony parametry kampanii UTM, jeśli wejście pochodzi z oznaczonego linku. Używam ich, żeby odpowiedzieć na zapytanie, ewentualnie przygotować się do współpracy i ustalić źródło zapytania.</li>
+    <li><strong>Rezerwacja rozmowy</strong> — jeżeli umówisz rozmowę, rezerwację obsługuje Google Calendar. Google otrzymuje imię, adres e-mail i inne informacje podane podczas rezerwacji, aby potwierdzić spotkanie.</li>
+    <li><strong>Podstawowa analityka odwiedzin</strong> — anonimowe, zbiorcze statystyki dotyczące odwiedzanych podstron, przybliżonego źródła wejścia i rodzaju urządzenia. Działa bez plików cookie i nie służy do identyfikacji konkretnej osoby.</li>
+    <li><strong>Opcjonalna analityka produktu i pomiar reklam</strong> — PostHog, Google Analytics lub Google Ads oraz Meta Pixel. Pomagają zrozumieć sposób korzystania ze strony i sprawdzić, czy reklamy prowadzą do zapytań. Narzędzia te uruchamiają się dopiero po akceptacji banera zgody — szczegóły znajdują się w punkcie 6.</li>
+    <li><strong>Opcjonalne nagrania sesji</strong> — po udzieleniu zgody PostHog może rejestrować przechodzenie między podstronami, kliknięcia, przewijanie i ruch kursora. Dane wpisywane do formularzy są maskowane i nie trafiają do nagrania. Nagrania są automatycznie usuwane po 30 dniach. Funkcja nie działa po odrzuceniu zgody.</li>
+  </ul>
+
+  <h2>3. Podstawa prawna</h2>
+  <ul>
+    <li>zgoda na przetwarzanie danych przesłanych przez formularz — art. 6 ust. 1 lit. a RODO;</li>
+    <li>zgoda na opcjonalną analitykę, pomiar reklam i nagrania sesji — art. 6 ust. 1 lit. a RODO;</li>
+    <li>podjęcie działań na twoje żądanie przed zawarciem umowy — art. 6 ust. 1 lit. b RODO;</li>
+    <li>mój prawnie uzasadniony interes polegający na zbiorczym sprawdzaniu sposobu korzystania ze strony — art. 6 ust. 1 lit. f RODO, wyłącznie w odniesieniu do podstawowej analityki bez plików cookie.</li>
+  </ul>
+
+  <h2>4. Kto przetwarza dane w moim imieniu</h2>
+  <p>Korzystam z ograniczonej liczby dostawców:</p>
+  <ul>
+    <li><strong>Vercel Inc.</strong> — hosting strony i analityka bez plików cookie;</li>
+    <li><strong>Amazon Web Services</strong> — API Gateway, Lambda i SES obsługujące wysyłkę wiadomości z formularza; dane są przetwarzane w regionie UE, Frankfurt (eu-central-1);</li>
+    <li><strong>Google Workspace i Google Calendar</strong> — skrzynka e-mail i rezerwacja rozmów;</li>
+    <li><strong>PostHog</strong> na serwerach w UE — analityka produktu i nagrania sesji, wyłącznie po udzieleniu zgody;</li>
+    <li><strong>Google Analytics lub Google Ads</strong> — analiza ruchu i pomiar konwersji reklam, wyłącznie po udzieleniu zgody;</li>
+    <li><strong>Meta Platforms Ireland</strong> — Meta Pixel do pomiaru zapytań pochodzących z reklam, wyłącznie po udzieleniu zgody.</li>
+  </ul>
+  <p>Część dostawców ma siedzibę poza Europejskim Obszarem Gospodarczym. Jeżeli dochodzi do takiego transferu, jest on oparty na standardowych klauzulach umownych UE albo innym właściwym zabezpieczeniu.</p>
+
+  <h2>5. Jak długo przechowuję dane</h2>
+  <p>Wiadomości kontaktowe przechowuję przez czas potrzebny do obsługi zapytania i ewentualnej współpracy, a później przez rozsądny okres pozwalający wrócić do rozmowy. W każdej chwili możesz poprosić o wcześniejsze usunięcie danych.</p>
+  <p><strong>Nagrania sesji są automatycznie usuwane po 30 dniach.</strong></p>
+
+  <h2>6. Pliki cookie</h2>
+  <p><strong>mioduszewsky.com domyślnie nie zapisuje plików cookie.</strong> Podstawowa analityka działa bez nich i nie identyfikuje konkretnej osoby.</p>
+  <p>Jeżeli na stronie pojawia się baner zgody, dotyczy on PostHog oraz pomiaru Google i Meta. Żadne z tych narzędzi nie uruchamia się przed kliknięciem „Akceptuję”. Po kliknięciu „Odrzuć” albo pozostawieniu banera bez odpowiedzi opcjonalny pomiar nie działa. Wybór jest zapisywany lokalnie na urządzeniu, żeby nie pytać o niego przy każdej podstronie.</p>
+  <p>Kalendarz na stronie <a href="/pl/kontakt/">kontaktu</a> jest dostarczany przez Google. Po jego wyświetleniu Google zapisuje plik cookie <code>NID</code> potrzebny do działania widżetu. Jeśli zgoda dla całej strony została już udzielona, kalendarz ładuje się automatycznie. W przeciwnym razie pojawi się dopiero po kliknięciu „Pokaż kalendarz”. Zamiast kalendarza możesz zawsze napisać na <a href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com</a>.</p>
+
+  <h2>7. Twoje prawa</h2>
+  <p>Na zasadach określonych w RODO możesz:</p>
+  <ul>
+    <li>uzyskać dostęp do danych i ich kopię,</li>
+    <li>sprostować lub zaktualizować dane,</li>
+    <li>zażądać usunięcia danych,</li>
+    <li>ograniczyć przetwarzanie lub wnieść sprzeciw,</li>
+    <li>wycofać zgodę bez wpływu na zgodność z prawem wcześniejszego przetwarzania,</li>
+    <li>wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych — <a href="https://uodo.gov.pl" target="_blank" rel="noopener">uodo.gov.pl</a>.</li>
+  </ul>
+  <p>Aby skorzystać z tych praw, napisz na <a href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com</a>.</p>
+
+  <h2>8. Zmiany dokumentu</h2>
+  <p>Jeżeli polityka prywatności się zmieni, zaktualizuję datę widoczną na początku dokumentu.</p>
+</LegalDocumentLayout>

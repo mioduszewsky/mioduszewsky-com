@@ -10,6 +10,7 @@ import '@fontsource-variable/syne';
 import '@fontsource-variable/archivo';
 import Analytics from '@vercel/analytics/astro';
 import { POSTHOG_KEY, POSTHOG_HOST, GA4_ID, GOOGLE_ADS_ID, META_PIXEL_ID, TRACKING_ENABLED } from '../config/tracking';
+import { layoutCopy, routes, type Locale } from '../i18n/site';
 
 interface Props {
   title: string;
@@ -21,23 +22,44 @@ interface Props {
   robots?: string;
   /** meta description — podawana tylko na produkcyjnym indexie */
   description?: string;
+  /** język dokumentu i komunikatów wspólnych */
+  locale?: Locale;
+  /** dokładny odpowiednik tej strony w drugim języku */
+  alternatePath?: string;
+  /** osobna grafika social dla wersji językowej */
+  ogImagePath?: string;
 }
-const { title, bg = '#111', fg = '#fff', switcher = true, robots = 'noindex, nofollow', description } = Astro.props;
+const {
+  title,
+  bg = '#111',
+  fg = '#fff',
+  switcher = true,
+  robots = 'noindex, nofollow',
+  description,
+  locale = 'en',
+  alternatePath,
+  ogImagePath = locale === 'pl' ? '/og-pl.png' : '/og.png',
+} = Astro.props;
 
 // SEO: kanoniczny host = docelowa domena produkcyjna.
 const SITE = 'https://mioduszewsky.com';
 const canonical = new URL(Astro.url.pathname, SITE).href;
-const ogImage = `${SITE}/og.png`;
+const ogImage = new URL(ogImagePath, SITE).href;
 const indexable = robots.includes('index') && !robots.includes('noindex');
+const c = layoutCopy[locale];
+const alternate = alternatePath ? new URL(alternatePath, SITE).href : undefined;
+const englishUrl = locale === 'en' ? canonical : alternate;
+const polishUrl = locale === 'pl' ? canonical : alternate;
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
   name: 'mioduszewsky',
   url: SITE,
   image: ogImage,
-  description: description || 'Landing pages, company websites, AI implementations and web apps, built by one person from idea to launch.',
+  description: description || c.defaultDescription,
+  inLanguage: locale === 'pl' ? 'pl-PL' : 'en',
   founder: { '@type': 'Person', name: 'Kacper Mioduszewski' },
-  areaServed: 'Worldwide',
+  areaServed: c.areaServed,
   address: { '@type': 'PostalAddress', addressLocality: 'Wrocław', addressCountry: 'PL' },
   sameAs: [
     'https://instagram.com/mioduszewsky',
@@ -58,7 +80,7 @@ const current = Astro.url.pathname.replace(/\/$/, '');
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale === 'pl' ? 'pl' : 'en'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -72,6 +94,9 @@ const current = Astro.url.pathname.replace(/\/$/, '');
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonical} />
+    {englishUrl && <link rel="alternate" hreflang="en" href={englishUrl} />}
+    {polishUrl && <link rel="alternate" hreflang="pl-PL" href={polishUrl} />}
+    {englishUrl && <link rel="alternate" hreflang="x-default" href={englishUrl} />}
     <meta name="theme-color" content="#f8f9f2" />
 
     <meta property="og:type" content="website" />
@@ -80,6 +105,8 @@ const current = Astro.url.pathname.replace(/\/$/, '');
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={locale === 'pl' ? 'pl_PL' : 'en_US'} />
+    {alternate && <meta property="og:locale:alternate" content={locale === 'pl' ? 'en_US' : 'pl_PL'} />}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     {description && <meta name="twitter:description" content={description} />}
@@ -131,14 +158,11 @@ const current = Astro.url.pathname.replace(/\/$/, '');
     {TRACKING_ENABLED && (
       <div class="cookie-banner" id="cookieBanner" hidden>
         <p>
-          I use analytics (PostHog) and, for paid campaigns, Google and Meta conversion
-          tracking to see what is working — including how visitors move through the site.
-          No data is sold or shared beyond that. Read the
-          <a href="/privacy/">privacy policy</a>.
+          {c.cookie.text} <a href={routes[locale].privacy}>{c.cookie.privacy}</a>.
         </p>
         <div class="cookie-actions">
-          <button type="button" class="cb-reject" id="cookieReject">Reject</button>
-          <button type="button" class="cb-accept" id="cookieAccept">Accept</button>
+          <button type="button" class="cb-reject" id="cookieReject">{c.cookie.reject}</button>
+          <button type="button" class="cb-accept" id="cookieAccept">{c.cookie.accept}</button>
         </div>
       </div>
     )}

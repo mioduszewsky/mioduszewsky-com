@@ -8,6 +8,7 @@
 // patrz mioduszewsky-com/STATUS.md — gate prawny 27.07.2026). Aktualizować przy każdej
 // zmianie zakresu usług elektronicznych na stronie lub przy reaktywacji działalności.
 import VariantLayout from '../layouts/VariantLayout.astro';
+import LanguageSwitch from '../components/LanguageSwitch.astro';
 const updated = '27 July 2026';
 ---
 
@@ -18,6 +19,8 @@ const updated = '27 July 2026';
   switcher={false}
   robots="index, follow"
   description="Terms for using the contact form and call booking on mioduszewsky.com."
+  locale="en"
+  alternatePath="/pl/regulamin/"
 >
   <main class="doc">
     <header class="doc-nav">
@@ -27,7 +30,7 @@ const updated = '27 July 2026';
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <a class="back" href="/">← Back</a>
+      <div class="nav-actions"><LanguageSwitch locale="en" href="/pl/regulamin/" /><a class="back" href="/">← Back</a></div>
     </header>
 
     <article class="doc-body">
@@ -126,6 +129,8 @@ const updated = '27 July 2026';
       min-height:100svh; padding:0 6vw 6vh; display:flex; flex-direction:column;
     }
     .doc-nav { display:flex; align-items:center; justify-content:space-between; padding:20px 0; }
+    .nav-actions { display:flex; align-items:center; gap:14px; }
+    :global(.doc-nav .language-switch) { color:var(--ink); text-decoration:none; font-size:11px; font-weight:650; letter-spacing:.14em; padding:8px 2px; }
     /* logotyp ma proporcje ~3.6:1, wiec kwadratowy kontener + object-fit:contain
        scisnal go do ~15px wysokosci. Wysokosc steruje, szerokosc sie dostosowuje,
        tak jak w nawigacji na stronie glownej. */

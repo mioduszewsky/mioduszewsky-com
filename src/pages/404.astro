@@ -5,15 +5,31 @@ import VariantLayout from '../layouts/VariantLayout.astro';
 
 <VariantLayout title="404 · mioduszewsky" bg="#f8f9f2" fg="#000000" switcher={false} robots="noindex, follow">
   <main class="nf">
-    <p class="label">( Lost )</p>
-    <h1>4<span class="o">0</span>4</h1>
-    <p class="msg">This page does not exist. Or it does not exist <em>yet</em>. Either way, let's get you somewhere useful.</p>
-    <div class="nf-cta">
-      <a class="btn big" href="/"><span>Back home</span></a>
-      <a class="btn" href="/contact/"><span>Book a 15-min call</span></a>
+    <div data-locale="en">
+      <p class="label">( Lost )</p>
+      <h1>4<span class="o">0</span>4</h1>
+      <p class="msg">This page does not exist. Or it does not exist <em>yet</em>. Either way, let's get you somewhere useful.</p>
+      <div class="nf-cta">
+        <a class="btn big" href="/"><span>Back home</span></a>
+        <a class="btn" href="/contact/"><span>Book a 15-min call</span></a>
+      </div>
+    </div>
+    <div data-locale="pl" hidden>
+      <p class="label">( Nie tutaj )</p>
+      <h1>4<span class="o">0</span>4</h1>
+      <p class="msg">Tej strony nie ma. Może <em>jeszcze</em>. Wróćmy do miejsca, z którego da się ruszyć dalej.</p>
+      <div class="nf-cta">
+        <a class="btn big" href="/pl/"><span>Wróć na stronę główną</span></a>
+        <a class="btn" href="/pl/kontakt/"><span>Umów 15 minut</span></a>
+      </div>
     </div>
   </main>
   <script is:inline>
+    var isPolish = location.pathname === '/pl' || location.pathname.indexOf('/pl/') === 0;
+    document.documentElement.lang = isPolish ? 'pl' : 'en';
+    document.querySelectorAll('[data-locale]').forEach(function (el) {
+      el.hidden = el.getAttribute('data-locale') !== (isPolish ? 'pl' : 'en');
+    });
     // :active na iOS wymaga listenera touchstart
     addEventListener('touchstart', function () {}, { passive: true });
   </script>
@@ -27,6 +43,8 @@ import VariantLayout from '../layouts/VariantLayout.astro';
       min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center;
       text-align:center; padding:6vw; gap:0.4rem;
     }
+    .nf > div { display:flex; flex-direction:column; align-items:center; gap:.4rem; }
+    .nf > div[hidden] { display:none; }
     .label { font-size:11px; letter-spacing:0.26em; text-transform:uppercase; color:var(--dim); }
     .nf h1 { font-family:'NohemiV',sans-serif; font-weight:540; letter-spacing:-0.04em; font-size:clamp(6rem,22vw,16rem); line-height:0.9; margin:0.5rem 0; }
     .nf h1 .o { color:var(--blue); }

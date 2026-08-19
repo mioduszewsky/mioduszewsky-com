@@ -1,0 +1,71 @@
+---
+import VariantLayout from '../layouts/VariantLayout.astro';
+import LanguageSwitch from './LanguageSwitch.astro';
+import type { Locale } from '../i18n/site';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  alternatePath: string;
+}
+
+const { locale, title, description, alternatePath } = Astro.props;
+const isPl = locale === 'pl';
+const home = isPl ? '/pl/' : '/';
+const contact = isPl ? '/pl/kontakt/' : '/contact/';
+const privacy = isPl ? '/pl/polityka-prywatnosci/' : '/privacy/';
+const terms = isPl ? '/pl/regulamin/' : '/terms/';
+---
+
+<VariantLayout title={title} bg="#f8f9f2" fg="#000000" switcher={false} robots="index, follow" description={description} locale={locale} alternatePath={alternatePath}>
+  <main class="doc">
+    <header class="doc-nav">
+      <a class="mark" href={home} aria-label={isPl ? 'mioduszewsky. Wróć na stronę główną.' : 'mioduszewsky — back home'}>
+        <video autoplay loop muted playsinline preload="auto" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+      </a>
+      <div class="nav-actions">
+        <LanguageSwitch locale={locale} href={alternatePath} />
+        <a class="back" href={home}>← {isPl ? 'Wróć' : 'Back'}</a>
+      </div>
+    </header>
+
+    <article class="doc-body"><slot /></article>
+
+    <footer class="doc-foot">
+      <span>© 2026 mioduszewsky</span>
+      <a href={privacy}>{isPl ? 'Prywatność' : 'Privacy'}</a>
+      <a href={terms}>{isPl ? 'Warunki' : 'Terms'}</a>
+      <a href={contact}>{isPl ? 'Kontakt' : 'Contact'}</a>
+      <a href={home}>{isPl ? 'Strona główna' : 'Home'}</a>
+    </footer>
+  </main>
+
+  <style>
+    @font-face { font-family:'NohemiV'; src:url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight:100 900; font-display:swap; }
+    @font-face { font-family:'GeneralSansV'; src:url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight:200 700; font-display:swap; }
+    .doc { --ink:#000; --ivory:#f8f9f2; --dim:#8b8677; --blue:#0522ff; font-family:'GeneralSansV',sans-serif; background:var(--ivory); color:var(--ink); min-height:100svh; padding:0 6vw 6vh; display:flex; flex-direction:column; }
+    .doc-nav { display:flex; align-items:center; justify-content:space-between; padding:20px 0; }
+    .doc-nav .mark { display:block; }
+    .doc-nav .mark video { height:clamp(40px,3.4vw,54px); width:auto; display:block; }
+    .nav-actions { display:flex; align-items:center; gap:14px; }
+    :global(.doc-nav .language-switch) { color:var(--ink); text-decoration:none; font-size:11px; font-weight:650; letter-spacing:.14em; padding:8px 2px; }
+    .back { text-decoration:none; color:var(--ink); font-size:13px; letter-spacing:.16em; text-transform:uppercase; }
+    .back:hover, :global(.doc-nav .language-switch:hover) { color:var(--blue); }
+    .doc-body { max-width:66ch; margin:5vh auto; width:100%; }
+    .doc-body :global(.label) { font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--dim); }
+    .doc-body :global(h1) { font-family:'NohemiV',sans-serif; font-weight:520; letter-spacing:-.025em; font-size:clamp(2.2rem,5vw,3.6rem); margin:1rem 0 .4rem; }
+    .doc-body :global(.upd) { color:var(--dim); font-size:13px; margin-bottom:2.5rem; }
+    .doc-body :global(h2) { font-family:'NohemiV',sans-serif; font-weight:540; letter-spacing:-.015em; font-size:clamp(1.2rem,2vw,1.5rem); margin:2.4rem 0 .8rem; }
+    .doc-body :global(p), .doc-body :global(li) { font-size:16px; line-height:1.7; color:#3a382f; }
+    .doc-body :global(ul) { margin:.4rem 0 .4rem 1.2rem; }
+    .doc-body :global(li) { margin-bottom:.5rem; }
+    .doc-body :global(a) { color:var(--blue); }
+    .doc-foot { display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:auto; padding-top:6vh; font-size:12px; color:var(--dim); letter-spacing:.04em; }
+    .doc-foot a { color:var(--dim); text-decoration:none; }
+    .doc-foot a:hover { color:var(--ink); }
+  </style>
+</VariantLayout>

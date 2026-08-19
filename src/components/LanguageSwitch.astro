@@ -1,0 +1,47 @@
+---
+import { alternateLocale, localeNames, type Locale } from '../i18n/site';
+
+interface Props {
+  locale: Locale;
+  href: string;
+  class?: string;
+}
+
+const { locale, href, class: className = '' } = Astro.props;
+const targetLocale = alternateLocale(locale);
+---
+
+<a
+  class:list={['language-switch', className]}
+  href={href}
+  hreflang={targetLocale === 'pl' ? 'pl-PL' : 'en'}
+  lang={targetLocale}
+  data-language-switch
+  aria-label={locale === 'pl' ? 'Switch to English' : 'Przejdź do wersji polskiej'}
+>
+  {targetLocale.toUpperCase()}
+  <span class="sr-only"> — {localeNames[targetLocale]}</span>
+</a>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('[data-language-switch]').forEach((link) => {
+    const target = new URL(link.href);
+    target.search = window.location.search;
+    target.hash = window.location.hash;
+    link.href = target.href;
+  });
+</script>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

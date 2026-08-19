@@ -3,7 +3,17 @@
 // „umów rozmowę" + krótki formularz konwertuje najlepiej dla high-ticket
 // founder-led). Styl 1:1 z W5 (ivory/ink/blue/brand, Nohemi + General Sans).
 import VariantLayout from '../layouts/VariantLayout.astro';
+import LanguageSwitch from '../components/LanguageSwitch.astro';
+import { contactPl } from '../content/contact-pl';
+import { routes, type Locale } from '../i18n/site';
 import { TRACKING_ENABLED, GOOGLE_ADS_ID, GOOGLE_ADS_LABEL } from '../config/tracking';
+
+interface Props { locale?: Locale; }
+const { locale = 'en' } = Astro.props;
+const isPl = locale === 'pl';
+const p = isPl ? contactPl : undefined;
+const r = routes[locale];
+const alt = routes[isPl ? 'en' : 'pl'];
 
 // === DO UZUPEŁNIENIA ===
 // Link z Google Calendar → „Umów termin" (Appointment schedule). Pusty = pokazujemy
@@ -18,36 +28,38 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
 ---
 
 <VariantLayout
-  title="Book a call · mioduszewsky"
+  title={p?.meta.title || 'Book a call · mioduszewsky'}
   bg="#f8f9f2"
   fg="#000000"
   switcher={false}
   robots="index, follow, max-image-preview:large"
-  description="Book a free 15-minute call or send a short message. One person from idea to launch: strategy, copy, design and build."
+  description={p?.meta.description || 'Book a free 15-minute call or send a short message. One person from idea to launch: strategy, copy, design and build.'}
+  locale={locale}
+  alternatePath={alt.contact}
 >
   <main class="ct">
     <header class="ct-nav">
-      <a class="mark" href="/" aria-label="mioduszewsky — back home">
+      <a class="mark" href={r.home} aria-label={p?.logoAria || 'mioduszewsky — back home'}>
         <video autoplay loop muted playsinline preload="auto" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
           <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <a class="back" href="/">← Back</a>
+      <div class="nav-actions">
+        <LanguageSwitch locale={locale} href={alt.contact} />
+        <a class="back" href={r.home}>← {p?.back || 'Back'}</a>
+      </div>
     </header>
 
     <section class="ct-head">
       <div class="ct-head-l">
-        <p class="label">( Next step · one honest conversation )</p>
+        <p class="label">{p?.label || '( Next step · one honest conversation )'}</p>
         <h1>
-          Book a <span class="hl">15-minute</span> call.<br />
-          Or just write to me.
+          {isPl ? <Fragment><span class="hl">{p!.h1}</span><br />{p!.h2}</Fragment> : <Fragment>Book a <span class="hl">15-minute</span> call.<br />Or just write to me.</Fragment>}
         </h1>
       </div>
       <p class="lead">
-        Tell me what you have now, even if it is nothing yet, what is not working
-        and what the new page should do. I will tell you whether the project is a
-        fit and what I would build first. No pressure, no sales script.
+        {p?.lead || 'Tell me what you have now, even if it is nothing yet, what is not working and what the new page should do. I will tell you whether the project is a fit and what I would build first. No pressure, no sales script.'}
       </p>
     </section>
 
@@ -55,22 +67,22 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       <!-- ŚCIEŻKA 1: umów rozmowę (główny CTA) -->
       <div class="path path-call">
         <span class="pnum">01</span>
-        <h2>Book a call</h2>
-        <p class="pdesc">Pick a slot that works for you. 15 minutes, video, no obligation.</p>
+        <h2>{p?.call.title || 'Book a call'}</h2>
+        <p class="pdesc">{p?.call.desc || 'Pick a slot that works for you. 15 minutes, video, no obligation.'}</p>
         {GOOGLE_BOOKING_URL ? (
           <div class="cal-embed" id="calEmbed" data-src={GOOGLE_BOOKING_URL}>
             <div class="cal-consent" id="calConsent">
-              <p>The booking calendar is provided by Google and, once shown, sets a cookie on your device to display available times.</p>
-              <button type="button" class="btn" id="calLoadBtn"><span class="btn-in">Show calendar</span></button>
+              <p>{p?.call.consent || 'The booking calendar is provided by Google and, once shown, sets a cookie on your device to display available times.'}</p>
+              <button type="button" class="btn" id="calLoadBtn"><span class="btn-in">{p?.call.show || 'Show calendar'}</span></button>
             </div>
           </div>
-          <p class="cal-note">Calendar being shy? <a href="mailto:kacper@mioduszewsky.com?subject=Book%20a%20call">Email me</a> and we will find a slot.</p>
+          <p class="cal-note">{p?.call.noteBefore || 'Calendar being shy?'} <a href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(p?.call.mailSubject || 'Book a call')}`}>{p?.call.email || 'Email me'}</a> {p?.call.noteAfter || 'and we will find a slot.'}</p>
         ) : (
           <div class="cal-fallback">
-            <a class="btn big" href="mailto:kacper@mioduszewsky.com?subject=Book%20a%20call">
-              <span class="btn-in">Email me to book a call</span>
+            <a class="btn big" href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(p?.call.mailSubject || 'Book a call')}`}>
+              <span class="btn-in">{p?.call.fallback || 'Email me to book a call'}</span>
             </a>
-            <p class="note">Live calendar is being connected. For now, email works and I reply fast.</p>
+            <p class="note">{p?.call.fallbackNote || 'Live calendar is being connected. For now, email works and I reply fast.'}</p>
           </div>
         )}
       </div>
@@ -78,51 +90,51 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       <!-- ŚCIEŻKA 2: krótki formularz (max 3 pola + zgoda) -->
       <div class="path path-form">
         <span class="pnum">02</span>
-        <h2>Or send a message</h2>
-        <p class="pdesc">Prefer to write first? Three fields, that is it.</p>
+        <h2>{p?.form.title || 'Or send a message'}</h2>
+        <p class="pdesc">{p?.form.desc || 'Prefer to write first? Three fields, that is it.'}</p>
 
         <form id="ctForm" novalidate>
           <label class="fld">
-            <span>Your name</span>
+            <span>{p?.form.name || 'Your name'}</span>
             <input type="text" name="name" autocomplete="name" required maxlength="120" />
           </label>
           <label class="fld">
-            <span>Email</span>
+            <span>{p?.form.email || 'Email'}</span>
             <input type="email" name="email" autocomplete="email" required maxlength="200" />
           </label>
           <label class="fld">
-            <span>What should we talk about?</span>
+            <span>{p?.form.message || 'What should we talk about?'}</span>
             <textarea name="message" rows="3" required maxlength="4000"></textarea>
           </label>
 
           <!-- honeypot: ukryte, boty wypełnią -->
           <div class="hp" aria-hidden="true">
-            <label>Leave this empty<input type="text" name="hp" tabindex="-1" autocomplete="off" /></label>
+            <label>{p?.form.honeypot || 'Leave this empty'}<input type="text" name="hp" tabindex="-1" autocomplete="off" /></label>
           </div>
 
           <label class="consent">
             <input type="checkbox" name="consent" required />
-            <span>I agree that my data is processed to answer this message, per the <a href="/privacy/">privacy policy</a> and <a href="/terms/">terms of service</a>.</span>
+            <span>{isPl ? <Fragment>{p!.form.consentBefore} <a href={r.privacy}>{p!.form.privacy}</a> i <a href={r.terms}>{p!.form.terms}</a>.</Fragment> : <Fragment>I agree that my data is processed to answer this message, per the <a href={r.privacy}>privacy policy</a> and <a href={r.terms}>terms of service</a>.</Fragment>}</span>
           </label>
 
           <button type="submit" class="btn big submit">
-            <span class="btn-in">Send message</span>
+            <span class="btn-in">{p?.form.send || 'Send message'}</span>
           </button>
           <p class="formmsg" id="ctMsg" role="status" aria-live="polite"></p>
         </form>
 
         <div class="ct-success" id="ctSuccess" hidden>
-          <h3>Thanks — message sent.</h3>
-          <p>I read every message myself and reply within a day. Want it faster? Grab a call slot:</p>
-          <a class="btn big" href={GOOGLE_BOOKING_URL || 'mailto:kacper@mioduszewsky.com?subject=Book%20a%20call'}>
-            <span class="btn-in">Book a 15-min call</span>
+          <h3>{p?.form.successTitle || 'Thanks — message sent.'}</h3>
+          <p>{p?.form.successText || 'I read every message myself and reply within a day. Want it faster? Grab a call slot:'}</p>
+          <a class="btn big" href={GOOGLE_BOOKING_URL || `mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(p?.call.mailSubject || 'Book a call')}`}>
+            <span class="btn-in">{isPl ? 'Umów 15 minut' : 'Book a 15-min call'}</span>
           </a>
         </div>
       </div>
     </section>
 
     <section class="ct-alt">
-      <p class="label">( Other ways )</p>
+      <p class="label">{p?.other || '( Other ways )'}</p>
       <div class="alt-grid">
         <a href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com</a>
         <a href="https://instagram.com/mioduszewsky" target="_blank" rel="noopener">Instagram</a>
@@ -132,13 +144,13 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
 
     <footer class="ct-foot">
       <span>© 2026 mioduszewsky</span>
-      <span>Wrocław, PL · working worldwide</span>
-      <a href="/terms/">Terms</a>
-      <a href="/privacy/">Privacy</a>
+      <span>{p?.remote || 'Wrocław, PL · working worldwide'}</span>
+      <a href={r.terms}>{p?.terms || 'Terms'}</a>
+      <a href={r.privacy}>{p?.privacy || 'Privacy'}</a>
     </footer>
   </main>
 
-  <script define:vars={{ CONTACT_ENDPOINT, TRACKING_ENABLED, GOOGLE_ADS_ID, GOOGLE_ADS_LABEL }}>
+  <script define:vars={{ CONTACT_ENDPOINT, TRACKING_ENABLED, GOOGLE_ADS_ID, GOOGLE_ADS_LABEL, isPl, formCopy: p?.form, iframeTitle: p?.call.iframeTitle }}>
     // Kalendarz Google ustawia cookie NID gdy się ładuje. Dwie ścieżki zgody:
     // 1) TRACKING_ENABLED (baner site-wide w VariantLayout skonfigurowany): jeśli user
     //    kliknął Accept w bannerze (mioduszewsky_consent), kalendarz ładuje się od razu,
@@ -154,7 +166,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       if (!calEmbed || calEmbed.querySelector('iframe')) return;
       const iframe = document.createElement('iframe');
       iframe.src = calEmbed.dataset.src;
-      iframe.title = 'Book a 15-minute call';
+      iframe.title = iframeTitle || 'Book a 15-minute call';
       iframe.style.border = '0';
       iframe.width = '100%';
       iframe.height = '560';
@@ -247,9 +259,9 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       if (!name) missing.push('name');
       if (!email) missing.push('email');
       if (!message) missing.push('message');
-      if (missing.length) { showError('Please fill in all three fields.', missing); return; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('That email does not look right.', ['email']); return; }
-      if (!consent) { showError('Please tick the consent box so I can reply.', ['consent']); return; }
+      if (missing.length) { showError(formCopy?.missing || 'Please fill in all three fields.', missing); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError(formCopy?.invalidEmail || 'That email does not look right.', ['email']); return; }
+      if (!consent) { showError(formCopy?.missingConsent || 'Please tick the consent box so I can reply.', ['consent']); return; }
       msg.textContent = '';
       msg.classList.remove('err');
 
@@ -258,7 +270,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       // Bez skonfigurowanego endpointu — fallback do maila (nic nie ginie).
       if (!CONTACT_ENDPOINT) {
         window.location.href =
-          'mailto:kacper@mioduszewsky.com?subject=' + encodeURIComponent('Contact from ' + name) +
+          'mailto:kacper@mioduszewsky.com?subject=' + encodeURIComponent((formCopy?.fallbackSubject || 'Contact from ') + name) +
           '&body=' + encodeURIComponent(messageWithUtm + '\n\n— ' + name + ' (' + email + ')');
         fireLeadConversion();
         return;
@@ -266,7 +278,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
 
       btn.disabled = true;
       const orig = btn.querySelector('.btn-in').textContent;
-      btn.querySelector('.btn-in').textContent = 'Sending…';
+      btn.querySelector('.btn-in').textContent = formCopy?.sending || 'Sending…';
       try {
         const res = await fetch(CONTACT_ENDPOINT, {
           method: 'POST',
@@ -279,7 +291,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
         buzz(16); // pojedynczy dłuższy impuls = sukces (Android)
         fireLeadConversion();
       } catch {
-        showError('Something went wrong. Email me directly at kacper@mioduszewsky.com.');
+        showError(formCopy?.error || 'Something went wrong. Email me directly at kacper@mioduszewsky.com.');
         btn.disabled = false;
         btn.querySelector('.btn-in').textContent = orig;
       }
@@ -299,6 +311,9 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     h1, h2, h3 { font-family: 'NohemiV', sans-serif; letter-spacing: -0.025em; font-weight: 520; }
 
     .ct-nav { display: flex; align-items: flex-start; justify-content: space-between; padding: 18px 0; }
+    .nav-actions { display: flex; align-items: center; gap: 14px; }
+    :global(.ct-nav .language-switch) { color: var(--ink); text-decoration: none; font-size: 11px; font-weight: 650; letter-spacing: 0.14em; padding: 8px 2px; }
+    :global(.ct-nav .language-switch:hover) { color: var(--blue); }
     .ct-nav .mark { display: block; }
     .ct-nav .mark video { height: clamp(44px, 4.4vw, 62px); width: auto; display: block; }
     .back { text-decoration: none; color: var(--ink); font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; }

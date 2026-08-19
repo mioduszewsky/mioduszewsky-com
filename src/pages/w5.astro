@@ -4,14 +4,22 @@
 // Baza: Clash Display + Sentient, Lenis, maskowane reveale, magnetyczne CTA.
 import '@fontsource-variable/shantell-sans';
 import VariantLayout from '../layouts/VariantLayout.astro';
+import LanguageSwitch from '../components/LanguageSwitch.astro';
 import PhoneFrame from '../components/frames/PhoneFrame.astro';
+import { homePl } from '../content/home-pl';
+import { routes, type Locale } from '../i18n/site';
 import thumbWoodspot from '../assets/live/thumb-woodspot.webp';
 import thumbGlassstone from '../assets/live/thumb-glassstone.webp';
 import thumbCannversity from '../assets/live/thumb-cannversity.webp';
 
 // Tryb prod (index): bez przełącznika wariantów, z indeksowaniem i meta description.
-interface Props { prod?: boolean; title?: string; }
-const { prod = false, title = 'W5 — ATELIER · mioduszewsky' } = Astro.props;
+interface Props { prod?: boolean; title?: string; locale?: Locale; }
+const { prod = false, title: titleProp, locale = 'en' } = Astro.props;
+const isPl = locale === 'pl';
+const p = isPl ? homePl : undefined;
+const r = routes[locale];
+const alt = routes[isPl ? 'en' : 'pl'];
+const title = titleProp || p?.meta.title || 'W5 — ATELIER · mioduszewsky';
 
 // Copy EN wg docs/strategy/LANDING_COPY_DRAFT.md (decyzja Kacpra 16.07.2026:
 // strona po angielsku, ceny USD jak na Contrze).
@@ -19,11 +27,12 @@ const { prod = false, title = 'W5 — ATELIER · mioduszewsky' } = Astro.props;
 // Klient NIE wybiera landing vs company — to Kacper decyduje na rozmowie o zakresie.
 // Landing/company to tylko widełki-przewodnik ceny, nie dwie osobne oferty do wyboru.
 // Plan projektu zdjęty ze strony (zostaje na Contrze); reszta = dodatki „beyond the website".
-const beyond = [
+const beyondEn = [
   { nr: '01', n: 'AI implementation', p: 'from $1,200', d: 'For companies that already have customers and want to improve a specific process. I map it, define what to automate and build the workflow, agent, integration or dashboard.' },
   { nr: '02', n: 'Application or system', p: 'from $3,000', d: 'A first working version of a product, application, dashboard or business system. Something that works for the business from day one.' },
   { nr: '03', n: 'Build + Iterate', p: 'from $1,500 / mo', d: 'Ongoing development after launch for selected projects: maintenance, iterations, product decisions and new versions.' },
 ];
+const beyond = p?.offer.beyond || beyondEn;
 ---
 
 <VariantLayout
@@ -32,7 +41,9 @@ const beyond = [
   fg="#000000"
   switcher={!prod}
   robots={prod ? 'index, follow, max-image-preview:large' : undefined}
-  description={prod ? 'Landing pages, company websites, AI implementations and web apps. One person from idea to launch: strategy, copy, design and build.' : undefined}
+  description={prod ? (p?.meta.description || 'Landing pages, company websites, AI implementations and web apps. One person from idea to launch: strategy, copy, design and build.') : undefined}
+  locale={locale}
+  alternatePath={alt.home}
 >
   <main class="w5">
     <!-- Wspólne filtry spray (inline SVG = działa też w Safari) -->
@@ -81,96 +92,102 @@ const beyond = [
     </noscript>
 
     <header class="nav">
-      <a class="mark" href="#" aria-label="mioduszewsky">
+      <a class="mark" href={r.home} aria-label={isPl ? 'mioduszewsky. Wróć na początek strony.' : 'mioduszewsky'}>
         <video autoplay loop muted playsinline preload="auto" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
           <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <a class="btn mag" href="/contact/"><span class="btn-in">Book a call</span></a>
+      <div class="nav-actions">
+        <LanguageSwitch locale={locale} href={alt.home} />
+        <a class="btn mag" href={r.contact}><span class="btn-in">{p?.nav.cta || 'Book a call'}</span></a>
+      </div>
     </header>
 
     <!-- Sticky CTA (pojawia się po zjechaniu z hero). Wrapper trzyma slide-in/centrowanie
          (transform), .sticky-cta w środku jest .mag i dostaje SWÓJ własny transform od
          magnetyzmu — rozdzielone, żeby oba się nie nadpisywały. -->
     <div class="sticky-cta-wrap">
-      <a class="sticky-cta mag" href="/contact/" aria-label="Book a 15-minute call">
-        <span class="btn-in">Book a 15-min call</span>
+      <a class="sticky-cta mag" href={r.contact} aria-label={p?.nav.stickyAria || 'Book a 15-minute call'}>
+        <span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span>
         <i aria-hidden="true">→</i>
       </a>
     </div>
 
     <!-- HERO -->
     <section class="hero">
-      <p class="label rv">( Websites · AI · Apps )</p>
-      <h1>
-        <span class="ln"><span class="ln-in">A <span class="fix">generic<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix" aria-hidden="true">working!</span></span> website</span></span>
-        <span class="ln"><span class="ln-in">you can <em>finally</em></span></span>
-        <span class="ln"><span class="ln-in">send people <span class="hero-end">to<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span></span>
-      </h1>
+      <p class="label rv">{p?.hero.label || '( Websites · AI · Apps )'}</p>
+      {isPl ? (
+        <h1 aria-label={p!.hero.aria}>
+          <span class="ln"><span class="ln-in">{p!.hero.line1}</span></span>
+          <span class="ln" aria-hidden="true"><span class="ln-in"><span class="fix">{p!.hero.struck}<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix">{p!.hero.note}</span></span></span></span>
+          <span class="ln"><span class="ln-in">{p!.hero.line3}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span>
+        </h1>
+      ) : (
+        <h1>
+          <span class="ln"><span class="ln-in">A <span class="fix">generic<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix" aria-hidden="true">working!</span></span> website</span></span>
+          <span class="ln"><span class="ln-in">you can <em>finally</em></span></span>
+          <span class="ln"><span class="ln-in">send people <span class="hero-end">to<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span></span>
+        </h1>
+      )}
       <div class="hero-b">
         <div class="hero-cta rv">
-          <a class="btn mag big" href="/contact/"><span class="btn-in">Book a 15-min call</span></a>
+          <a class="btn mag big" href={r.contact}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span></a>
         </div>
         <p class="hero-sub rv">
-          I plan, write, design and build your website, start to finish.
-          One person takes the project from an idea to a working page.
+          {p?.hero.sub || 'I plan, write, design and build your website, start to finish. One person takes the project from an idea to a working page.'}
         </p>
       </div>
     </section>
 
     <!-- LEAD: problem, który biorę na siebie -->
     <section class="lead">
-      <p class="label rv">( The problem )</p>
+      <p class="label rv">{p?.problem.label || '( The problem )'}</p>
       <h2 class="sec-h">
-        <span class="ln"><span class="ln-in">Having a website is not the same</span></span>
-        <span class="ln"><span class="ln-in">as having one you <em>trust</em>.</span></span>
+        <span class="ln"><span class="ln-in">{p?.problem.h1 || 'Having a website is not the same'}</span></span>
+        <span class="ln"><span class="ln-in">{p?.problem.h2 || <Fragment>as having one you <em>trust</em>.</Fragment>}</span></span>
       </h2>
-      <p class="lead-intro rv">Maybe you have not started yet. Maybe it stalled somewhere. Or maybe it works, just not hard enough. It usually goes one of these ways:</p>
+      <p class="lead-intro rv">{p?.problem.intro || 'Maybe you have not started yet. Maybe it stalled somewhere. Or maybe it works, just not hard enough. It usually goes one of these ways:'}</p>
       <div class="lead-rows">
         <div class="lrow rv">
           <span class="idx">01</span>
-          <h3>You do not know where to start</h3>
-          <p>A developer, a designer, a copywriter, or all three? So the idea stays an idea.</p>
+          <h3>{p?.problem.rows[0][0] || 'You do not know where to start'}</h3>
+          <p>{p?.problem.rows[0][1] || 'A developer, a designer, a copywriter, or all three? So the idea stays an idea.'}</p>
         </div>
         <div class="lrow rv">
           <span class="idx">02</span>
-          <h3>The website stayed behind</h3>
-          <p>Your business grew, the website did not.</p>
+          <h3>{p?.problem.rows[1][0] || 'The website stayed behind'}</h3>
+          <p>{p?.problem.rows[1][1] || 'Your business grew, the website did not.'}</p>
         </div>
         <div class="lrow rv">
           <span class="idx">03</span>
-          <h3>You tried AI</h3>
-          <p>It gave you a page fast, but the offer stayed unclear.</p>
+          <h3>{p?.problem.rows[2][0] || 'You tried AI'}</h3>
+          <p>{p?.problem.rows[2][1] || 'It gave you a page fast, but the offer stayed unclear.'}</p>
         </div>
       </div>
-      <p class="lead-close rv">So the problem is rarely another tool. It is knowing what to build, and whether the result is ready to meet customers. <em>That is the part I take off your plate.</em></p>
+      <p class="lead-close rv">{p?.problem.close || <Fragment>So the problem is rarely another tool. It is knowing what to build, and whether the result is ready to meet customers. <em>That is the part I take off your plate.</em></Fragment>}</p>
     </section>
 
     <!-- REALIZACJE -->
     <section class="work">
       <div class="sec-head">
-        <p class="label rv">Selected work</p>
-        <p class="label dim rv">( the screens scroll, these are live projects )</p>
+        <p class="label rv">{p?.work.label || 'Selected work'}</p>
+        <p class="label dim rv">{p?.work.hint || '( the screens scroll, these are live projects )'}</p>
       </div>
 
       <article class="proj">
         <div class="proj-t">
           <span class="ln"><span class="ln-in idx">№ 01</span></span>
           <h2 class="ln"><span class="ln-in">eskapizm</span></h2>
-          <p class="proj-d rv">
-            A travel-planning platform: public website, sales flow, checkout, client
-            application, content management and operational tools.
-            <em>Designed and built from zero, as one connected system.</em>
-          </p>
+          <p class="proj-d rv">{p?.work.eskapizm || <Fragment>A travel-planning platform: public website, sales flow, checkout, client application, content management and operational tools. <em>Designed and built from zero, as one connected system.</em></Fragment>}</p>
           <a class="tlink rv" href="https://eskapizm.com" target="_blank" rel="noopener">eskapizm.com<i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></i></a>
         </div>
         <div class="proj-f" data-parallax>
           <div class="phone-hold">
-            <PhoneFrame url="https://eskapizm.com/en" alt="eskapizm.com - scroll it" screenbg="#fbfff7" />
+            <PhoneFrame url={isPl ? 'https://eskapizm.com' : 'https://eskapizm.com/en'} alt={p?.work.eskapizmAlt || 'eskapizm.com - scroll it'} screenbg="#fbfff7" fallbackText={isPl ? 'strona chwilowo się nie ładuje' : undefined} fallbackLinkText={isPl ? 'otwórz w nowej karcie ↗' : undefined} />
             <div class="spray-note" aria-hidden="true">
               <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M120 14 L 140 16 L 132 36" filter="url(#sprayF)" /></svg>
-              <span class="tag">psst, it's live.<br />scroll it!</span>
+              <span class="tag">{isPl ? <Fragment>psst, działa.<br />przewiń</Fragment> : <Fragment>psst, it's live.<br />scroll it!</Fragment>}</span>
             </div>
           </div>
         </div>
@@ -180,34 +197,31 @@ const beyond = [
         <div class="proj-t">
           <span class="ln"><span class="ln-in idx">№ 02</span></span>
           <h2 class="ln"><span class="ln-in">aigor.grabowski</span></h2>
-          <p class="proj-d rv">
-            A website for an art collection: works, artists and acquisition
-            history. <em>Designed to sell a story.</em>
-          </p>
+          <p class="proj-d rv">{p?.work.aigor || <Fragment>A website for an art collection: works, artists and acquisition history. <em>Designed to sell a story.</em></Fragment>}</p>
         </div>
         <div class="proj-f" data-parallax>
-          <PhoneFrame url="https://www.igorgrabowski.com/?lang=en" alt="igorgrabowski.com - scroll it" />
+          <PhoneFrame url={isPl ? 'https://www.igorgrabowski.com/' : 'https://www.igorgrabowski.com/?lang=en'} alt={p?.work.aigorAlt || 'igorgrabowski.com - scroll it'} fallbackText={isPl ? 'strona chwilowo się nie ładuje' : undefined} fallbackLinkText={isPl ? 'otwórz w nowej karcie ↗' : undefined} />
         </div>
       </article>
 
       <div class="more">
-        <p class="label rv">More work</p>
+        <p class="label rv">{p?.work.more || 'More work'}</p>
         <a class="mrow rv" href="https://glassstone.pl" target="_blank" rel="noopener" data-thumb={thumbGlassstone.src}>
           <span class="mname">GlassStone</span>
-          <span class="mdesc">Company website with a portfolio gallery, publishing tools and an admin panel. A system the business keeps using after launch.</span>
+          <span class="mdesc">{p?.work.glassstone || 'Company website with a portfolio gallery, publishing tools and an admin panel. A system the business keeps using after launch.'}</span>
           <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
         </a>
         <a class="mrow rv" href="https://www.cannversity.com" target="_blank" rel="noopener" data-thumb={thumbCannversity.src}>
           <span class="mname">Cannversity</span>
-          <span class="mdesc">A platform translating a complex offer and a broader strategy into a structure people can understand and navigate.</span>
+          <span class="mdesc">{p?.work.cannversity || 'A platform translating a complex offer and a broader strategy into a structure people can understand and navigate.'}</span>
           <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
         </a>
         <!-- Wewnętrzny dokument, nie strona publiczna: bez linku, tylko podgląd na hover -->
         <div class="mrow mrow-static rv" data-thumb={thumbWoodspot.src}>
-          <span class="mname">Internal project decks</span>
-          <span class="mdesc">Interactive presentations and financial models connecting an idea to real limits and a business decision.</span>
+          <span class="mname">{p?.work.decksName || 'Internal project decks'}</span>
+          <span class="mdesc">{p?.work.decks || 'Interactive presentations and financial models connecting an idea to real limits and a business decision.'}</span>
         </div>
-        <p class="work-note rv">These examples show the scope and type of work delivered, not proof of guaranteed revenue, conversion or cost savings.</p>
+        <p class="work-note rv">{p?.work.disclaimer || 'These examples show the scope and type of work delivered, not proof of guaranteed revenue, conversion or cost savings.'}</p>
       </div>
     </section>
 
@@ -215,97 +229,95 @@ const beyond = [
     <section class="manif">
       <div class="manif-in">
         <p class="manif-t">
-          <span class="ln"><span class="ln-in">The goal is not another step.</span></span>
-          <span class="ln"><span class="ln-in">It is the <em>last</em> one.</span></span>
-          <span class="ln"><span class="ln-in">You go live. <span class="tag tag-manif" aria-hidden="true">for real.</span></span></span>
+          <span class="ln"><span class="ln-in">{p?.manifest.line1 || 'The goal is not another step.'}</span></span>
+          <span class="ln"><span class="ln-in">{p?.manifest.line2 || <Fragment>It is the <em>last</em> one.</Fragment>}</span></span>
+          <span class="ln"><span class="ln-in">{p?.manifest.line3 || 'You go live.'} <span class="tag tag-manif" aria-hidden="true">{p?.manifest.note || 'for real.'}</span></span></span>
         </p>
-        <p class="manif-sub rv">Send it in an email. Run a campaign to it. Show it to a customer. Build on it after launch.</p>
+        <p class="manif-sub rv">{p?.manifest.sub || 'Send it in an email. Run a campaign to it. Show it to a customer. Build on it after launch.'}</p>
       </div>
     </section>
 
     <!-- JAK PRACUJĘ (OLD vs NEW + WHY ME z draftu) -->
     <section class="how">
-      <p class="label rv">( How I work )</p>
+      <p class="label rv">{p?.how.label || '( How I work )'}</p>
       <h2 class="sec-h">
-        <span class="ln"><span class="ln-in">A good website is not the one</span></span>
-        <span class="ln"><span class="ln-in">with the <em>most polish</em>.</span></span>
+        <span class="ln"><span class="ln-in">{p?.how.h1 || 'A good website is not the one'}</span></span>
+        <span class="ln"><span class="ln-in">{p?.how.h2 || <Fragment>with the <em>most polish</em>.</Fragment>}</span></span>
       </h2>
       <div class="how-cols">
         <div class="how-col rv">
-          <h3 class="how-t how-t-old"><span class="fix">The usual way<svg class="strike strike-sm" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g filter="url(#sprayF)"><path d="M6 25 C 60 18, 138 30, 194 21" /></g></svg></span></h3>
+          <h3 class="how-t how-t-old"><span class="fix">{p?.how.oldTitle || 'The usual way'}<svg class="strike strike-sm" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g filter="url(#sprayF)"><path d="M6 25 C 60 18, 138 30, 194 21" /></g></svg></span></h3>
           <ol class="how-list">
-            <li>You write a brief.</li>
-            <li>Someone designs the page.</li>
-            <li>Someone else writes the copy.</li>
-            <li>A developer receives the files later.</li>
-            <li>Every person sees one part of the project.</li>
+            {(p?.how.oldList || ['You write a brief.', 'Someone designs the page.', 'Someone else writes the copy.', 'A developer receives the files later.', 'Every person sees one part of the project.']).map((item) => <li>{item}</li>)}
           </ol>
-          <p class="how-out">You become the person responsible for making sure those parts still fit together.</p>
+          <p class="how-out">{p?.how.oldOut || 'You become the person responsible for making sure those parts still fit together.'}</p>
         </div>
         <div class="how-col rv">
-          <h3 class="how-t">The way I work</h3>
+          <h3 class="how-t">{p?.how.newTitle || 'The way I work'}</h3>
           <ol class="how-list">
-            <li>What are you selling?</li>
-            <li>Who needs to understand it?</li>
-            <li>What should they do after visiting the page?</li>
-            <li>What must be included and what can be removed?</li>
-            <li>Only then do I write, design and build.</li>
+            {(p?.how.newList || ['What are you selling?', 'Who needs to understand it?', 'What should they do after visiting the page?', 'What must be included and what can be removed?', 'Only then do I write, design and build.']).map((item) => <li>{item}</li>)}
           </ol>
-          <p class="how-out">You speak directly with the person doing the work, the whole way through.</p>
+          <p class="how-out">{p?.how.newOut || 'You speak directly with the person doing the work, the whole way through.'}</p>
         </div>
       </div>
       <div class="how-why">
-        <p class="how-why-t rv how-why-full how-me">Behind mioduszewsky there is one person, not an agency. I am <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>, and I build from Wrocław. I build things to keep working long after the first impression fades.</p>
-        <p class="how-why-t rv">I am not the best specialist in every single discipline. <span class="dim2">A dedicated designer may draw a prettier system. A specialist developer may write more advanced code.</span> But depth in one craft is not what makes the whole thing work.</p>
-        <p class="how-why-t rv">I work across the points where projects usually break: <em>the decision, the offer, the design, the build, the launch</em>. One system, by one person.</p>
-        <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> and <span class="lp" data-tap data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span>, shown above, are not client work. <span class="dim2">They are my own projects.</span> I run this exact system on <span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">my own business</span> before I ever run it on yours.</p>
+        {isPl ? (
+          <>
+            <p class="how-why-t rv how-why-full how-me">Za mioduszewsky stoję ja, nie agencja. Mam na imię <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span> i buduję z Wrocławia. Robię rzeczy, które mają działać także wtedy, gdy opadnie pierwsze wrażenie.</p>
+            <p class="how-why-t rv">Nie sprzedaję się jako najlepszy specjalista od wszystkiego. <span class="dim2">Dobry projektant może stworzyć ładniejszy system. Wyspecjalizowany programista może napisać bardziej zaawansowany kod.</span> Tyle że cały projekt nie kończy się na jednej z tych rzeczy.</p>
+            <p class="how-why-t rv">Pracuję tam, gdzie projekty najczęściej się rozjeżdżają: <em>decyzja, oferta, treść, projekt, budowa i publikacja</em>. Jedna całość, jedna odpowiedzialność.</p>
+            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> i <span class="lp" data-tap data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span>, które widzisz wyżej, nie są realizacjami dla klientów. <span class="dim2">To moje własne projekty.</span> Zanim uruchomię ten sposób pracy u klienta, sprawdzam go we <span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">własnym biznesie</span>.</p>
+          </>
+        ) : (
+          <>
+            <p class="how-why-t rv how-why-full how-me">Behind mioduszewsky there is one person, not an agency. I am <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>, and I build from Wrocław. I build things to keep working long after the first impression fades.</p>
+            <p class="how-why-t rv">I am not the best specialist in every single discipline. <span class="dim2">A dedicated designer may draw a prettier system. A specialist developer may write more advanced code.</span> But depth in one craft is not what makes the whole thing work.</p>
+            <p class="how-why-t rv">I work across the points where projects usually break: <em>the decision, the offer, the design, the build, the launch</em>. One system, by one person.</p>
+            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> and <span class="lp" data-tap data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span>, shown above, are not client work. <span class="dim2">They are my own projects.</span> I run this exact system on <span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">my own business</span> before I ever run it on yours.</p>
+          </>
+        )}
       </div>
     </section>
 
     <!-- OFERTA: flagowy „Complete website build" (2 poziomy) + dodatki -->
     <section class="serv">
-      <p class="label rv">( The offer )</p>
+      <p class="label rv">{p?.offer.label || '( The offer )'}</p>
 
       <div class="deal">
         <span class="deal-grain" aria-hidden="true"></span>
 
         <div class="deal-top">
           <div class="deal-main">
-            <span class="deal-badge rv">30-day launch warranty</span>
+            <span class="deal-badge rv">{p?.offer.badge || '30-day launch warranty'}</span>
             <h2 class="deal-h">
-              <span class="ln"><span class="ln-in deal-h1">Complete website</span></span>
-              <span class="ln"><span class="ln-in deal-h2">build<span class="spray-dot deal-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="16" filter="url(#sprayMist)" /></svg></span><svg class="deal-strike" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M8 17 C 82 9, 214 22, 292 12" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M8 17 C 82 9, 214 22, 292 12" /><path class="draw" d="M12 23 C 90 15, 206 25, 288 17" /></g></svg></span></span>
+              <span class="ln"><span class="ln-in deal-h1">{p?.offer.h1 || 'Complete website'}</span></span>
+              <span class="ln"><span class="ln-in deal-h2">{p?.offer.h2 || 'build'}<span class="spray-dot deal-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="16" filter="url(#sprayMist)" /></svg></span><svg class="deal-strike" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M8 17 C 82 9, 214 22, 292 12" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M8 17 C 82 9, 214 22, 292 12" /><path class="draw" d="M12 23 C 90 15, 206 25, 288 17" /></g></svg></span></span>
             </h2>
-            <p class="deal-price rv">from <b>$1,000</b></p>
-            <p class="deal-say rv">A website that makes your offer clear and looks professional enough to put in front of customers, partners or investors. On our first call I tell you whether you need a landing page or a full company site, so you do not have to figure that out yourself.</p>
+            <p class="deal-price rv">{isPl ? p!.offer.price : <Fragment>from <b>$1,000</b></Fragment>}</p>
+            <p class="deal-say rv">{p?.offer.say || 'A website that makes your offer clear and looks professional enough to put in front of customers, partners or investors. On our first call I tell you whether you need a landing page or a full company site, so you do not have to figure that out yourself.'}</p>
             <div class="deal-cta-wrap rv">
-              <a class="deal-cta mag" href="/contact/?service=Complete%20website%20build"><span class="btn-in">Book a 15-min call</span><i aria-hidden="true">→</i></a>
+              <a class="deal-cta mag" href={`${r.contact}?service=${encodeURIComponent(isPl ? 'Strona internetowa' : 'Complete website build')}`}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span><i aria-hidden="true">→</i></a>
             </div>
-            <p class="deal-assure rv">Scope and price are agreed before I build. If a website is not the right move, I will tell you, and you still leave the call with a clear next step.</p>
+            <p class="deal-assure rv">{p?.offer.assure || 'Scope and price are agreed before I build. If a website is not the right move, I will tell you, and you still leave the call with a clear next step.'}</p>
           </div>
 
           <div class="deal-inc rv">
-            <p class="deal-inc-label">What you walk away with</p>
+            <p class="deal-inc-label">{p?.offer.includesLabel || 'What you walk away with'}</p>
             <ul class="deal-list">
-              <li>An offer that is clear, in words your customers understand</li>
-              <li>A design that looks like a real business, not a template</li>
-              <li>One person from first call to launch, no agency handoffs</li>
-              <li>Mobile, forms, domain and SSL, all handled</li>
-              <li>A live page you can measure from day one</li>
-              <li>30 days of fixes after launch, at no extra cost</li>
+              {(p?.offer.includes || ['An offer that is clear, in words your customers understand', 'A design that looks like a real business, not a template', 'One person from first call to launch, no agency handoffs', 'Mobile, forms, domain and SSL, all handled', 'A live page you can measure from day one', '30 days of fixes after launch, at no extra cost']).map((item) => <li>{item}</li>)}
             </ul>
             <div class="deal-for">
-              <p>Built for <b>founders, owners and teams</b> who need to look credible online and start getting customers.</p>
+              <p>{isPl ? p!.offer.forWhom : <Fragment>Built for <b>founders, owners and teams</b> who need to look credible online and start getting customers.</Fragment>}</p>
             </div>
           </div>
         </div>
 
         <div class="deal-beyond">
-          <p class="deal-beyond-label rv">Other services</p>
-          <p class="deal-beyond-intro rv">Separate from the website build, each priced on its own. Most people start with a website, but you can come straight here if this is the actual job.</p>
+          <p class="deal-beyond-label rv">{p?.offer.other || 'Other services'}</p>
+          <p class="deal-beyond-intro rv">{p?.offer.otherIntro || 'Separate from the website build, each priced on its own. Most people start with a website, but you can come straight here if this is the actual job.'}</p>
           <div class="deal-beyond-grid">
             {beyond.map((u) => (
-              <a class="deal-bcard rv" href={`/contact/?service=${encodeURIComponent(u.n)}`}>
+              <a class="deal-bcard rv" href={`${r.contact}?service=${encodeURIComponent(u.n)}`}>
                 <span class="deal-bn">{u.n}</span>
                 <span class="deal-bd">{u.d}</span>
                 <span class="deal-bp">{u.p}</span>
@@ -314,101 +326,90 @@ const beyond = [
           </div>
         </div>
 
-        <p class="deal-fine rv">Landing from $1,000 · full company website from $1,500 · a maximum of three projects at a time.</p>
+        <p class="deal-fine rv">{p?.offer.fine || 'Landing from $1,000 · full company website from $1,500 · a maximum of three projects at a time.'}</p>
       </div>
 
-      <p class="serv-note rv">Long-term advertising, ongoing SEO and guaranteed sales results are not part of the scope.</p>
+      <p class="serv-note rv">{p?.offer.exclusion || 'Long-term advertising, ongoing SEO and guaranteed sales results are not part of the scope.'}</p>
     </section>
 
     <!-- PROCES -->
     <section class="proc">
-      <p class="label rv">( Process )</p>
+      <p class="label rv">{p?.process.label || '( Process )'}</p>
       <h2 class="sec-h">
-        <span class="ln"><span class="ln-in">What working together</span></span>
-        <span class="ln"><span class="ln-in"><em>actually</em> looks like.</span></span>
+        <span class="ln"><span class="ln-in">{p?.process.h1 || 'What working together'}</span></span>
+        <span class="ln"><span class="ln-in">{p?.process.h2 || <Fragment><em>actually</em> looks like.</Fragment>}</span></span>
       </h2>
       <div class="proc-flow">
         <article class="pstep rv">
           <span class="pn">01</span>
-          <h3>We talk about the business</h3>
-          <p>What exists today, what needs to change, starting with a <a class="ilink" href="/contact/">15-min call</a>.</p>
+          <h3>{p?.process.steps[0][0] || 'We talk about the business'}</h3>
+          <p>{isPl ? <Fragment>Co działa dziś, co trzeba zmienić i po co ma powstać nowa strona. Zaczynamy od <a class="ilink" href={r.contact}>15 minut</a>.</Fragment> : <Fragment>What exists today, what needs to change, starting with a <a class="ilink" href={r.contact}>15-min call</a>.</Fragment>}</p>
         </article>
         <article class="pstep rv">
           <span class="pn">02</span>
-          <h3>I define the scope</h3>
-          <p>A clear proposal: what will be built, what is not included and how it is priced.</p>
+          <h3>{p?.process.steps[1][0] || 'I define the scope'}</h3>
+          <p>{p?.process.steps[1][1] || 'A clear proposal: what will be built, what is not included and how it is priced.'}</p>
         </article>
         <article class="pstep rv">
           <span class="pn">03</span>
-          <h3>You <span class="hl-y">book the build</span></h3>
-          <p>Work is paid upfront: in full for small projects, stage by stage for larger ones.</p>
+          <h3>{isPl ? <span class="hl-y">{p!.process.steps[2][0]}</span> : <Fragment>You <span class="hl-y">book the build</span></Fragment>}</h3>
+          <p>{p?.process.steps[2][1] || 'Work is paid upfront: in full for small projects, stage by stage for larger ones.'}</p>
         </article>
         <article class="pstep rv">
           <span class="pn">04</span>
-          <h3>I build it</h3>
-          <p>The same person who discussed the business writes, designs and implements.</p>
+          <h3>{p?.process.steps[3][0] || 'I build it'}</h3>
+          <p>{p?.process.steps[3][1] || 'The same person who discussed the business writes, designs and implements.'}</p>
         </article>
         <article class="pstep rv">
           <span class="pn">05</span>
-          <h3>We launch</h3>
-          <p>The page or system goes live and starts receiving real use.</p>
+          <h3>{p?.process.steps[4][0] || 'We launch'}</h3>
+          <p>{p?.process.steps[4][1] || 'The page or system goes live and starts receiving real use.'}</p>
         </article>
         <article class="pstep rv">
           <span class="pn">06</span>
-          <h3>We iterate when it helps</h3>
-          <p>Ongoing development for selected projects. Build + Iterate from $1,500 per month.</p>
+          <h3>{p?.process.steps[5][0] || 'We iterate when it helps'}</h3>
+          <p>{p?.process.steps[5][1] || 'Ongoing development for selected projects. Build + Iterate from $1,500 per month.'}</p>
         </article>
       </div>
     </section>
 
     <!-- FAQ (+ „czego nie obiecuję" z draftu) -->
     <section class="faq">
-      <p class="label rv">( Fair questions )</p>
+      <p class="label rv">{p?.faq.label || '( Fair questions )'}</p>
       <div class="faq-list">
-        <details class="rv">
-          <summary>Can AI build the website for me?<span class="fmark" aria-hidden="true"></span></summary>
-          <div class="fbody"><p>It can generate text, layouts and code. The harder part is deciding whether the result is clear, credible and appropriate for the business. Using AI is not the problem. Knowing what to keep, what to remove and what needs to be rebuilt is where experience matters.</p></div>
-        </details>
-        <details class="rv">
-          <summary>Do I need to prepare all the copy?<span class="fmark" aria-hidden="true"></span></summary>
-          <div class="fbody"><p>No. Copy can be part of the project scope. I still need real information about the business, customers and offer. I will not invent results, testimonials or claims to fill the page.</p></div>
-        </details>
-        <details class="rv">
-          <summary>Do you only work on websites?<span class="fmark" aria-hidden="true"></span></summary>
-          <div class="fbody"><p>Websites and landing pages are the main focus. I also build AI workflows, applications, dashboards and internal systems when the project requires more than a public-facing page.</p></div>
-        </details>
-        <details class="rv">
-          <summary>Are you an agency?<span class="fmark" aria-hidden="true"></span></summary>
-          <div class="fbody"><p>No. You work directly with one person from the first conversation to implementation. I currently take on a maximum of three active projects at the same time.</p></div>
-        </details>
-        <details class="rv">
-          <summary>What does the 30-day launch warranty cover?<span class="fmark" aria-hidden="true"></span></summary>
-          <div class="fbody"><p>For 30 days after launch, I fix anything within the agreed scope that does not work as intended, at no extra cost. If you want to change or add something beyond what we agreed, we scope that separately. This covers the work being delivered as promised. It is not a guarantee of business results.</p></div>
-        </details>
-        <details class="rv">
-          <summary>Do you guarantee results?<span class="fmark" aria-hidden="true"></span></summary>
-          <div class="fbody"><p>No. I do not guarantee revenue or a specific marketing result, and a new website will not fix an unclear offer by itself. I define the problem, build the agreed solution and give you something real to put in front of customers. What happens next also depends on the offer, traffic, market and how the business uses what was built.</p></div>
-        </details>
+        {(p?.faq.items || [
+          ['Can AI build the website for me?', 'It can generate text, layouts and code. The harder part is deciding whether the result is clear, credible and appropriate for the business. Using AI is not the problem. Knowing what to keep, what to remove and what needs to be rebuilt is where experience matters.'],
+          ['Do I need to prepare all the copy?', 'No. Copy can be part of the project scope. I still need real information about the business, customers and offer. I will not invent results, testimonials or claims to fill the page.'],
+          ['Do you only work on websites?', 'Websites and landing pages are the main focus. I also build AI workflows, applications, dashboards and internal systems when the project requires more than a public-facing page.'],
+          ['Are you an agency?', 'No. You work directly with one person from the first conversation to implementation. I currently take on a maximum of three active projects at the same time.'],
+          ['What does the 30-day launch warranty cover?', 'For 30 days after launch, I fix anything within the agreed scope that does not work as intended, at no extra cost. If you want to change or add something beyond what we agreed, we scope that separately. This covers the work being delivered as promised. It is not a guarantee of business results.'],
+          ['Do you guarantee results?', 'No. I do not guarantee revenue or a specific marketing result, and a new website will not fix an unclear offer by itself. I define the problem, build the agreed solution and give you something real to put in front of customers. What happens next also depends on the offer, traffic, market and how the business uses what was built.'],
+        ]).map(([question, answer]) => (
+          <details class="rv">
+            <summary>{question}<span class="fmark" aria-hidden="true"></span></summary>
+            <div class="fbody"><p>{answer}</p></div>
+          </details>
+        ))}
       </div>
     </section>
 
     <!-- FOOTER -->
     <footer class="foot">
       <div class="foot-lead">
-        <p class="foot-eyebrow rv">( Let's talk )</p>
-        <a class="foot-h" href="/contact/">
-          <span class="ln"><span class="ln-in">Let's build the website</span></span>
-          <span class="ln"><span class="ln-in">your business <em>actually needs</em>.</span></span>
+        <p class="foot-eyebrow rv">{p?.footer.label || "( Let's talk )"}</p>
+        <a class="foot-h" href={r.contact}>
+          <span class="ln"><span class="ln-in">{p?.footer.h1 || "Let's build the website"}</span></span>
+          <span class="ln"><span class="ln-in">{p?.footer.h2 || <Fragment>your business <em>actually needs</em>.</Fragment>}</span></span>
         </a>
-        <p class="foot-sub rv">Tell me what you have now, even if it is nothing yet. I will tell you whether the project is a fit and what I would build first.</p>
+        <p class="foot-sub rv">{p?.footer.sub || 'Tell me what you have now, even if it is nothing yet. I will tell you whether the project is a fit and what I would build first.'}</p>
         <div class="foot-b rv">
-          <a class="btn mag big" href="/contact/"><span class="btn-in">Book a 15-min call</span></a>
-          <a class="foot-write" href="/contact/#ctForm">or just write to me</a>
+          <a class="btn mag big" href={r.contact}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span></a>
+          <a class="foot-write" href={`${r.contact}#ctForm`}>{p?.footer.write || 'or just write to me'}</a>
         </div>
       </div>
       <div class="foot-bar">
         <div class="fcol rv">
-          <p class="flabel">Contact</p>
+          <p class="flabel">{p?.footer.contact || 'Contact'}</p>
           <a href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com</a>
           <a class="sc" href="https://instagram.com/mioduszewsky" target="_blank" rel="noopener">
             <svg class="sc-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077" /></svg>
@@ -428,22 +429,22 @@ const beyond = [
           <div class="spin-badge">
             <svg viewBox="0 0 200 200" aria-hidden="true">
               <defs><path id="badgeArc" d="M100,100 m-70,0 a70,70 0 1,1 140,0 a70,70 0 1,1 -140,0" /></defs>
-              <text><textPath href="#badgeArc" startOffset="0" textLength="439" lengthAdjust="spacing">CURRENTLY IN WROCŁAW, POLAND · WORKING WORLDWIDE ·&#160;</textPath></text>
+              <text><textPath href="#badgeArc" startOffset="0" textLength="439" lengthAdjust="spacing">{p?.footer.badge || 'CURRENTLY IN WROCŁAW, POLAND · WORKING WORLDWIDE · '}</textPath></text>
             </svg>
             <span class="spin-core" aria-hidden="true"></span>
           </div>
         </div>
         <div class="fcol fcol-right rv">
-          <p class="flabel">Availability</p>
-          <span>A maximum of three active projects at a time</span>
-          <span>One honest conversation, always</span>
+          <p class="flabel">{p?.footer.availability || 'Availability'}</p>
+          <span>{p?.footer.availability1 || 'A maximum of three active projects at a time'}</span>
+          <span>{p?.footer.availability2 || 'One honest conversation, always'}</span>
         </div>
       </div>
     </footer>
   </main>
 
   <!-- STOPKA-FINAŁ (curtain reveal): treść unosi się i naturalnie odsłania ją u dołu -->
-  <footer class="finale" aria-label="Book a call">
+  <footer class="finale" aria-label={isPl ? 'Umów rozmowę' : 'Book a call'}>
     <div class="finale-dal" aria-hidden="true">
       <!-- Bez autoplay/preload: 11 MB futra dociąga IntersectionObserver dopiero przy stopce (patrz <script> niżej). Poster WebP trzyma miejsce od razu. -->
       <video class="finale-video" loop muted playsinline preload="none" poster="/logo3d/logo-dalmatian-poster.webp">
@@ -452,19 +453,19 @@ const beyond = [
       </video>
     </div>
     <div class="finale-cta-wrap">
-      <a class="finale-cta mag" href="/contact/"><span class="btn-in">Book a 15-min call</span><i aria-hidden="true">→</i></a>
-      <a class="finale-alt" href="/contact/#ctForm">or just write to me</a>
+      <a class="finale-cta mag" href={r.contact}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span><i aria-hidden="true">→</i></a>
+      <a class="finale-alt" href={`${r.contact}#ctForm`}>{p?.footer.write || 'or just write to me'}</a>
     </div>
-    <button class="finale-top" type="button" aria-label="Back to top">
+    <button class="finale-top" type="button" aria-label={isPl ? 'Wróć na początek strony' : 'Back to top'}>
       <span class="finale-top-arrow" aria-hidden="true">↑</span>
-      <span>Back to top</span>
+      <span>{p?.footer.top || 'Back to top'}</span>
     </button>
     <div class="finale-meta">
       <span>© 2026 Kacper Mioduszewski</span>
-      <span>Designed and built by one person</span>
+      <span>{p?.footer.built || 'Designed and built by one person'}</span>
       <span class="finale-legal">
-        <a href="/terms/">Terms</a>
-        <a href="/privacy/">Privacy</a>
+        <a href={r.terms}>{p?.footer.terms || 'Terms'}</a>
+        <a href={r.privacy}>{p?.footer.privacy || 'Privacy'}</a>
       </span>
     </div>
   </footer>
@@ -1080,6 +1081,12 @@ const beyond = [
     padding: 20px 3vw; pointer-events: none;
   }
   .nav a { pointer-events: auto; }
+  .nav-actions { display: flex; align-items: center; gap: 14px; pointer-events: auto; }
+  :global(.nav .language-switch) {
+    color: var(--ink); text-decoration: none; font-size: 11px; font-weight: 650;
+    letter-spacing: 0.14em; padding: 10px 4px; transition: color 0.25s;
+  }
+  :global(.nav .language-switch:hover) { color: var(--blue); }
   .nav { transition: translate 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
   .nav.nav-hide { translate: 0 -130%; opacity: 0 !important; pointer-events: none; }
   .mark { display: block; }
@@ -1696,6 +1703,9 @@ const beyond = [
 
   @media (max-width: 860px) {
     .nav { padding: 14px 5vw; }
+    .nav-actions { gap: 8px; }
+    :global(.nav .language-switch) { padding-inline: 6px; }
+    .nav .btn { white-space: nowrap; letter-spacing: .08em; padding-inline: 18px; }
     .hero { padding-inline: 5vw; }
     .hero-b { flex-direction: column-reverse; align-items: flex-start; gap: 2.4rem; margin-top: 8vh; }
     .work, .serv, .foot, .lead, .how, .proc, .faq { padding-inline: 5vw; }
