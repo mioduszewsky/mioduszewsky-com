@@ -90,7 +90,8 @@ export const homePl = {
       { nr: '03', n: 'Stały rozwój produktu', p: 'od 5 500 zł miesięcznie', d: 'Dla projektów, które po pierwszej wersji mają być dalej rozwijane. Ustalamy stałą współpracę i pracujemy nad kolejnymi funkcjami, wersjami i decyzjami produktowymi.' },
     ],
     fine: 'Dokładny zakres i cena są znane przed startem · maksymalnie trzy aktywne projekty jednocześnie.',
-    exclusion: 'Poza zakresem: długoterminowe prowadzenie reklam, stałe SEO i gwarantowane wyniki sprzedażowe.',
+    exclusionLabel: 'Poza zakresem',
+    exclusion: 'Długoterminowe prowadzenie reklam, stałe SEO i gwarantowane wyniki sprzedażowe.',
   },
   process: {
     label: '( Proces )',
@@ -123,7 +124,7 @@ export const homePl = {
     sub: 'Pokaż mi, co masz dziś. Może to być stara strona, szkic albo nic. Powiem Ci, czy to projekt dla mnie i od czego bym zaczął.',
     write: 'albo po prostu napisz',
     contact: 'Kontakt',
-    badge: 'WROCŁAW, POLSKA · PRACUJĘ ZDALNIE ·',
+    badge: 'Wrocław, Polska · pracuję zdalnie ·',
     availability: 'Dostępność',
     availability1: 'Maksymalnie trzy aktywne projekty jednocześnie',
     availability2: 'Zaczynamy od 15 minut',

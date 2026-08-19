@@ -306,7 +306,7 @@ const beyond = p?.offer.beyond || beyondEn;
             <p class="deal-say rv">{p?.offer.say || 'A website that makes your offer clear and looks professional enough to put in front of customers, partners or investors. On our first call I tell you whether you need a landing page or a full company site, so you do not have to figure that out yourself.'}</p>
             {isPl && <p class="deal-say rv">{p!.offer.say2}</p>}
             <div class="deal-cta-wrap rv">
-              <a class="deal-cta mag" href={`${r.contact}?service=${encodeURIComponent(isPl ? 'Strona internetowa' : 'Complete website build')}`}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span><i aria-hidden="true">→</i></a>
+              <a class="deal-cta mag" href={`${r.contact}?service=${encodeURIComponent(isPl ? 'Kompletna strona internetowa' : 'Complete website build')}`}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span><i aria-hidden="true">→</i></a>
             </div>
             <p class="deal-assure rv">{p?.offer.assure || 'Scope and price are agreed before I build. If a website is not the right move, I will tell you, and you still leave the call with a clear next step.'}</p>
           </div>
@@ -339,6 +339,7 @@ const beyond = p?.offer.beyond || beyondEn;
         <p class="deal-fine rv">{p?.offer.fine || 'Landing from $1,000 · full company website from $1,500 · a maximum of three projects at a time.'}</p>
       </div>
 
+      {isPl && <p class="deal-beyond-label serv-note-label rv">{p!.offer.exclusionLabel}</p>}
       <p class="serv-note rv">{p?.offer.exclusion || 'Long-term advertising, ongoing SEO and guaranteed sales results are not part of the scope.'}</p>
     </section>
 
@@ -353,7 +354,7 @@ const beyond = p?.offer.beyond || beyondEn;
         <article class="pstep rv">
           <span class="pn">01</span>
           <h3>{p?.process.steps[0][0] || 'We talk about the business'}</h3>
-          <p>{isPl ? <Fragment>Co działa dziś, co trzeba zmienić i po co ma powstać nowa strona. Zaczynamy od <a class="ilink" href={r.contact}>15 minut</a>.</Fragment> : <Fragment>What exists today, what needs to change, starting with a <a class="ilink" href={r.contact}>15-min call</a>.</Fragment>}</p>
+          <p>{isPl ? <Fragment>Pokazujesz mi, co masz dziś, czego potrzebujesz i po co ma powstać nowa strona. Zaczynamy od <a class="ilink" href={r.contact}>15 minut</a>.</Fragment> : <Fragment>What exists today, what needs to change, starting with a <a class="ilink" href={r.contact}>15-min call</a>.</Fragment>}</p>
         </article>
         <article class="pstep rv">
           <span class="pn">02</span>
@@ -1680,6 +1681,7 @@ const beyond = p?.offer.beyond || beyondEn;
   .spray-note { position: absolute; left: -46%; bottom: 4%; width: 60%; pointer-events: none; }
   .spray-note svg { width: 70%; fill: none; stroke: var(--spray); stroke-width: 6; stroke-linecap: round; }
   .spray-note .tag { display: block; rotate: -6deg; margin-top: 2px; }
+  .serv-note-label { color: var(--dim); margin-bottom: 0.5rem; }
   /* wariant przy odwróconym wierszu (.proj.flip): dopisek po prawej, strzałka w lewo */
   .spray-note-r { left: auto; right: -46%; }
   .spray-note-r svg { transform: scaleX(-1); }
