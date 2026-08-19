@@ -200,7 +200,15 @@ const beyond = p?.offer.beyond || beyondEn;
           <p class="proj-d rv">{p?.work.aigor || <Fragment>A website for an art collection: works, artists and acquisition history. <em>Designed to sell a story.</em></Fragment>}</p>
         </div>
         <div class="proj-f" data-parallax>
-          <PhoneFrame url={isPl ? 'https://www.igorgrabowski.com/' : 'https://www.igorgrabowski.com/?lang=en'} alt={p?.work.aigorAlt || 'igorgrabowski.com - scroll it'} fallbackText={isPl ? 'strona chwilowo się nie ładuje' : undefined} fallbackLinkText={isPl ? 'otwórz w nowej karcie ↗' : undefined} />
+          <div class="phone-hold">
+            <PhoneFrame url={isPl ? 'https://www.igorgrabowski.com/' : 'https://www.igorgrabowski.com/?lang=en'} alt={p?.work.aigorAlt || 'igorgrabowski.com - scroll it'} fallbackText={isPl ? 'strona chwilowo się nie ładuje' : undefined} fallbackLinkText={isPl ? 'otwórz w nowej karcie ↗' : undefined} />
+            {isPl && (
+              <div class="spray-note spray-note-r" aria-hidden="true">
+                <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M120 14 L 140 16 L 132 36" filter="url(#sprayF)" /></svg>
+                <span class="tag">to one pager.<br />tu nie scrollujesz</span>
+              </div>
+            )}
+          </div>
         </div>
       </article>
 
@@ -250,7 +258,9 @@ const beyond = p?.offer.beyond || beyondEn;
           <ol class="how-list">
             {(p?.how.oldList || ['You write a brief.', 'Someone designs the page.', 'Someone else writes the copy.', 'A developer receives the files later.', 'Every person sees one part of the project.']).map((item) => <li>{item}</li>)}
           </ol>
-          <p class="how-out">{p?.how.oldOut || 'You become the person responsible for making sure those parts still fit together.'}</p>
+          {(p ? p.how.oldOut : 'You become the person responsible for making sure those parts still fit together.') && (
+            <p class="how-out">{p?.how.oldOut || 'You become the person responsible for making sure those parts still fit together.'}</p>
+          )}
         </div>
         <div class="how-col rv">
           <h3 class="how-t">{p?.how.newTitle || 'The way I work'}</h3>
@@ -263,10 +273,9 @@ const beyond = p?.offer.beyond || beyondEn;
       <div class="how-why">
         {isPl ? (
           <>
-            <p class="how-why-t rv how-why-full how-me">Za mioduszewsky stoję ja, nie agencja. Mam na imię <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span> i buduję z Wrocławia. Robię rzeczy, które mają działać także wtedy, gdy opadnie pierwsze wrażenie.</p>
-            <p class="how-why-t rv">Nie sprzedaję się jako najlepszy specjalista od wszystkiego. <span class="dim2">Dobry projektant może stworzyć ładniejszy system. Wyspecjalizowany programista może napisać bardziej zaawansowany kod.</span> Tyle że cały projekt nie kończy się na jednej z tych rzeczy.</p>
-            <p class="how-why-t rv">Pracuję tam, gdzie projekty najczęściej się rozjeżdżają: <em>decyzja, oferta, treść, projekt, budowa i publikacja</em>. Jedna całość, jedna odpowiedzialność.</p>
-            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> i <span class="lp" data-tap data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span>, które widzisz wyżej, nie są realizacjami dla klientów. <span class="dim2">To moje własne projekty.</span> Zanim uruchomię ten sposób pracy u klienta, sprawdzam go we <span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">własnym biznesie</span>.</p>
+            <p class="how-why-t rv how-why-full how-me">Siemka, tu <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>. Zanim zacząłem robić strony, pracowałem przy prowadzeniu projektów i startupów. Designu i developmentu nauczyłem się później, bo chciałem sam zamieniać pomysły w działające produkty.</p>
+            <p class="how-why-t rv">Biorę to, co masz w głowie i w biznesie, i przekładam na <span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">działającą stronę</span>. Patrzę na cały ciąg: <em>decyzja, oferta, treść, design, wdrożenie i publikacja</em>.</p>
+            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> to spółka, którą współprowadzę. <span class="dim2"><span class="lp" data-tap data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span> powstało, kiedy wchodziłem głębiej w branżę konopną.</span> Oba nauczyły mnie patrzeć na stronę przez pryzmat tego, co ma zrobić dla firmy.</p>
           </>
         ) : (
           <>
@@ -295,6 +304,7 @@ const beyond = p?.offer.beyond || beyondEn;
             </h2>
             <p class="deal-price rv">{isPl ? p!.offer.price : <Fragment>from <b>$1,000</b></Fragment>}</p>
             <p class="deal-say rv">{p?.offer.say || 'A website that makes your offer clear and looks professional enough to put in front of customers, partners or investors. On our first call I tell you whether you need a landing page or a full company site, so you do not have to figure that out yourself.'}</p>
+            {isPl && <p class="deal-say rv">{p!.offer.say2}</p>}
             <div class="deal-cta-wrap rv">
               <a class="deal-cta mag" href={`${r.contact}?service=${encodeURIComponent(isPl ? 'Strona internetowa' : 'Complete website build')}`}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span><i aria-hidden="true">→</i></a>
             </div>
@@ -1670,6 +1680,10 @@ const beyond = p?.offer.beyond || beyondEn;
   .spray-note { position: absolute; left: -46%; bottom: 4%; width: 60%; pointer-events: none; }
   .spray-note svg { width: 70%; fill: none; stroke: var(--spray); stroke-width: 6; stroke-linecap: round; }
   .spray-note .tag { display: block; rotate: -6deg; margin-top: 2px; }
+  /* wariant przy odwróconym wierszu (.proj.flip): dopisek po prawej, strzałka w lewo */
+  .spray-note-r { left: auto; right: -46%; }
+  .spray-note-r svg { transform: scaleX(-1); }
+  .spray-note-r .tag { rotate: 6deg; text-align: right; }
 
   .tag-manif { color: var(--brand); rotate: -5deg; display: inline-block; vertical-align: super; font-size: 0.42em; margin-left: 0.2em; }
 
@@ -1731,6 +1745,9 @@ const beyond = p?.offer.beyond || beyondEn;
     .spray-note { left: 0; right: auto; bottom: -9%; width: 62%; }
     .spray-note svg { width: 56%; }
     .spray-note .tag { margin-left: 6%; }
+    /* ramka .proj-f na mobile sięga tuż poza prawą krawędź, więc dopisek trzyma odstęp */
+    .spray-note-r { right: 10%; left: auto; }
+    .spray-note-r .tag { margin-left: 0; margin-right: 6%; }
     .proj { grid-template-columns: 1fr; gap: 6vh; margin-bottom: 12vh; }
     .proj.flip .proj-t { order: 0; }
     .more { margin-top: 0; }
