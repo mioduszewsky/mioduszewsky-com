@@ -841,7 +841,7 @@ const beyond = p?.offer.beyond || beyondEn;
     /* Sticky CTA: widoczny po zjechaniu z hero, chowany gdy jasna stopka blisko dołu.
        Finał (.finale) jest fixed pod treścią — go nie obserwujemy. */
     const sticky = document.querySelector<HTMLElement>('.sticky-cta-wrap');
-    const navBtn = document.querySelector<HTMLElement>('.nav .btn');
+    const navBtn = document.querySelector<HTMLElement>('.nav-actions');
     const heroEl = document.querySelector<HTMLElement>('.hero');
     const footEl = document.querySelector<HTMLElement>('.foot');
     if (sticky && heroEl && footEl) {
@@ -1150,6 +1150,8 @@ const beyond = p?.offer.beyond || beyondEn;
   /* chowa się, gdy poza hero — sticky-cta albo CTA stopki i tak są wtedy widoczne */
   .nav .btn { transition: opacity 0.3s, translate 0.3s, color 0.3s, border-color 0.3s, scale 0.18s ease-out; }
   .nav .btn.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
+  .nav-actions { transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1), translate 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
+  .nav-actions.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
   /* Sticky CTA — powtarzany główny cel konwersji.
      Wrapper = fixed + centrowanie + slide-in/out (swój transform).
      .sticky-cta w środku = .mag, dostaje x/y od magnetyzmu na WŁASNYM transformie. */
@@ -1656,7 +1658,8 @@ const beyond = p?.offer.beyond || beyondEn;
     text-transform: none;
     white-space: nowrap;
   }
-  .fix { position: relative; display: inline-block; }
+  /* skreslenie rysuje sie na caly blok, wiec zawiniecie wrzuciloby kreske miedzy linie */
+  .fix { position: relative; display: inline-block; white-space: nowrap; }
   .fix .strike {
     position: absolute; inset: 14% -5% auto; width: 110%; height: 66%;
     fill: none; stroke: var(--spray); stroke-linecap: round;

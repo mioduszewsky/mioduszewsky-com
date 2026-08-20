@@ -6,10 +6,10 @@ export const homePl = {
   nav: { cta: 'Umów 15 minut', sticky: 'Umów 15 minut', stickyAria: 'Umów 15-minutową rozmowę' },
   hero: {
     label: '( Strony · AI · aplikacje )',
-    aria: 'Strona, którą możesz wysłać klientowi.',
+    aria: 'Strona, którą wysyłasz klientowi.',
     line1: 'Strona, którą',
-    struck: 'trzeba tłumaczyć',
-    note: 'możesz wysłać',
+    struck: 'tłumaczysz',
+    note: 'wysyłasz',
     line3: 'klientowi.',
     sub: 'Najpierw ustalam, co strona ma zrobić dla Twojego biznesu. Potem układam treść, projektuję i buduję całość do publikacji.',
   },
@@ -17,7 +17,7 @@ export const homePl = {
     label: '( Problem )',
     h1: 'Potrzebujesz strony.',
     h2: 'Nagle masz cały projekt na głowie.',
-    intro: 'Najczęściej zaczyna się od prostego „potrzebuję strony”. Potem wychodzi, że trzeba ogarnąć treść, zdjęcia, projekt, domenę, formularze i wdrożenie. A punkt startu bywa różny: czasem strony jeszcze nie ma, czasem obecna została w tyle, a czasem jest, ale niewiele z niej wynika.',
+    intro: 'Zaczyna się od „potrzebuję strony”. Potem wychodzi, że trzeba ogarnąć treść, projekt, domenę i wdrożenie. Punkt startu bywa różny:',
     rows: [
       ['Strony jeszcze nie ma', 'Wiesz, że jej potrzebujesz, ale nie wiesz, od czego zacząć ani co przygotować.'],
       ['Biznes poszedł dalej. Strona została.', 'Oferta się zmieniła, firma wygląda dziś inaczej, a strona nadal pokazuje jej starą wersję.'],
