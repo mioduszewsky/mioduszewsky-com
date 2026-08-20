@@ -1660,6 +1660,9 @@ const beyond = p?.offer.beyond || beyondEn;
   }
   /* skreslenie rysuje sie na caly blok, wiec zawiniecie wrzuciloby kreske miedzy linie */
   .fix { position: relative; display: inline-block; white-space: nowrap; }
+  /* odreczny dopisek siedzi nad skreslonym slowem. Gdy skreslenie nie jest w pierwszej
+     linii naglowka (PL), nad soba ma tekst — bez tego powietrza dopisek go zasłania. */
+  .hero h1 .ln:not(:first-child):has(.fix) { margin-top: 0.4em; }
   .fix .strike {
     position: absolute; inset: 14% -5% auto; width: 110%; height: 66%;
     fill: none; stroke: var(--spray); stroke-linecap: round;
