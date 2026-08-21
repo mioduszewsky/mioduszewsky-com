@@ -15,8 +15,8 @@ export const homePl = {
   problem: {
     label: '( Problem )',
     h1: 'Potrzebujesz strony.',
-    h2: 'Nagle prowadzisz cały projekt.',
-    intro: 'Zaczyna się od „potrzebuję strony”. Potem dochodzi treść, projekt, domena i wdrożenie. Zależnie od tego, z czym przychodzisz:',
+    h2: 'Nagle masz cały projekt na głowie.',
+    intro: 'Zaczyna się od „potrzebuję strony”. Potem dochodzi treść, projekt, domena i wdrożenie. Ile z tego spada na Ciebie, zależy od tego, w którym miejscu jesteś dzisiaj. Zwykle w jednym z trzech:',
     rows: [
       ['Strony jeszcze nie ma', 'Wiesz, że jej potrzebujesz, ale nie wiesz, od czego zacząć ani co przygotować.'],
       ['Biznes poszedł dalej. Strona została.', 'Oferta się zmieniła, firma wygląda dziś inaczej, a strona nadal pokazuje jej starą wersję.'],
