@@ -116,9 +116,9 @@ const beyond = p?.offer.beyond || beyondEn;
 
     <!-- HERO + PROBLEM: sprayowa nitka rysowana scrollem -->
     <div class="thread-zone">
-      <div class="thread t-wide" data-start="560,18" data-end-y="724" aria-hidden="true">
-        <svg viewBox="0 0 600 760" fill="none">
-          <path class="td" pathLength="1" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724 L 410 692 L 440 724 L 472 696" />
+      <div class="thread t-wide" data-start="560,13" data-end-y="507" data-max-w="760" aria-hidden="true">
+        <svg viewBox="0 0 600 540" fill="none">
+          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 440 448, 420 477, 440 507 L 410 484 L 440 507 L 472 487" />
         </svg>
       </div>
       <div class="thread t-narrow" data-start="330,31" data-end-y="751" aria-hidden="true">
@@ -682,7 +682,13 @@ const beyond = p?.offer.beyond || beyondEn;
             const endY = Number(wrap.dataset.endY || 0);
             if (endY && leadTop) {
               const dist = Math.max(320, leadTop - (y + dot.offsetHeight / 2 + dy) - 26);
-              wrap.style.width = `${(dist / (endY - py)) * svg.viewBox.baseVal.width}px`;
+              let wpx = (dist / (endY - py)) * svg.viewBox.baseVal.width;
+              /* wariant szeroki ma trzymac swoja skale — dopasowanie moze go tylko
+                 przyciac, gdy zabraknie miejsca, nigdy rozdmuchac ani zmniejszyc
+                 ponizej rozsadku */
+              const cap = Number(wrap.dataset.maxW || 0);
+              if (cap) wpx = Math.min(wpx, innerWidth * 0.58, cap);
+              wrap.style.width = `${wpx}px`;
             }
             const scale = wrap.getBoundingClientRect().width / svg.viewBox.baseVal.width;
             wrap.style.left = `${x + dot.offsetWidth / 2 + dx - px * scale}px`;
