@@ -10,7 +10,7 @@ export const homePl = {
     line1: 'Dobra strona',
     em: 'mówi',
     line3: 'za Ciebie.',
-    sub: 'Najpierw ustalam, co strona ma zrobić dla Twojego biznesu. Potem układam treść, projektuję, buduję i publikuję.',
+    sub: 'Buduję strony internetowe, wdrożenia AI i aplikacje. Treść, projekt i technologia są po mojej stronie, od pierwszej rozmowy do publikacji.',
   },
   problem: {
     label: '( Problem )',
