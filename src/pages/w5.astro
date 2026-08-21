@@ -118,7 +118,7 @@ const beyond = p?.offer.beyond || beyondEn;
     <div class="thread-zone">
       <div class="thread" aria-hidden="true">
         <svg viewBox="0 0 600 760" fill="none">
-          <path class="td" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724 M 410 692 L 440 726 L 472 696" />
+          <path class="td" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724 L 410 692 M 440 724 L 472 696" />
         </svg>
       </div>
     <!-- HERO -->
@@ -657,8 +657,15 @@ const beyond = p?.offer.beyond || beyondEn;
           let x = 0, y = 0;
           let n: HTMLElement | null = dot;
           while (n && n !== zone) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
-          wrap.style.left = `${x + dot.offsetWidth / 2 - 560 * scale}px`;
-          wrap.style.top = `${y + dot.offsetHeight / 2 - 18 * scale}px`;
+          /* kolo jest mniejsze od pudelka i siedzi w nim nizej (baseline), wiec do
+             srodka pudelka dokladamy roznice zmierzona na zywo — obie miary lapia
+             ten sam transform, wiec ich roznica jest od niego niezalezna */
+          const dRect = dot.getBoundingClientRect();
+          const cRect = (dot.querySelector('circle') as SVGCircleElement).getBoundingClientRect();
+          const dx = cRect.left + cRect.width / 2 - (dRect.left + dRect.width / 2);
+          const dy = cRect.top + cRect.height / 2 - (dRect.top + dRect.height / 2);
+          wrap.style.left = `${x + dot.offsetWidth / 2 + dx - 560 * scale}px`;
+          wrap.style.top = `${y + dot.offsetHeight / 2 + dy - 18 * scale}px`;
         };
         anchorThread();
         addEventListener('resize', anchorThread);
