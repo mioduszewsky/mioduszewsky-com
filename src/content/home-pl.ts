@@ -9,7 +9,7 @@ export const homePl = {
     aria: 'Dobra strona mówi za Ciebie.',
     line1: 'Dobra strona',
     em: 'mówi',
-    line3: 'za Ciebie.',
+    line3: 'za Ciebie',
     sub: 'Buduję strony internetowe, wdrożenia AI i aplikacje. Całość robi jedna osoba, więc nie zszywasz projektu z kawałków od kilku wykonawców.',
   },
   problem: {
