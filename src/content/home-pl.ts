@@ -6,11 +6,11 @@ export const homePl = {
   nav: { cta: 'Umów 15 minut', sticky: 'Umów 15 minut', stickyAria: 'Umów 15-minutową rozmowę' },
   hero: {
     label: '( Strony · AI · aplikacje )',
-    aria: 'Strona, którą wysyłasz klientowi.',
-    line1: 'Strona, którą',
-    struck: 'tłumaczysz',
-    note: 'wysyłasz',
-    line3: 'klientowi.',
+    aria: 'Dobra strona mówi za Ciebie.',
+    line1: 'Dobra strona',
+    struck: 'tłumaczy',
+    note: 'mówi',
+    line3: 'za Ciebie.',
     sub: 'Najpierw ustalam, co strona ma zrobić dla Twojego biznesu. Potem układam treść, projektuję, buduję i publikuję.',
   },
   problem: {
