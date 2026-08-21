@@ -118,7 +118,7 @@ const beyond = p?.offer.beyond || beyondEn;
     <div class="thread-zone">
       <div class="thread" aria-hidden="true">
         <svg viewBox="0 0 600 760" fill="none">
-          <path class="td" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724 L 410 692 M 440 724 L 472 696" />
+          <path class="td" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724 L 410 692 L 440 724 L 472 696" />
         </svg>
       </div>
     <!-- HERO -->
@@ -673,7 +673,9 @@ const beyond = p?.offer.beyond || beyondEn;
            obok kropki, bo naglowek zdazy jeszcze zmienic wysokosc */
         document.fonts?.ready.then(anchorThread);
         ScrollTrigger.addEventListener('refresh', anchorThread);
-        /* linia i grot siedza w jednej sciezce, wiec scroll rysuje je jednym ciagiem */
+        /* Grot jest czescia tej samej, NIEPRZERWANEJ sciezki: dash w SVG startuje od
+           nowa po kazdym `M`, wiec kazde podniesienie piora dawalo kawalek rysowany
+           wlasnym rytmem, wiszacy obok linii. Tu pioro wraca po tym samym odcinku. */
         gsap.to(thread, {
           strokeDashoffset: 0, ease: 'none',
           scrollTrigger: { trigger: '.thread-zone', start: 'top top', end: 'bottom bottom', scrub: 0.4 },
