@@ -1,17 +1,17 @@
 export const contactPl = {
   meta: {
     title: 'Umów rozmowę · mioduszewsky',
-    description: 'Umów 15 minut albo po prostu napisz. Pokaż, co masz dziś. Powiem Ci, czy to projekt dla mnie i od czego bym zaczął.',
+    description: 'Bezpłatna 15-minutowa rozmowa przez wideo albo krótka wiadomość. Pokaż, co masz dziś. Powiem Ci, czy to projekt dla mnie i od czego bym zaczął.',
   },
   back: 'Wróć',
   logoAria: 'mioduszewsky. Wróć na stronę główną.',
   label: '( Następny krok · 15 minut )',
-  h1: 'Umów 15 minut.',
-  h2: 'Albo po prostu napisz.',
-  lead: 'Pokaż mi, co masz dziś. Może to być stara strona, szkic albo nic. Powiem Ci, czy to projekt dla mnie i od czego bym zaczął. Bez ciśnienia i bez skryptu sprzedażowego.',
+  h1: 'Bezpłatne 15 minut.',
+  h2: 'Rozmowa przez wideo. Albo po prostu napisz.',
+  lead: 'Pokaż mi, co masz dziś. Może to być stara strona, szkic albo nic. Powiem Ci, czy to projekt dla mnie i od czego bym zaczął. Piętnaście minut przez wideo, bezpłatnie.',
   call: {
     title: 'Wybierz termin',
-    desc: '15 minut, wideo, bez zobowiązań.',
+    desc: 'Bezpłatnie. 15 minut rozmowy przez wideo.',
     consent: 'Kalendarz obsługuje Google. Po jego wyświetleniu Google może zapisać plik cookie na twoim urządzeniu, żeby pokazać dostępne terminy.',
     show: 'Pokaż kalendarz',
     noteBefore: 'Kalendarz się nie wyświetla?',
@@ -19,7 +19,7 @@ export const contactPl = {
     noteAfter: 'i znajdziemy termin.',
     fallback: 'Napisz, żeby umówić rozmowę',
     fallbackNote: 'Kalendarz jest właśnie podłączany. Na razie napisz maila. Wrócę z terminem.',
-    iframeTitle: 'Umów 15 minut',
+    iframeTitle: 'Umów bezpłatne 15 minut rozmowy',
     mailSubject: 'Umówmy rozmowę',
   },
   form: {
