@@ -116,9 +116,14 @@ const beyond = p?.offer.beyond || beyondEn;
 
     <!-- HERO + PROBLEM: sprayowa nitka rysowana scrollem -->
     <div class="thread-zone">
-      <div class="thread" aria-hidden="true">
+      <div class="thread t-wide" data-start="560,18" aria-hidden="true">
         <svg viewBox="0 0 600 760" fill="none">
-          <path class="td" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724 L 410 692 L 440 724 L 472 696" />
+          <path class="td" pathLength="1" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724 L 410 692 L 440 724 L 472 696" />
+        </svg>
+      </div>
+      <div class="thread t-narrow" data-start="330,20" data-end-y="558" aria-hidden="true">
+        <svg viewBox="0 0 360 620" fill="none">
+          <path class="td" pathLength="1" d="M330 20 C 352 46, 344 78, 318 94 C 262 128, 120 110, 74 152 C 34 190, 60 244, 128 252 C 216 262, 306 268, 320 320 C 334 372, 300 432, 244 472 C 208 498, 182 522, 180 558 L 148 522 L 180 558 L 214 524" />
         </svg>
       </div>
     <!-- HERO -->
@@ -637,48 +642,68 @@ const beyond = p?.offer.beyond || beyondEn;
          przez dashoffset. */
       const thread = gsap.utils.toArray<SVGPathElement>('.thread .td');
       if (thread.length) {
-        thread.forEach((p) => {
-          const len = p.getTotalLength();
-          p.style.strokeDasharray = `${len}`;
-          p.style.strokeDashoffset = `${len}`;
-        });
-        /* Linia ma WYCHODZIC z czerwonej kropki po haslu, a nie mijac ja bokiem:
-           SVG jest kotwiczony tak, zeby poczatek sciezki (560,18) padal na srodek
-           kropki. Liczone z realnych pozycji, wiec trzyma sie przy kazdej szerokosci. */
+        /* pathLength="1" normalizuje dlugosc, wiec dash dziala tez dla wariantu
+           schowanego przez media query (getTotalLength zwracalby tam zero) */
+        thread.forEach((p) => { p.style.strokeDasharray = '1'; p.style.strokeDashoffset = '1'; });
+        /* Linia ma WYCHODZIC z czerwonej kropki po hasle, a nie mijac ja bokiem:
+           kazdy wariant deklaruje swoj punkt startu w data-start, a SVG jest tak
+           przesuwany, zeby ten punkt padal na srodek kropki. */
         const anchorThread = () => {
-          const wrap = document.querySelector<HTMLElement>('.thread');
           const zone = document.querySelector<HTMLElement>('.thread-zone');
           const dot = document.querySelector<HTMLElement>('.hero .spray-dot');
-          if (!wrap || !zone || !dot) return;
-          const scale = wrap.getBoundingClientRect().width / 600;
+          const circle = dot?.querySelector('circle');
+          if (!zone || !dot || !circle) return;
           /* offsetLeft/Top, NIE getBoundingClientRect: w trakcie intro kropka jedzie
-             razem z linia naglowka (transform), wiec rect podawal pozycje o ~157px
-             za nisko i linia startowala obok kropki zamiast z niej */
+             razem z linia naglowka (transform), wiec rect podawalby pozycje za nisko */
           let x = 0, y = 0;
           let n: HTMLElement | null = dot;
           while (n && n !== zone) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
-          /* kolo jest mniejsze od pudelka i siedzi w nim nizej (baseline), wiec do
-             srodka pudelka dokladamy roznice zmierzona na zywo — obie miary lapia
-             ten sam transform, wiec ich roznica jest od niego niezalezna */
+          /* kolo jest mniejsze od pudelka i siedzi w nim nizej (baseline) — roznice
+             obu prostokatow liczymy na zywo, oba lapia ten sam transform */
           const dRect = dot.getBoundingClientRect();
-          const cRect = (dot.querySelector('circle') as SVGCircleElement).getBoundingClientRect();
+          const cRect = circle.getBoundingClientRect();
           const dx = cRect.left + cRect.width / 2 - (dRect.left + dRect.width / 2);
           const dy = cRect.top + cRect.height / 2 - (dRect.top + dRect.height / 2);
-          wrap.style.left = `${x + dot.offsetWidth / 2 + dx - 560 * scale}px`;
-          wrap.style.top = `${y + dot.offsetHeight / 2 + dy - 18 * scale}px`;
+          const lead = document.querySelector<HTMLElement>('.lead');
+          document.querySelectorAll<HTMLElement>('.thread').forEach((wrap) => {
+            if (!wrap.offsetParent) return;
+            const svg = wrap.querySelector('svg')!;
+            const [px, py] = (wrap.dataset.start || '0,0').split(',').map(Number);
+            /* wariant pionowy dopasowuje sie do realnego dystansu kropka -> sekcja
+               problemu: na telefonie zalezy on od wysokosci ekranu, wiec sztywna
+               proporcja konczylaby strzalke raz za wysoko, raz za nisko */
+            const endY = Number(wrap.dataset.endY || 0);
+            if (endY && lead) {
+              const dist = Math.max(360, lead.offsetTop - (y + dot.offsetHeight / 2 + dy) - 28);
+              wrap.style.width = `${(dist / (endY - py)) * svg.viewBox.baseVal.width}px`;
+            }
+            const scale = wrap.getBoundingClientRect().width / svg.viewBox.baseVal.width;
+            wrap.style.left = `${x + dot.offsetWidth / 2 + dx - px * scale}px`;
+            wrap.style.top = `${y + dot.offsetHeight / 2 + dy - py * scale}px`;
+          });
         };
         anchorThread();
         addEventListener('resize', anchorThread);
-        /* pierwszy pomiar leci przed dojsciem fontow — bez tego kotwica laduje
-           obok kropki, bo naglowek zdazy jeszcze zmienic wysokosc */
+        /* pierwszy pomiar leci przed dojsciem fontow — bez tego kotwica laduje obok */
         document.fonts?.ready.then(anchorThread);
         ScrollTrigger.addEventListener('refresh', anchorThread);
         /* Grot jest czescia tej samej, NIEPRZERWANEJ sciezki: dash w SVG startuje od
-           nowa po kazdym `M`, wiec kazde podniesienie piora dawalo kawalek rysowany
-           wlasnym rytmem, wiszacy obok linii. Tu pioro wraca po tym samym odcinku. */
+           nowa po kazdym poleceniu M, wiec kazde podniesienie piora dawalo kawalek
+           rysowany wlasnym rytmem, wiszacy obok linii. */
+        /* tempo rysowania idzie za dlugoscia linii, nie za wysokoscia calej sekcji:
+           inaczej na telefonie (sekcja duzo wyzsza niz rysunek) kreska konczyla sie
+           daleko przed sekcja problemu i przez pol ekranu nic sie nie dzialo */
+        const visibleThread = () => document.querySelector<HTMLElement>('.thread:not([style*="display: none"])');
         gsap.to(thread, {
           strokeDashoffset: 0, ease: 'none',
-          scrollTrigger: { trigger: '.thread-zone', start: 'top top', end: 'bottom bottom', scrub: 0.4 },
+          scrollTrigger: {
+            trigger: '.thread-zone', start: 'top top', scrub: 0.4,
+            end: () => {
+              const wrap = [...document.querySelectorAll<HTMLElement>('.thread')].find((el) => el.offsetParent);
+              return `+=${Math.round((wrap?.offsetHeight || 800) * 1.1)}`;
+            },
+            invalidateOnRefresh: true,
+          },
         });
       }
       const dealDraw = gsap.utils.toArray<SVGPathElement>('.deal-strike .draw');
@@ -1757,13 +1782,16 @@ const beyond = p?.offer.beyond || beyondEn;
      Te same filtry co skreslenia w hero, wiec to gest marki, nie efekt z polki. */
   .thread-zone { position: relative; }
   .hero, .lead { position: relative; z-index: 1; }
-  .thread {
-    position: absolute; left: 24vw; top: 50vh; width: min(58vw, 760px);
-    z-index: 0; pointer-events: none;
+  .thread { position: absolute; z-index: 0; pointer-events: none; }
+  .t-wide { left: 24vw; top: 50vh; width: min(58vw, 760px); }
+  .t-narrow { display: none; width: 86vw; max-width: 90vw; }
+  @media (max-width: 900px) {
+    .t-wide { display: none; }
+    .t-narrow { display: block; }
   }
   .thread svg { display: block; width: 100%; height: auto; overflow: visible; }
   .thread path { fill: none; stroke: var(--spray); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
-  @media (max-width: 900px) { .thread { display: none; } }
+  .t-narrow path { stroke-width: 7; }
 
   .phone-hold { position: relative; display: inline-block; }
   .spray-note { position: absolute; left: -46%; bottom: 4%; width: 60%; pointer-events: none; }
