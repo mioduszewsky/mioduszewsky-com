@@ -121,9 +121,9 @@ const beyond = p?.offer.beyond || beyondEn;
           <path class="td" pathLength="1" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724 L 410 692 L 440 724 L 472 696" />
         </svg>
       </div>
-      <div class="thread t-narrow" data-start="330,20" data-end-y="558" aria-hidden="true">
-        <svg viewBox="0 0 360 620" fill="none">
-          <path class="td" pathLength="1" d="M330 20 C 352 46, 344 78, 318 94 C 262 128, 120 110, 74 152 C 34 190, 60 244, 128 252 C 216 262, 306 268, 320 320 C 334 372, 300 432, 244 472 C 208 498, 182 522, 180 558 L 148 522 L 180 558 L 214 524" />
+      <div class="thread t-narrow" data-start="330,31" data-end-y="751" aria-hidden="true">
+        <svg viewBox="0 0 360 790" fill="none">
+          <path class="td" pathLength="1" d="M330 31 C 352 62, 372 91, 374 134 C 376 206, 372 286, 372 362 C 372 446, 368 518, 352 574 C 330 646, 270 674, 220 698 C 204 708, 192 727, 190 751 L 158 696 L 190 751 L 222 698" />
         </svg>
       </div>
     <!-- HERO -->
@@ -664,7 +664,16 @@ const beyond = p?.offer.beyond || beyondEn;
           const cRect = circle.getBoundingClientRect();
           const dx = cRect.left + cRect.width / 2 - (dRect.left + dRect.width / 2);
           const dy = cRect.top + cRect.height / 2 - (dRect.top + dRect.height / 2);
-          const lead = document.querySelector<HTMLElement>('.lead');
+          /* celujemy w widoczny tekst sekcji, nie w krawedz .lead: sekcja ma spory
+             padding-gorny, wiec kotwiczenie do niej zostawialo pol ekranu pustki */
+          const leadTop = (() => {
+            const label = document.querySelector<HTMLElement>('.lead .label');
+            if (!label) return 0;
+            let v = 0;
+            let m: HTMLElement | null = label;
+            while (m && m !== zone) { v += m.offsetTop; m = m.offsetParent as HTMLElement | null; }
+            return v;
+          })();
           document.querySelectorAll<HTMLElement>('.thread').forEach((wrap) => {
             if (!wrap.offsetParent) return;
             const svg = wrap.querySelector('svg')!;
@@ -673,8 +682,8 @@ const beyond = p?.offer.beyond || beyondEn;
                problemu: na telefonie zalezy on od wysokosci ekranu, wiec sztywna
                proporcja konczylaby strzalke raz za wysoko, raz za nisko */
             const endY = Number(wrap.dataset.endY || 0);
-            if (endY && lead) {
-              const dist = Math.max(360, lead.offsetTop - (y + dot.offsetHeight / 2 + dy) - 28);
+            if (endY && leadTop) {
+              const dist = Math.max(320, leadTop - (y + dot.offsetHeight / 2 + dy) - 26);
               wrap.style.width = `${(dist / (endY - py)) * svg.viewBox.baseVal.width}px`;
             }
             const scale = wrap.getBoundingClientRect().width / svg.viewBox.baseVal.width;
@@ -1784,7 +1793,7 @@ const beyond = p?.offer.beyond || beyondEn;
   .hero, .lead { position: relative; z-index: 1; }
   .thread { position: absolute; z-index: 0; pointer-events: none; }
   .t-wide { left: 24vw; top: 50vh; width: min(58vw, 760px); }
-  .t-narrow { display: none; width: 86vw; max-width: 90vw; }
+  .t-narrow { display: none; width: 86vw; max-width: 94vw; }
   @media (max-width: 900px) {
     .t-wide { display: none; }
     .t-narrow { display: block; }
