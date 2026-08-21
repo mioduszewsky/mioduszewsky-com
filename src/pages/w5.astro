@@ -1188,7 +1188,9 @@ const beyond = p?.offer.beyond || beyondEn;
   @media (max-width: 620px) {
     .nav { padding: 14px 5vw; }
     .nav-actions { gap: 10px; }
-    .nav .btn { padding: 8px 14px; font-size: 10px; letter-spacing: 0.07em; }
+    /* Na telefonie CTA stoi w samym hero, a po zjechaniu przejmuje je sticky —
+       baton w navie tylko dublowal akcje i scisnal gore obok logo. */
+    .nav .btn { display: none; }
     .sticky-cta { font-size: 12px; padding: 12px 20px; }
     .sticky-cta-wrap { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   }
@@ -1629,6 +1631,12 @@ const beyond = p?.offer.beyond || beyondEn;
     /* hero skaluje się z vw zamiast twardego floora — „send people to·"
        mieści się w jednej linii na każdej szerokości (zmierzone 360-640px) */
     .hero h1 { font-size: clamp(2.2rem, 12.3vw, 3.6rem); }
+  }
+  @media (max-width: 640px) {
+    /* bez batonu w navie cały hero (label, hasło, podtytuł, CTA) ma się zmieścić
+       w jednym ekranie — MUSI stać PO bazowej regule .hero, inaczej przegrywa */
+    .hero { padding: 7vh 3vw 7vh; }
+    .hero-b { margin-top: 4vh; }
   }
   @media (max-width: 640px) {
     /* PL: „mówi za Ciebie" o włos nie mieściło się w linii i spadało trzecim
