@@ -7,7 +7,8 @@ export const contactPl = {
   logoAria: 'mioduszewsky. Wróć na stronę główną.',
   label: '( Następny krok · 15 minut )',
   h1: 'Bezpłatne 15 minut.',
-  h2: 'Rozmowa przez wideo. Albo po prostu napisz.',
+  h2: 'Rozmowa przez wideo.',
+  h3: 'Albo po prostu napisz.',
   lead: 'Pokaż mi, co masz dziś. Może to być stara strona, szkic albo nic. Powiem Ci, czy to projekt dla mnie i od czego bym zaczął. Piętnaście minut przez wideo, bezpłatnie.',
   call: {
     title: 'Wybierz termin',
