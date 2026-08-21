@@ -51,7 +51,7 @@ export const homePl = {
   how: {
     label: '( Jak pracuję )',
     h1: 'Płacisz za stronę.',
-    h2: 'Nie za swój czas przy niej.',
+    h2: 'Masz ją z głowy.',
     oldTitle: 'Typowy proces',
     oldList: ['Piszesz brief.', 'Ktoś robi treść.', 'Ktoś projektuje.', 'Ktoś inny wdraża.', 'Ty spinasz resztę.'],
     oldOut: '',
