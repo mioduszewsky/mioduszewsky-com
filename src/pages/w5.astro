@@ -116,7 +116,7 @@ const beyond = p?.offer.beyond || beyondEn;
 
     <!-- HERO + PROBLEM: sprayowa nitka rysowana scrollem -->
     <div class="thread-zone">
-      <div class="thread t-wide" data-start="560,18" aria-hidden="true">
+      <div class="thread t-wide" data-start="560,18" data-end-y="724" aria-hidden="true">
         <svg viewBox="0 0 600 760" fill="none">
           <path class="td" pathLength="1" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724 L 410 692 L 440 724 L 472 696" />
         </svg>
@@ -184,7 +184,7 @@ const beyond = p?.offer.beyond || beyondEn;
     <section class="work">
       <div class="sec-head">
         <p class="label rv">{p?.work.label || 'Selected work'}</p>
-        <p class="label dim rv">{p?.work.hint || '( the screens scroll, these are live projects )'}</p>
+        <p class="label dim rv">{p?.work.hint || '( these are not screenshots, but live websites )'}</p>
       </div>
 
       <article class="proj">
@@ -214,12 +214,10 @@ const beyond = p?.offer.beyond || beyondEn;
         <div class="proj-f" data-parallax>
           <div class="phone-hold">
             <PhoneFrame url={isPl ? 'https://www.igorgrabowski.com/' : 'https://www.igorgrabowski.com/?lang=en'} alt={p?.work.aigorAlt || 'igorgrabowski.com - scroll it'} fallbackText={isPl ? 'strona chwilowo się nie ładuje' : undefined} fallbackLinkText={isPl ? 'otwórz w nowej karcie ↗' : undefined} />
-            {isPl && (
-              <div class="spray-note spray-note-r" aria-hidden="true">
-                <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M 116 20 L 140 16 L 136 40" /></svg>
-                <span class="tag">to one pager.<br />tu klikasz</span>
-              </div>
-            )}
+            <div class="spray-note spray-note-r" aria-hidden="true">
+              <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M 116 20 L 140 16 L 136 40" /></svg>
+              <span class="tag">{isPl ? <Fragment>to one pager.<br />tu klikasz</Fragment> : <Fragment>it's a one pager.<br />click around</Fragment>}</span>
+            </div>
           </div>
         </div>
       </article>
@@ -769,6 +767,7 @@ const beyond = p?.offer.beyond || beyondEn;
       };
       let peekOn = false;
       let curThumb = '';
+      let shownAtY = 0;
       const hidePeek = () => {
         if (!peekOn) return;
         peekOn = false;
@@ -777,6 +776,7 @@ const beyond = p?.offer.beyond || beyondEn;
       const showPeek = (row: HTMLElement, x: number, y: number) => {
         const t = row.dataset.thumb!;
         if (t !== curThumb) { peek.src = t; curThumb = t; }
+        shownAtY = scrollY;
         if (!peekOn) {
           peekOn = true;
           place(x, y);
@@ -793,20 +793,32 @@ const beyond = p?.offer.beyond || beyondEn;
          więc działa i przy ruchu myszy, i gdy treść przewija się pod nieruchomym
          kursorem. Koniec z gubionym pointerleave i przyklejoną miniaturą. */
       let lastX = -1, lastY = -1;
-      const evaluate = () => {
+      /* canShow tylko z realnego ruchu myszy. Ticker moze WYLACZNIE chowac —
+         wczesniej tez pokazywal, wiec przy scrollu pod nieruchomym kursorem
+         miniatura wisiala i przeskakiwala po kolejnych wierszach, ktore same
+         wjezdzaly pod kursor. */
+      const evaluate = (canShow = false) => {
         if (lastX < 0) return;
         const el = document.elementFromPoint(lastX, lastY) as HTMLElement | null;
         const row = el?.closest?.('.mrow[data-thumb]') as HTMLElement | null;
-        if (row) showPeek(row, lastX, lastY);
-        else hidePeek();
+        if (row && canShow) showPeek(row, lastX, lastY);
+        else if (!row) hidePeek();
       };
-      document.addEventListener('pointermove', (e) => { lastX = e.clientX; lastY = e.clientY; evaluate(); });
+      document.addEventListener('pointermove', (e) => { lastX = e.clientX; lastY = e.clientY; evaluate(true); });
+
       /* Bulletproof: dopóki miniatura jest widoczna, co KLATKĘ sprawdzaj co realnie
          jest pod kursorem (działa dla każdego scrolla — Lenis, natywny, momentum).
          Gdy wiersz zjedzie spod nieruchomego kursora przy scrollu → natychmiast chowa.
          Pokazujemy tylko na realny ruch myszy (pointermove), więc scroll pod
          nieruchomym kursorem NIE „przyklei" miniatury. */
-      gsap.ticker.add(() => { if (peekOn) evaluate(); });
+      /* Kursor stoi, a tresc ucieka = chowamy. Porownujemy pozycje scrolla z ta
+         z momentu pokazania, zamiast sluchac zdarzenia 'scroll' — Lenis dowozi je
+         tez w bezruchu (inercja, rAF), wiec miniatura nie pokazalaby sie wcale. */
+      gsap.ticker.add(() => {
+        if (!peekOn) return;
+        if (Math.abs(scrollY - shownAtY) > 24) { hidePeek(); return; }
+        evaluate(false);
+      });
       addEventListener('blur', hidePeek);
       document.addEventListener('pointerleave', hidePeek);
       document.addEventListener('visibilitychange', () => { if (document.hidden) hidePeek(); });
@@ -1792,7 +1804,7 @@ const beyond = p?.offer.beyond || beyondEn;
   .thread-zone { position: relative; }
   .hero, .lead { position: relative; z-index: 1; }
   .thread { position: absolute; z-index: 0; pointer-events: none; }
-  .t-wide { left: 24vw; top: 50vh; width: min(58vw, 760px); }
+  .t-wide { left: 24vw; top: 50vh; width: min(58vw, 760px); max-width: 62vw; }
   .t-narrow { display: none; width: 86vw; max-width: 94vw; }
   @media (max-width: 900px) {
     .t-wide { display: none; }
