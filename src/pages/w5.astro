@@ -114,6 +114,14 @@ const beyond = p?.offer.beyond || beyondEn;
       </a>
     </div>
 
+    <!-- HERO + PROBLEM: sprayowa nitka rysowana scrollem -->
+    <div class="thread-zone">
+      <div class="thread" aria-hidden="true">
+        <svg viewBox="0 0 600 760" fill="none">
+          <path class="td" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724" />
+          <path class="td td-tip" d="M408 690 L 440 730 L 474 694" />
+        </svg>
+      </div>
     <!-- HERO -->
     <section class="hero">
       <p class="label rv">{p?.hero.label || '( Websites · AI · Apps )'}</p>
@@ -166,6 +174,7 @@ const beyond = p?.offer.beyond || beyondEn;
       </div>
       <p class="lead-close rv">{p?.problem.close || <Fragment>So the problem is rarely another tool. It is knowing what to build, and whether the result is ready to meet customers. <em>That is the part I take off your plate.</em></Fragment>}</p>
     </section>
+    </div>
 
     <!-- REALIZACJE -->
     <section class="work">
@@ -624,6 +633,26 @@ const beyond = p?.offer.beyond || beyondEn;
       });
       /* OFERTA: spray-podkreślenie rysuje się, kropka i dopisek „psikają" — ten sam
          język gestów co hero (te same filtry sprayF/sprayMist, kolor --spray). */
+      /* Nitka sprayem rysuje sie w rytmie scrolla przez hero i problem. Ten sam
+         mechanizm co skreslenie: dlugosc sciezki na dasharray, scroll odsłania ją
+         przez dashoffset. */
+      const thread = gsap.utils.toArray<SVGPathElement>('.thread .td');
+      if (thread.length) {
+        thread.forEach((p) => {
+          const len = p.getTotalLength();
+          p.style.strokeDasharray = `${len}`;
+          p.style.strokeDashoffset = `${len}`;
+        });
+        /* grot dorysowuje sie dopiero, gdy linia dobiegnie konca — przy staggerze
+           obie czesci rysowaly sie rownolegle i grot wisial w powietrzu */
+        const tip = thread.filter((p) => p.classList.contains('td-tip'));
+        const line = thread.filter((p) => !p.classList.contains('td-tip'));
+        gsap.timeline({
+          scrollTrigger: { trigger: '.thread-zone', start: 'top top', end: 'bottom bottom', scrub: 0.4 },
+        })
+          .to(line, { strokeDashoffset: 0, ease: 'none', duration: 0.86 }, 0)
+          .to(tip, { strokeDashoffset: 0, ease: 'none', duration: 0.14 }, 0.86);
+      }
       const dealDraw = gsap.utils.toArray<SVGPathElement>('.deal-strike .draw');
       if (dealDraw.length) {
         dealDraw.forEach((p) => { const len = p.getTotalLength(); p.style.strokeDasharray = `${len}`; p.style.strokeDashoffset = `${len}`; });
@@ -1696,6 +1725,17 @@ const beyond = p?.offer.beyond || beyondEn;
   .spray-dot circle { fill: var(--spray); }
 
   .hero { position: relative; }
+  /* Sprayowa nitka: jedna linia rysowana w rytmie scrolla przez hero i problem.
+     Te same filtry co skreslenia w hero, wiec to gest marki, nie efekt z polki. */
+  .thread-zone { position: relative; }
+  .hero, .lead { position: relative; z-index: 1; }
+  .thread {
+    position: absolute; left: 24vw; top: 50vh; width: min(58vw, 760px);
+    z-index: 0; pointer-events: none;
+  }
+  .thread svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .thread path { fill: none; stroke: var(--spray); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+  @media (max-width: 900px) { .thread { display: none; } }
 
   .phone-hold { position: relative; display: inline-block; }
   .spray-note { position: absolute; left: -46%; bottom: 4%; width: 60%; pointer-events: none; }
