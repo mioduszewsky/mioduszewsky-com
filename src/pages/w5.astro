@@ -123,7 +123,7 @@ const beyond = p?.offer.beyond || beyondEn;
       </div>
       <div class="thread t-narrow" data-start="330,31" data-end-y="751" aria-hidden="true">
         <svg viewBox="0 0 360 790" fill="none">
-          <path class="td" pathLength="1" d="M330 31 C 350 40, 364 50, 366 62 C 368 78, 340 86, 292 82 C 210 74, 110 72, 68 86 C 34 98, 38 118, 76 122 C 140 128, 250 120, 320 106 C 352 100, 370 114, 371 152 C 374 232, 372 300, 372 360 C 372 402, 350 426, 310 442 C 240 470, 120 452, 76 502 C 40 544, 72 598, 142 608 C 202 616, 226 662, 230 702 C 231 722, 230 738, 230 751 L 198 700 L 230 751 L 262 702" />
+          <path class="td" pathLength="1" d="M330 31 C 350 40, 364 50, 366 62 C 368 78, 340 86, 292 82 C 210 74, 110 72, 68 86 C 34 98, 38 118, 76 122 C 140 128, 250 120, 320 106 C 352 100, 370 116, 370 154 C 370 194, 360 224, 366 258 C 372 296, 362 330, 368 366 C 372 404, 340 426, 296 438 C 210 460, 96 444, 62 502 C 32 552, 96 598, 170 580 C 244 562, 292 510, 268 472 C 250 444, 222 460, 212 498 C 200 548, 206 622, 224 692 C 227 714, 229 734, 230 751 L 190 708 L 230 751 L 266 714" />
         </svg>
       </div>
     <!-- HERO -->
@@ -706,7 +706,7 @@ const beyond = p?.offer.beyond || beyondEn;
         gsap.to(thread, {
           strokeDashoffset: 0, ease: 'none',
           scrollTrigger: {
-            trigger: '.thread-zone', start: 'top top', scrub: 0.4,
+            trigger: '.thread-zone', start: 'top top', scrub: 0.6,
             end: () => {
               const wrap = [...document.querySelectorAll<HTMLElement>('.thread')].find((el) => el.offsetParent);
               return `+=${Math.round((wrap?.offsetHeight || 800) * 1.1)}`;
