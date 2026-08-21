@@ -120,7 +120,7 @@ const beyond = p?.offer.beyond || beyondEn;
       {isPl ? (
         <h1 aria-label={p!.hero.aria}>
           <span class="ln"><span class="ln-in">{p!.hero.line1}</span></span>
-          <span class="ln"><span class="ln-in"><em>{p!.hero.em}</em> {p!.hero.line3}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span>
+          <span class="ln"><span class="ln-in"><em>{p!.hero.em}</em> <span class="hero-end">{p!.hero.line3}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span></span>
         </h1>
       ) : (
         <h1>
@@ -1097,8 +1097,8 @@ const beyond = p?.offer.beyond || beyondEn;
 
   .nav {
     position: fixed; inset-inline: 0; top: 0; z-index: 90;
-    display: flex; align-items: flex-start; justify-content: space-between;
-    padding: 20px 3vw; pointer-events: none;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 3vw; pointer-events: none;
   }
   .nav a { pointer-events: auto; }
   .nav-actions { display: flex; align-items: center; gap: 14px; pointer-events: auto; }
@@ -1149,6 +1149,8 @@ const beyond = p?.offer.beyond || beyondEn;
   /* chowa się, gdy poza hero — sticky-cta albo CTA stopki i tak są wtedy widoczne */
   .nav .btn { transition: opacity 0.3s, translate 0.3s, color 0.3s, border-color 0.3s, scale 0.18s ease-out; }
   .nav .btn.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
+  /* baton w navie byl w tej samej skali co CTA w tresci i dusil gore strony */
+  .nav .btn { padding: 9px 18px; font-size: 11px; letter-spacing: 0.12em; }
   .nav-actions { transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1), translate 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
   .nav-actions.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
   /* Sticky CTA — powtarzany główny cel konwersji.
@@ -1184,6 +1186,10 @@ const beyond = p?.offer.beyond || beyondEn;
   .sticky-cta i { font-style: normal; transition: translate 0.3s; }
   .sticky-cta:hover i { translate: 4px 0; }
   @media (max-width: 620px) {
+    .nav { padding: 14px 5vw; }
+    .mark video { height: clamp(34px, 9.2vw, 44px); }
+    .nav-actions { gap: 10px; }
+    .nav .btn { padding: 8px 14px; font-size: 10px; letter-spacing: 0.07em; }
     .sticky-cta { font-size: 12px; padding: 12px 20px; }
     .sticky-cta-wrap { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   }
@@ -1726,7 +1732,7 @@ const beyond = p?.offer.beyond || beyondEn;
     .tlink:active i { translate: 4px -4px; }
     .finale-top:active, .finale-alt:active { color: var(--ivory); }
     /* tap targets: te same wymiary wizualne, większe pole reakcji */
-    .nav .btn { padding: 13px 24px; }
+    .nav .btn { padding: 9px 15px; }
     .fcol a, .foot-write, .finale-alt, .meta a { padding-block: 6px; }
     .tlink { padding-block: 10px; }
     .finale-top { padding: 14px 16px; }
