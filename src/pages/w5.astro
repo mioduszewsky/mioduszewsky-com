@@ -120,8 +120,7 @@ const beyond = p?.offer.beyond || beyondEn;
       {isPl ? (
         <h1 aria-label={p!.hero.aria}>
           <span class="ln"><span class="ln-in">{p!.hero.line1}</span></span>
-          <span class="ln" aria-hidden="true"><span class="ln-in"><span class="fix">{p!.hero.struck}<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix">{p!.hero.note}</span></span></span></span>
-          <span class="ln"><span class="ln-in">{p!.hero.line3}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span>
+          <span class="ln"><span class="ln-in"><em>{p!.hero.em}</em> {p!.hero.line3}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span>
         </h1>
       ) : (
         <h1>
