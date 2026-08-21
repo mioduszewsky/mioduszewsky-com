@@ -118,7 +118,7 @@ const beyond = p?.offer.beyond || beyondEn;
     <section class="hero">
       <p class="label rv">{p?.hero.label || '( Websites · AI · Apps )'}</p>
       {isPl ? (
-        <h1 aria-label={p!.hero.aria}>
+        <h1 class="h1-pl" aria-label={p!.hero.aria}>
           <span class="ln"><span class="ln-in">{p!.hero.line1}</span></span>
           <span class="ln"><span class="ln-in"><em>{p!.hero.em}</em> <span class="hero-end">{p!.hero.line3}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span></span>
         </h1>
@@ -1629,6 +1629,12 @@ const beyond = p?.offer.beyond || beyondEn;
     /* hero skaluje się z vw zamiast twardego floora — „send people to·"
        mieści się w jednej linii na każdej szerokości (zmierzone 360-640px) */
     .hero h1 { font-size: clamp(2.2rem, 12.3vw, 3.6rem); }
+  }
+  @media (max-width: 640px) {
+    /* PL: „mówi za Ciebie" o włos nie mieściło się w linii i spadało trzecim
+       wierszem, zostawiając dziurę po „mówi". Ciaśniejszy trekking domyka
+       wers bez schodzenia z wielkości nagłówka (zmierzone 360-640px). */
+    .hero h1.h1-pl { letter-spacing: -0.05em; }
   }
   /* Subtelny powrót na górę (zastępuje zabrane żółte logo jako kotwicę) */
   /* „Back to top" na samej górze, nad wordmarkiem */
