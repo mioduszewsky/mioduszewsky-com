@@ -118,8 +118,7 @@ const beyond = p?.offer.beyond || beyondEn;
     <div class="thread-zone">
       <div class="thread" aria-hidden="true">
         <svg viewBox="0 0 600 760" fill="none">
-          <path class="td" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724" />
-          <path class="td td-tip" d="M408 690 L 440 730 L 474 694" />
+          <path class="td" d="M560 18 C 606 120, 470 180, 380 220 C 290 260, 250 330, 300 410 C 350 486, 470 500, 452 580 C 440 640, 420 682, 440 724 M 410 692 L 440 726 L 472 696" />
         </svg>
       </div>
     <!-- HERO -->
@@ -128,13 +127,13 @@ const beyond = p?.offer.beyond || beyondEn;
       {isPl ? (
         <h1 aria-label={p!.hero.aria}>
           <span class="ln"><span class="ln-in">{p!.hero.line1}</span></span>
-          <span class="ln"><span class="ln-in"><em>{p!.hero.em}</em> <span class="hero-end">{p!.hero.line3}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span></span>
+          <span class="ln"><span class="ln-in"><em>{p!.hero.em}</em> <span class="hero-end">{p!.hero.line3}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" /></svg></span></span></span></span>
         </h1>
       ) : (
         <h1>
           <span class="ln"><span class="ln-in">A <span class="fix">generic<svg class="strike" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="draw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg><span class="tag tag-fix" aria-hidden="true">working!</span></span> website</span></span>
           <span class="ln"><span class="ln-in">you can <em>finally</em></span></span>
-          <span class="ln"><span class="ln-in">send people <span class="hero-end">to<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" filter="url(#sprayMist)" /></svg></span></span></span></span>
+          <span class="ln"><span class="ln-in">send people <span class="hero-end">to<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" /></svg></span></span></span></span>
         </h1>
       )}
       <div class="hero-b">
@@ -194,7 +193,7 @@ const beyond = p?.offer.beyond || beyondEn;
           <div class="phone-hold">
             <PhoneFrame url={isPl ? 'https://eskapizm.com' : 'https://eskapizm.com/en'} alt={p?.work.eskapizmAlt || 'eskapizm.com - scroll it'} screenbg="#fbfff7" fallbackText={isPl ? 'strona chwilowo się nie ładuje' : undefined} fallbackLinkText={isPl ? 'otwórz w nowej karcie ↗' : undefined} />
             <div class="spray-note" aria-hidden="true">
-              <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M120 14 L 140 16 L 132 36" filter="url(#sprayF)" /></svg>
+              <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M 116 20 L 140 16 L 136 40" /></svg>
               <span class="tag">{isPl ? <Fragment>psst, działa.<br />przewiń</Fragment> : <Fragment>psst, it's live.<br />scroll it!</Fragment>}</span>
             </div>
           </div>
@@ -212,7 +211,7 @@ const beyond = p?.offer.beyond || beyondEn;
             <PhoneFrame url={isPl ? 'https://www.igorgrabowski.com/' : 'https://www.igorgrabowski.com/?lang=en'} alt={p?.work.aigorAlt || 'igorgrabowski.com - scroll it'} fallbackText={isPl ? 'strona chwilowo się nie ładuje' : undefined} fallbackLinkText={isPl ? 'otwórz w nowej karcie ↗' : undefined} />
             {isPl && (
               <div class="spray-note spray-note-r" aria-hidden="true">
-                <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M120 14 L 140 16 L 132 36" filter="url(#sprayF)" /></svg>
+                <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M 116 20 L 140 16 L 136 40" /></svg>
                 <span class="tag">to one pager.<br />tu klikasz</span>
               </div>
             )}
@@ -308,7 +307,7 @@ const beyond = p?.offer.beyond || beyondEn;
             <span class="deal-badge rv">{p?.offer.badge || '30-day launch warranty'}</span>
             <h2 class="deal-h">
               <span class="ln"><span class="ln-in deal-h1">{p?.offer.h1 || 'Complete website'}</span></span>
-              <span class="ln"><span class="ln-in deal-h2">{p?.offer.h2 || 'build'}<span class="spray-dot deal-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="16" filter="url(#sprayMist)" /></svg></span><svg class="deal-strike" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M8 17 C 82 9, 214 22, 292 12" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M8 17 C 82 9, 214 22, 292 12" /><path class="draw" d="M12 23 C 90 15, 206 25, 288 17" /></g></svg></span></span>
+              <span class="ln"><span class="ln-in deal-h2">{p?.offer.h2 || 'build'}<span class="spray-dot deal-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="16" /></svg></span><svg class="deal-strike" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M8 17 C 82 9, 214 22, 292 12" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M8 17 C 82 9, 214 22, 292 12" /><path class="draw" d="M12 23 C 90 15, 206 25, 288 17" /></g></svg></span></span>
             </h2>
             <p class="deal-price rv">{isPl ? p!.offer.price : <Fragment>from <b>$1,000</b></Fragment>}</p>
             <p class="deal-say rv">{p?.offer.say || 'A website that makes your offer clear and looks professional enough to put in front of customers, partners or investors. On our first call I tell you whether you need a landing page or a full company site, so you do not have to figure that out yourself.'}</p>
@@ -643,15 +642,35 @@ const beyond = p?.offer.beyond || beyondEn;
           p.style.strokeDasharray = `${len}`;
           p.style.strokeDashoffset = `${len}`;
         });
-        /* grot dorysowuje sie dopiero, gdy linia dobiegnie konca — przy staggerze
-           obie czesci rysowaly sie rownolegle i grot wisial w powietrzu */
-        const tip = thread.filter((p) => p.classList.contains('td-tip'));
-        const line = thread.filter((p) => !p.classList.contains('td-tip'));
-        gsap.timeline({
+        /* Linia ma WYCHODZIC z czerwonej kropki po haslu, a nie mijac ja bokiem:
+           SVG jest kotwiczony tak, zeby poczatek sciezki (560,18) padal na srodek
+           kropki. Liczone z realnych pozycji, wiec trzyma sie przy kazdej szerokosci. */
+        const anchorThread = () => {
+          const wrap = document.querySelector<HTMLElement>('.thread');
+          const zone = document.querySelector<HTMLElement>('.thread-zone');
+          const dot = document.querySelector<HTMLElement>('.hero .spray-dot');
+          if (!wrap || !zone || !dot) return;
+          const scale = wrap.getBoundingClientRect().width / 600;
+          /* offsetLeft/Top, NIE getBoundingClientRect: w trakcie intro kropka jedzie
+             razem z linia naglowka (transform), wiec rect podawal pozycje o ~157px
+             za nisko i linia startowala obok kropki zamiast z niej */
+          let x = 0, y = 0;
+          let n: HTMLElement | null = dot;
+          while (n && n !== zone) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
+          wrap.style.left = `${x + dot.offsetWidth / 2 - 560 * scale}px`;
+          wrap.style.top = `${y + dot.offsetHeight / 2 - 18 * scale}px`;
+        };
+        anchorThread();
+        addEventListener('resize', anchorThread);
+        /* pierwszy pomiar leci przed dojsciem fontow — bez tego kotwica laduje
+           obok kropki, bo naglowek zdazy jeszcze zmienic wysokosc */
+        document.fonts?.ready.then(anchorThread);
+        ScrollTrigger.addEventListener('refresh', anchorThread);
+        /* linia i grot siedza w jednej sciezce, wiec scroll rysuje je jednym ciagiem */
+        gsap.to(thread, {
+          strokeDashoffset: 0, ease: 'none',
           scrollTrigger: { trigger: '.thread-zone', start: 'top top', end: 'bottom bottom', scrub: 0.4 },
-        })
-          .to(line, { strokeDashoffset: 0, ease: 'none', duration: 0.86 }, 0)
-          .to(tip, { strokeDashoffset: 0, ease: 'none', duration: 0.14 }, 0.86);
+        });
       }
       const dealDraw = gsap.utils.toArray<SVGPathElement>('.deal-strike .draw');
       if (dealDraw.length) {
