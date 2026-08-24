@@ -37,6 +37,15 @@ const beyondEn = [
   { nr: '03', n: 'Build + Iterate', p: 'from $1,500 / mo', d: 'Ongoing development after launch for selected projects: maintenance, iterations, product decisions and new versions.' },
 ];
 const beyond = p?.offer.beyond || beyondEn;
+/* Manifest: spray przekresla fraze z pierwszej linii. Tekst zostaje jednym stringiem
+   w tresci, a tutaj dzielimy go na trzy czesci — inaczej kazdy jezyk musialby trzymac
+   zdanie w kawalkach i latwo bylo je rozjechac przy redakcji. */
+const manifLine1 = p?.manifest.line1 || 'The goal is not another step.';
+const manifCross = p?.manifest.cross || 'another step';
+const crossAt = manifLine1.indexOf(manifCross);
+const manifPre = crossAt >= 0 ? manifLine1.slice(0, crossAt) : manifLine1;
+const manifHit = crossAt >= 0 ? manifCross : '';
+const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) : '';
 ---
 
 <VariantLayout
@@ -246,9 +255,9 @@ const beyond = p?.offer.beyond || beyondEn;
     <section class="manif">
       <div class="manif-in">
         <p class="manif-t">
-          <span class="ln"><span class="ln-in">{p?.manifest.line1 || 'The goal is not another step.'}</span></span>
+          <span class="ln"><span class="ln-in">{manifPre}<span class="fix">{manifHit}<svg class="strike manif-strike" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist manif-mist" filter="url(#sprayMist)"><path d="M6 25 C 60 18, 138 30, 194 21" /><path d="M10 33 C 68 26, 132 37, 190 26" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="mdraw" d="M6 25 C 60 18, 138 30, 194 21" /><path class="mdraw" d="M10 33 C 68 26, 132 37, 190 26" /></g></svg></span>{manifPost}</span></span>
           <span class="ln"><span class="ln-in">{p?.manifest.line2 ? <Fragment set:html={mark(p.manifest.line2)} /> : <Fragment>It is the <em>last</em> one.</Fragment>}</span></span>
-          <span class="ln"><span class="ln-in">{p?.manifest.line3 || 'You go live.'} <span class="tag tag-manif" aria-hidden="true">{p?.manifest.note || 'for real.'}</span></span></span>
+          <span class="ln"><span class="ln-in">{p?.manifest.line3 || 'You go live.'}</span></span>
         </p>
         <p class="manif-sub rv">{p?.manifest.sub || 'Send it in an email. Run a campaign to it. Show it to a customer. Build on it after launch.'}</p>
       </div>
@@ -746,6 +755,26 @@ const beyond = p?.offer.beyond || beyondEn;
         clipPath: 'circle(125% at 50% 52%)', ease: 'none',
         scrollTrigger: { trigger: '.manif', start: 'top 78%', end: 'top 12%', scrub: 0.5 },
       });
+      /* Spray przekreslajacy fraze w manifescie: ten sam gest co w hero, ale wlasny
+         moment. Sciezki celowo NIE maja klasy `.draw` — ta jest zbierana globalnie do
+         intro hero i psiknelaby sie kilka ekranow przed swoja sekcja. */
+      const manifDraw = gsap.utils.toArray<SVGPathElement>('.manif-strike .mdraw');
+      if (manifDraw.length) {
+        manifDraw.forEach((path) => {
+          const len = path.getTotalLength();
+          path.style.strokeDasharray = `${len}`;
+          path.style.strokeDashoffset = `${len}`;
+        });
+        gsap.set('.manif-mist', { opacity: 0 });
+        ScrollTrigger.create({
+          trigger: '.manif-t', start: 'top 62%', once: true,
+          onEnter: () => {
+            gsap.timeline()
+              .to(manifDraw, { strokeDashoffset: 0, duration: 0.5, ease: 'power2.in', stagger: 0.14 })
+              .to('.manif-mist', { opacity: 1, duration: 0.3 }, '-=0.15');
+          },
+        });
+      }
     }
 
     /* Nav (żółte logo + „Book a call") jest WIDOCZNY cały czas.
@@ -1852,6 +1881,9 @@ const beyond = p?.offer.beyond || beyondEn;
     fill: none; stroke: var(--spray); stroke-linecap: round;
     pointer-events: none; overflow: visible;
   }
+  /* W manifescie fraza konczy zdanie, wiec domyslne wystawanie o 5% zahaczalo
+     o kropke zdaniowa tuz za nia. Tu kreska trzyma sie samych slow. */
+  .manif-strike { inset: 16% -2% auto; width: 104%; }
   .strike-ink path { stroke-width: 4.5; }
   .strike-ink path:last-child { stroke-width: 3.5; opacity: 0.92; }
   .strike-mist path { stroke-width: 7; opacity: 0.12; }
@@ -1888,7 +1920,6 @@ const beyond = p?.offer.beyond || beyondEn;
   .spray-note-r svg { transform: scaleX(-1); }
   .spray-note-r .tag { rotate: 6deg; text-align: right; }
 
-  .tag-manif { color: var(--brand); rotate: -5deg; display: inline-block; vertical-align: super; font-size: 0.42em; margin-left: 0.2em; width: 0; margin-right: -0.2em; overflow: visible; white-space: nowrap; }
 
   .idx-wrap { position: relative; }
   .spray-circle {

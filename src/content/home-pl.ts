@@ -42,9 +42,11 @@ export const homePl = {
   },
   manifest: {
     line1: 'Nie chodzi o kolejny etap.',
+    /* fraza z line1, ktora spray przekresla — napiecie robi teraz pierwsza linia,
+       wiec odreczny dopisek „teraz." przestal byc potrzebny */
+    cross: 'kolejny etap',
     line2: 'Chodzi o *ten ostatni*.',
     line3: 'Wchodzisz live.',
-    note: 'teraz.',
     sub: 'Wysyłasz stronę klientom. Puszczasz na nią kampanię. Pokazujesz partnerom. Przestajesz ją robić i zaczynasz jej używać.',
   },
   how: {
