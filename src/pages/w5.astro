@@ -1523,14 +1523,18 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 
   /* LINK-PREVIEW: słowa, które po najechaniu odsłaniają zdjęcie Kacpra.
      Świadomie inne od żółtego markera (em) — cienkie podkreślenie = "tu jest coś do zobaczenia". */
+  /* Slowa z podgladem mialy podkreslenie w 30% czerni — praktycznie niewidoczne,
+     wiec nikt nie wiedzial, ze da sie w nie wejsc. Jednoczesnie przygaszony szary
+     tekst obok (.dim2), ktory linkiem NIE jest, ludzie brali za interaktywny.
+     Niebieski rozdziela te dwa sygnaly: to kolor interakcji na calej stronie. */
   .lp {
     position: relative; color: var(--ink); cursor: pointer;
     text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--ink) 30%, transparent);
-    text-decoration-thickness: 1.5px; text-underline-offset: 4px;
-    transition: text-decoration-color 0.28s ease;
+    text-decoration-color: var(--blue);
+    text-decoration-thickness: 2px; text-underline-offset: 4px;
+    transition: text-decoration-color 0.28s ease, color 0.28s ease;
   }
-  .lp:hover, .lp.lp-on { text-decoration-color: var(--ink); }
+  .lp:hover, .lp.lp-on { color: var(--blue); text-decoration-color: var(--blue); }
   :global(body.has-cur) .lp { cursor: none; }
   /* Karta jest tworzona w JS runtime, więc scoped selektory Astro jej nie łapią.
      Dlatego reguły karty muszą być :global (patrz lekcja: Astro scope'uje statyczne elementy). */
