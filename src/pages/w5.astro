@@ -120,11 +120,6 @@ const beyond = p?.offer.beyond || beyondEn;
 
     <!-- HERO + PROBLEM: sprayowa nitka rysowana scrollem -->
     <div class="thread-zone">
-      <div class="thread t-narrow" data-start="270,12" data-end-y="500" data-end-fold="54" aria-hidden="true">
-        <svg viewBox="0 0 300 520" fill="none">
-          <path class="td" pathLength="1" d="M270 12 C 288 34, 288 68, 274 102 C 258 146, 220 176, 202 222 C 186 264, 192 314, 184 364 C 178 408, 166 448, 158 500 L 128 472 L 158 500 L 188 472" />
-        </svg>
-      </div>
       <div class="thread t-wide" data-start="560,13" data-end-y="566" data-max-w="760" aria-hidden="true">
         <svg viewBox="0 0 600 600" fill="none">
           <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 442 456, 432 512, 440 566 L 410 538 L 440 566 L 470 538" />
@@ -692,15 +687,7 @@ const beyond = p?.offer.beyond || beyondEn;
                problemu: na telefonie zalezy on od wysokosci ekranu, wiec sztywna
                proporcja konczylaby strzalke raz za wysoko, raz za nisko */
             const endY = Number(wrap.dataset.endY || 0);
-            /* Wariant telefonowy konczy sie nad zagieciem pierwszego ekranu, nie przy
-               sekcji problemu: haslo zajmuje caly ekran, a kreska zyje w wolnym polu
-               pod nim i ma dojechac do krawedzi, nie kilka ekranow nizej. */
-            const foldGap = Number(wrap.dataset.endFold || 0);
-            if (endY && foldGap) {
-              const zoneTop = zone.getBoundingClientRect().top + window.scrollY;
-              const dist = Math.max(240, innerHeight - foldGap - zoneTop - (y + dot.offsetHeight / 2 + dy));
-              wrap.style.width = `${(dist / (endY - py)) * svg.viewBox.baseVal.width}px`;
-            } else if (endY && leadTop) {
+            if (endY && leadTop) {
               const dist = Math.max(320, leadTop - (y + dot.offsetHeight / 2 + dy) - 26);
               let wpx = (dist / (endY - py)) * svg.viewBox.baseVal.width;
               /* wariant szeroki ma trzymac swoja skale — dopasowanie moze go tylko
@@ -711,15 +698,7 @@ const beyond = p?.offer.beyond || beyondEn;
               wrap.style.width = `${wpx}px`;
             }
             const scale = wrap.getBoundingClientRect().width / svg.viewBox.baseVal.width;
-            const anchorX = x + dot.offsetWidth / 2 + dx;
-            /* Waski wariant dryfuje w bok w drodze na dol. Kropka konczy inne zdanie w
-               kazdym jezyku (PL „za Ciebie", EN „send people to"), wiec przy kropce w
-               lewej polowie ten sam rysunek wychodzil poza kadr — odbijamy go w poziomie.
-               Grot jest symetryczny, wiec odbicie go nie psuje. */
-            const flip = !!wrap.dataset.endFold && anchorX < innerWidth * 0.5;
-            wrap.style.transformOrigin = 'left top';
-            wrap.style.transform = flip ? 'scaleX(-1)' : '';
-            wrap.style.left = `${flip ? anchorX + px * scale : anchorX - px * scale}px`;
+            wrap.style.left = `${x + dot.offsetWidth / 2 + dx - px * scale}px`;
             wrap.style.top = `${y + dot.offsetHeight / 2 + dy - py * scale}px`;
           });
         };
@@ -734,24 +713,18 @@ const beyond = p?.offer.beyond || beyondEn;
         /* tempo rysowania idzie za dlugoscia linii, nie za wysokoscia calej sekcji:
            inaczej na telefonie (sekcja duzo wyzsza niz rysunek) kreska konczyla sie
            daleko przed sekcja problemu i przez pol ekranu nic sie nie dzialo */
-        const foldWrap = document.querySelector<HTMLElement>('.thread[data-end-fold]');
-        if (foldWrap?.offsetParent) {
-          gsap.to(foldWrap.querySelectorAll('.td'), {
-            strokeDashoffset: 0, duration: 1.5, ease: 'power2.inOut', delay: 1.15,
-          });
-        } else {
-          gsap.to(thread, {
-            strokeDashoffset: 0, ease: 'none',
-            scrollTrigger: {
-              trigger: '.thread-zone', start: 'top top', scrub: 0.6,
-              end: () => {
-                const wrap = [...document.querySelectorAll<HTMLElement>('.thread')].find((el) => el.offsetParent);
-                return `+=${Math.round((wrap?.offsetHeight || 800) * 1.1)}`;
-              },
-              invalidateOnRefresh: true,
+        const visibleThread = () => document.querySelector<HTMLElement>('.thread:not([style*="display: none"])');
+        gsap.to(thread, {
+          strokeDashoffset: 0, ease: 'none',
+          scrollTrigger: {
+            trigger: '.thread-zone', start: 'top top', scrub: 0.6,
+            end: () => {
+              const wrap = [...document.querySelectorAll<HTMLElement>('.thread')].find((el) => el.offsetParent);
+              return `+=${Math.round((wrap?.offsetHeight || 800) * 1.1)}`;
             },
-          });
-        }
+            invalidateOnRefresh: true,
+          },
+        });
       }
       const dealDraw = gsap.utils.toArray<SVGPathElement>('.deal-strike .draw');
       if (dealDraw.length) {
@@ -1822,27 +1795,20 @@ const beyond = p?.offer.beyond || beyondEn;
        domyka wersy: PL „mówi za Ciebie" nie spada trzecią linią, a EN mieści
        „A generic website" w jednym wierszu zamiast łamać je po „A generic"
        (zmierzone 360-640px). */
-    .hero h1 { font-size: clamp(2.2rem, 15vw, 4.6rem); letter-spacing: -0.055em; }
+    .hero h1 { font-size: clamp(2.2rem, 12vw, 3.6rem); letter-spacing: -0.05em; }
   }
-  @media (max-width: 360px) {
-    /* przy 320 px „mowi za Ciebie" siadalo na styk z krawedzia kolumny — jeden
-       stopien mniej daje zapas na inny rendering fontu */
-    .hero h1 { font-size: 13.5vw; }
-  }
-  @media (max-width: 860px) {
-    /* Hero jednokolumnowy jest PLAKATEM, nie kartka z notatka: pierwszy ekran nalezy
-       do samego hasla, a akapit i CTA zaczynaja sie tuz pod zagieciem. Wczesniej caly
-       hero byl wciskany w jeden ekran i wszystko robilo sie male naraz.
-       min-height liczylo sie przy tym do CONTENT-BOXa, wiec hero wystawal poza ekran
-       o wysokosc paddingu. Teraz pelny ekran bierze samo h1, a .hero rosnie naturalnie.
-       Prog 860 jest ten sam co dla .hero-b i dla waskiego wariantu kreski — inaczej
-       miedzy progami kreska biegla przez tekst. */
-    .hero { box-sizing: border-box; min-height: 0; padding: calc(2.5vh + 74px) 3vw 9vh; }
-    .hero h1 {
-      margin-top: 1.6vh;
-      min-height: calc(100svh - 74px - 2.5vh - 3.4rem);
-      display: flex; flex-direction: column; justify-content: flex-start;
-    }
+  @media (max-width: 640px) {
+    /* bez batonu w navie cały hero (label, hasło, podtytuł, CTA) ma się zmieścić
+       w jednym ekranie — MUSI stać PO bazowej regule .hero, inaczej przegrywa */
+    /* min-height liczylo sie do CONTENT-BOXa, wiec hero mial 100svh + 14vh
+       paddingu i wystawal poza ekran o kilkanascie procent — stad pol ekranu
+       pustki pod CTA. border-box sprawia, ze „jeden ekran" znaczy jeden ekran. */
+    /* min-height liczylo sie do CONTENT-BOXa, wiec hero mial 100svh + 14vh paddingu
+       i wystawal poza ekran. border-box sprawia, ze „jeden ekran" znaczy jeden ekran.
+       Gorny padding dolicza wysokosc fixed-nava, zeby blok byl wysrodkowany optycznie
+       wzgledem WOLNEGO pola pod nawigacja, a nie wzgledem calej sekcji. */
+    .hero { box-sizing: border-box; min-height: 94svh; padding: calc(6vh + 74px) 3vw 6vh; }
+    .hero h1 { margin-top: 1.4vh; }
   }
   /* Subtelny powrót na górę (zastępuje zabrane żółte logo jako kotwicę) */
   /* „Back to top" na samej górze, nad wordmarkiem */
@@ -1906,15 +1872,9 @@ const beyond = p?.offer.beyond || beyondEn;
   .hero, .lead { position: relative; z-index: 1; }
   .thread { position: absolute; z-index: 0; pointer-events: none; }
   .t-wide { left: 24vw; top: 50vh; width: min(58vw, 760px); max-width: 62vw; }
-  /* Kreska ma dwa warianty trasy. Szeroki biegnie w bocznym kadrze obok tekstu,
-     ktory istnieje tylko na desktopie. Waski schodzi w wolne pole pod haslem —
-     to pole powstalo dopiero wtedy, gdy akapit i CTA zeszly pod zagiecie. */
-  .t-narrow { display: none; }
-  @media (max-width: 860px) {
-    .t-wide { display: none; }
-    .t-narrow { display: block; }
-  }
-  .t-narrow path { stroke-width: 7; }
+  /* Na telefonie tresc zajmuje cala szerokosc, wiec kreska nie miala gdzie biec —
+     ruch przejmuje tam zakreslacz malujacy sie na frazach przy wjezdzie w kadr. */
+  @media (max-width: 900px) { .t-wide { display: none; } }
   .thread svg { display: block; width: 100%; height: auto; overflow: visible; }
   .thread path { fill: none; stroke: var(--spray); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
 
