@@ -16,6 +16,10 @@ import thumbCannversity from '../assets/live/thumb-cannversity.webp';
 interface Props { prod?: boolean; title?: string; locale?: Locale; }
 const { prod = false, title: titleProp, locale = 'en' } = Astro.props;
 const isPl = locale === 'pl';
+/* Polskie teksty to zwykle stringi, wiec zakreslacz nie mial jak w nich zaistniec
+   (w wersji EN siedzi wprost w JSX). Gwiazdki w tresci znacza fraze do podkreslenia.
+   Wstrzykujemy wlasny, statyczny tekst z content/, nie dane z zewnatrz. */
+const mark = (s: string) => s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 const p = isPl ? homePl : undefined;
 const r = routes[locale];
 const alt = routes[isPl ? 'en' : 'pl'];
@@ -121,11 +125,6 @@ const beyond = p?.offer.beyond || beyondEn;
           <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 440 448, 420 477, 440 507 L 410 484 L 440 507 L 472 487" />
         </svg>
       </div>
-      <div class="thread t-narrow" data-start="330,31" data-end-y="748" aria-hidden="true">
-        <svg viewBox="0 0 360 790" fill="none">
-          <path class="td" pathLength="1" d="M330 31 C 352 40, 366 52, 368 66 C 370 84, 340 92, 292 88 C 208 80, 108 78, 66 92 C 32 104, 36 126, 76 132 C 142 140, 254 128, 322 112 C 358 104, 380 128, 384 168 C 388 212, 386 264, 390 306 C 392 332, 378 346, 354 358 C 320 374, 288 386, 276 412 C 264 438, 286 458, 320 470 C 356 484, 372 514, 350 544 C 322 582, 220 566, 150 590 C 84 612, 78 668, 140 686 C 210 704, 298 688, 302 638 C 308 684, 300 716, 292 748 L 258 712 L 292 748 L 326 712" />
-        </svg>
-      </div>
     <!-- HERO -->
     <section class="hero">
       <p class="label rv">{p?.hero.label || '( Websites · AI · Apps )'}</p>
@@ -146,7 +145,7 @@ const beyond = p?.offer.beyond || beyondEn;
           <a class="btn mag big" href={r.contact}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span></a>
         </div>
         <p class="hero-sub rv">
-          {p?.hero.sub || 'I plan, write, design and build your website, start to finish. One person takes the project from an idea to a working page.'}
+          {p?.hero.sub ? <Fragment set:html={mark(p.hero.sub)} /> : <Fragment>I plan, write, design and build your website, start to finish. <em>One person</em> takes the project from an idea to a working page.</Fragment>}
         </p>
       </div>
     </section>
@@ -176,7 +175,7 @@ const beyond = p?.offer.beyond || beyondEn;
           <p>{p?.problem.rows[2][1] || 'It gave you a page fast, but the offer stayed unclear.'}</p>
         </div>
       </div>
-      <p class="lead-close rv">{p?.problem.close || <Fragment>So the problem is rarely another tool. It is knowing what to build, and whether the result is ready to meet customers. <em>That is the part I take off your plate.</em></Fragment>}</p>
+      <p class="lead-close rv">{p?.problem.close ? <Fragment set:html={mark(p.problem.close)} /> : <Fragment>So the problem is rarely another tool. It is knowing what to build, and whether the result is ready to meet customers. <em>That is the part I take off your plate.</em></Fragment>}</p>
     </section>
     </div>
 
@@ -277,7 +276,7 @@ const beyond = p?.offer.beyond || beyondEn;
           <ol class="how-list">
             {(p?.how.newList || ['What are you selling?', 'Who needs to understand it?', 'What should they do after visiting the page?', 'What must be included and what can be removed?', 'Only then do I write, design and build.']).map((item) => <li>{item}</li>)}
           </ol>
-          <p class="how-out">{p?.how.newOut || 'You speak directly with the person doing the work, the whole way through.'}</p>
+          <p class="how-out">{p?.how.newOut ? <Fragment set:html={mark(p.how.newOut)} /> : <Fragment>You speak directly with <em>the person doing the work</em>, the whole way through.</Fragment>}</p>
         </div>
       </div>
       <div class="how-why">
@@ -630,8 +629,15 @@ const beyond = p?.offer.beyond || beyondEn;
       /* Żółty marker „maluje się" od lewej, gdy tekst wjeżdża w kadr
          (hero ma własny moment w timeline intro — patrz wyżej) */
       document.querySelector('.w5')?.classList.add('em-anim');
-      document.querySelectorAll<HTMLElement>('.proj-d em, .foot-h em, .sec-h em, .lead-close em, .how-why-t em').forEach((el) => {
-        ScrollTrigger.create({ trigger: el, start: 'top 86%', once: true, onEnter: () => el.classList.add('lit') });
+      /* Zakreslacz zeruje sie inline, a nie regula z `:not(.lit)`: czesc fraz jest
+         wstrzykiwana przez set:html i nie dostaje atrybutu scope'u Astro, wiec
+         kaskada bywa nieprzewidywalna. Inline styl jest jednoznaczny. */
+      document.querySelectorAll<HTMLElement>('.hero-sub em, .proj-d em, .foot-h em, .sec-h em, .lead-close em, .how-out em, .how-why-t em').forEach((el) => {
+        el.style.backgroundSize = '0% var(--mk-h, 56%)';
+        ScrollTrigger.create({
+          trigger: el, start: 'top 86%', once: true,
+          onEnter: () => { el.classList.add('lit'); el.style.backgroundSize = '100% var(--mk-h, 56%)'; },
+        });
       });
       /* OFERTA: spray-podkreślenie rysuje się, kropka i dopisek „psikają" — ten sam
          język gestów co hero (te same filtry sprayF/sprayMist, kolor --spray). */
@@ -958,6 +964,11 @@ const beyond = p?.offer.beyond || beyondEn;
         const footNear = footEl.getBoundingClientRect().top < innerHeight * 0.5;
         sticky.classList.toggle('show', heroOut && !footNear);
         navBtn?.classList.toggle('hide', heroOut);
+        /* Na telefonie tresc idzie na pelna szerokosc, wiec przezroczysty nav nie ma
+           marginesu, w ktorym moglby stac — logo laduje na akapitach i makietach.
+           Za hero chowamy je razem z reszta nawigacji; rola „wroc na gore" przechodzi
+           na przycisk w finale. Na desktopie znak zostaje (zatwierdzony uklad). */
+        document.querySelector('.nav')?.classList.toggle('nav-tuck', heroOut);
       };
       (window as any).__lenis?.on?.('scroll', updateSticky);
       addEventListener('scroll', updateSticky, { passive: true });
@@ -1262,6 +1273,10 @@ const beyond = p?.offer.beyond || beyondEn;
   .nav .btn { padding: 9px 18px; font-size: 11px; letter-spacing: 0.12em; }
   .nav-actions { transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1), translate 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
   .nav-actions.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
+  .nav .mark { transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1), translate 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
+  @media (max-width: 860px) {
+    .nav.nav-tuck .mark { opacity: 0; translate: 0 -8px; pointer-events: none; }
+  }
   /* Sticky CTA — powtarzany główny cel konwersji.
      Wrapper = fixed + centrowanie + slide-in/out (swój transform).
      .sticky-cta w środku = .mag, dostaje x/y od magnetyzmu na WŁASNYM transformie. */
@@ -1319,20 +1334,46 @@ const beyond = p?.offer.beyond || beyondEn;
   }
   /* Wyróżnienia: pociągnięcie żółtym markerem zamiast kursywy (decyzja 16.07:
      italic/serif czytał się jako AI-maniera) */
-  .hero h1 em, .proj-d em, .foot-h em, .sec-h em, .lead-close em, .how-why-t em {
+  .hero h1 em, .hero-sub em, .proj-d em, .foot-h em, .sec-h em, .lead-close em, .how-out em, .how-why-t em {
     font-style: normal;
-    padding: 0 0.08em;
+    /* ujemny margines rownowazy padding: marker maluje sie szerzej niz glify,
+       ale nie odsuwa sasiedniego przecinka ani spacji */
+    padding: 0 0.08em; margin: 0 -0.08em;
     background:
       linear-gradient(100deg, transparent 1.5%, color-mix(in srgb, var(--brand) 72%, transparent) 6% 94%, transparent 98.5%)
-      no-repeat 0 68% / 100% 56%;
+      no-repeat 0 68% / 100% var(--mk-h, 56%);
     box-decoration-break: clone; -webkit-box-decoration-break: clone;
     transition: background-size 0.9s cubic-bezier(0.19, 1, 0.22, 1) 0.15s;
   }
+  /* Marker w tekscie ciaglym potrzebuje wyzszego pasma niz w naglowku: przy
+     line-height 1.65 wersja 56% tnie glify w polowie i czyta sie jak przekreslenie. */
+  .hero-sub em, .lead-close em, .how-out em,
+  .hero-sub :global(em), .lead-close :global(em), .how-out :global(em) {
+    --mk-h: 72%;
+  }
+  /* Zakreslacz wstrzykiwany przez set:html nie dostaje atrybutu scope'u Astro,
+     wiec te same reguly musza istniec w wersji globalnej. */
+  .hero-sub :global(em), .lead-close :global(em), .how-out :global(em) {
+    font-style: normal;
+    /* ujemny margines rownowazy padding: marker maluje sie szerzej niz glify,
+       ale nie odsuwa sasiedniego przecinka ani spacji */
+    padding: 0 0.08em; margin: 0 -0.08em;
+    background:
+      linear-gradient(100deg, transparent 1.5%, color-mix(in srgb, var(--brand) 72%, transparent) 6% 94%, transparent 98.5%)
+      no-repeat 0 68% / 100% var(--mk-h, 56%);
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    transition: background-size 0.9s cubic-bezier(0.19, 1, 0.22, 1) 0.15s;
+  }
+  .em-anim .hero-sub :global(em:not(.lit)), .em-anim .lead-close :global(em:not(.lit)),
+  .em-anim .how-out :global(em:not(.lit)) {
+    background-size: 0% var(--mk-h, 56%);
+  }
   /* marker startuje pusty i „maluje się" od lewej po dodaniu .lit (JS, tylko
      bez reduced-motion — inaczej .em-anim nie istnieje i marker jest pełny) */
-  .em-anim .hero h1 em:not(.lit), .em-anim .proj-d em:not(.lit), .em-anim .foot-h em:not(.lit),
-  .em-anim .sec-h em:not(.lit), .em-anim .lead-close em:not(.lit), .em-anim .how-why-t em:not(.lit) {
-    background-size: 0% 56%;
+  .em-anim .hero h1 em:not(.lit), .em-anim .hero-sub em:not(.lit), .em-anim .proj-d em:not(.lit),
+  .em-anim .foot-h em:not(.lit), .em-anim .sec-h em:not(.lit), .em-anim .lead-close em:not(.lit),
+  .em-anim .how-out em:not(.lit), .em-anim .how-why-t em:not(.lit) {
+    background-size: 0% var(--mk-h, 56%);
   }
   .hero-b { display: flex; justify-content: space-between; align-items: flex-end; gap: 4vw; margin-top: 6vh; }
   .hero-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 1.1rem; }
@@ -1746,7 +1787,10 @@ const beyond = p?.offer.beyond || beyondEn;
   @media (max-width: 640px) {
     /* bez batonu w navie cały hero (label, hasło, podtytuł, CTA) ma się zmieścić
        w jednym ekranie — MUSI stać PO bazowej regule .hero, inaczej przegrywa */
-    .hero { padding: 7vh 3vw 7vh; }
+    /* min-height liczylo sie do CONTENT-BOXa, wiec hero mial 100svh + 14vh
+       paddingu i wystawal poza ekran o kilkanascie procent — stad pol ekranu
+       pustki pod CTA. border-box sprawia, ze „jeden ekran" znaczy jeden ekran. */
+    .hero { box-sizing: border-box; padding: 7vh 3vw 7vh; }
     .hero-b { margin-top: 4vh; }
   }
   /* Subtelny powrót na górę (zastępuje zabrane żółte logo jako kotwicę) */
@@ -1811,14 +1855,11 @@ const beyond = p?.offer.beyond || beyondEn;
   .hero, .lead { position: relative; z-index: 1; }
   .thread { position: absolute; z-index: 0; pointer-events: none; }
   .t-wide { left: 24vw; top: 50vh; width: min(58vw, 760px); max-width: 62vw; }
-  .t-narrow { display: none; width: 86vw; max-width: 94vw; }
-  @media (max-width: 900px) {
-    .t-wide { display: none; }
-    .t-narrow { display: block; }
-  }
+  /* Na telefonie tresc zajmuje cala szerokosc, wiec kreska nie miala gdzie biec —
+     ruch przejmuje tam zakreslacz malujacy sie na frazach przy wjezdzie w kadr. */
+  @media (max-width: 900px) { .t-wide { display: none; } }
   .thread svg { display: block; width: 100%; height: auto; overflow: visible; }
   .thread path { fill: none; stroke: var(--spray); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
-  .t-narrow path { stroke-width: 7; }
 
   .phone-hold { position: relative; display: inline-block; }
   .spray-note { position: absolute; left: -46%; bottom: 4%; width: 60%; pointer-events: none; }
@@ -1884,6 +1925,10 @@ const beyond = p?.offer.beyond || beyondEn;
     .lrow .idx { grid-row: 1; }
     .lrow h3 { grid-column: 2; grid-row: 1; }
     .lrow p { grid-column: 2; grid-row: 2; }
+    /* Hero konczy sie dokladnie na zagieciu, wiec sekcja problemu nie potrzebuje
+       juz wlasnych 12vh rozbiegu — inaczej po CTA leci pol ekranu pustki
+       (kiedys mieszkala tam linia, na telefonie jej nie ma). */
+    .lead { padding-top: 2vh; }
     .lead-close { margin-top: 5vh; }
     /* dopisek po LEWEJ (jak na desktopie): przy prawej krawędzi strzałka celowała
        prosto w pływający przycisk WhatsApp w środku iframe'a i ludzie w niego klikali */

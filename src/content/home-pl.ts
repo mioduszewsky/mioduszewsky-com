@@ -10,7 +10,7 @@ export const homePl = {
     line1: 'Dobra strona',
     em: 'mówi',
     line3: 'za Ciebie',
-    sub: 'Buduję strony internetowe, wdrożenia AI i aplikacje. Całość robię sam, więc nie zszywasz projektu z kawałków od kilku wykonawców.',
+    sub: 'Buduję strony internetowe, wdrożenia AI i aplikacje. *Całość robię sam*, więc nie zszywasz projektu z kawałków od kilku wykonawców.',
   },
   problem: {
     label: '( Problem )',
@@ -22,7 +22,7 @@ export const homePl = {
       ['Biznes poszedł dalej. Strona została.', 'Oferta się zmieniła, firma wygląda dziś inaczej, a strona nadal pokazuje jej starą wersję.'],
       ['Strona powstała, ale niewiele z niej wynika', 'Klient nadal musi się domyślać, co oferujesz i co ma zrobić dalej.'],
     ],
-    close: 'Strona składa się z kilku różnych decyzji: co powiedzieć, jak to ułożyć, jak pokazać i jak zbudować. Ja prowadzę te rzeczy razem, żeby na końcu powstała jedna działająca całość.',
+    close: 'Strona składa się z kilku różnych decyzji: co powiedzieć, jak to ułożyć, jak pokazać i jak zbudować. *Ja prowadzę te rzeczy razem*, żeby na końcu powstała jedna działająca całość.',
   },
   work: {
     label: 'Wybrane realizacje',
@@ -56,7 +56,7 @@ export const homePl = {
     oldOut: '',
     newTitle: 'U mnie',
     newList: ['Rozmawiamy o biznesie.', 'Ustalam, co ma powstać.', 'Układam treść i strukturę.', 'Projektuję i buduję.', 'Publikujemy.'],
-    newOut: 'Od pierwszej rozmowy do publikacji rozmawiasz z tą samą osobą.',
+    newOut: 'Od pierwszej rozmowy do publikacji rozmawiasz z *tą samą osobą*.',
     why1: 'Siemka, tu Kacper. Zanim zacząłem robić strony, pracowałem przy prowadzeniu projektów i startupów. Designu i developmentu nauczyłem się później, bo chciałem sam zamieniać pomysły w działające produkty.',
     why2: 'Biorę to, co masz w głowie i w biznesie, i przekładam na działającą stronę. Patrzę na cały ciąg: decyzja, oferta, treść, design, wdrożenie i publikacja.',
     why3: 'eskapizm to spółka, którą współprowadzę. Cannversity powstało, kiedy wchodziłem głębiej w branżę konopną. Oba nauczyły mnie patrzeć na stronę przez pryzmat tego, co ma zrobić dla firmy.',
