@@ -1859,10 +1859,6 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
        i wystawal poza ekran. border-box sprawia, ze „jeden ekran" znaczy jeden ekran.
        Gorny padding dolicza wysokosc fixed-nava, zeby blok byl wysrodkowany optycznie
        wzgledem WOLNEGO pola pod nawigacja, a nie wzgledem calej sekcji. */
-    /* Rytm wewnetrzny (label->haslo->kreska->CTA) grupuje juz poprawnie; problemem
-       byla RAMA: przy 94svh wokol zwartego bloku zostawalo ~340 px pustki, czyli 40%
-       ekranu. Nizsze hero zaciska ja, nie ruszajac odstepow miedzy elementami. */
-    .hero { box-sizing: border-box; min-height: 88svh; padding: calc(4vh + 74px) 3vw 4vh; }
     .hero h1 { margin-top: 1.4vh; }
   }
   /* Subtelny powrót na górę (zastępuje zabrane żółte logo jako kotwicę) */
@@ -1991,14 +1987,22 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     :global(.nav .language-switch) { padding-inline: 6px; }
     .nav .btn { white-space: nowrap; letter-spacing: .08em; padding-inline: 18px; }
     .hero { padding-inline: 5vw; }
+    /* Hero jednokolumnowe to DOKLADNIE jeden ekran: 100svh liczone w border-boxie
+       (domyslnie min-height liczy sie do content-boxa, wiec padding dochodzil na wierzch
+       i hero wystawalo poza kadr). Dzieki temu sekcja problemu nie zaglada na dol.
+       `padding-block`, nie `padding`, zeby nie skasowac padding-inline powyzej.
+       Asymetria pionu jest celowa: blok tresci siedzi nieco POWYZEJ srodka
+       geometrycznego, bo tam lezy srodek optyczny, a przycisk laduje w zasiegu kciuka
+       zamiast przy samej krawedzi ekranu. */
+    .hero { box-sizing: border-box; min-height: 100svh; padding-block: calc(3vh + 74px) 10vh; }
     /* Rytm hero na telefonie grupuje, zamiast rozdzielac wszystko po rowno:
        label klei sie do H1, kreska + akapit + CTA tworza drugi blok. Wczesniej
        najwiekszy odstep w hero (8vh) siedzial miedzy H1 a kreska, czyli w miejscu
        najslabszego przejscia — kreska wisiala w pustce zamiast cokolwiek grupowac. */
-    .hero-b { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-start; gap: 0; margin-top: 3.4vh; }
+    .hero-b { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-start; gap: 0; margin-top: 4.4vh; }
     /* odstepy ustawione jawnie: <p> wnosi wlasny margin 1em, a odziedziczone
        space-between dokladalo resztke wysokosci w losowym miejscu */
-    .hero-b > .hero-sub { margin: 0 0 2rem; }
+    .hero-b > .hero-sub { margin: 0 0 2.3rem; }
     .hero-b > .hero-cta { margin: 0; }
     /* OFERTA na telefonie. Blok naglowka rozjezdzal sie na trzy sposoby naraz:
        druga linia byla o 14% wieksza od pierwszej (dwa rozne naglowki zamiast
