@@ -129,9 +129,9 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 
     <!-- HERO + PROBLEM: sprayowa nitka rysowana scrollem -->
     <div class="thread-zone">
-      <div class="thread t-wide" data-start="560,13" data-end-y="566" data-max-w="760" aria-hidden="true">
-        <svg viewBox="0 0 600 600" fill="none">
-          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 442 456, 432 512, 440 566 L 410 538 L 440 566 L 470 538" />
+      <div class="thread t-wide" data-start="560,13" data-end-y="774" data-max-w="860" aria-hidden="true">
+        <svg viewBox="0 0 600 820" fill="none">
+          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 442 456, 432 512, 440 566 C 448 632, 434 702, 442 774 L 412 746 L 442 774 L 472 746" />
         </svg>
       </div>
     <!-- HERO -->
@@ -1345,6 +1345,19 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .ln-in { display: inline-block; will-change: transform; }
 
   .hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 18vh 3vw 10vh; }
+  /* DESKTOP: pierwszy ekran nalezy do samego hasla, podtytul i przycisk zaczynaja
+     sie pod zagieciem. Wczesniej min-height liczylo sie do content-boxa, wiec hero
+     mial 100svh + 28vh paddingu i podtytul wystawal ucięty przy dolnej krawedzi.
+     Pelny ekran bierze teraz samo h1, a .hero rosnie naturalnie. CTA nie ginie:
+     na desktopie przycisk „Umow 15 minut" siedzi w navie przez caly czas. */
+  @media (min-width: 861px) {
+    .hero { min-height: 0; padding: calc(5vh + 74px) 3vw 12vh; }
+    .hero h1 {
+      min-height: calc(100svh - 74px - 5vh - 5rem);
+      display: flex; flex-direction: column; justify-content: flex-start;
+    }
+    .hero-b { margin-top: 9vh; }
+  }
   .hero h1 {
     font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520; letter-spacing: -0.025em;
     font-size: clamp(3.2rem, 9.5vw, 9.8rem); line-height: 1.0; margin-top: 3vh;
