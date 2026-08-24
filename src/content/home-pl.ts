@@ -15,8 +15,8 @@ export const homePl = {
   problem: {
     label: '( Problem )',
     h1: 'Potrzebujesz strony.',
-    h2: 'Nagle masz cały projekt na głowie.',
-    intro: 'Zaczyna się od „potrzebuję strony”. Potem dochodzi treść, projekt, domena i wdrożenie. Ile z tego spada na Ciebie, zależy od tego, w którym miejscu jesteś dzisiaj. Zwykle w jednym z trzech:',
+    h2: 'Nagle masz cały projekt *na głowie*.',
+    intro: 'Ile z tego spada na Ciebie, zależy od tego, w którym miejscu jesteś dzisiaj. Zwykle w jednym z trzech:',
     rows: [
       ['Strony jeszcze nie ma', 'Wiesz, że jej potrzebujesz, ale nie wiesz, od czego zacząć ani co przygotować.'],
       ['Biznes poszedł dalej. Strona została.', 'Oferta się zmieniła, firma wygląda dziś inaczej, a strona nadal pokazuje jej starą wersję.'],
@@ -42,7 +42,7 @@ export const homePl = {
   },
   manifest: {
     line1: 'Nie chodzi o kolejny etap.',
-    line2: 'Chodzi o ten ostatni.',
+    line2: 'Chodzi o *ten ostatni*.',
     line3: 'Wchodzisz live.',
     note: 'teraz.',
     sub: 'Wysyłasz stronę klientom. Puszczasz na nią kampanię. Pokazujesz partnerom. Przestajesz ją robić i zaczynasz jej używać.',
@@ -63,10 +63,10 @@ export const homePl = {
   },
   offer: {
     label: '( Oferta )',
-    badge: '30 dni poprawek po publikacji',
+    badge: '30 dni poprawek',
     h1: 'Kompletna strona',
     h2: 'internetowa',
-    price: 'od 3 500 zł',
+    price: 'od *3 500 zł*',
     say: 'Nie przychodzisz do mnie po sam design albo samo wdrożenie. Ustalamy, czego potrzebuje Twój biznes, a potem biorę na siebie treść, projekt, technologię i publikację.',
     say2: 'Nie musisz wiedzieć, ile ma być podstron ani na czym to ma być zbudowane. Od tego jest pierwsza rozmowa: mówisz, co robi Twoja firma, a ja mówię, co trzeba zbudować i ile to kosztuje.',
     assure: 'Zakres i cena są znane przed startem. Jeśli po rozmowie uznam, że strona nie jest teraz właściwym ruchem, też Ci to powiem.',
@@ -88,9 +88,7 @@ export const homePl = {
       { nr: '02', n: 'Aplikacja lub system', p: 'od 11 000 zł', d: 'Pierwsza działająca wersja produktu, aplikacji, dashboardu albo systemu dla firmy.' },
       { nr: '03', n: 'Stały rozwój produktu', p: 'od 5 500 zł miesięcznie', d: 'Dla projektów, które po pierwszej wersji mają być dalej rozwijane. Ustalamy stałą współpracę i pracujemy nad kolejnymi funkcjami, wersjami i decyzjami produktowymi.' },
     ],
-    fine: 'Dokładny zakres i cena są znane przed startem · maksymalnie trzy aktywne projekty jednocześnie.',
-    exclusionLabel: 'Poza zakresem',
-    exclusion: 'Długoterminowe prowadzenie reklam, stałe SEO i gwarantowane wyniki sprzedażowe.',
+    fine: 'Dokładny zakres i cena są znane przed startem.',
   },
   process: {
     label: '( Proces )',
@@ -119,11 +117,11 @@ export const homePl = {
   footer: {
     label: '( Pogadajmy )',
     h1: 'Masz stronę do zrobienia.',
-    h2: 'Sprawdźmy, co ma powstać.',
+    h2: 'Sprawdźmy, co ma *powstać*.',
     sub: 'Pokaż mi, co masz dziś. Może to być stara strona, szkic albo nic. Powiem Ci, czy to projekt dla mnie i od czego bym zaczął.',
     write: 'albo po prostu napisz',
     contact: 'Kontakt',
-    badge: 'Wrocław, Polska · pracuję zdalnie ·',
+    badge: 'Wrocław, Polska · pracuję zdalnie · ',
     availability: 'Dostępność',
     availability1: 'Maksymalnie trzy aktywne projekty jednocześnie',
     availability2: 'Zaczynamy od 15 minut',

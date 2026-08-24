@@ -120,9 +120,9 @@ const beyond = p?.offer.beyond || beyondEn;
 
     <!-- HERO + PROBLEM: sprayowa nitka rysowana scrollem -->
     <div class="thread-zone">
-      <div class="thread t-wide" data-start="560,13" data-end-y="507" data-max-w="760" aria-hidden="true">
-        <svg viewBox="0 0 600 540" fill="none">
-          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 440 448, 420 477, 440 507 L 410 484 L 440 507 L 472 487" />
+      <div class="thread t-wide" data-start="560,13" data-end-y="566" data-max-w="760" aria-hidden="true">
+        <svg viewBox="0 0 600 600" fill="none">
+          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 442 456, 432 512, 440 566 L 410 538 L 440 566 L 470 538" />
         </svg>
       </div>
     <!-- HERO -->
@@ -155,7 +155,7 @@ const beyond = p?.offer.beyond || beyondEn;
       <p class="label rv">{p?.problem.label || '( The problem )'}</p>
       <h2 class="sec-h">
         <span class="ln"><span class="ln-in">{p?.problem.h1 || 'Having a website is not the same'}</span></span>
-        <span class="ln"><span class="ln-in">{p?.problem.h2 || <Fragment>as having one you <em>trust</em>.</Fragment>}</span></span>
+        <span class="ln"><span class="ln-in">{p?.problem.h2 ? <Fragment set:html={mark(p.problem.h2)} /> : <Fragment>as having one you <em>trust</em>.</Fragment>}</span></span>
       </h2>
       <p class="lead-intro rv">{p?.problem.intro || 'Maybe you have not started yet. Maybe it stalled somewhere. Or maybe it works, just not hard enough. It usually goes one of these ways:'}</p>
       <div class="lead-rows">
@@ -247,7 +247,7 @@ const beyond = p?.offer.beyond || beyondEn;
       <div class="manif-in">
         <p class="manif-t">
           <span class="ln"><span class="ln-in">{p?.manifest.line1 || 'The goal is not another step.'}</span></span>
-          <span class="ln"><span class="ln-in">{p?.manifest.line2 || <Fragment>It is the <em>last</em> one.</Fragment>}</span></span>
+          <span class="ln"><span class="ln-in">{p?.manifest.line2 ? <Fragment set:html={mark(p.manifest.line2)} /> : <Fragment>It is the <em>last</em> one.</Fragment>}</span></span>
           <span class="ln"><span class="ln-in">{p?.manifest.line3 || 'You go live.'} <span class="tag tag-manif" aria-hidden="true">{p?.manifest.note || 'for real.'}</span></span></span>
         </p>
         <p class="manif-sub rv">{p?.manifest.sub || 'Send it in an email. Run a campaign to it. Show it to a customer. Build on it after launch.'}</p>
@@ -311,9 +311,9 @@ const beyond = p?.offer.beyond || beyondEn;
               <span class="ln"><span class="ln-in deal-h1">{p?.offer.h1 || 'Complete website'}</span></span>
               <span class="ln"><span class="ln-in deal-h2">{p?.offer.h2 || 'build'}<span class="spray-dot deal-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="16" /></svg></span><svg class="deal-strike" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M8 17 C 82 9, 214 22, 292 12" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M8 17 C 82 9, 214 22, 292 12" /><path class="draw" d="M12 23 C 90 15, 206 25, 288 17" /></g></svg></span></span>
             </h2>
-            <p class="deal-price rv">{isPl ? p!.offer.price : <Fragment>from <b>$1,000</b></Fragment>}</p>
+            <p class="deal-price rv">{isPl ? <Fragment set:html={mark(p!.offer.price)} /> : <Fragment>from <b>$1,000</b></Fragment>}</p>
             <p class="deal-say rv">{p?.offer.say || 'A website that makes your offer clear and looks professional enough to put in front of customers, partners or investors. On our first call I tell you whether you need a landing page or a full company site, so you do not have to figure that out yourself.'}</p>
-            {isPl && <p class="deal-say rv">{p!.offer.say2}</p>}
+            {/* say2 zdjete 24.08: powtarzalo obietnice z „assure" i robilo z oferty scianke tekstu */}
             <div class="deal-cta-wrap rv">
               <a class="deal-cta mag" href={`${r.contact}?service=${encodeURIComponent(isPl ? 'Kompletna strona internetowa' : 'Complete website build')}`}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span><i aria-hidden="true">→</i></a>
             </div>
@@ -348,8 +348,9 @@ const beyond = p?.offer.beyond || beyondEn;
         <p class="deal-fine rv">{p?.offer.fine || 'Landing from $1,000 · full company website from $1,500 · a maximum of three projects at a time.'}</p>
       </div>
 
-      {isPl && <p class="deal-beyond-label serv-note-label rv">{p!.offer.exclusionLabel}</p>}
-      <p class="serv-note rv">{p?.offer.exclusion || 'Long-term advertising, ongoing SEO and guaranteed sales results are not part of the scope.'}</p>
+      {/* Sekcja „Poza zakresem" zdjeta z PL (decyzja Kacpra 24.08): za duzo tekstu
+          w ofercie, a wykluczenia i tak sa w FAQ oraz w regulaminie. EN zostaje. */}
+      {!isPl && <p class="serv-note rv">Long-term advertising, ongoing SEO and guaranteed sales results are not part of the scope.</p>}
     </section>
 
     <!-- PROCES -->
@@ -419,7 +420,7 @@ const beyond = p?.offer.beyond || beyondEn;
         <p class="foot-eyebrow rv">{p?.footer.label || "( Let's talk )"}</p>
         <a class="foot-h" href={r.contact}>
           <span class="ln"><span class="ln-in">{p?.footer.h1 || "Let's build the website"}</span></span>
-          <span class="ln"><span class="ln-in">{p?.footer.h2 || <Fragment>your business <em>actually needs</em>.</Fragment>}</span></span>
+          <span class="ln"><span class="ln-in">{p?.footer.h2 ? <Fragment set:html={mark(p.footer.h2)} /> : <Fragment>your business <em>actually needs</em>.</Fragment>}</span></span>
         </a>
         <p class="foot-sub rv">{p?.footer.sub || 'Tell me what you have now, even if it is nothing yet. I will tell you whether the project is a fit and what I would build first.'}</p>
         <div class="foot-b rv">
@@ -447,7 +448,7 @@ const beyond = p?.offer.beyond || beyondEn;
         </div>
         <div class="fcol fcol-badge rv">
           <div class="spin-badge">
-            <svg viewBox="0 0 200 200" aria-hidden="true">
+            <svg class={isPl ? 'sb-pl' : undefined} viewBox="0 0 200 200" aria-hidden="true">
               <defs><path id="badgeArc" d="M100,100 m-70,0 a70,70 0 1,1 140,0 a70,70 0 1,1 -140,0" /></defs>
               <text><textPath href="#badgeArc" startOffset="0" textLength="439" lengthAdjust="spacing">{p?.footer.badge || 'CURRENTLY IN WROCŁAW, POLAND · WORKING WORLDWIDE · '}</textPath></text>
             </svg>
@@ -964,11 +965,6 @@ const beyond = p?.offer.beyond || beyondEn;
         const footNear = footEl.getBoundingClientRect().top < innerHeight * 0.5;
         sticky.classList.toggle('show', heroOut && !footNear);
         navBtn?.classList.toggle('hide', heroOut);
-        /* Na telefonie tresc idzie na pelna szerokosc, wiec przezroczysty nav nie ma
-           marginesu, w ktorym moglby stac — logo laduje na akapitach i makietach.
-           Za hero chowamy je razem z reszta nawigacji; rola „wroc na gore" przechodzi
-           na przycisk w finale. Na desktopie znak zostaje (zatwierdzony uklad). */
-        document.querySelector('.nav')?.classList.toggle('nav-tuck', heroOut);
       };
       (window as any).__lenis?.on?.('scroll', updateSticky);
       addEventListener('scroll', updateSticky, { passive: true });
@@ -1273,10 +1269,7 @@ const beyond = p?.offer.beyond || beyondEn;
   .nav .btn { padding: 9px 18px; font-size: 11px; letter-spacing: 0.12em; }
   .nav-actions { transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1), translate 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
   .nav-actions.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
-  .nav .mark { transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1), translate 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
-  @media (max-width: 860px) {
-    .nav.nav-tuck .mark { opacity: 0; translate: 0 -8px; pointer-events: none; }
-  }
+
   /* Sticky CTA — powtarzany główny cel konwersji.
      Wrapper = fixed + centrowanie + slide-in/out (swój transform).
      .sticky-cta w środku = .mag, dostaje x/y od magnetyzmu na WŁASNYM transformie. */
@@ -1364,6 +1357,18 @@ const beyond = p?.offer.beyond || beyondEn;
     box-decoration-break: clone; -webkit-box-decoration-break: clone;
     transition: background-size 0.9s cubic-bezier(0.19, 1, 0.22, 1) 0.15s;
   }
+  .sec-h :global(em), .foot-h :global(em) {
+    font-style: normal;
+    padding: 0 0.08em; margin: 0 -0.08em;
+    background:
+      linear-gradient(100deg, transparent 1.5%, color-mix(in srgb, var(--brand) 72%, transparent) 6% 94%, transparent 98.5%)
+      no-repeat 0 68% / 100% var(--mk-h, 56%);
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    transition: background-size 0.9s cubic-bezier(0.19, 1, 0.22, 1) 0.15s;
+  }
+  .em-anim .sec-h :global(em:not(.lit)), .em-anim .foot-h :global(em:not(.lit)) {
+    background-size: 0% var(--mk-h, 56%);
+  }
   .em-anim .hero-sub :global(em:not(.lit)), .em-anim .lead-close :global(em:not(.lit)),
   .em-anim .how-out :global(em:not(.lit)) {
     background-size: 0% var(--mk-h, 56%);
@@ -1447,7 +1452,7 @@ const beyond = p?.offer.beyond || beyondEn;
     will-change: clip-path;
   }
   .manif-t { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 460; font-size: clamp(1.9rem, 4.6vw, 4.4rem); line-height: 1.12; letter-spacing: -0.02em; }
-  .manif em { color: var(--brand); font-style: normal; }
+  .manif em, .manif :global(em) { color: var(--brand); font-style: normal; background: none; padding: 0; margin: 0; }
   .manif-sub { margin-top: 4.5vh; font-size: clamp(0.9rem, 1.25vw, 1.05rem); letter-spacing: 0.03em; color: color-mix(in srgb, var(--ivory) 60%, transparent); }
 
   /* HOW I WORK */
@@ -1572,7 +1577,11 @@ const beyond = p?.offer.beyond || beyondEn;
     fill: none; stroke: var(--spray); stroke-linecap: round; pointer-events: none; overflow: visible;
   }
   .deal-price { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 420; font-size: clamp(1.6rem, 2.6vw, 2.4rem); letter-spacing: -0.01em; color: rgba(248, 249, 242, 0.5); margin-top: 3.8vh; }
-  .deal-price b { font-weight: 640; color: var(--brand); font-variant-numeric: lining-nums tabular-nums; letter-spacing: -0.02em; }
+  .deal-price b, .deal-price :global(em) {
+    font-style: normal; font-weight: 640; color: var(--brand);
+    font-variant-numeric: lining-nums tabular-nums; letter-spacing: -0.02em;
+    background: none; padding: 0; margin: 0;
+  }
   .deal-say { margin-top: 2.4vh; max-width: 44ch; font-size: 15.5px; line-height: 1.62; color: rgba(248, 249, 242, 0.76); }
   .deal-cta-wrap { margin-top: 3.6vh; display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
   .deal-cta {
@@ -1705,6 +1714,10 @@ const beyond = p?.offer.beyond || beyondEn;
   .spin-badge { position: relative; width: clamp(118px, 12vw, 150px); aspect-ratio: 1; display: grid; place-items: center; }
   .spin-badge svg { width: 100%; height: 100%; animation: badgeSpin 24s linear infinite; }
   .spin-badge text { font-family: 'Space Grotesk Variable', monospace; font-size: 12.5px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; fill: var(--ink); }
+  /* Napis jest rozciagany do pelnego obwodu (textLength), a wersja PL ma 36 znakow
+     wobec 51 w EN — przy tym samym stopniu pisma litery rozjezdzaly sie na boki.
+     Wiekszy stopien wyrownuje gestosc obu wersji. */
+  .spin-badge svg.sb-pl text { font-size: 14.5px; }
   .spin-core { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
   @keyframes badgeSpin { to { rotate: 360deg; } }
   @media (prefers-reduced-motion: reduce) { .spin-badge svg { animation: none; } }
@@ -1782,7 +1795,7 @@ const beyond = p?.offer.beyond || beyondEn;
        domyka wersy: PL „mówi za Ciebie" nie spada trzecią linią, a EN mieści
        „A generic website" w jednym wierszu zamiast łamać je po „A generic"
        (zmierzone 360-640px). */
-    .hero h1 { font-size: clamp(2.2rem, 11.2vw, 3.6rem); letter-spacing: -0.05em; }
+    .hero h1 { font-size: clamp(2.2rem, 12vw, 3.6rem); letter-spacing: -0.05em; }
   }
   @media (max-width: 640px) {
     /* bez batonu w navie cały hero (label, hasło, podtytuł, CTA) ma się zmieścić
@@ -1790,8 +1803,12 @@ const beyond = p?.offer.beyond || beyondEn;
     /* min-height liczylo sie do CONTENT-BOXa, wiec hero mial 100svh + 14vh
        paddingu i wystawal poza ekran o kilkanascie procent — stad pol ekranu
        pustki pod CTA. border-box sprawia, ze „jeden ekran" znaczy jeden ekran. */
-    .hero { box-sizing: border-box; padding: 7vh 3vw 7vh; }
-    .hero-b { margin-top: 4vh; }
+    /* min-height liczylo sie do CONTENT-BOXa, wiec hero mial 100svh + 14vh paddingu
+       i wystawal poza ekran. border-box sprawia, ze „jeden ekran" znaczy jeden ekran.
+       Gorny padding dolicza wysokosc fixed-nava, zeby blok byl wysrodkowany optycznie
+       wzgledem WOLNEGO pola pod nawigacja, a nie wzgledem calej sekcji. */
+    .hero { box-sizing: border-box; min-height: 94svh; padding: calc(6vh + 74px) 3vw 6vh; }
+    .hero h1 { margin-top: 1.4vh; }
   }
   /* Subtelny powrót na górę (zastępuje zabrane żółte logo jako kotwicę) */
   /* „Back to top" na samej górze, nad wordmarkiem */
@@ -1871,7 +1888,7 @@ const beyond = p?.offer.beyond || beyondEn;
   .spray-note-r svg { transform: scaleX(-1); }
   .spray-note-r .tag { rotate: 6deg; text-align: right; }
 
-  .tag-manif { color: var(--brand); rotate: -5deg; display: inline-block; vertical-align: super; font-size: 0.42em; margin-left: 0.2em; }
+  .tag-manif { color: var(--brand); rotate: -5deg; display: inline-block; vertical-align: super; font-size: 0.42em; margin-left: 0.2em; width: 0; margin-right: -0.2em; overflow: visible; white-space: nowrap; }
 
   .idx-wrap { position: relative; }
   .spray-circle {
@@ -1917,7 +1934,25 @@ const beyond = p?.offer.beyond || beyondEn;
     :global(.nav .language-switch) { padding-inline: 6px; }
     .nav .btn { white-space: nowrap; letter-spacing: .08em; padding-inline: 18px; }
     .hero { padding-inline: 5vw; }
-    .hero-b { flex-direction: column-reverse; align-items: flex-start; gap: 2.4rem; margin-top: 8vh; }
+    /* Rytm hero na telefonie grupuje, zamiast rozdzielac wszystko po rowno:
+       label klei sie do H1, kreska + akapit + CTA tworza drugi blok. Wczesniej
+       najwiekszy odstep w hero (8vh) siedzial miedzy H1 a kreska, czyli w miejscu
+       najslabszego przejscia — kreska wisiala w pustce zamiast cokolwiek grupowac. */
+    .hero-b { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-start; gap: 0; margin-top: 3.4vh; }
+    /* odstepy ustawione jawnie: <p> wnosi wlasny margin 1em, a odziedziczone
+       space-between dokladalo resztke wysokosci w losowym miejscu */
+    .hero-b > .hero-sub { margin: 0 0 2rem; }
+    .hero-b > .hero-cta { margin: 0; }
+    /* OFERTA na telefonie. Blok naglowka rozjezdzal sie na trzy sposoby naraz:
+       druga linia byla o 14% wieksza od pierwszej (dwa rozne naglowki zamiast
+       jednego), kropka nie miescila sie po ostatnim slowie i spadala do wlasnego
+       wiersza, a spray-podkreslenie kotwiczone do dolu tej linii ladowalo przez to
+       kilkadziesiat pikseli pod tekstem. Na waskim ekranie roznicuje sama waga. */
+    .deal-badge { letter-spacing: 0.14em; padding: 0.5em 0.9em; white-space: nowrap; }
+    .deal-h { line-height: 1.02; }
+    .deal-h2 { font-size: 1em; }
+    .deal-dot { display: none; }
+    .deal-strike { bottom: -0.22em; }
     .work, .serv, .foot, .lead, .how, .proc, .faq { padding-inline: 5vw; }
     .manif-in { padding-inline: 6vw; }
     .sec-head { flex-direction: column; gap: 6px; margin-bottom: 7vh; }
