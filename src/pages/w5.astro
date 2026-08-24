@@ -136,6 +136,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       </div>
     <!-- HERO -->
     <section class="hero">
+      <div class="hero-top">
       <p class="label rv">{p?.hero.label || '( Websites · AI · Apps )'}</p>
       {isPl ? (
         <h1 aria-label={p!.hero.aria}>
@@ -149,6 +150,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           <span class="ln"><span class="ln-in">send people <span class="hero-end">to<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" /></svg></span></span></span></span>
         </h1>
       )}
+      </div>
       <div class="hero-b">
         <div class="hero-cta rv">
           <a class="btn mag big" href={r.contact}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span></a>
@@ -1350,11 +1352,19 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
      mial 100svh + 28vh paddingu i podtytul wystawal ucięty przy dolnej krawedzi.
      Pelny ekran bierze teraz samo h1, a .hero rosnie naturalnie. CTA nie ginie:
      na desktopie przycisk „Umow 15 minut" siedzi w navie przez caly czas. */
+  /* `display: contents` znaczy „tego diva nie ma w ukladzie" — na telefonie label
+     i haslo zostaja bezposrednimi dziecmi .hero, dokladnie jak wczesniej. */
+  .hero-top { display: contents; }
   @media (min-width: 861px) {
     .hero { min-height: 0; padding: calc(5vh + 74px) 3vw 12vh; }
-    .hero h1 {
-      min-height: calc(100svh - 74px - 5vh - 5rem);
-      display: flex; flex-direction: column; justify-content: flex-start;
+    /* Label i haslo srodkuja sie RAZEM w pierwszym ekranie. Gdyby min-height siedzial
+       na samym h1, label zostalby przyklejony do gory i miedzy nim a haslem powstalaby
+       dziura na pol ekranu. */
+    .hero-top {
+      display: flex; flex-direction: column; justify-content: center;
+      /* dokladnie do zagiecia: 100svh minus fixed-nav i gorny padding hero.
+         Ponizej zaczyna sie .hero-b, wiec podtytul nigdy nie ociera sie o krawedz. */
+      min-height: calc(100svh - 74px - 5vh);
     }
     .hero-b { margin-top: 9vh; }
   }
