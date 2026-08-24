@@ -1859,7 +1859,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
        i wystawal poza ekran. border-box sprawia, ze „jeden ekran" znaczy jeden ekran.
        Gorny padding dolicza wysokosc fixed-nava, zeby blok byl wysrodkowany optycznie
        wzgledem WOLNEGO pola pod nawigacja, a nie wzgledem calej sekcji. */
-    .hero { box-sizing: border-box; min-height: 94svh; padding: calc(6vh + 74px) 3vw 6vh; }
+    /* Rytm wewnetrzny (label->haslo->kreska->CTA) grupuje juz poprawnie; problemem
+       byla RAMA: przy 94svh wokol zwartego bloku zostawalo ~340 px pustki, czyli 40%
+       ekranu. Nizsze hero zaciska ja, nie ruszajac odstepow miedzy elementami. */
+    .hero { box-sizing: border-box; min-height: 88svh; padding: calc(4vh + 74px) 3vw 4vh; }
     .hero h1 { margin-top: 1.4vh; }
   }
   /* Subtelny powrót na górę (zastępuje zabrane żółte logo jako kotwicę) */

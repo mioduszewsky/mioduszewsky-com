@@ -77,8 +77,20 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
               <p>{p?.call.consent || 'The booking calendar is provided by Google and, once shown, sets a cookie on your device to display available times.'}</p>
               <button type="button" class="btn" id="calLoadBtn"><span class="btn-in">{p?.call.show || 'Show calendar'}</span></button>
             </div>
+            {/* Pokazywane tylko wtedy, gdy ramka nie wstala — najczesciej przez blokera. */}
+            <div class="cal-blocked" id="calBlocked" hidden>
+              <p class="cal-blocked-t">{p?.call.blockedTitle || 'The calendar will not load here'}</p>
+              <p class="cal-blocked-n">{p?.call.blockedNote || 'A privacy extension is usually the reason. Open it in a new window instead — it works there.'}</p>
+            </div>
           </div>
-          <p class="cal-note">{p?.call.noteBefore || 'Calendar being shy?'} <a href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(p?.call.mailSubject || 'Book a call')}`}>{p?.call.email || 'Email me'}</a> {p?.call.noteAfter || 'and we will find a slot.'}</p>
+          <div class="cal-actions">
+            {/* Widoczny ZAWSZE, nie dopiero po wykryciu bledu: omija ramke calkowicie,
+                wiec dziala takze u ludzi, ktorych bloker podmienia iframe na pusta strone. */}
+            <a class="btn cal-open" href={GOOGLE_BOOKING_URL} target="_blank" rel="noopener">
+              <span class="btn-in">{p?.call.openNew || 'Open the calendar in a new window'}</span>
+            </a>
+            <p class="cal-note">{p?.call.noteBefore || 'Prefer email?'} <a href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(p?.call.mailSubject || 'Book a call')}`}>{p?.call.email || 'Email me'}</a> {p?.call.noteAfter || 'and we will find a slot.'}</p>
+          </div>
         ) : (
           <div class="cal-fallback">
             <a class="btn big" href={`mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(p?.call.mailSubject || 'Book a call')}`}>
@@ -165,6 +177,17 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     const calEmbed = document.getElementById('calEmbed');
     const calConsent = document.getElementById('calConsent');
     const calLoadBtn = document.getElementById('calLoadBtn');
+    const calBlocked = document.getElementById('calBlocked');
+    /* Ramka Google Calendar to czesty cel rozszerzen prywatnosci. Rozpoznajemy dwa
+       przypadki: (1) zadanie w ogole nie doszlo — brak zdarzenia `load` w oknie czasu;
+       (2) bloker podmienil ramke na pusta strone — wtedy `load` jest, ale dokument
+       staje sie SAME-ORIGIN i da sie go odczytac. Prawdziwy kalendarz jest cross-origin,
+       wiec proba odczytu rzuca wyjatkiem — i to wlasnie oznacza, ze wszystko dziala. */
+    function markCalendarBlocked() {
+      if (!calBlocked || !calBlocked.hidden) return;
+      calBlocked.hidden = false;
+      calEmbed?.classList.add('cal-is-blocked');
+    }
     function loadCalendar() {
       if (!calEmbed || calEmbed.querySelector('iframe')) return;
       const iframe = document.createElement('iframe');
@@ -174,6 +197,14 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       iframe.width = '100%';
       iframe.height = '560';
       calConsent?.remove();
+      const timer = setTimeout(markCalendarBlocked, 6000);
+      iframe.addEventListener('load', () => {
+        clearTimeout(timer);
+        try {
+          if (iframe.contentDocument) markCalendarBlocked();
+        } catch { /* cross-origin = realny kalendarz, nic nie robimy */ }
+      });
+      iframe.addEventListener('error', () => { clearTimeout(timer); markCalendarBlocked(); });
       calEmbed.appendChild(iframe);
       try { localStorage.setItem(CAL_CONSENT_KEY, '1'); } catch {}
     }
@@ -350,11 +381,30 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     .btn[disabled]::before { transform: scaleY(0); }
     .btn[disabled]:active { scale: 1; }
 
-    .cal-embed { border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); border-radius: 14px; overflow: hidden; background: #fff; }
+    .cal-embed { position: relative; border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); border-radius: 14px; overflow: hidden; background: #fff; min-height: 560px; }
     .cal-embed iframe { display: block; }
     .cal-consent { min-height: 560px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1.1rem; padding: 2.4rem; }
     .cal-consent p { font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 34ch; margin: 0; }
-    .cal-note { margin-top: 0.7rem; font-size: 12px; color: var(--dim); }
+    /* Komunikat o zablokowanej ramce lezy NA niej: pusta ramka zostaje pod spodem,
+       wiec nie ma skoku ukladu, gdy blokada zostanie wykryta po chwili. */
+    /* przy wykrytej blokadzie pusta ramka znika, a komunikat wraca do przeplywu —
+       inaczej zostawaloby 560 px bieli wokol trzech linijek tekstu */
+    .cal-is-blocked { min-height: 0; }
+    .cal-is-blocked iframe { display: none; }
+    .cal-is-blocked .cal-blocked { position: static; padding-block: 2.6rem; }
+    .cal-blocked {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: center; gap: 0.6rem;
+      padding: 2.4rem; background: #fff; border-radius: 14px;
+    }
+    .cal-blocked-t { margin: 0; font-family: 'NohemiV', sans-serif; font-weight: 560; font-size: 19px; letter-spacing: -0.02em; }
+    .cal-blocked-n { margin: 0; font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 34ch; }
+    .cal-actions { margin-top: 1.1rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.4rem; }
+    .cal-open { white-space: nowrap; }
+    /* gdy ramka jest zablokowana, przycisk „otworz w nowym oknie" przestaje byc
+       alternatywa i staje sie glowna droga — dostaje wypelnienie jak CTA */
+    .cal-is-blocked ~ .cal-actions .cal-open { background: var(--ink); color: var(--ivory); }
+    .cal-note { margin: 0; font-size: 12px; color: var(--dim); }
     .cal-note a { color: var(--blue); }
     .cal-fallback .note { margin-top: 1rem; font-size: 12px; color: var(--dim); line-height: 1.5; max-width: 36ch; }
 
