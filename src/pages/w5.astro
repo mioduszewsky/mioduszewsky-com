@@ -136,12 +136,14 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           sie jak wykres, nie jak ruch reki. Ostatni wymach idzie mocno w LEWO, w strone
           przycisku CTA, zeby kreska nie jechala rownolegle do kolumny tekstu po prawej;
           dopiero potem domyka sie do pionu przed grotem.
-          UWAGA na pasmo naglowka sekcji problemu: w jego wysokosci (viewBox y ok. 660-770)
-          sciezka MUSI trzymac x >= 420, inaczej przecina „na glowie". Wymachy w lewo naleza
-          do pustego pola POWYZEJ naglowka; nizej gest zwalnia i schodzi po prawej. */}
-      <div class="thread t-wide" data-start="560,13" data-end-y="812" data-max-w="860" aria-hidden="true">
-        <svg viewBox="0 0 600 860" fill="none">
-          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 432 442, 316 456, 302 508 C 288 560, 424 578, 442 626 C 452 664, 424 700, 428 748 C 429 770, 428 790, 428 812 L 398 784 L 428 812 L 458 784" />
+          Czyta sie jak JEDEN ruch: wyjscie z kropki, szeroki luk w lewo, powrot w prawo,
+          domkniecie do pionu, grot. Cztery segmenty, dwie zmiany kierunku — wiecej zakretow
+          sprawia, ze kreska zaczyna dominowac nad trescia zamiast ja prowadzic.
+          W pasmie naglowka sekcji problemu sciezka MUSI trzymac x >= 500, inaczej przecina
+          „na glowie". */}
+      <div class="thread t-wide" data-start="560,13" data-end-y="886" data-max-w="1250" aria-hidden="true">
+        <svg viewBox="0 0 800 960" fill="none">
+          <path class="td" pathLength="1" d="M560 13 C 604 92, 452 150, 380 232 C 302 322, 302 428, 402 520 C 502 612, 556 692, 512 786 C 496 826, 466 846, 466 886 L 436 858 L 466 886 L 496 858" />
         </svg>
       </div>
     <!-- HERO -->
@@ -690,7 +692,8 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           /* Celem jest akapit „Ile z tego spada na Ciebie", nie mala etykieta nad nim:
              grot ma siegac w glab sekcji, a nie zatrzymywac sie na jej progu. */
           const leadTop = (() => {
-            const label = document.querySelector<HTMLElement>('.lead-intro')
+            const label = document.querySelector<HTMLElement>('.lead .lrow')
+              || document.querySelector<HTMLElement>('.lead-intro')
               || document.querySelector<HTMLElement>('.lead .label');
             if (!label) return 0;
             let v = 0;
@@ -709,15 +712,17 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
             if (endY && leadTop) {
               /* Celujemy PONIZEJ etykiety sekcji, nie nad nia: grot konczacy sie
                  26 px nad malym, szarym „( Problem )" wisial w pustce po prawej.
-                 Grot laduje na wysokosci pierwszego wiersza akapitu, po PRAWEJ stronie
-                 kolumny tekstu — dlatego dolny odcinek sciezki wraca w prawo. */
-              const dist = Math.max(320, leadTop - (y + dot.offsetHeight / 2 + dy) + 24);
+                 Grot zatrzymuje sie TUZ NAD pierwszym wierszem listy, po prawej stronie
+                 kolumny tekstu — dlatego dolny odcinek wraca w prawo i domyka sie pionowo. */
+              const dist = Math.max(320, leadTop - (y + dot.offsetHeight / 2 + dy) + 8);
               let wpx = (dist / (endY - py)) * svg.viewBox.baseVal.width;
               /* wariant szeroki ma trzymac swoja skale — dopasowanie moze go tylko
                  przyciac, gdy zabraknie miejsca, nigdy rozdmuchac ani zmniejszyc
                  ponizej rozsadku */
               const cap = Number(wrap.dataset.maxW || 0);
-              if (cap) wpx = Math.min(wpx, innerWidth * 0.58, cap);
+              /* Sciezka ma teraz zamach w prawo, wiec zajmuje szerszy pas niz dawniej;
+                 0.58 przycinaloby ja tak, ze przestalaby dojezdzac do celu. */
+              if (cap) wpx = Math.min(wpx, innerWidth * 0.78, cap);
               wrap.style.width = `${wpx}px`;
             }
             const scale = wrap.getBoundingClientRect().width / svg.viewBox.baseVal.width;
@@ -1946,12 +1951,17 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .thread-zone { position: relative; }
   .hero, .lead { position: relative; z-index: 1; }
   .thread { position: absolute; z-index: 0; pointer-events: none; }
-  .t-wide { left: 24vw; top: 50vh; width: min(58vw, 760px); max-width: 62vw; }
+  /* max-width przycina szerokosc PO obliczeniach w JS, wiec musi miec zapas ponad
+     limit z kodu (innerWidth * 0.78) — inaczej kreska cicho sie kurczy i nie dojezdza
+     do celu, mimo ze wyliczona szerokosc byla poprawna. */
+  .t-wide { left: 24vw; top: 50vh; width: min(58vw, 760px); max-width: 84vw; }
   /* Na telefonie tresc zajmuje cala szerokosc, wiec kreska nie miala gdzie biec —
      ruch przejmuje tam zakreslacz malujacy sie na frazach przy wjezdzie w kadr. */
   @media (max-width: 900px) { .t-wide { display: none; } }
   .thread svg { display: block; width: 100%; height: auto; overflow: visible; }
-  .thread path { fill: none; stroke: var(--spray); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+  /* 7, nie 9: przy dlugim gescie grubsza kreska zaczyna dominowac nad trescia,
+     zamiast ja prowadzic. */
+  .thread path { fill: none; stroke: var(--spray); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
 
   .phone-hold { position: relative; display: inline-block; }
   .spray-note { position: absolute; left: -46%; bottom: 4%; width: 60%; pointer-events: none; }
