@@ -67,10 +67,6 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           <feDisplacementMap in="SourceGraphic" in2="n" scale="14" />
           <feGaussianBlur stdDeviation="0.55" />
         </filter>
-        <filter id="threadInk" x="-12%" y="-8%" width="124%" height="116%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.016" numOctaves="2" seed="7" result="n" />
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="6" />
-        </filter>
         <filter id="sprayMist" x="-60%" y="-60%" width="220%" height="220%">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="n" />
           <feDisplacementMap in="SourceGraphic" in2="n" scale="30" />
@@ -140,14 +136,13 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           sie jak wykres, nie jak ruch reki. Ostatni wymach idzie mocno w LEWO, w strone
           przycisku CTA, zeby kreska nie jechala rownolegle do kolumny tekstu po prawej;
           dopiero potem domyka sie do pionu przed grotem.
-          Czyta sie jak JEDEN ruch: wyjscie z kropki, szeroki luk w lewo, powrot w prawo,
-          domkniecie do pionu, grot. Cztery segmenty, dwie zmiany kierunku — wiecej zakretow
-          sprawia, ze kreska zaczyna dominowac nad trescia zamiast ja prowadzic.
-          W pasmie naglowka sekcji problemu sciezka MUSI trzymac x >= 500, inaczej przecina
-          „na glowie". */}
-      <div class="thread t-wide" data-start="560,13" data-end-y="886" data-max-w="1250" aria-hidden="true">
-        <svg viewBox="0 0 800 960" fill="none">
-          <path class="td" pathLength="1" filter="url(#threadInk)" d="M560 13 C 598 60, 560 102, 488 130 C 428 154, 372 188, 380 232 C 390 278, 328 294, 306 338 C 286 382, 300 450, 346 488 C 374 512, 388 508, 402 520 C 450 558, 514 618, 536 676 C 554 722, 542 760, 512 786 C 494 808, 470 822, 466 852 C 465 868, 466 877, 466 886 L 436 858 L 466 886 L 496 858" />
+          KSZTALT ZATWIERDZONY przez Kacpra 25.08 (wariant „C" z porownania czterech
+          historycznych wersji). NIE przerabiac trasy bez jego decyzji — kazda proba
+          „ulepszenia" konczyla sie odrzuceniem. Zasieg i punkt koncowy steruje kotwica
+          w JS, nie ta sciezka. */}
+      <div class="thread t-wide" data-start="560,13" data-end-y="774" data-max-w="900" aria-hidden="true">
+        <svg viewBox="0 0 600 820" fill="none">
+          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 440 452, 358 468, 348 518 C 338 572, 438 606, 444 658 C 450 714, 402 732, 412 774 L 382 748 L 412 774 L 442 748" />
         </svg>
       </div>
     <!-- HERO -->
@@ -1963,8 +1958,9 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
      ruch przejmuje tam zakreslacz malujacy sie na frazach przy wjezdzie w kadr. */
   @media (max-width: 900px) { .t-wide { display: none; } }
   .thread svg { display: block; width: 100%; height: auto; overflow: visible; }
-  /* 9, nie 7: cienka kreska czytala sie jak wykres. Grubosc + nierowna krawedz
-     (filtr threadInk) sprawiaja, ze to jest slad pisaka, a nie krzywa Beziera. */
+  /* 9 to grubosc, przy ktorej kreska ma ciezar sladu pisaka. Cienka (7) czyta sie
+     jak wykres. NIE dokladac filtrow znieksztalcajacych — probowane, wychodzi
+     postrzepiona linia, nie odreczna. Charakter daje trasa i grubosc, nie szum. */
   .thread path { fill: none; stroke: var(--spray); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
 
   .phone-hold { position: relative; display: inline-block; }
