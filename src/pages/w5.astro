@@ -129,9 +129,13 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 
     <!-- HERO + PROBLEM: sprayowa nitka rysowana scrollem -->
     <div class="thread-zone">
+      {/* Dolny odcinek MUSI falowac tak jak gorny. Przy przedluzaniu sciezki latwo
+          dopisac krzywe o zerowej amplitudzie poziomej — wychodzi wtedy prosty zjazd,
+          ktory zabija charakter gestu. Amplituda dogasa (92 → 56 → 42 jednostek),
+          bo tak konczy sie ruch reki, ale nigdy nie spada do zera. */}
       <div class="thread t-wide" data-start="560,13" data-end-y="774" data-max-w="860" aria-hidden="true">
         <svg viewBox="0 0 600 820" fill="none">
-          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 442 456, 432 512, 440 566 C 448 632, 434 702, 442 774 L 412 746 L 442 774 L 472 746" />
+          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 440 452, 358 468, 348 518 C 338 572, 438 606, 444 658 C 450 714, 402 732, 412 774 L 382 748 L 412 774 L 442 748" />
         </svg>
       </div>
     <!-- HERO -->
