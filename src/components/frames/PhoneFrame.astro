@@ -93,6 +93,23 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
     // fetch no-cors — odrzuca wyłącznie przy realnym błędzie sieciowym. Sprawdzamy
     // dopiero przy wejściu makiety w okolice viewportu (wtedy src jest już ustawiony
     // od dawna; startLoad() tu tylko jako zabezpieczenie na wypadek bardzo wolnej sieci).
+    /* Klikniecie w zywa strone przewijalo CALA nasza strone o kilkadziesiat pikseli.
+       Powod: iframe jest wyzszy niz ramka (cala strona w skali), a jego dolna czesc
+       jest tylko UKRYTA przez overflow. Po kliknieciu przegladarka nadaje mu focus
+       i przewija dokument tak, zeby „pokazac" zafokusowany element — czyli w gore.
+       Zdarzenie focusu leci w dokumencie iframe (inna domena), wiec nie da sie go
+       zlapac ani anulowac. Zamiast tego zapamietujemy pozycje tuz przed kliknieciem
+       i przywracamy ja w nastepnej klatce, jesli przegladarka ja ruszyla. */
+    frame.addEventListener('pointerdown', () => {
+      const lenis = (window as any).__lenis;
+      const before = window.scrollY;
+      requestAnimationFrame(() => {
+        if (Math.abs(window.scrollY - before) < 2) return;
+        if (lenis?.scrollTo) lenis.scrollTo(before, { immediate: true });
+        else window.scrollTo({ top: before, behavior: 'instant' as ScrollBehavior });
+      });
+    });
+
     const io = new IntersectionObserver((entries) => {
       if (entries.some((e) => e.isIntersecting)) {
         io.disconnect();
