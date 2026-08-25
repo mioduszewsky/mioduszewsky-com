@@ -135,10 +135,13 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           (108 → 92 → 114 jednostek, rozne dlugosci lukow) — rowne, malejace fale czytaja
           sie jak wykres, nie jak ruch reki. Ostatni wymach idzie mocno w LEWO, w strone
           przycisku CTA, zeby kreska nie jechala rownolegle do kolumny tekstu po prawej;
-          dopiero potem domyka sie do pionu przed grotem. */}
+          dopiero potem domyka sie do pionu przed grotem.
+          UWAGA na pasmo naglowka sekcji problemu: w jego wysokosci (viewBox y ok. 660-770)
+          sciezka MUSI trzymac x >= 420, inaczej przecina „na glowie". Wymachy w lewo naleza
+          do pustego pola POWYZEJ naglowka; nizej gest zwalnia i schodzi po prawej. */}
       <div class="thread t-wide" data-start="560,13" data-end-y="808" data-max-w="860" aria-hidden="true">
         <svg viewBox="0 0 600 860" fill="none">
-          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 438 448, 356 462, 344 510 C 334 556, 424 588, 436 634 C 448 684, 356 704, 322 752 C 306 774, 308 792, 312 808 L 282 782 L 312 808 L 342 782" />
+          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 432 442, 316 456, 302 508 C 288 560, 424 578, 442 626 C 452 664, 424 700, 428 746 C 434 772, 402 786, 402 808 L 372 780 L 402 808 L 432 780" />
         </svg>
       </div>
     <!-- HERO -->
@@ -684,8 +687,11 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           const dy = cRect.top + cRect.height / 2 - (dRect.top + dRect.height / 2);
           /* celujemy w widoczny tekst sekcji, nie w krawedz .lead: sekcja ma spory
              padding-gorny, wiec kotwiczenie do niej zostawialo pol ekranu pustki */
+          /* Celem jest akapit „Ile z tego spada na Ciebie", nie mala etykieta nad nim:
+             grot ma siegac w glab sekcji, a nie zatrzymywac sie na jej progu. */
           const leadTop = (() => {
-            const label = document.querySelector<HTMLElement>('.lead .label');
+            const label = document.querySelector<HTMLElement>('.lead-intro')
+              || document.querySelector<HTMLElement>('.lead .label');
             if (!label) return 0;
             let v = 0;
             let m: HTMLElement | null = label;
@@ -703,9 +709,9 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
             if (endY && leadTop) {
               /* Celujemy PONIZEJ etykiety sekcji, nie nad nia: grot konczacy sie
                  26 px nad malym, szarym „( Problem )" wisial w pustce po prawej.
-                 Grot ma siegac tuz PONIZEJ etykiety, w przerwe przed naglowkiem —
-                 nie na sam naglowek, bo wtedy przecina tekst. */
-              const dist = Math.max(320, leadTop - (y + dot.offsetHeight / 2 + dy) + 20);
+                 Grot laduje na wysokosci pierwszego wiersza akapitu, po PRAWEJ stronie
+                 kolumny tekstu — dlatego dolny odcinek sciezki wraca w prawo. */
+              const dist = Math.max(320, leadTop - (y + dot.offsetHeight / 2 + dy) + 24);
               let wpx = (dist / (endY - py)) * svg.viewBox.baseVal.width;
               /* wariant szeroki ma trzymac swoja skale — dopasowanie moze go tylko
                  przyciac, gdy zabraknie miejsca, nigdy rozdmuchac ani zmniejszyc
