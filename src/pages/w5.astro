@@ -67,6 +67,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           <feDisplacementMap in="SourceGraphic" in2="n" scale="14" />
           <feGaussianBlur stdDeviation="0.55" />
         </filter>
+        <filter id="threadInk" x="-12%" y="-8%" width="124%" height="116%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.016" numOctaves="2" seed="7" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="6" />
+        </filter>
         <filter id="sprayMist" x="-60%" y="-60%" width="220%" height="220%">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="n" />
           <feDisplacementMap in="SourceGraphic" in2="n" scale="30" />
@@ -143,7 +147,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           „na glowie". */}
       <div class="thread t-wide" data-start="560,13" data-end-y="886" data-max-w="1250" aria-hidden="true">
         <svg viewBox="0 0 800 960" fill="none">
-          <path class="td" pathLength="1" d="M560 13 C 604 92, 452 150, 380 232 C 302 322, 302 428, 402 520 C 502 612, 556 692, 512 786 C 496 826, 466 846, 466 886 L 436 858 L 466 886 L 496 858" />
+          <path class="td" pathLength="1" filter="url(#threadInk)" d="M560 13 C 598 60, 560 102, 488 130 C 428 154, 372 188, 380 232 C 390 278, 328 294, 306 338 C 286 382, 300 450, 346 488 C 374 512, 388 508, 402 520 C 450 558, 514 618, 536 676 C 554 722, 542 760, 512 786 C 494 808, 470 822, 466 852 C 465 868, 466 877, 466 886 L 436 858 L 466 886 L 496 858" />
         </svg>
       </div>
     <!-- HERO -->
@@ -1959,9 +1963,9 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
      ruch przejmuje tam zakreslacz malujacy sie na frazach przy wjezdzie w kadr. */
   @media (max-width: 900px) { .t-wide { display: none; } }
   .thread svg { display: block; width: 100%; height: auto; overflow: visible; }
-  /* 7, nie 9: przy dlugim gescie grubsza kreska zaczyna dominowac nad trescia,
-     zamiast ja prowadzic. */
-  .thread path { fill: none; stroke: var(--spray); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+  /* 9, nie 7: cienka kreska czytala sie jak wykres. Grubosc + nierowna krawedz
+     (filtr threadInk) sprawiaja, ze to jest slad pisaka, a nie krzywa Beziera. */
+  .thread path { fill: none; stroke: var(--spray); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
 
   .phone-hold { position: relative; display: inline-block; }
   .spray-note { position: absolute; left: -46%; bottom: 4%; width: 60%; pointer-events: none; }
