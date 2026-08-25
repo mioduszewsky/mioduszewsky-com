@@ -1054,9 +1054,13 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
        gotowe na czas, zamiast ładować się na jego oczach w trakcie dojazdu. */
     {
       const fv = document.querySelector('.finale-video') as HTMLVideoElement | null;
-      /* Save-Data / 2G: 6-12 MB futra zostaje na posterze, nie dociągamy */
+      /* Save-Data i wolne lacza: 6-12 MB futra zostaje na posterze, nie dociagamy.
+         Warunek obejmuje 2G, 3G i slow-4g — przy ruchu z reklam czesc ludzi wchodzi
+         z komorki w gorszym zasiegu i nie ma powodu zjadac im pakietu danych na
+         dekoracje w stopce, ktorej moga nigdy nie zobaczyc. Poster zostaje. */
       const conn = (navigator as any).connection;
-      const skipHeavy = !!(conn?.saveData || /(^|\b)2g/.test(conn?.effectiveType || ''));
+      const slowLink = /(^|\b)(slow-2g|2g|3g)$/.test(conn?.effectiveType || '');
+      const skipHeavy = !!(conn?.saveData || slowLink);
       if (fv && !skipHeavy) {
         const load = () => {
           fv.querySelectorAll('source[data-src]').forEach((s) => {
