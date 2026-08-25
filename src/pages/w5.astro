@@ -142,7 +142,13 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           w JS, nie ta sciezka. */}
       <div class="thread t-wide" data-start="560,13" data-end-y="774" data-max-w="900" aria-hidden="true">
         <svg viewBox="0 0 600 820" fill="none">
-          <path class="td" pathLength="1" d="M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 440 452, 358 468, 348 518 C 338 572, 438 606, 444 658 C 450 714, 402 732, 412 774 L 382 748 L 412 774 L 442 748" />
+          {/* Wariant EN ma PLYTSZY wymach w lewo (403 zamiast 348). Powod: angielski
+              naglowek sekcji problemu jest dluzszy od polskiego („Having a website is not
+              the same" siega 776 px wobec 501 px w PL), wiec zatwierdzona trasa wchodzila
+              w niego o 59 px. Ksztalt PL jest ZATWIERDZONY i nietkniety. */}
+          <path class="td" pathLength="1" d={isPl
+            ? "M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 440 452, 358 468, 348 518 C 338 572, 438 606, 444 658 C 450 714, 402 732, 412 774 L 382 748 L 412 774 L 442 748"
+            : "M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 446 452, 428 468, 421 518 C 413 572, 448 606, 452 658 C 458 714, 414 732, 424 774 L 394 748 L 424 774 L 454 748"} />
         </svg>
       </div>
     <!-- HERO -->
