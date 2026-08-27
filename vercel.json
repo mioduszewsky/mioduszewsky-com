@@ -14,5 +14,57 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/ig",
+      "destination": "/pl/?utm_campaign=organic-outbound&utm_source=instagram&utm_medium=bio",
+      "permanent": false
+    },
+    {
+      "source": "/ig/",
+      "destination": "/pl/?utm_campaign=organic-outbound&utm_source=instagram&utm_medium=bio",
+      "permanent": false
+    },
+    {
+      "source": "/contra",
+      "destination": "/pl/?utm_campaign=organic-outbound&utm_source=contra&utm_medium=profile",
+      "permanent": false
+    },
+    {
+      "source": "/contra/",
+      "destination": "/pl/?utm_campaign=organic-outbound&utm_source=contra&utm_medium=profile",
+      "permanent": false
+    },
+    {
+      "source": "/li",
+      "destination": "/pl/?utm_campaign=organic-outbound&utm_source=linkedin&utm_medium=bio",
+      "permanent": false
+    },
+    {
+      "source": "/li/",
+      "destination": "/pl/?utm_campaign=organic-outbound&utm_source=linkedin&utm_medium=bio",
+      "permanent": false
+    },
+    {
+      "source": "/gh",
+      "destination": "/pl/?utm_campaign=organic-outbound&utm_source=github&utm_medium=profile",
+      "permanent": false
+    },
+    {
+      "source": "/gh/",
+      "destination": "/pl/?utm_campaign=organic-outbound&utm_source=github&utm_medium=profile",
+      "permanent": false
+    },
+    {
+      "source": "/mail",
+      "destination": "/pl/?utm_campaign=organic-outbound&utm_source=email&utm_medium=signature",
+      "permanent": false
+    },
+    {
+      "source": "/mail/",
+      "destination": "/pl/?utm_campaign=organic-outbound&utm_source=email&utm_medium=signature",
+      "permanent": false
+    }
   ]
 }
