@@ -2,7 +2,7 @@
 
 Source of my own site. Astro, Tailwind, and a small AWS backend for the contact form.
 
-Live at [mioduszewsky.com](https://mioduszewsky.com).
+Live at [mioduszewsky.com](https://mioduszewsky.com/pl/?utm_source=github&utm_medium=readme&utm_campaign=organic-outbound).
 
 ---
 
@@ -72,4 +72,4 @@ bash backend/contact-form/deploy.sh
 
 ---
 
-Built by [Kacper Mioduszewski](https://mioduszewsky.com). Architecture write-ups for my larger systems: [eskapizm-architecture](https://github.com/mioduszewsky/eskapizm-architecture), [finch-architecture](https://github.com/mioduszewsky/finch-architecture).
+Built by [Kacper Mioduszewski](https://mioduszewsky.com/pl/?utm_source=github&utm_medium=readme&utm_campaign=organic-outbound). Architecture write-ups for my larger systems: [eskapizm-architecture](https://github.com/mioduszewsky/eskapizm-architecture), [finch-architecture](https://github.com/mioduszewsky/finch-architecture).
