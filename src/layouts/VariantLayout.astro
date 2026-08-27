@@ -168,6 +168,21 @@ const current = Astro.url.pathname.replace(/\/$/, '');
     )}
 
     <script define:vars={{ POSTHOG_KEY, POSTHOG_HOST, GA4_ID, GOOGLE_ADS_ID, META_PIXEL_ID, TRACKING_ENABLED }}>
+      // UTM musi przeżyć przejście między stronami w tej samej karcie. Zapisujemy
+      // tylko wartości faktycznie obecne w adresie, więc wejście organiczne nie
+      // kasuje atrybucji z kampanii rozpoczętej chwilę wcześniej.
+      const UTM_STORAGE_KEY = 'mioduszewsky:utm';
+      const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      try {
+        const params = new URLSearchParams(location.search);
+        const incomingUtm = Object.fromEntries(
+          UTM_KEYS.map((key) => [key, params.get(key) || '']).filter(([, value]) => value),
+        );
+        if (Object.keys(incomingUtm).length) {
+          const storedUtm = JSON.parse(sessionStorage.getItem(UTM_STORAGE_KEY) || '{}');
+          sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify({ ...storedUtm, ...incomingUtm }));
+        }
+      } catch {}
       // Bramka zgody: PostHog/GA4/Google Ads NIE ładują się dopóki user nie kliknie
       // Accept. Decyzja pamiętana w localStorage, nie w cookie same w sobie.
       // Spec: systemy/ads/docs/TRACKING-GATE.md.

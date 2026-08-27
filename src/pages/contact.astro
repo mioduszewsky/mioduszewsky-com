@@ -221,15 +221,14 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       document.addEventListener('mioduszewsky:trackingReady', loadCalendar);
     }
 
-    // Przechwyt UTM z URL-a, żeby atrybucja przeżyła do maila (patrz TRACKING-GATE.md).
+    // UTM z aktualnego URL-a ma pierwszeństwo; przy przejściu z landingu bierzemy
+    // zapis sesji utworzony przez VariantLayout. Dzięki temu link do /kontakt/
+    // nie gubi źródła kampanii.
     const utmParams = new URLSearchParams(location.search);
-    const utm = {
-      utm_source: utmParams.get('utm_source') || '',
-      utm_medium: utmParams.get('utm_medium') || '',
-      utm_campaign: utmParams.get('utm_campaign') || '',
-      utm_content: utmParams.get('utm_content') || '',
-      utm_term: utmParams.get('utm_term') || '',
-    };
+    const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+    let storedUtm = {};
+    try { storedUtm = JSON.parse(sessionStorage.getItem('mioduszewsky:utm') || '{}'); } catch {}
+    const utm = Object.fromEntries(utmKeys.map((key) => [key, utmParams.get(key) || storedUtm[key] || '']));
     const utmSuffix = Object.values(utm).some(Boolean)
       ? '\n\n[utm] ' + Object.entries(utm).filter(([, v]) => v).map(([k, v]) => k + '=' + v).join(' ')
       : '';
