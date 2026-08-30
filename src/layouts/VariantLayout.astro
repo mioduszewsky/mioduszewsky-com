@@ -185,23 +185,80 @@ const current = Astro.url.pathname.replace(/\/$/, '');
           sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(incomingUtm));
         }
       } catch {}
-      // Bramka zgody: PostHog/GA4/Google Ads NIE ładują się dopóki user nie kliknie
-      // Accept. Decyzja pamiętana w localStorage, nie w cookie same w sobie.
+      // Bramka zgody: GA4, Google Ads i piksel Mety NIE ładują się dopóki user nie
+      // kliknie Accept. Decyzja pamiętana w localStorage, nie w cookie same w sobie.
       // Spec: systemy/ads/docs/TRACKING-GATE.md.
       const CONSENT_KEY = 'mioduszewsky_consent';
+
+      // PostHog jest wyjątkiem i startuje dla wszystkich, w dwóch trybach:
+      //  - przed decyzją: `cookieless_mode: 'on_reject'` + `opt_out_capturing_by_default`,
+      //    czyli zero zapisu na urządzeniu (bez cookie, bez localStorage). Unikalnych
+      //    użytkowników liczy PostHog po swojej stronie z dziennego hasha, ta sama
+      //    kategoria pomiaru co Vercel Web Analytics, który już tu działa przed zgodą.
+      //    Bez tego PostHog widział 0,4% ruchu, czyli mierzył akceptację bannera,
+      //    a nie zachowanie na stronie.
+      //  - po kliknięciu Accept: `opt_in_capturing()` przełącza SDK w tej samej odsłonie
+      //    na pełny tryb (cookie, identyfikacja, nagrania sesji) i odtwarza managery sesji.
+      // Docs: https://posthog.com/docs/data/cookieless-tracking
+      // Uwaga: tryb bezcookiowy wymaga włączonego "Cookieless server hash mode"
+      // w ustawieniach projektu PostHog (Project Settings > Web analytics).
+      // `person_profiles` zostaje na 'identified_only' (a nie 'never'), żeby po zgodzie
+      // działał `identify()` i event celu Lead z formularza kontaktowego.
+      let phRequested = false;
+      let phConsented = false;
+      let phRejected = false;
+
+      function loadPostHog() {
+        if (!POSTHOG_KEY || phRequested || phRejected) return;
+        phRequested = true;
+        const s = document.createElement('script');
+        s.src = POSTHOG_HOST + '/static/array.js';
+        s.onload = function () {
+          if (phRejected) return;
+          const base = { api_host: POSTHOG_HOST, person_profiles: 'identified_only' };
+          if (phConsented) {
+            window.posthog.init(POSTHOG_KEY, base);
+            return;
+          }
+          window.posthog.init(POSTHOG_KEY, Object.assign({}, base, {
+            cookieless_mode: 'on_reject',
+            // Brak decyzji = mierzymy bezcookiowo, zamiast nie mierzyć wcale.
+            opt_out_capturing_by_default: true,
+            // Nagrania i ankiety wymagają storage, więc dopiero po zgodzie.
+            disable_session_recording: true,
+            disable_surveys: true,
+          }));
+        };
+        document.head.appendChild(s);
+      }
+
+      function consentPostHog() {
+        if (phConsented) return;
+        const wasAnonymous = phRequested;
+        phConsented = true;
+        phRejected = false;
+        // Skrypt jeszcze się ładuje: onload sam zainicjuje pełny tryb (phConsented).
+        if (!wasAnonymous) { loadPostHog(); return; }
+        try {
+          window.posthog?.opt_in_capturing();
+          window.posthog?.startSessionRecording();
+        } catch {}
+      }
+
+      function rejectPostHog() {
+        phRejected = true;
+        try {
+          // Jawne "Odrzuć" wyłącza PostHoga do zera, także pomiar bezcookiowy.
+          window.posthog?.set_config({ before_send: () => null });
+          window.posthog?.opt_out_capturing();
+        } catch {}
+      }
 
       function initTracking() {
         if (window.__trackingConsent) return;
         window.__trackingConsent = true;
 
-        if (POSTHOG_KEY && !window.posthog) {
-          const s = document.createElement('script');
-          s.src = POSTHOG_HOST + '/static/array.js';
-          s.onload = function () {
-            window.posthog.init(POSTHOG_KEY, { api_host: POSTHOG_HOST, person_profiles: 'identified_only' });
-          };
-          document.head.appendChild(s);
-        }
+        consentPostHog();
 
         if ((GA4_ID || GOOGLE_ADS_ID) && !window.gtag) {
           const id = GA4_ID || GOOGLE_ADS_ID;
@@ -241,6 +298,8 @@ const current = Astro.url.pathname.replace(/\/$/, '');
         if (consent === 'accepted') {
           initTracking();
         } else if (consent !== 'rejected') {
+          // Pomiar bezcookiowy rusza od razu, nie czeka na klik w bannerze.
+          loadPostHog();
           const banner = document.getElementById('cookieBanner');
           const reveal = () => { if (banner) banner.hidden = false; };
           // Strony z kurtyną wejściową (.veil, np. w5) nie mogą pokazać bannera
@@ -270,6 +329,7 @@ const current = Astro.url.pathname.replace(/\/$/, '');
         document.getElementById('cookieReject')?.addEventListener('click', () => {
           try { localStorage.setItem(CONSENT_KEY, 'rejected'); } catch {}
           document.getElementById('cookieBanner').hidden = true;
+          rejectPostHog();
         });
       }
     </script>

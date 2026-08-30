@@ -60,16 +60,19 @@ const updated = '11 August 2026';
         </li>
         <li>
           <strong>Basic usage analytics</strong> — anonymous, aggregated statistics about
-          page visits (which pages, rough referrer, device type). This is
-          <strong>cookieless</strong> and does not identify you individually. Always on,
+          page visits (which pages, rough referrer, how people move around the page,
+          device type). Run by Vercel and by PostHog in <strong>cookieless</strong>
+          mode: nothing is stored on your device, and visitor numbers are estimated
+          server-side from an irreversible hash that is rotated daily. It does not
+          identify you individually and is not used for advertising. Always on,
           no consent needed.
         </li>
         <li>
           <strong>Optional product analytics and ad conversion tracking</strong> —
-          PostHog (to understand how people use the site), Google Analytics / Google
-          Ads conversion tracking and the Meta Pixel (to measure whether paid ads lead
-          to real enquiries). These only run <strong>after you accept the cookie
-          banner</strong> — see section 6.
+          PostHog in full mode (a cookie that lets a returning visit be recognised),
+          Google Analytics / Google Ads conversion tracking and the Meta Pixel (to
+          measure whether paid ads lead to real enquiries). These only run
+          <strong>after you accept the cookie banner</strong> — see section 6.
         </li>
         <li>
           <strong>Optional session recordings</strong> — if you accept the cookie
@@ -85,7 +88,7 @@ const updated = '11 August 2026';
       <h2>3. Legal basis (GDPR Art. 6)</h2>
       <ul>
         <li>Your <strong>consent</strong> for processing the contact form (Art. 6(1)(a)) — given by ticking the consent box.</li>
-        <li>Your <strong>consent</strong> for PostHog, Google and Meta analytics/ad tracking (Art. 6(1)(a)) — given by accepting the cookie banner. Nothing loads before that.</li>
+        <li>Your <strong>consent</strong> for cookie-based analytics and ad tracking — PostHog in full mode, Google and Meta (Art. 6(1)(a)) — given by accepting the cookie banner. Before that, only the cookieless measurement in section 2 runs, under my <strong>legitimate interest</strong> in seeing in aggregate how the site is used (Art. 6(1)(f)).</li>
         <li>Your <strong>consent</strong> for session recordings (Art. 6(1)(a)) — the same banner. Reject it, or simply do not accept, and nothing is recorded.</li>
         <li>Taking <strong>steps at your request before entering a contract</strong> (Art. 6(1)(b)).</li>
         <li>My <strong>legitimate interest</strong> in understanding, in aggregate, how the site is used (Art. 6(1)(f)) — for the cookieless basic analytics only.</li>
@@ -97,7 +100,7 @@ const updated = '11 August 2026';
         <li><strong>Vercel Inc.</strong> — website hosting and cookieless Web Analytics.</li>
         <li><strong>Amazon Web Services (AWS SES)</strong> — delivery of contact-form emails. Data is processed in the EU (Frankfurt, eu-central-1).</li>
         <li><strong>Google (Google Workspace)</strong> — my email inbox and, if you book a call, the appointment scheduling.</li>
-        <li><strong>PostHog</strong> (EU servers) — product analytics and session recordings, only after you accept the cookie banner.</li>
+        <li><strong>PostHog</strong> (EU servers) — cookieless visit analytics, plus full product analytics and session recordings after you accept the cookie banner.</li>
         <li><strong>Google Analytics / Google Ads</strong> — traffic and ad-conversion measurement, only after you accept the cookie banner.</li>
         <li><strong>Meta Platforms Ireland</strong> — the Meta Pixel, used to measure whether paid ads lead to real enquiries, only after you accept the cookie banner.</li>
       </ul>
@@ -123,13 +126,15 @@ const updated = '11 August 2026';
       </p>
       <p>
         If a <strong>cookie banner</strong> is shown on the site, it is asking your
-        consent to run two additional tools: <strong>PostHog</strong> (product
-        analytics <strong>and session recordings</strong>, described in section 2) and
-        <strong>Google Analytics / Google Ads</strong> (traffic and
-        ad-conversion measurement). Neither loads before you click “Accept” — if you
-        click “Reject”, or never see a banner because these tools are not active yet,
-        none of this runs and no related cookie is set. Your choice is remembered on
-        this device so you are not asked again.
+        consent for the cookie-based tools: <strong>PostHog in full mode</strong>
+        (product analytics <strong>and session recordings</strong>, described in
+        section 2), <strong>Google Analytics / Google Ads</strong> and the
+        <strong>Meta Pixel</strong>. Google and Meta do not load before you click
+        “Accept”. PostHog runs from the moment you open the page, but until you accept
+        it stays in the cookieless mode described in section 2 and stores nothing on
+        your device. If you click “Reject”, PostHog stops collecting anything at all
+        and no Google or Meta tag is loaded. Your choice is remembered on this device
+        so you are not asked again.
       </p>
       <p>
         The <strong>booking calendar on the /contact page</strong> is provided by
