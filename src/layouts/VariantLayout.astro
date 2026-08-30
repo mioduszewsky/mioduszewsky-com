@@ -224,6 +224,14 @@ const current = Astro.url.pathname.replace(/\/$/, '');
             cookieless_mode: 'on_reject',
             // Brak decyzji = mierzymy bezcookiowo, zamiast nie mierzyć wcale.
             opt_out_capturing_by_default: true,
+            // Przed zgodą zbieramy WYŁĄCZNIE to, co mieści się w pomiarze ruchu:
+            // odsłony i głębokość scrolla. Autocapture zbiera kliknięcia razem
+            // z treścią klikniętych elementów, czyli analitykę produktu, a nie
+            // pomiar ruchu — na to zgoda jest potrzebna. Patrz TRACKING-GATE.md.
+            autocapture: false,
+            capture_heatmaps: false,
+            capture_performance: false,
+            rageclick: false,
             // Nagrania i ankiety wymagają storage, więc dopiero po zgodzie.
             disable_session_recording: true,
             disable_surveys: true,
@@ -241,6 +249,16 @@ const current = Astro.url.pathname.replace(/\/$/, '');
         if (!wasAnonymous) { loadPostHog(); return; }
         try {
           window.posthog?.opt_in_capturing();
+          window.posthog?.set_config({
+            autocapture: true,
+            capture_heatmaps: true,
+            capture_performance: true,
+            rageclick: true,
+          });
+          // Nasłuchy autocapture podpinają się przy starcie modułu, więc po samej
+          // zmianie configu trzeba go obudzić. Gdyby ta ścieżka kiedyś zniknęła,
+          // autocapture i tak wróci przy następnej odsłonie (pełna inicjalizacja).
+          window.posthog?.autocapture?.startIfEnabled?.();
           window.posthog?.startSessionRecording();
         } catch {}
       }
