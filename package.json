@@ -7,9 +7,11 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "npm run qa:public-urls",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "qa:public-urls": "node --test scripts/public-url-guard.test.mjs && node scripts/public-url-guard.mjs"
   },
   "dependencies": {
     "@fontsource-variable/anybody": "^5.2.7",
