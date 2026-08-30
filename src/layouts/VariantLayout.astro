@@ -171,6 +171,9 @@ const current = Astro.url.pathname.replace(/\/$/, '');
       // UTM musi przeżyć przejście między stronami w tej samej karcie. Zapisujemy
       // tylko wartości faktycznie obecne w adresie, więc wejście organiczne nie
       // kasuje atrybucji z kampanii rozpoczętej chwilę wcześniej.
+      // Liczy się pierwsze wejście z UTM w sesji i zapisujemy jego komplet naraz:
+      // późniejsze wejście z innego linku nie podmienia źródła ani nie skleja
+      // parametrów dwóch kampanii w jedno zgłoszenie.
       const UTM_STORAGE_KEY = 'mioduszewsky:utm';
       const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
       try {
@@ -178,9 +181,8 @@ const current = Astro.url.pathname.replace(/\/$/, '');
         const incomingUtm = Object.fromEntries(
           UTM_KEYS.map((key) => [key, params.get(key) || '']).filter(([, value]) => value),
         );
-        if (Object.keys(incomingUtm).length) {
-          const storedUtm = JSON.parse(sessionStorage.getItem(UTM_STORAGE_KEY) || '{}');
-          sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify({ ...storedUtm, ...incomingUtm }));
+        if (Object.keys(incomingUtm).length && !sessionStorage.getItem(UTM_STORAGE_KEY)) {
+          sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(incomingUtm));
         }
       } catch {}
       // Bramka zgody: PostHog/GA4/Google Ads NIE ładują się dopóki user nie kliknie
@@ -242,13 +244,19 @@ const current = Astro.url.pathname.replace(/\/$/, '');
           const banner = document.getElementById('cookieBanner');
           const reveal = () => { if (banner) banner.hidden = false; };
           // Strony z kurtyną wejściową (.veil, np. w5) nie mogą pokazać bannera
-          // na kurtynie — czekamy na koniec animacji (event z GSAP timeline)
-          // albo na watchdog 4.5s, gdyby event się nie doczekał.
+          // na zaciągniętej kurtynie. Czekamy więc na moment, w którym kurtyna
+          // ZACZYNA wjeżdżać do góry — dół ekranu jest wtedy już odsłonięty.
+          // `curtainDone` (koniec animacji) zostaje jako zapas dla stron, które
+          // nie wysyłają `curtainLifting`.
+          // Watchdog to wyłącznie bezpiecznik na wypadek, gdyby żaden z tych
+          // sygnałów nie przyszedł (GSAP nie wstał, telefon zaciął skrypt).
+          // Przy sprawnej stronie nie odpala się w ogóle.
           if (document.querySelector('.veil')) {
             let curtainDone = false;
             const onCurtainDone = () => { if (curtainDone) return; curtainDone = true; reveal(); };
+            document.addEventListener('mioduszewsky:curtainLifting', onCurtainDone, { once: true });
             document.addEventListener('mioduszewsky:curtainDone', onCurtainDone, { once: true });
-            setTimeout(onCurtainDone, 4500);
+            setTimeout(onCurtainDone, 2500);
           } else {
             reveal();
           }

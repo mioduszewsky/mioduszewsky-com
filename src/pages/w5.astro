@@ -578,6 +578,11 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       tl.fromTo('.veil-word', { opacity: 0, y: 24, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: afterLanguageSwitch ? 0.16 : 0.55 })
         .to(veil, {
           yPercent: -100, duration: afterLanguageSwitch ? 0.42 : 0.9, ease: 'expo.inOut',
+          // Kurtyna sunie w górę, więc dół ekranu odsłania się pierwszy. Baner zgody
+          // może wyjść już na starcie tego ruchu zamiast czekać na jego koniec —
+          // na telefonie to 0.9 s wcześniej, a tyle wystarczy, żeby ruch z reklam
+          // zdążył go zobaczyć przed odbiciem.
+          onStart: () => document.dispatchEvent(new CustomEvent('mioduszewsky:curtainLifting')),
           onComplete: () => document.dispatchEvent(new CustomEvent('mioduszewsky:curtainDone')),
         }, curtainAt)
         .fromTo('.hero .ln-in', { y: '112%' }, {
