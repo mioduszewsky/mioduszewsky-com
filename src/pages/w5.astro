@@ -1378,7 +1378,9 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .btn.ghost { color: var(--ink); }
 
   .label { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dim); }
-  .label.dim { color: color-mix(in srgb, var(--dim) 70%, transparent); }
+  /* Bylo --dim @70% = 2.65:1. Przy 11px uppercase nie ma jasniejszej wartosci
+     niz sam --dim, ktora przechodzi 4.5:1, wiec dodatkowe rozjasnienie znika. */
+  .label.dim { color: var(--dim); }
 
   /* maskowane linie */
   .ln { display: block; overflow: hidden; }
@@ -1716,7 +1718,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .pn {
     display: block; font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 600;
     font-size: clamp(3.4rem, 6vw, 6rem); line-height: 0.86; letter-spacing: -0.04em;
-    color: transparent; -webkit-text-stroke: 1.4px color-mix(in srgb, var(--ink) 32%, transparent);
+    color: transparent; -webkit-text-stroke: 1.4px color-mix(in srgb, var(--ink) 45%, transparent);
     margin-bottom: 0.7rem; transition: color 0.4s, -webkit-text-stroke-color 0.4s;
   }
   /* hover tylko na urządzeniach z realnym hoverem — na dotyku iOS „przykleja"
@@ -2125,7 +2127,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     .foot { min-height: auto; padding: 12vh 5vw 5vh; }
     .foot-b { flex-direction: column; align-items: center; gap: 18px; }
     .foot-b .btn { width: 100%; text-align: center; }
-    .foot-bar { grid-template-columns: 1fr auto; gap: 1.6rem 2rem; margin-top: 6vh; text-align: left; align-items: center; }
+    .foot-bar { grid-template-columns: minmax(0, 1fr) auto; gap: 1.6rem 2rem; margin-top: 6vh; text-align: left; align-items: center; }
     .fcol-badge { align-items: flex-start; }
     .meta { flex-direction: column; gap: 6px; }
   }
