@@ -3,7 +3,7 @@ export const homePl = {
     title: 'mioduszewsky · strony internetowe, AI i aplikacje',
     description: 'Strony internetowe od pierwszej rozmowy do publikacji. Układam treść, projektuję i buduję. Tworzę też wdrożenia AI, aplikacje i systemy.',
   },
-  nav: { cta: 'Umów 15 minut', sticky: 'Umów 15 minut', stickyAria: 'Umów 15-minutową rozmowę' },
+  nav: { cta: 'Umów 15 minut', sticky: 'Umów 15 minut', stickyAria: 'Umów 15 minut — rozmowa wideo' },
   hero: {
     label: '( Strony · AI · aplikacje )',
     aria: 'Dobra strona mówi za Ciebie.',
@@ -19,7 +19,7 @@ export const homePl = {
     intro: 'Ile z tego spada na Ciebie, zależy od tego, w którym miejscu jesteś dzisiaj. Zwykle w jednym z trzech:',
     rows: [
       ['Strony jeszcze nie ma', 'Wiesz, że jej potrzebujesz, ale nie wiesz, od czego zacząć ani co przygotować.'],
-      ['Biznes poszedł dalej. Strona została.', 'Oferta się zmieniła, firma wygląda dziś inaczej, a strona nadal pokazuje jej starą wersję.'],
+      ['Biznes poszedł dalej. Strona została.', 'Oferta się zmieniła, firma wygląda dziś inaczej, a strona pokazuje jej starą wersję.'],
       ['Strona powstała, ale niewiele z niej wynika', 'Klient nadal musi się domyślać, co oferujesz i co ma zrobić dalej.'],
     ],
     close: 'Strona składa się z kilku różnych decyzji: co powiedzieć, jak to ułożyć, jak pokazać i jak zbudować. *Ja prowadzę te rzeczy razem*, żeby na końcu powstała jedna działająca całość.',
@@ -125,7 +125,6 @@ export const homePl = {
     contact: 'Kontakt',
     badge: 'Wrocław, Polska · pracuję zdalnie · ',
     top: 'Wróć na początek',
-    built: 'Zaprojektowane i zbudowane przez jedną osobę',
     terms: 'Warunki',
     privacy: 'Prywatność',
   },

@@ -506,7 +506,6 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     </button>
     <div class="finale-meta">
       <span>© 2026 Kacper Mioduszewski</span>
-      <span>{p?.footer.built || 'Designed and built by one person'}</span>
       <span class="finale-legal">
         <a href={r.terms}>{p?.footer.terms || 'Terms'}</a>
         <a href={r.privacy}>{p?.footer.privacy || 'Privacy'}</a>
@@ -1233,9 +1232,12 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     /* kanoniczna paleta marki (decyzja Kacpra 14.07.2026) */
     --ivory: #f8f9f2;
     --ink: #000000;
-    --dim: #8b8677;
+    --dim: #777265;
     --blue: #0522ff;
     --brand: #ffcc33;
+    /* ring focusu: niebieski trzyma 7.4:1 na kremie, na czarnych bryłach
+       przejmuje go żółć marki (13.9:1) — niebieski dawał tam 2.5:1 */
+    --focus: var(--blue);
     font-family: 'GeneralSansV', sans-serif;
     background: var(--ivory);
     color: var(--ink);
@@ -1639,6 +1641,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
      Beyond WEWNĄTRZ bryły (zero przeskoku). */
   .deal {
     position: relative; overflow: hidden; margin-top: 3.4vh;
+    --focus: var(--brand);
     background: #0c0b0a; color: var(--ivory); border-radius: 8px;
     box-shadow: 0 34px 80px -46px rgba(0, 0, 0, 0.85);
   }
@@ -1817,6 +1820,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .finale {
     /* finał jest poza .w5 — własne zmienne palety I czcionka (inaczej serif z przeglądarki) */
     --ink: #000000; --ivory: #f8f9f2; --brand: #ffcc33; --dim: #8b8677; --blue: #0522ff;
+    --focus: var(--brand);
     --dal-w: min(80vw, 1100px);            /* szerokość wordmarku */
     font-family: 'GeneralSansV', sans-serif;
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 0;
@@ -1974,7 +1978,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
      postrzepiona linia, nie odreczna. Charakter daje trasa i grubosc, nie szum. */
   .thread path { fill: none; stroke: var(--spray); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
 
-  .phone-hold { position: relative; display: inline-block; }
+  .phone-hold { position: relative; display: inline-block; max-width: 100%; }
   .spray-note { position: absolute; left: -46%; bottom: 4%; width: 60%; pointer-events: none; }
   .spray-note svg { width: 70%; fill: none; stroke: var(--spray); stroke-width: 6; stroke-linecap: round; }
   .spray-note .tag { display: block; rotate: -6deg; margin-top: 2px; }
@@ -2000,7 +2004,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 
 
   a:focus-visible, .btn:focus-visible, button:focus-visible, summary:focus-visible {
-    outline: 2px solid var(--blue); outline-offset: 4px; border-radius: 4px;
+    outline: 2px solid var(--focus, var(--blue)); outline-offset: 4px; border-radius: 4px;
   }
   .btn:focus-visible { border-radius: 999px; }
 
@@ -2076,7 +2080,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     /* ramka .proj-f na mobile sięga tuż poza prawą krawędź, więc dopisek trzyma odstęp */
     .spray-note-r { right: 10%; left: auto; }
     .spray-note-r .tag { margin-left: 0; margin-right: 6%; }
-    .proj { grid-template-columns: 1fr; gap: 6vh; margin-bottom: 12vh; }
+    .proj { grid-template-columns: minmax(0, 1fr); gap: 6vh; margin-bottom: 12vh; }
     .proj.flip .proj-t { order: 0; }
     .more { margin-top: 0; }
     .mrow { grid-template-columns: 1fr 30px; grid-template-rows: auto auto; row-gap: 8px; padding: 20px 2px; }

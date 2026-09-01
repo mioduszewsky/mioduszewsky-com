@@ -198,14 +198,14 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       iframe.height = '560';
       calConsent?.remove();
       const timer = setTimeout(markCalendarBlocked, 6000);
-      iframe.addEventListener('load', () => {
-        clearTimeout(timer);
-        try {
-          if (iframe.contentDocument) markCalendarBlocked();
-        } catch { /* cross-origin = realny kalendarz, nic nie robimy */ }
-      });
+      iframe.addEventListener('load', () => clearTimeout(timer));
       iframe.addEventListener('error', () => { clearTimeout(timer); markCalendarBlocked(); });
       calEmbed.appendChild(iframe);
+      /* Sama ramka nie powie, czy kalendarz wstal: `contentDocument` zwraca null
+         i dla dzialajacego kalendarza (cross-origin), i dla strony bledu blokera,
+         a `load` odpala sie w obu przypadkach. Pytamy wiec o domene osobno, tym
+         samym probe co PhoneFrame — bloker tnie takze to zadanie. */
+      fetch(iframe.src, { mode: 'no-cors' }).catch(() => markCalendarBlocked());
       try { localStorage.setItem(CAL_CONSENT_KEY, '1'); } catch {}
     }
     if (calEmbed) {
@@ -391,6 +391,10 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     .cal-is-blocked { min-height: 0; }
     .cal-is-blocked iframe { display: none; }
     .cal-is-blocked .cal-blocked { position: static; padding-block: 2.6rem; }
+    /* Klasa wygrywa z regula przegladarki [hidden]{display:none}, wiec bez tej
+       linii panel bledu renderowal sie ZAWSZE: bialy, na inset:0, przykrywajac
+       dzialajacy kalendarz i przechwytujac klik w przycisk zgody. */
+    .cal-blocked[hidden] { display: none; }
     .cal-blocked {
       position: absolute; inset: 0; display: flex; flex-direction: column;
       align-items: flex-start; justify-content: center; gap: 0.6rem;
