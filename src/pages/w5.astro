@@ -2063,12 +2063,8 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     .deal-dot { display: none; }
     .deal-strike { bottom: -0.22em; }
     .work, .serv, .foot, .lead, .how, .proc, .faq { padding-inline: 5vw; }
-    /* .work dziedziczyl padding-block 10vh z desktopu (brak tu override'u),
-       wiec sekcja miala pelny desktopowy oddech gory/dolu na ekranie, na
-       ktorym i tak jest go w nadmiarze po .proj margin-bottom. */
-    .work { padding-block: 6vh; }
     .manif-in { padding-inline: 6vw; }
-    .sec-head { flex-direction: column; gap: 6px; margin-bottom: 4vh; }
+    .sec-head { flex-direction: column; gap: 6px; margin-bottom: 7vh; }
     .lrow { grid-template-columns: 44px 1fr; grid-template-rows: auto auto; row-gap: 8px; padding: 22px 2px; }
     .lrow .idx { grid-row: 1; }
     .lrow h3 { grid-column: 2; grid-row: 1; }
@@ -2086,7 +2082,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     /* ramka .proj-f na mobile sięga tuż poza prawą krawędź, więc dopisek trzyma odstęp */
     .spray-note-r { right: 10%; left: auto; }
     .spray-note-r .tag { margin-left: 0; margin-right: 6%; }
-    .proj { grid-template-columns: minmax(0, 1fr); gap: 6vh; margin-bottom: 6vh; }
+    .proj { grid-template-columns: minmax(0, 1fr); gap: 6vh; margin-bottom: 12vh; }
     .proj.flip .proj-t { order: 0; }
     .more { margin-top: 0; }
     .mrow { grid-template-columns: 1fr 30px; grid-template-rows: auto auto; row-gap: 8px; padding: 20px 2px; }
