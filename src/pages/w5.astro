@@ -2042,12 +2042,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
        Asymetria pionu jest celowa: blok tresci siedzi nieco POWYZEJ srodka
        geometrycznego, bo tam lezy srodek optyczny, a przycisk laduje w zasiegu kciuka
        zamiast przy samej krawedzi ekranu. */
-    /* Pelny 100svh + justify-content:center (dziedziczone z desktopu) na
-       wysokim telefonie (iPhone 14: 844pt) dawalo dwa martwe pola powietrza
-       — nad i pod tresciowym blokiem — bo tresc sama w sobie jest krotka.
-       min-height:auto: hero konczy sie zaraz po CTA + oddechu, a kolejna
-       sekcja jest widoczna od razu, zamiast pol ekranu bialej przestrzeni. */
-    .hero { box-sizing: border-box; min-height: auto; justify-content: flex-start; padding-block: calc(3vh + 74px) 8vh; }
+    .hero { box-sizing: border-box; min-height: 100svh; padding-block: calc(3vh + 74px) 10vh; }
     /* Rytm hero na telefonie grupuje, zamiast rozdzielac wszystko po rowno:
        label klei sie do H1, kreska + akapit + CTA tworza drugi blok. Wczesniej
        najwiekszy odstep w hero (8vh) siedzial miedzy H1 a kreska, czyli w miejscu
