@@ -50,20 +50,49 @@ const c = layoutCopy[locale];
 const alternate = alternatePath ? new URL(alternatePath, SITE).href : undefined;
 const englishUrl = locale === 'en' ? canonical : alternate;
 const polishUrl = locale === 'pl' ? canonical : alternate;
+// Profile potwierdzajace tozsamosc marki. Google laczy je w jedna encje przez sameAs.
+const PROFILES = [
+  'https://www.linkedin.com/in/kacper-mioduszewski/',
+  'https://instagram.com/mioduszewsky',
+  'https://contra.com/kacper_mioduszewski_i7ytzt28',
+];
+
+// Graf zamiast pojedynczego wezla: nazwa witryny + firma + osoba, powiazane przez @id.
+// Nazwa "mioduszewsky" kolidowala w wynikach z nazwiskiem Mioduszewsky/Mioduszewski,
+// wiec encja musi byc opisana jawnie, a nie domyslana z tresci strony.
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'ProfessionalService',
-  name: 'mioduszewsky',
-  url: SITE,
-  image: ogImage,
-  description: description || c.defaultDescription,
-  inLanguage: locale === 'pl' ? 'pl-PL' : 'en',
-  founder: { '@type': 'Person', name: 'Kacper Mioduszewski' },
-  areaServed: c.areaServed,
-  address: { '@type': 'PostalAddress', addressLocality: 'Wrocław', addressCountry: 'PL' },
-  sameAs: [
-    'https://instagram.com/mioduszewsky',
-    'https://contra.com/kacper_mioduszewski_i7ytzt28',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': SITE + '#website',
+      url: SITE,
+      name: 'mioduszewsky',
+      alternateName: 'mioduszewsky.com',
+      inLanguage: locale === 'pl' ? 'pl-PL' : 'en',
+      publisher: { '@id': SITE + '#business' },
+    },
+    {
+      '@type': 'ProfessionalService',
+      '@id': SITE + '#business',
+      name: 'mioduszewsky',
+      url: SITE,
+      image: ogImage,
+      description: description || c.defaultDescription,
+      inLanguage: locale === 'pl' ? 'pl-PL' : 'en',
+      founder: { '@id': SITE + '#kacper' },
+      areaServed: c.areaServed,
+      address: { '@type': 'PostalAddress', addressLocality: 'Wrocław', addressCountry: 'PL' },
+      sameAs: PROFILES,
+    },
+    {
+      '@type': 'Person',
+      '@id': SITE + '#kacper',
+      name: 'Kacper Mioduszewski',
+      url: SITE,
+      worksFor: { '@id': SITE + '#business' },
+      sameAs: PROFILES,
+    },
   ],
 };
 
