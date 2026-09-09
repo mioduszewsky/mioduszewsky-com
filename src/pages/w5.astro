@@ -7,6 +7,7 @@ import VariantLayout from '../layouts/VariantLayout.astro';
 import LanguageSwitch from '../components/LanguageSwitch.astro';
 import PhoneFrame from '../components/frames/PhoneFrame.astro';
 import { homePl } from '../content/home-pl';
+import { services, servicePath } from '../content/services-pl';
 import { routes, type Locale } from '../i18n/site';
 import thumbWoodspot from '../assets/live/thumb-woodspot.webp';
 import thumbGlassstone from '../assets/live/thumb-glassstone.webp';
@@ -36,7 +37,11 @@ const beyondEn = [
   { nr: '02', n: 'Application or system', p: 'from $3,000', d: 'A first working version of a product, application, dashboard or business system. Something that works for the business from day one.' },
   { nr: '03', n: 'Build + Iterate', p: 'from $1,500 / mo', d: 'Ongoing development after launch for selected projects: maintenance, iterations, product decisions and new versions.' },
 ];
-const beyond = p?.offer.beyond || beyondEn;
+const beyond = isPl ? [
+  { ...homePl.offer.beyond[0], nr: '01', href: servicePath(services[0]) },
+  { ...homePl.offer.beyond[1], nr: '02', href: servicePath(services[1]) },
+  { nr: '03', n: 'Cofounder as a Service', p: 'Porozmawiajmy o współpracy ↗', d: 'Stała współpraca przy Twoim projekcie: od kierunku biznesowego i organizacji pracy po technologię. Wspólnie ustalamy priorytety i kolejne działania.', href: '/pl/uslugi/cofounder-as-a-service/' },
+] : beyondEn.map((u) => ({ ...u, href: `${r.contact}?service=${encodeURIComponent(u.n)}` }));
 /* Manifest: spray przekresla fraze z pierwszej linii. Tekst zostaje jednym stringiem
    w tresci, a tutaj dzielimy go na trzy czesci — inaczej kazdy jezyk musialby trzymac
    zdanie w kawalkach i latwo bylo je rozjechac przy redakcji. */
@@ -326,7 +331,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     </section>
 
     <!-- OFERTA: flagowy „Complete website build" (2 poziomy) + dodatki -->
-    <section class="serv">
+    <section class="serv" id="oferta">
       <p class="label rv">{p?.offer.label || '( The offer )'}</p>
 
       <div class="deal">
@@ -362,9 +367,9 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         <div class="deal-beyond">
           <p class="deal-beyond-label rv">{p?.offer.other || 'Other services'}</p>
           <p class="deal-beyond-intro rv">{p?.offer.otherIntro || 'Separate from the website build, each priced on its own. Most people start with a website, but you can come straight here if this is the actual job.'}</p>
-          <div class="deal-beyond-grid">
+          <div class:list={["deal-beyond-grid", isPl && "deal-beyond-grid-pl"]}>
             {beyond.map((u) => (
-              <a class="deal-bcard rv" href={`${r.contact}?service=${encodeURIComponent(u.n)}`}>
+              <a class="deal-bcard rv" href={u.href}>
                 <span class="deal-bn">{u.n}</span>
                 <span class="deal-bd">{u.d}</span>
                 <span class="deal-bp">{u.p}</span>
@@ -1699,6 +1704,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .deal-beyond-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: color-mix(in srgb, var(--blue) 78%, var(--ivory)); margin-bottom: 1.4vh; }
   .deal-beyond-intro { font-size: 13.5px; line-height: 1.6; color: rgba(248, 249, 242, 0.72); max-width: 60ch; }
   .deal-beyond-grid { margin-top: 2.6vh; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 3vw; }
+  .deal-beyond-grid-pl { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(20px, 2.5vw, 48px); }
+  .deal-beyond-grid-pl .deal-bd { max-width: 32ch; }
+  .deal-beyond-grid-pl .deal-bcard { padding: 1.1rem 0 1.5rem; }
+  .deal-beyond-grid-pl .deal-bn { font-size: clamp(15px, 1.25vw, 18px); }
   .deal-bcard { display: flex; flex-direction: column; gap: 0.55rem; padding: 1.5rem 0 2.2rem; text-decoration: none; color: var(--ivory); border-top: 2px solid rgba(248, 249, 242, 0.22); transition: border-color 0.3s; }
   .deal-bcard:hover { border-color: var(--brand); }
   .deal-bn { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: 1.15rem; }

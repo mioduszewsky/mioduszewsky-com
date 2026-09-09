@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://mioduszewsky.com/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/" />
     <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/" />
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://mioduszewsky.com/pl/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/" />
     <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/" />
@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>https://mioduszewsky.com/contact/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/contact/" />
     <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/kontakt/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/contact/" />
@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://mioduszewsky.com/pl/kontakt/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/contact/" />
     <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/kontakt/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/contact/" />
@@ -34,7 +34,7 @@
   </url>
   <url>
     <loc>https://mioduszewsky.com/privacy/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/privacy/" />
     <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/polityka-prywatnosci/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/privacy/" />
@@ -42,7 +42,7 @@
   </url>
   <url>
     <loc>https://mioduszewsky.com/pl/polityka-prywatnosci/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/privacy/" />
     <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/polityka-prywatnosci/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/privacy/" />
@@ -50,7 +50,7 @@
   </url>
   <url>
     <loc>https://mioduszewsky.com/terms/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/terms/" />
     <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/regulamin/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/terms/" />
@@ -58,10 +58,13 @@
   </url>
   <url>
     <loc>https://mioduszewsky.com/pl/regulamin/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/terms/" />
     <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/regulamin/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/terms/" />
     <priority>0.3</priority>
   </url>
+  <url><loc>https://mioduszewsky.com/pl/uslugi/wdrozenie-ai/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://mioduszewsky.com/pl/uslugi/aplikacje-i-systemy/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://mioduszewsky.com/pl/uslugi/cofounder-as-a-service/</loc><lastmod>2026-09-09</lastmod></url>
 </urlset>

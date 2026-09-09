@@ -1,0 +1,8 @@
+---
+import ServiceLanding from '../../../components/ServiceLanding.astro';
+import { services } from '../../../content/services-pl';
+// Consultation stays in source until its sales terms are settled; never build its public route.
+export const getStaticPaths = () => services.filter((service) => !service.consultation).map((service) => ({ params: { slug: service.slug }, props: { service } }));
+const { service } = Astro.props;
+---
+<ServiceLanding service={service} />

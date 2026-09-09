@@ -8,10 +8,17 @@ import { contactPl } from '../content/contact-pl';
 import { routes, type Locale } from '../i18n/site';
 import { TRACKING_ENABLED, GOOGLE_ADS_ID, GOOGLE_ADS_LABEL } from '../config/tracking';
 
-interface Props { locale?: Locale; }
-const { locale = 'en' } = Astro.props;
+interface Props { locale?: Locale; consultation?: boolean; }
+const { locale = 'en', consultation = false } = Astro.props;
 const isPl = locale === 'pl';
-const p = isPl ? contactPl : undefined;
+const p = isPl ? (consultation ? {
+  ...contactPl,
+  meta: { title: 'Zgłoszenie na konsultację · mioduszewsky', description: 'Opisz pomysł na płatną konsultację biznesową. Temat, cenę i termin potwierdzimy po zgłoszeniu.' },
+  label: '( Płatna konsultacja biznesowa )',
+  h1: 'Opisz swój pomysł.', h2: 'Potwierdzimy warunki.', h3: '',
+  lead: 'Wyślij opis pomysłu. Potwierdzimy temat, cenę i termin płatnej konsultacji. Zgłoszenie nie rezerwuje terminu i nie pobiera pieniędzy.',
+  form: { ...contactPl.form, title: 'Zgłoszenie na konsultację', desc: 'Co chcesz uruchomić, na jakim jesteś etapie i z czym chcesz wyjść z rozmowy?', send: 'Wyślij zgłoszenie', successTitle: 'Dzięki. Zgłoszenie wysłane.', successText: 'Przeczytam opis i wrócę z potwierdzeniem tematu, terminu oraz warunków płatności. Termin nie jest jeszcze zarezerwowany.' },
+} : contactPl) : undefined;
 const r = routes[locale];
 const alt = routes[isPl ? 'en' : 'pl'];
 
@@ -32,10 +39,10 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
   bg="#f8f9f2"
   fg="#000000"
   switcher={false}
-  robots="index, follow, max-image-preview:large"
+  robots={consultation ? 'noindex, follow' : 'index, follow, max-image-preview:large'}
   description={p?.meta.description || 'Book a free 15-minute call or send a short message. One person from idea to launch: strategy, copy, design and build.'}
   locale={locale}
-  alternatePath={alt.contact}
+  alternatePath={consultation ? undefined : alt.contact}
 >
   <main class="ct">
     <header class="ct-nav">
@@ -49,7 +56,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
         {/* „← Wroc" przed przelacznikiem jezyka: przy odwrotnej kolejnosci strzalka
             celowala prosto w „EN" i czytalo sie to jak „wroc do wersji angielskiej". */}
         <a class="back" href={r.home}>← {p?.back || 'Back'}</a>
-        <LanguageSwitch locale={locale} href={alt.contact} />
+        {!consultation && <LanguageSwitch locale={locale} href={alt.contact} />}
       </div>
     </header>
 
@@ -65,9 +72,9 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       </p>
     </section>
 
-    <section class="ct-grid">
+    <section class:list={['ct-grid', consultation && 'consultation-grid']}>
       <!-- ŚCIEŻKA 1: umów rozmowę (główny CTA) -->
-      <div class="path path-call">
+      {!consultation && <div class="path path-call">
         <span class="pnum">01</span>
         <h2>{p?.call.title || 'Book a call'}</h2>
         <p class="pdesc">{p?.call.desc || 'Pick a slot that works for you. 15 minutes, video, no obligation.'}</p>
@@ -99,11 +106,11 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
             <p class="note">{p?.call.fallbackNote || 'Live calendar is being connected. For now, email works and I reply fast.'}</p>
           </div>
         )}
-      </div>
+      </div>}
 
       <!-- ŚCIEŻKA 2: krótki formularz (max 3 pola + zgoda) -->
       <div class="path path-form">
-        <span class="pnum">02</span>
+        {!consultation && <span class="pnum">02</span>}
         <h2>{p?.form.title || 'Or send a message'}</h2>
         <p class="pdesc">{p?.form.desc || 'Prefer to write first? Three fields, that is it.'}</p>
 
@@ -140,9 +147,9 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
         <div class="ct-success" id="ctSuccess" hidden>
           <h3>{p?.form.successTitle || 'Thanks — message sent.'}</h3>
           <p>{p?.form.successText || 'I read every message myself and reply within a day. Want it faster? Grab a call slot:'}</p>
-          <a class="btn big" href={GOOGLE_BOOKING_URL || `mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(p?.call.mailSubject || 'Book a call')}`}>
+          {!consultation && <a class="btn big" href={GOOGLE_BOOKING_URL || `mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(p?.call.mailSubject || 'Book a call')}`}>
             <span class="btn-in">{isPl ? 'Umów 15 minut' : 'Book a 15-min call'}</span>
-          </a>
+          </a>}
         </div>
       </div>
     </section>
@@ -165,7 +172,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     </footer>
   </main>
 
-  <script define:vars={{ CONTACT_ENDPOINT, TRACKING_ENABLED, GOOGLE_ADS_ID, GOOGLE_ADS_LABEL, isPl, formCopy: p?.form, iframeTitle: p?.call.iframeTitle }}>
+  <script define:vars={{ CONTACT_ENDPOINT, TRACKING_ENABLED, GOOGLE_ADS_ID, GOOGLE_ADS_LABEL, isPl, consultation, formCopy: p?.form, iframeTitle: p?.call.iframeTitle }}>
     // Kalendarz Google ustawia cookie NID gdy się ładuje. Dwie ścieżki zgody:
     // 1) TRACKING_ENABLED (baner site-wide w VariantLayout skonfigurowany): jeśli user
     //    kliknął Accept w bannerze (mioduszewsky_consent), kalendarz ładuje się od razu,
@@ -225,6 +232,16 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     // zapis sesji utworzony przez VariantLayout. Dzięki temu link do /kontakt/
     // nie gubi źródła kampanii.
     const utmParams = new URLSearchParams(location.search);
+    const knownServices = ['Cofounder as a Service', 'Wdrożenie AI', 'Aplikacja lub system', 'Dalszy rozwój', 'Dalszy rozwój po publikacji'];
+    const requestedService = utmParams.get('service');
+    const selectedService = consultation ? 'Konsultacja biznesowa (płatna; cena i termin do potwierdzenia)' : (knownServices.includes(requestedService) ? requestedService : '');
+    const serviceSuffix = selectedService ? '\n\n[Usługa] ' + selectedService : '';
+    if (!consultation && isPl && selectedService) {
+      const heading = document.querySelector('.ct-head h1');
+      const intro = document.querySelector('.ct-head .lead');
+      if (heading) heading.textContent = selectedService + '. Porozmawiajmy o zakresie.';
+      if (intro) intro.textContent = 'Opisz, co chcesz zrobić i jak wygląda to dzisiaj. Możesz też wybrać bezpłatną, 15-minutową rozmowę wideo. Ustalimy, czy to projekt dla mnie i od czego zacząć.';
+    }
     const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
     let storedUtm = {};
     try { storedUtm = JSON.parse(sessionStorage.getItem('mioduszewsky:utm') || '{}'); } catch {}
@@ -298,7 +315,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       msg.textContent = '';
       msg.classList.remove('err');
 
-      const messageWithUtm = message + utmSuffix;
+      const messageWithUtm = message + serviceSuffix + utmSuffix;
 
       // Bez skonfigurowanego endpointu — fallback do maila (nic nie ginie).
       if (!CONTACT_ENDPOINT) {
@@ -361,6 +378,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     @media (max-width: 820px) { .ct-head { grid-template-columns: 1fr; gap: 1.4rem; align-items: start; } }
 
     .ct-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 4vw, 4rem); padding: 3vh 0 2vh; }
+    .ct-grid.consultation-grid { grid-template-columns: minmax(0, 720px); }
     .path { border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-top: 1.4rem; position: relative; }
     .pnum { font-family: 'GeneralSansV', monospace; font-size: 12px; letter-spacing: 0.24em; color: var(--dim); }
     .path h2 { font-size: clamp(1.35rem, 2vw, 1.85rem); margin: 0.3rem 0 0.45rem; }

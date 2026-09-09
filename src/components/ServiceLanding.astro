@@ -1,0 +1,338 @@
+---
+import VariantLayout from '../layouts/VariantLayout.astro';
+import { serviceContact, type Service } from '../content/services-pl';
+import LandingCopyEditor from './LandingCopyEditor.astro';
+interface Props { service: Service }
+const { service: s } = Astro.props;
+const contact = serviceContact(s);
+// Presentation only: source copy stays unchanged. Emphasis follows customer outcomes.
+const emphasis = [
+  'mniej ręcznej pracy', 'oddać ją użytkownikom', 'ustalimy najbliższe działania',
+  'Nie potrzebujesz gotowej specyfikacji.', 'Dostaniesz wycenę uzgodnionego zakresu.',
+  'Rozmawiasz ze mną przez cały projekt.', 'Dalszy rozwój wyceniamy osobno.',
+  'Twoją akceptację', 'zakres, koszt wdrożenia i koszty jego działania',
+  'sprawdzenia przez człowieka', 'Możemy pracować nad samym procesem.',
+  'Twój czas, budżet', 'codzienne działanie firmy', 'Zatrzymałem projekt przed produkcją',
+  'wcześniej sprawdzam potrzebę i możliwość sprzedaży',
+  'co możesz zrobić jako następne', 'Nie musisz później zlecać mi strony ani aplikacji.',
+  'Od 11 000 zł.', 'od 4 500 zł', 'produkt dla klientów', 'narzędzie dla swojej firmy',
+  'Informacje z zapytania', 'Odpowiedź', 'Dane do raportu',
+  'w stałej współpracy', 'uzgodnioną część realizacji',
+  'Kierunek biznesowy:', 'Organizacja pracy:', 'Technologia:',
+  'które zadania biorę na siebie', 'bez opowiadania wszystkiego od początku',
+  'zakres, odpowiedzialność, sposób pracy i wynagrodzenie',
+];
+const escape = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const emphasize = (text: string) => {
+  let html = escape(text);
+  for (const phrase of emphasis) {
+    if (text.includes(phrase)) html = html.replace(escape(phrase), `<strong>${escape(phrase)}</strong>`);
+  }
+  return html;
+};
+const sentences = (text: string) => text.split(/(?<=[.?])\s+/);
+const paragraphs = (text: string) => {
+  const parts = sentences(text);
+  return text.length > 230 && parts.length > 2 ? [parts.slice(0, 2).join(' '), parts.slice(2).join(' ')] : [text];
+};
+const [before, after] = s.title.split(s.accent);
+const note = s.consultation
+  ? 'Wyślij opis pomysłu. Potwierdzimy temat, cenę i termin konsultacji.'
+  : 'Opisz, co chcesz zrobić. Ustalimy zakres i możliwość współpracy.';
+---
+<VariantLayout title={`${s.label} · mioduszewsky`} description={s.description} bg="#f8f9f2" fg="#000000" switcher={false} robots={s.consultation ? 'noindex, follow' : 'index, follow, max-image-preview:large'} locale="pl">
+  <div class="service-page" data-service={s.slug}>
+    <div class="cur" aria-hidden="true"></div>
+    <a class="skip" href="#main">Przejdź do treści</a>
+    <header class="nav">
+      <a class="mark" href="/pl/" aria-label="mioduszewsky. Strona główna.">
+        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+      </a>
+      <nav class="nav-actions" aria-label="Nawigacja"><a class="home-link" href="/pl/">Strona główna</a></nav>
+    </header>
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="label">( {s.label} )</p>
+        <!-- ZATWIERDZONY 09.09.2026: słowa hero aplikacji i konsultacji. Zmieniaj tylko skład. -->
+        <h1 id="hero-title">{before}<em>{s.accent}</em>{after}</h1>
+        <div class="hero-b">
+          <div class="hero-sub">{paragraphs(s.lead).map(text => <Fragment><p set:html={emphasize(text)} />{' '}</Fragment>)}</div>
+          <div class="hero-cta">
+            <a class="btn mag big" href={contact}><span class="btn-in">{s.cta}</span></a>
+            <p class="cta-note">{note}</p>
+            {s.consultation && <p class="consultation-price">Konsultacja płatna. Cenę potwierdzimy przed umówieniem.</p>}
+          </div>
+        </div>
+      </section>
+      <div class="lead-rows">
+        {s.sections.map((section, i) => <section class:list={['lrow', i === s.sections.length - 1 && 'closing']} aria-labelledby={`section-${i}`}>
+          <h2 class="sec-h" id={`section-${i}`}>{section.title}</h2>
+          <div class="section-copy">
+            {section.paragraphs.map((paragraph, pi) => i === 0 && pi === 0 ? (
+              <div class="scan-block">
+                <ul class="scan-list">{sentences(paragraph).slice(0, s.consultation ? 3 : s.slug === 'wdrozenie-ai' ? 3 : 2).map(text => <li><span set:html={emphasize(text)} />{' '}</li>)}</ul>
+                {sentences(paragraph).slice(s.consultation ? 3 : s.slug === 'wdrozenie-ai' ? 3 : 2).map(text => <Fragment><p class="scan-takeaway" set:html={emphasize(text)} />{' '}</Fragment>)}
+              </div>
+            ) : paragraphs(paragraph).map(text => <Fragment><p set:html={emphasize(text)} />{' '}</Fragment>))}
+            {i === s.sections.length - 1 && <div class="closing-action">
+              {s.consultation && <p class="consultation-price">Konsultacja płatna. Cenę potwierdzimy przed umówieniem.</p>}
+              <a class="btn mag big" href={contact}><span class="btn-in">{s.cta}</span></a>
+              <p class="cta-note">{note}</p>
+            </div>}
+          </div>
+        </section>)}
+      </div>
+    </main>
+    <footer class="service-footer">
+      <a href="mailto:kacper@mioduszewsky.com" class="footer-mail">kacper@mioduszewsky.com</a>
+      <nav aria-label="Informacje"><a href="/pl/polityka-prywatnosci/">Polityka prywatności</a><a href="/pl/regulamin/">Regulamin</a></nav>
+    </footer>
+    {import.meta.env.DEV && <LandingCopyEditor />}
+  </div>
+</VariantLayout>
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+  const media = gsap.matchMedia();
+  const editing = new URLSearchParams(location.search).has('edit');
+  // W5: same magnetic movement and ink fill; no curtain on a secondary page.
+  media.add('(prefers-reduced-motion: reduce)', () => {
+    document.querySelectorAll<HTMLVideoElement>('.service-page video').forEach(video => { video.pause(); video.autoplay = false; });
+  });
+  if (!editing) {
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.from('.service-page .hero > *', { y: 12, opacity: 0, duration: .45, stagger: .08, ease: 'power3.out', clearProps: 'all' });
+      gsap.utils.toArray<HTMLElement>('.service-page .lrow').forEach(row => {
+        // Keep reading contrast constant; a small one-time settle replaces the washed-out scrub.
+        gsap.from(row, { y: 16, duration: .5, ease: 'power3.out', scrollTrigger: { trigger: row, start: 'top 94%', once: true }, clearProps: 'transform' });
+      });
+    });
+    media.add('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)', () => {
+      const cleanup: (() => void)[] = [];
+      const surface = document.querySelector<HTMLElement>('.service-page')!;
+      const cur = surface.querySelector<HTMLElement>('.cur')!;
+      let curScale = 1;
+      const track = (e: MouseEvent) => {
+        surface.classList.add('has-cur');
+        gsap.set(cur, { x: e.clientX, y: e.clientY, opacity: 1 });
+      };
+      const hide = () => { gsap.set(cur, { opacity: 0 }); surface.classList.remove('has-cur'); };
+      const keyboard = (e: KeyboardEvent) => { if(e.key === 'Tab') hide(); };
+      const down = () => gsap.to(cur, { scale: curScale * .55, duration: .15, ease: 'power2.out' });
+      const up = () => gsap.to(cur, { scale: curScale, duration: .35, ease: 'back.out(2.2)' });
+      window.addEventListener('mousemove', track);
+      window.addEventListener('blur', hide);
+      document.addEventListener('pointerleave', hide);
+      window.addEventListener('keydown', keyboard);
+      window.addEventListener('pointerdown', down);
+      window.addEventListener('pointerup', up);
+      surface.querySelectorAll('a, button').forEach(el => {
+        const enter = () => { curScale = 2.6; gsap.to(cur, { scale: curScale, duration: .3 }); };
+        const leave = () => { curScale = 1; gsap.to(cur, { scale: curScale, duration: .3 }); };
+        el.addEventListener('mouseenter', enter); el.addEventListener('mouseleave', leave);
+        cleanup.push(() => { el.removeEventListener('mouseenter', enter); el.removeEventListener('mouseleave', leave); });
+      });
+      cleanup.push(() => {
+        window.removeEventListener('mousemove', track); window.removeEventListener('blur', hide);
+        document.removeEventListener('pointerleave', hide); window.removeEventListener('keydown', keyboard);
+        window.removeEventListener('pointerdown', down); window.removeEventListener('pointerup', up);
+        hide();
+      });
+      document.querySelectorAll<HTMLElement>('.service-page .mag').forEach(btn => {
+        const inner = btn.querySelector<HTMLElement>('.btn-in')!;
+        const move = (e: MouseEvent) => {
+          const r = btn.getBoundingClientRect();
+          const x = (e.clientX - r.left - r.width / 2) * .35;
+          const y = (e.clientY - r.top - r.height / 2) * .45;
+          gsap.to(btn, { x, y, duration: .4, ease: 'power2.out' });
+          gsap.to(inner, { x: x * .4, y: y * .4, duration: .4 });
+        };
+        const leave = () => gsap.to([btn, inner], { x: 0, y: 0, duration: .7, ease: 'elastic.out(1, 0.4)' });
+        const press = () => gsap.to(btn, { scale: .96, duration: .15, ease: 'power2.out' });
+        const release = () => gsap.to(btn, { scale: 1, duration: .35, ease: 'back.out(2.2)' });
+        btn.addEventListener('mousemove', move); btn.addEventListener('mouseleave', leave);
+        btn.addEventListener('pointerdown', press); btn.addEventListener('pointerup', release); btn.addEventListener('pointerleave', release);
+        cleanup.push(() => {
+          btn.removeEventListener('mousemove', move); btn.removeEventListener('mouseleave', leave);
+          btn.removeEventListener('pointerdown', press); btn.removeEventListener('pointerup', release); btn.removeEventListener('pointerleave', release);
+          gsap.set([btn, inner], { clearProps: 'transform' });
+        });
+      });
+      return () => cleanup.forEach(fn => fn());
+    });
+  }
+  window.addEventListener('pagehide', () => media.revert(), { once: true });
+</script>
+<style>
+  /* W5 subpages: literal existing nav/button/marker rules, then layout-only overrides.
+     Current brief overrides old DESIGN.md palette and rejected notebook/catalog design. */
+  .service-page {
+    /* kanoniczna paleta marki (decyzja Kacpra 14.07.2026) */
+    --ivory: #f8f9f2;
+    --ink: #000000;
+    --dim: #777265;
+    --blue: #0522ff;
+    --brand: #ffcc33;
+    /* ring focusu: niebieski trzyma 7.4:1 na kremie, na czarnych bryłach
+       przejmuje go żółć marki (13.9:1) — niebieski dawał tam 2.5:1 */
+    --focus: var(--blue);
+    font-family: 'GeneralSansV', sans-serif;
+    background: var(--ivory);
+    color: var(--ink);
+    overflow-x: clip;
+  }
+  @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'ClashV'; src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-VariableItalic.woff2') format('woff2'); font-weight: 200 700; font-style: italic; font-display: swap; }
+
+  .nav {
+    position: fixed; inset-inline: 0; top: 0; z-index: 90;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 3vw; pointer-events: none;
+  }
+  .nav a { pointer-events: auto; }
+  .nav-actions { display: flex; align-items: center; gap: 14px; pointer-events: auto; }
+  :global(.nav .language-switch) {
+    color: var(--ink); text-decoration: none; font-size: 11px; font-weight: 650;
+    letter-spacing: 0.14em; padding: 10px 4px; transition: color 0.25s;
+  }
+  :global(.nav .language-switch:hover) { color: var(--blue); }
+  .nav { transition: translate 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
+  .nav.nav-hide { translate: 0 -130%; opacity: 0 !important; pointer-events: none; }
+  .mark { display: block; }
+  .mark video {
+    height: clamp(46px, 4.6vw, 68px); width: auto; display: block;
+    filter: drop-shadow(0 5px 10px color-mix(in srgb, var(--ink) 26%, transparent));
+    transition: scale 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .mark:hover video { scale: 1.05; }
+
+  .btn {
+    /* reset `*` z VariantLayout jest scope'owany przez Astro i nie sięga tu:
+       bez tego `width:100%` w stopce dokłada 68px paddingu i baton wychodzi poza ekran */
+    box-sizing: border-box;
+    display: inline-block; position: relative; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--ink); border-radius: 999px; padding: 10px 22px;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    background: var(--ivory);
+    overflow: clip;
+    transition: color 0.3s, border-color 0.3s, scale 0.18s ease-out;
+    will-change: transform;
+  }
+  /* hover: tusz nalewa się od dołu (zamiast twardego przełącznika koloru) */
+  .btn::before {
+    content: ""; position: absolute; inset: 0; z-index: 0; background: var(--ink);
+    transform: scaleY(0); transform-origin: bottom;
+    transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .btn .btn-in { display: inline-block; position: relative; z-index: 1; }
+  .btn:hover { color: var(--ivory); }
+  .btn:hover::before { transform: scaleY(1); }
+  /* press: fizyczne dociśnięcie */
+  .btn:active { scale: 0.96; }
+  .btn.big { padding: 16px 34px; font-size: 13px; background: var(--ink); color: var(--ivory); }
+  .btn.big::before { background: var(--blue); }
+  .btn.big:hover { border-color: var(--blue); }
+  /* nav „Book a call": nalewa się niebieskim (ujednolicenie z resztą niebieskich akcentów) */
+  .nav .btn::before { background: var(--blue); }
+  .nav .btn:hover { border-color: var(--blue); }
+  /* chowa się, gdy poza hero — sticky-cta albo CTA stopki i tak są wtedy widoczne */
+  .nav .btn { transition: opacity 0.3s, translate 0.3s, color 0.3s, border-color 0.3s, scale 0.18s ease-out; }
+  .nav .btn.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
+  /* baton w navie byl w tej samej skali co CTA w tresci i dusil gore strony */
+  .nav .btn { padding: 9px 18px; font-size: 11px; letter-spacing: 0.12em; }
+  .nav-actions { transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1), translate 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
+  .nav-actions.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
+
+  .hero h1 em, .hero-sub em, .proj-d em, .foot-h em, .sec-h em, .lead-close em, .how-out em, .how-why-t em,
+  .hero-sub p:last-child :global(strong), .closing .section-copy > p:first-child :global(strong) {
+    font-style: normal;
+    /* ujemny margines rownowazy padding: marker maluje sie szerzej niz glify,
+       ale nie odsuwa sasiedniego przecinka ani spacji */
+    padding: 0 0.08em; margin: 0 -0.08em;
+    background:
+      linear-gradient(100deg, transparent 1.5%, color-mix(in srgb, var(--brand) 72%, transparent) 6% 94%, transparent 98.5%)
+      no-repeat 0 68% / 100% var(--mk-h, 56%);
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    transition: background-size 0.9s cubic-bezier(0.19, 1, 0.22, 1) 0.15s;
+  }
+
+  .service-page { --body-ink: #4c483c; --nav-height: 104px; --gutter: clamp(24px, 5vw, 96px); }
+  .service-page :is(a,button):focus-visible { outline: 3px solid var(--focus); outline-offset: 5px; }
+  .service-page :is(h1,h2,p) { margin: 0; }
+  .service-page :is(h1,h2) { text-wrap: balance; overflow-wrap: break-word; }
+  .service-page ::selection { background: var(--brand); color: var(--ink); }
+  .cur { position: fixed; top: -7px; left: -7px; z-index: 1200; width: 14px; height: 14px; border-radius: 50%; background: var(--blue); pointer-events: none; mix-blend-mode: exclusion; opacity: 0; }
+  .service-page.has-cur :is(a,button) { cursor: none; }
+  .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
+  .skip:focus { transform: none; }
+  .nav { position: relative; height: var(--nav-height); box-sizing: border-box; padding: 24px var(--gutter); }
+  .mark video { width: clamp(155px, 18vw, 220px); height: auto; }
+  .home-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); font-size: 13px; text-underline-offset: 5px; }
+  /* Header + hero fill the first viewport, but grow with zoom/long copy. */
+  .hero { box-sizing: border-box; min-height: calc(100svh - var(--nav-height)); padding: 64px var(--gutter) 104px; display: flex; flex-direction: column; justify-content: center; }
+  .label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); margin-bottom: 32px!important; }
+  .hero h1 { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520; letter-spacing: -.025em; font-size: clamp(44px, 5.3vw, 80px); line-height: 1.1; max-width: 24ch; }
+  .hero-b { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(48px, 8vw, 144px); align-items: start; margin-top: 48px; }
+  .hero-sub { max-width: 58ch; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.6; color: var(--body-ink); text-wrap: pretty; }
+  .hero-sub p + p { margin-top: 20px; }
+  .hero-sub :global(strong), .section-copy :global(strong) { font-weight: 650; color: var(--ink); }
+  .hero-cta { padding-top: 4px; }
+  .btn { text-align: center; max-width: 100%; line-height: 1.45; }
+  .cta-note { font-size: 13px; line-height: 1.6; color: var(--body-ink); max-width: 42ch; margin-top: 20px!important; text-wrap: pretty; }
+  .consultation-price { font-size: 13px; line-height: 1.6; color: var(--body-ink); max-width: 42ch; margin-top: 12px!important; }
+  .lead-rows { padding-inline: var(--gutter); }
+  .lrow { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(64px, 9vw, 160px); align-items: start; border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); padding: 112px 0; }
+  .sec-h { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520; font-size: clamp(28px, 2.8vw, 40px); line-height: 1.15; letter-spacing: -.02em; max-width: 22ch; }
+  .sec-h::before { content: ''; display: block; width: 40px; height: 5px; background: var(--brand); margin-bottom: 28px; }
+  .section-copy { color: var(--body-ink); max-width: 56ch; font-size: clamp(16px, 1.3vw, 18px); line-height: 1.65; text-wrap: pretty; }
+  .section-copy > p + p, .scan-block + p { margin-top: 28px; }
+  .scan-list { padding: 0; margin: 0; list-style: none; display: grid; gap: 24px; }
+  .scan-list li { position: relative; padding-inline-start: 24px; }
+  .scan-list li::before { content: ''; position: absolute; inset-inline-start: 0; top: .65em; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
+  .scan-takeaway { margin-top: 32px!important; padding-inline-start: 24px; border-inline-start: 2px solid var(--brand); }
+  .closing-action { margin-top: 40px; }
+  .closing-action .consultation-price { margin-bottom: 20px!important; }
+  .service-footer { margin-inline: var(--gutter); padding: 56px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+  .service-footer a { color: var(--ink); text-underline-offset: 6px; }
+  .footer-mail { font-family: 'NohemiV', sans-serif; font-size: clamp(18px, 2vw, 28px); font-weight: 520; letter-spacing: -.02em; text-decoration-color: var(--blue); text-decoration-thickness: 2px; overflow-wrap: anywhere; }
+  .service-footer nav { display: flex; gap: 24px; font-size: 12px; }
+  .service-footer nav a { display: inline-flex; align-items: center; min-height: 44px; }
+  @media (max-width: 960px) {
+    .hero-b { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .hero h1 { font-size: clamp(40px, 6vw, 60px); }
+    .hero { padding-block: 48px 80px; }
+    .lrow { gap: 48px; padding-block: 88px; }
+    .service-footer { align-items: flex-start; flex-direction: column; }
+  }
+  @media (max-width: 640px) {
+    .service-page { --nav-height: 80px; --gutter: 24px; }
+    .nav { padding-block: 16px; }
+    .mark video { width: 142px; }
+    .home-link { font-size: 12px; }
+    .hero { padding-block: 40px 80px; }
+    .label { font-size: 10px; letter-spacing: .14em; margin-bottom: 28px!important; }
+    .hero h1 { font-size: clamp(32px, 8vw, 44px); line-height: 1.14; }
+    .hero-b { margin-top: 32px; gap: 32px; }
+    .hero-sub { font-size: 16px; }
+    .hero-cta { padding: 0; }
+    .btn.big { padding: 17px 18px; font-size: 12px; letter-spacing: .1em; }
+    .hero-cta .btn, .closing-action .btn { width: 100%; }
+    .lrow { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 72px; }
+    .sec-h { font-size: 28px; max-width: 23ch; line-height: 1.2; }
+    .sec-h::before { margin-bottom: 24px; }
+    .section-copy { font-size: 16px; }
+    .section-copy > p + p { margin-top: 24px; }
+    .service-footer { padding-block: 40px; gap: 24px; }
+    .service-footer nav { flex-wrap: wrap; gap: 8px 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .service-page *, .service-page *::before { animation: none!important; transition: none!important; }
+    .cur { display: none; }
+  }
+</style>

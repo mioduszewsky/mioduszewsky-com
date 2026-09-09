@@ -1,0 +1,43 @@
+---
+// Development-only review tool. Never rendered by a production build.
+---
+<aside id="copy-editor" hidden aria-label="Edycja tekstów podglądu">
+  <button id="copy-toggle" type="button">Edytuj teksty</button>
+  <button id="copy-export" type="button" disabled>Pobierz poprawki</button>
+  <span id="copy-status" role="status">Zmiany dotyczą podglądu.</span>
+</aside>
+<script>
+  if (new URLSearchParams(location.search).get('edit') === '1') {
+    const panel = document.getElementById('copy-editor')!;
+    const toggle = document.getElementById('copy-toggle') as HTMLButtonElement;
+    const save = document.getElementById('copy-export') as HTMLButtonElement;
+    const status = document.getElementById('copy-status')!;
+    const nodes = [...document.querySelectorAll<HTMLElement>('.service-page main h1, .service-page main h2, .service-page main h3, .service-page main p')];
+    const original = nodes.map((node) => node.innerText);
+    panel.hidden = false;
+    toggle.addEventListener('click', () => {
+      const active = toggle.getAttribute('aria-pressed') !== 'true';
+      toggle.setAttribute('aria-pressed', String(active));
+      toggle.textContent = active ? 'Zakończ edycję' : 'Edytuj teksty';
+      nodes.forEach((node) => { node.contentEditable = active ? 'plaintext-only' : 'false'; });
+      save.disabled = false;
+      status.textContent = active ? 'Kliknij tekst na stronie. Pobierz poprawki przed zamknięciem.' : 'Pobierz poprawki, aby zachować zmiany.';
+    });
+    save.addEventListener('click', () => {
+      const changes = nodes.map((node, index) => ({ index, before: original[index], after: node.innerText })).filter((entry) => entry.before !== entry.after);
+      const blob = new Blob([JSON.stringify({ page: location.pathname, changes }, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.download = 'poprawki-landingu.json'; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      status.textContent = 'Poprawki pobrane. Przekaż plik, żebym naniósł je w kodzie.';
+    });
+  }
+</script>
+<style is:global>
+  #copy-editor[hidden] { display:none; }
+  #copy-editor { position:fixed; bottom:12px; left:12px; z-index:1100; background:#f8f9f2; border:1px solid #000; border-radius:12px; padding:10px; display:flex; align-items:center; gap:10px; max-width:calc(100% - 24px); flex-wrap:wrap; font:12px GeneralSansV,sans-serif; box-shadow:0 4px 20px #0002; }
+  #copy-editor button { padding:10px 14px; min-height:44px; cursor:pointer; background:#ffcc33; border:1px solid #000; border-radius:999px; font:inherit; }
+  #copy-editor button:disabled { opacity:.5; cursor:default; }
+  .service-page [contenteditable="plaintext-only"] { outline:1px dashed #0522ff; outline-offset:4px; }
+</style>
