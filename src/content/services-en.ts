@@ -76,7 +76,7 @@ export const servicesEn: Service[] = [
       {
         "title": "A first version real people can use",
         "paragraphs": [
-          "Once it's live you find out how people actually use it and what they're missing. That's where the next round of features comes from. Ongoing development is part of what I do here, priced separately from the build, from $1,500 a month.",
+          "Once it's live you find out how people actually use it and what they're missing. That's where the next round of features comes from. Ongoing development and upkeep are part of what I do here, on terms we agree separately — they depend on how big the app is and how much runs through it.",
           "Shipping the product doesn't prove anyone will pay for it. So we keep what we know apart from what we still have to find out."
         ]
       },

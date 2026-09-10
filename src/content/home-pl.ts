@@ -88,7 +88,6 @@ export const homePl = {
     beyond: [
       { nr: '01', n: 'Wdrożenie AI', p: 'od 4 500 zł', d: 'Masz konkretny proces, który zabiera za dużo ręcznej pracy. Rozpisuję go i buduję rozwiązanie: automatyzację, agenta, integrację albo panel.' },
       { nr: '02', n: 'Aplikacja lub system', p: 'od 11 000 zł', d: 'Pierwsza działająca wersja produktu, aplikacji, dashboardu albo systemu dla firmy.' },
-      { nr: '03', n: 'Stały rozwój produktu', p: 'od 5 500 zł miesięcznie', d: 'Dla projektów, które po pierwszej wersji mają być dalej rozwijane. Ustalamy stałą współpracę i pracujemy nad kolejnymi funkcjami, wersjami i decyzjami produktowymi.' },
     ],
     fine: 'Dokładny zakres i cena są znane przed startem.',
   },

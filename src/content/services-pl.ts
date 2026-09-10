@@ -78,7 +78,7 @@ export const services: Service[] = [
       {
         "title": "Pierwsza wersja, którą oddasz użytkownikom",
         "paragraphs": [
-          "Po uruchomieniu możesz sprawdzić, jak ludzie korzystają z aplikacji i czego im brakuje. Kolejne funkcje ustalamy na tej podstawie. Dalszy rozwój wyceniamy osobno.",
+          "Po uruchomieniu możesz sprawdzić, jak ludzie korzystają z aplikacji i czego im brakuje. Kolejne funkcje ustalamy na tej podstawie. Dalszy rozwój i utrzymanie są częścią tej usługi, a warunki ustalamy osobno — zależą od tego, jak duża jest aplikacja i ile się w niej dzieje.",
           "Samo zbudowanie produktu nie potwierdza jeszcze, że znajdą się na niego klienci. Dlatego rozdzielamy to, co wiemy, od tego, co trzeba dopiero sprawdzić."
         ]
       },
