@@ -64,7 +64,52 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/terms/" />
     <priority>0.3</priority>
   </url>
-  <url><loc>https://mioduszewsky.com/pl/uslugi/wdrozenie-ai/</loc><lastmod>2026-09-09</lastmod></url>
-  <url><loc>https://mioduszewsky.com/pl/uslugi/aplikacje-i-systemy/</loc><lastmod>2026-09-09</lastmod></url>
-  <url><loc>https://mioduszewsky.com/pl/uslugi/cofounder-as-a-service/</loc><lastmod>2026-09-09</lastmod></url>
+  <url>
+    <loc>https://mioduszewsky.com/services/ai-implementation/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/services/ai-implementation/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/uslugi/wdrozenie-ai/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/services/ai-implementation/" />
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/pl/uslugi/wdrozenie-ai/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/services/ai-implementation/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/uslugi/wdrozenie-ai/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/services/ai-implementation/" />
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/services/apps-and-systems/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/services/apps-and-systems/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/uslugi/aplikacje-i-systemy/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/services/apps-and-systems/" />
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/pl/uslugi/aplikacje-i-systemy/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/services/apps-and-systems/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/uslugi/aplikacje-i-systemy/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/services/apps-and-systems/" />
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/services/cofounder-as-a-service/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/services/cofounder-as-a-service/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/uslugi/cofounder-as-a-service/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/services/cofounder-as-a-service/" />
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/pl/uslugi/cofounder-as-a-service/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/services/cofounder-as-a-service/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/uslugi/cofounder-as-a-service/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/services/cofounder-as-a-service/" />
+    <priority>0.8</priority>
+  </url>
 </urlset>

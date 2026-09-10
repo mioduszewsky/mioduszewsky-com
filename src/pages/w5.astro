@@ -8,6 +8,7 @@ import LanguageSwitch from '../components/LanguageSwitch.astro';
 import PhoneFrame from '../components/frames/PhoneFrame.astro';
 import { homePl } from '../content/home-pl';
 import { services, servicePath } from '../content/services-pl';
+import { servicesEn, serviceEnPath } from '../content/services-en';
 import { routes, type Locale } from '../i18n/site';
 import thumbWoodspot from '../assets/live/thumb-woodspot.webp';
 import thumbGlassstone from '../assets/live/thumb-glassstone.webp';
@@ -32,16 +33,18 @@ const title = titleProp || p?.meta.title || 'W5 — ATELIER · mioduszewsky';
 // Klient NIE wybiera landing vs company — to Kacper decyduje na rozmowie o zakresie.
 // Landing/company to tylko widełki-przewodnik ceny, nie dwie osobne oferty do wyboru.
 // Plan projektu zdjęty ze strony (zostaje na Contrze); reszta = dodatki „beyond the website".
+// EN karty prowadza na wlasne landingi uslug (parytet z PL, 10.09.2026).
+// „Build + Iterate" zastapione przez Cofounder as a Service, tak jak po polsku.
 const beyondEn = [
-  { nr: '01', n: 'AI implementation', p: 'from $1,200', d: 'For companies that already have customers and want to improve a specific process. I map it, define what to automate and build the workflow, agent, integration or dashboard.' },
-  { nr: '02', n: 'Application or system', p: 'from $3,000', d: 'A first working version of a product, application, dashboard or business system. Something that works for the business from day one.' },
-  { nr: '03', n: 'Build + Iterate', p: 'from $1,500 / mo', d: 'Ongoing development after launch for selected projects: maintenance, iterations, product decisions and new versions.' },
+  { nr: '01', n: 'AI implementation', p: 'from $1,200', d: 'For companies that already have customers and want to improve a specific process. I map it, define what to automate and build the workflow, agent, integration or dashboard.', href: serviceEnPath(servicesEn[0]) },
+  { nr: '02', n: 'Application or system', p: 'from $3,000', d: 'A first working version of a product, application, dashboard or business system. Something that works for the business from day one.', href: serviceEnPath(servicesEn[1]) },
+  { nr: '03', n: 'Cofounder as a Service', p: "Let's talk about it ↗", d: 'A business partner on your project, on terms agreed up front: direction, how the work runs and the technology behind it. We set the priorities together and split the delivery.', href: serviceEnPath(servicesEn[2]) },
 ];
 const beyond = isPl ? [
   { ...homePl.offer.beyond[0], nr: '01', href: servicePath(services[0]) },
   { ...homePl.offer.beyond[1], nr: '02', href: servicePath(services[1]) },
   { nr: '03', n: 'Cofounder as a Service', p: 'Porozmawiajmy o współpracy ↗', d: 'Stała współpraca przy Twoim projekcie: od kierunku biznesowego i organizacji pracy po technologię. Wspólnie ustalamy priorytety i kolejne działania.', href: '/pl/uslugi/cofounder-as-a-service/' },
-] : beyondEn.map((u) => ({ ...u, href: `${r.contact}?service=${encodeURIComponent(u.n)}` }));
+] : beyondEn;
 /* Manifest: spray przekresla fraze z pierwszej linii. Tekst zostaje jednym stringiem
    w tresci, a tutaj dzielimy go na trzy czesci — inaczej kazdy jezyk musialby trzymac
    zdanie w kawalkach i latwo bylo je rozjechac przy redakcji. */
@@ -422,7 +425,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         <article class="pstep rv">
           <span class="pn">06</span>
           <h3>{p?.process.steps[5][0] || 'We iterate when it helps'}</h3>
-          <p>{p?.process.steps[5][1] || 'Ongoing development for selected projects. Build + Iterate from $1,500 per month.'}</p>
+          <p>{p?.process.steps[5][1] || 'You get 30 days of fixes after launch. On bigger builds we can agree on ongoing development from there.'}</p>
         </article>
       </div>
     </section>

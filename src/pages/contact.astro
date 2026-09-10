@@ -232,10 +232,10 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     // zapis sesji utworzony przez VariantLayout. Dzięki temu link do /kontakt/
     // nie gubi źródła kampanii.
     const utmParams = new URLSearchParams(location.search);
-    const knownServices = ['Cofounder as a Service', 'Wdrożenie AI', 'Aplikacja lub system', 'Dalszy rozwój', 'Dalszy rozwój po publikacji'];
+    const knownServices = ['Cofounder as a Service', 'Wdrożenie AI', 'Aplikacja lub system', 'Dalszy rozwój', 'Dalszy rozwój po publikacji', 'AI implementation', 'Application or system'];
     const requestedService = utmParams.get('service');
     const selectedService = consultation ? 'Konsultacja biznesowa (płatna; cena i termin do potwierdzenia)' : (knownServices.includes(requestedService) ? requestedService : '');
-    const serviceSuffix = selectedService ? '\n\n[Usługa] ' + selectedService : '';
+    const serviceSuffix = selectedService ? (isPl ? '\n\n[Usługa] ' : '\n\n[Service] ') + selectedService : '';
     if (!consultation && isPl && selectedService) {
       const heading = document.querySelector('.ct-head h1');
       const intro = document.querySelector('.ct-head .lead');

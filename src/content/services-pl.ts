@@ -2,12 +2,15 @@
  * Consultation is parked, excluded from public routes until sales terms are settled. */
 export type Service = {
   slug: string; name: string; label: string; title: string; accent: string;
+  /** slug of the same service in the other language, for hreflang and the switch */
+  altSlug?: string;
   lead: string; description: string; cta: string; price: string; consultation: boolean;
   sections: { title: string; paragraphs: string[] }[];
 };
 export const services: Service[] = [
   {
     "slug": "wdrozenie-ai",
+    "altSlug": "ai-implementation",
     "name": "Wdrożenie AI",
     "label": "Wdrożenie AI i automatyzacje",
     "title": "Zautomatyzuj powtarzalną pracę w swojej firmie.",
@@ -47,6 +50,7 @@ export const services: Service[] = [
   },
   {
     "slug": "aplikacje-i-systemy",
+    "altSlug": "apps-and-systems",
     "name": "Aplikacja lub system",
     "label": "Aplikacja lub system",
     "title": "Zbuduj własną aplikację. Bez szukania wspólnika technicznego.",
@@ -88,15 +92,16 @@ export const services: Service[] = [
   },
   {
     "slug": "cofounder-as-a-service",
+    "altSlug": "cofounder-as-a-service",
     "name": "Cofounder as a Service",
     "label": "Cofounder as a Service",
     "title": "Rozwijaj swój biznes z partnerem do decyzji i codziennej pracy.",
     "accent": "Rozwijaj swój biznes",
-    "lead": "Dołączam do Twojego projektu w stałej współpracy. Wspólnie ustalamy kierunek biznesowy, organizujemy pracę i wybieramy potrzebną technologię. Biorę na siebie uzgodnioną część realizacji, a kolejne działania planujemy na podstawie tego, co dzieje się w firmie.",
+    "lead": "Cofounder to wspólnik. Dołączam do Twojego projektu w stałej współpracy. Wspólnie ustalamy kierunek biznesowy, organizujemy pracę i wybieramy potrzebną technologię. Biorę na siebie uzgodnioną część realizacji, a kolejne działania planujemy na podstawie tego, co dzieje się w firmie.",
     "cta": "Chcę wsparcia w rozwoju projektu",
     "price": "",
     "consultation": false,
-    "description": "Stała współpraca przy Twoim projekcie: kierunek biznesowy, organizacja pracy i technologia. Wspólnie ustalamy priorytety i dzielimy realizację. Kacper Mioduszewski.",
+    "description": "Cofounder to wspólnik w projekcie. Stała współpraca: kierunek biznesowy, organizacja pracy i technologia. Wspólnie ustalamy priorytety i dzielimy realizację. Kacper Mioduszewski.",
     "sections": [
       {
         "title": "Ustalamy, czym warto zająć się teraz",
@@ -131,9 +136,10 @@ export const services: Service[] = [
         ]
       },
       {
-        "title": "Zakres współpracy dopasowujemy do projektu",
+        "title": "Zakres i rozliczenie dopasowujemy do projektu",
         "paragraphs": [
           "Zaczynamy od tego, co już działa, czego brakuje i jakiego zaangażowania potrzebujesz. Na tej podstawie ustalamy zakres, odpowiedzialność, sposób pracy i wynagrodzenie.",
+          "Rozliczyć się możemy na kilka sposobów. Stała kwota za uzgodniony zakres, kwota niższa razem z udziałami w firmie albo inny podział, jeśli tak jest uczciwiej dla obu stron. Nie pracuję za same udziały.",
           "Cofounder as a Service to tutaj nazwa stałej współpracy przy projekcie. Szczegółowe warunki ustalamy indywidualnie przed rozpoczęciem pracy."
         ]
       }

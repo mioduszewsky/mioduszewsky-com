@@ -1,12 +1,35 @@
 ---
 import VariantLayout from '../layouts/VariantLayout.astro';
 import { serviceContact, type Service } from '../content/services-pl';
+import { serviceEnContact } from '../content/services-en';
+import LanguageSwitch from './LanguageSwitch.astro';
 import LandingCopyEditor from './LandingCopyEditor.astro';
-interface Props { service: Service }
-const { service: s } = Astro.props;
-const contact = serviceContact(s);
+import type { Locale } from '../i18n/site';
+interface Props { service: Service; locale?: Locale }
+const { service: s, locale = 'pl' } = Astro.props;
+const isPl = locale === 'pl';
+const contact = isPl ? serviceContact(s) : serviceEnContact(s);
+// Ta sama usluga w drugim jezyku; bez altSlug przelacznik wraca na strone glowna.
+const alternatePath = s.altSlug
+  ? (isPl ? `/services/${s.altSlug}/` : `/pl/uslugi/${s.altSlug}/`)
+  : (isPl ? '/' : '/pl/');
+const ui = isPl ? {
+  skip: 'Przejdź do treści', home: 'Strona główna', homeAria: 'mioduszewsky. Strona główna.',
+  nav: 'Nawigacja', legal: 'Informacje', privacy: 'Polityka prywatności', privacyHref: '/pl/polityka-prywatnosci/',
+  terms: 'Regulamin', termsHref: '/pl/regulamin/',
+  note: 'Opisz, co chcesz zrobić. Ustalimy zakres i możliwość współpracy.',
+  consultationNote: 'Wyślij opis pomysłu. Potwierdzimy temat, cenę i termin konsultacji.',
+  consultationPrice: 'Konsultacja płatna. Cenę potwierdzimy przed umówieniem.',
+} : {
+  skip: 'Skip to content', home: 'Home', homeAria: 'mioduszewsky. Home page.',
+  nav: 'Navigation', legal: 'Information', privacy: 'Privacy policy', privacyHref: '/privacy/',
+  terms: 'Terms of service', termsHref: '/terms/',
+  note: 'Tell me what you want to do. We will work out the scope and whether we can work together.',
+  consultationNote: 'Send a description of the idea. We will confirm the topic, the price and the date.',
+  consultationPrice: 'The consultation is paid. We confirm the price before booking.',
+};
 // Presentation only: source copy stays unchanged. Emphasis follows customer outcomes.
-const emphasis = [
+const emphasisPl = [
   'mniej ręcznej pracy', 'oddać ją użytkownikom', 'ustalimy najbliższe działania',
   'Nie potrzebujesz gotowej specyfikacji.', 'Dostaniesz wycenę uzgodnionego zakresu.',
   'Rozmawiasz ze mną przez cały projekt.', 'Dalszy rozwój wyceniamy osobno.',
@@ -21,7 +44,25 @@ const emphasis = [
   'Kierunek biznesowy:', 'Organizacja pracy:', 'Technologia:',
   'które zadania biorę na siebie', 'bez opowiadania wszystkiego od początku',
   'zakres, odpowiedzialność, sposób pracy i wynagrodzenie',
+  'Cofounder to wspólnik.', 'Nie pracuję za same udziały.',
 ];
+const emphasisEn = [
+  'take them over', 'put it in front of users', 'wait for you to approve it',
+  'the scope, what the build costs and what it costs to keep running',
+  "shouldn't happen without someone looking at it first",
+  'Then we can work on the process alone.',
+  'starts at $1,200', 'From $3,000.',
+  'an idea for a product', 'a tool your company needs and nobody sells',
+  "You don't need a spec.", 'You get a quote for that scope.',
+  'You deal with me the whole way through.', 'priced separately from the build',
+  'An inquiry', 'A reply', 'A report',
+  'I join for the long run.', 'an agreed share of the delivery',
+  'Direction:', 'Operations:', 'Technology:',
+  'what I take on', 're-explaining the whole thing',
+  "the scope, who's responsible for what, how we work and how I get paid",
+  'Cofounder here means a business partner on your project', "I don't work for equity alone.",
+];
+const emphasis = isPl ? emphasisPl : emphasisEn;
 const escape = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const emphasize = (text: string) => {
   let html = escape(text);
@@ -36,22 +77,20 @@ const paragraphs = (text: string) => {
   return text.length > 230 && parts.length > 2 ? [parts.slice(0, 2).join(' '), parts.slice(2).join(' ')] : [text];
 };
 const [before, after] = s.title.split(s.accent);
-const note = s.consultation
-  ? 'Wyślij opis pomysłu. Potwierdzimy temat, cenę i termin konsultacji.'
-  : 'Opisz, co chcesz zrobić. Ustalimy zakres i możliwość współpracy.';
+const note = s.consultation ? ui.consultationNote : ui.note;
 ---
-<VariantLayout title={`${s.label} · mioduszewsky`} description={s.description} bg="#f8f9f2" fg="#000000" switcher={false} robots={s.consultation ? 'noindex, follow' : 'index, follow, max-image-preview:large'} locale="pl">
+<VariantLayout title={`${s.label} · mioduszewsky`} description={s.description} bg="#f8f9f2" fg="#000000" switcher={false} robots={s.consultation ? 'noindex, follow' : 'index, follow, max-image-preview:large'} locale={locale} alternatePath={alternatePath}>
   <div class="service-page" data-service={s.slug}>
     <div class="cur" aria-hidden="true"></div>
-    <a class="skip" href="#main">Przejdź do treści</a>
+    <a class="skip" href="#main">{ui.skip}</a>
     <header class="nav">
-      <a class="mark" href="/pl/" aria-label="mioduszewsky. Strona główna.">
+      <a class="mark" href={isPl ? '/pl/' : '/'} aria-label={ui.homeAria}>
         <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
           <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <nav class="nav-actions" aria-label="Nawigacja"><a class="home-link" href="/pl/">Strona główna</a></nav>
+      <nav class="nav-actions" aria-label={ui.nav}><a class="home-link" href={isPl ? '/pl/' : '/'}>{ui.home}</a><LanguageSwitch locale={locale} href={alternatePath} class="service-lang" /></nav>
     </header>
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
@@ -63,7 +102,7 @@ const note = s.consultation
           <div class="hero-cta">
             <a class="btn mag big" href={contact}><span class="btn-in">{s.cta}</span></a>
             <p class="cta-note">{note}</p>
-            {s.consultation && <p class="consultation-price">Konsultacja płatna. Cenę potwierdzimy przed umówieniem.</p>}
+            {s.consultation && <p class="consultation-price">{ui.consultationPrice}</p>}
           </div>
         </div>
       </section>
@@ -73,12 +112,12 @@ const note = s.consultation
           <div class="section-copy">
             {section.paragraphs.map((paragraph, pi) => i === 0 && pi === 0 ? (
               <div class="scan-block">
-                <ul class="scan-list">{sentences(paragraph).slice(0, s.consultation ? 3 : s.slug === 'wdrozenie-ai' ? 3 : 2).map(text => <li><span set:html={emphasize(text)} />{' '}</li>)}</ul>
-                {sentences(paragraph).slice(s.consultation ? 3 : s.slug === 'wdrozenie-ai' ? 3 : 2).map(text => <Fragment><p class="scan-takeaway" set:html={emphasize(text)} />{' '}</Fragment>)}
+                <ul class="scan-list">{sentences(paragraph).slice(0, s.consultation ? 3 : (s.slug === 'wdrozenie-ai' || s.slug === 'ai-implementation') ? 3 : 2).map(text => <li><span set:html={emphasize(text)} />{' '}</li>)}</ul>
+                {sentences(paragraph).slice(s.consultation ? 3 : (s.slug === 'wdrozenie-ai' || s.slug === 'ai-implementation') ? 3 : 2).map(text => <Fragment><p class="scan-takeaway" set:html={emphasize(text)} />{' '}</Fragment>)}
               </div>
             ) : paragraphs(paragraph).map(text => <Fragment><p set:html={emphasize(text)} />{' '}</Fragment>))}
             {i === s.sections.length - 1 && <div class="closing-action">
-              {s.consultation && <p class="consultation-price">Konsultacja płatna. Cenę potwierdzimy przed umówieniem.</p>}
+              {s.consultation && <p class="consultation-price">{ui.consultationPrice}</p>}
               <a class="btn mag big" href={contact}><span class="btn-in">{s.cta}</span></a>
               <p class="cta-note">{note}</p>
             </div>}
@@ -88,7 +127,7 @@ const note = s.consultation
     </main>
     <footer class="service-footer">
       <a href="mailto:kacper@mioduszewsky.com" class="footer-mail">kacper@mioduszewsky.com</a>
-      <nav aria-label="Informacje"><a href="/pl/polityka-prywatnosci/">Polityka prywatności</a><a href="/pl/regulamin/">Regulamin</a></nav>
+      <nav aria-label={ui.legal}><a href={ui.privacyHref}>{ui.privacy}</a><a href={ui.termsHref}>{ui.terms}</a></nav>
     </footer>
     {import.meta.env.DEV && <LandingCopyEditor />}
   </div>
@@ -274,6 +313,8 @@ const note = s.consultation
   .nav { position: relative; height: var(--nav-height); box-sizing: border-box; padding: 24px var(--gutter); }
   .mark video { width: clamp(155px, 18vw, 220px); height: auto; }
   .home-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); font-size: 13px; text-underline-offset: 5px; }
+  .service-lang { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); font-size: 13px; letter-spacing: .06em; text-decoration: none; }
+  .service-lang:hover { text-decoration: underline; text-underline-offset: 5px; }
   /* Header + hero fill the first viewport, but grow with zoom/long copy. */
   .hero { box-sizing: border-box; min-height: calc(100svh - var(--nav-height)); padding: 64px var(--gutter) 104px; display: flex; flex-direction: column; justify-content: center; }
   .label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); margin-bottom: 32px!important; }
