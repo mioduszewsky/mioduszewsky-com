@@ -25,8 +25,10 @@ export const homePl = {
     close: 'Strona składa się z kilku różnych decyzji: co powiedzieć, jak to ułożyć, jak pokazać i jak zbudować. *Ja prowadzę te rzeczy razem*, żeby na końcu powstała jedna działająca całość.',
   },
   work: {
-    label: 'Wybrane realizacje',
-    hint: '( to nie są zrzuty ekranu, tylko działające strony )',
+    label: '( Realizacje )',
+    h1: 'To nie są zrzuty ekranu.',
+    h2: 'To *działające strony*.',
+    intro: 'Dwie pierwsze możesz przewinąć i przeklikać tutaj, bez otwierania nowej karty.',
     eskapizm: 'Firma zajmująca się planowaniem podróży po Azji. Strona, proces sprzedaży, płatności, aplikacja klienta, CMS i narzędzia do obsługi. Całość zbudowana od zera jako jeden system.',
     eskapizmAlt: 'eskapizm.com. Przewiń działającą stronę.',
     liveNote: 'psst, działa.\nprzewiń',

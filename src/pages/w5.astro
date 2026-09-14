@@ -217,9 +217,15 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 
     <!-- REALIZACJE -->
     <section class="work">
-      <div class="sec-head">
-        <p class="label rv">{p?.work.label || 'Selected work'}</p>
-        <p class="label dim rv">{p?.work.hint || '( these are not screenshots, but live websites )'}</p>
+      {/* Ten sam wzorzec co PROBLEM: szara etykieta w nawiasie, tytuł z treścią,
+          zdanie wstępu (decyzja Kacpra 14.09.2026). */}
+      <div class="work-head">
+        <p class="label rv">{p?.work.label || '( Selected work )'}</p>
+        <h2 class="sec-h">
+          <span class="ln"><span class="ln-in">{p?.work.h1 || 'These are not screenshots.'}</span></span>
+          <span class="ln"><span class="ln-in">{p?.work.h2 ? <Fragment set:html={mark(p.work.h2)} /> : <Fragment>They are <em>live websites</em>.</Fragment>}</span></span>
+        </h2>
+        <p class="lead-intro rv">{p?.work.intro || 'Scroll and click through the first two right here, without opening a new tab.'}</p>
       </div>
 
       <article class="proj">
@@ -1507,7 +1513,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   }
 
   .work { padding: 10vh 3vw; }
-  .sec-head { display: flex; justify-content: space-between; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-top: 1rem; margin-bottom: 10vh; }
+  .work-head { margin-bottom: 10vh; }
   .proj { display: grid; grid-template-columns: 1fr 1fr; gap: 5vw; align-items: center; margin-bottom: 16vh; }
   .proj.flip .proj-t { order: 2; }
   .proj-t .idx { font-size: 12px; letter-spacing: 0.3em; color: var(--dim); }
@@ -2101,19 +2107,8 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     .deal-strike { bottom: -0.22em; }
     .work, .serv, .foot, .lead, .how, .proc, .faq { padding-inline: 5vw; }
     .manif-in { padding-inline: 6vw; }
-    .sec-head { flex-direction: column; gap: 6px; margin-bottom: 7vh; }
-    /* REALIZACJE na telefonie (14.09.2026): dwie etykiety 11px w rozstrzelonych
-       wersalikach nie ogłaszały nowej sekcji — przejście z problemu ginęło, a dopisek
-       łamał się na dwie linie i czytał jak szum. Tytuł dostaje krój i skalę .sec-h
-       z innych sekcji, dopisek staje się zwykłym zdaniem pod nim. Desktop bez zmian. */
-    .work { padding-top: 6vh; }
-    .work .sec-head { gap: 0.55rem; padding-top: 1.4rem; margin-bottom: 6vh; }
-    .work .sec-head .label { margin: 0; }
-    .work .sec-head .label:not(.dim) {
-      font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520; font-size: clamp(1.8rem, 8.2vw, 2.4rem);
-      line-height: 1.08; letter-spacing: -0.02em; text-transform: none; color: var(--ink);
-    }
-    .work .sec-head .label.dim { font-size: 14.5px; line-height: 1.5; letter-spacing: 0; text-transform: none; text-wrap: balance; }
+    .work { padding-top: 8vh; }
+    .work-head { margin-bottom: 7vh; }
     .lrow { grid-template-columns: 44px 1fr; grid-template-rows: auto auto; row-gap: 8px; padding: 22px 2px; }
     .lrow .idx { grid-row: 1; }
     .lrow h3 { grid-column: 2; grid-row: 1; }
