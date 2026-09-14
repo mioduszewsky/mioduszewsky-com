@@ -164,7 +164,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       <div class="hero-top">
       <p class="label rv">{p?.hero.label || '( Websites · AI · Apps )'}</p>
       {isPl ? (
-        <h1 aria-label={p!.hero.aria}>
+        <h1 class="h1-pl" aria-label={p!.hero.aria}>
           <span class="ln"><span class="ln-in">{p!.hero.line1}</span></span>
           <span class="ln"><span class="ln-in"><em>{p!.hero.em}</em> <span class="hero-end">{p!.hero.line3}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" /></svg></span></span></span></span>
         </h1>
@@ -1909,6 +1909,11 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
        „A generic website" w jednym wierszu zamiast łamać je po „A generic"
        (zmierzone 360-640px). */
     .hero h1 { font-size: clamp(2.2rem, 12vw, 3.6rem); letter-spacing: -0.05em; }
+    /* PL ma dwie linie i dluzsza („mowi za Ciebie" z kropka) wypelniala tylko 92%
+       szerokosci — haslo bylo mniejsze, niz pozwala ekran. 12.9vw dociaga ja do
+       krawedzi (zmierzone 320-430 px). EN zostaje na 12vw, bo „A generic website"
+       juz dobija do prawej. */
+    .hero h1.h1-pl { font-size: clamp(2.2rem, 12.9vw, 3.9rem); }
   }
   @media (max-width: 640px) {
     /* bez batonu w navie cały hero (label, hasło, podtytuł, CTA) ma się zmieścić
@@ -2062,11 +2067,24 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
        geometrycznego, bo tam lezy srodek optyczny, a przycisk laduje w zasiegu kciuka
        zamiast przy samej krawedzi ekranu. */
     .hero { box-sizing: border-box; min-height: 100svh; padding-block: calc(3vh + 74px) 10vh; }
+    /* 14.09.2026: wysrodkowanie calego bloku zostawialo pustke nad haslem i drugie
+       tyle pod CTA (iPhone 14 w Chrome: 123 px pod przyciskiem). Teraz dwa bloki:
+       haslo stoi wysoko i dominuje, podtytul + CTA siadaja przy dolnej krawedzi,
+       w zasiegu kciuka. Wolne miejsce dziela dwa elastyczne odstepy (flex-grow 1:2):
+       nad haslem i pauza po hasle. Pauza ma sufit 22vh, bo na wysokim telefonie
+       (430x830) rosla do 319 px i haslo odklejalo sie od reszty; nadmiar przejmuje
+       wtedy odstep nad haslem. Minimum 5vh trzyma pauze na niskim ekranie.
+       Kolejnosc przez `order`, bo pseudo-elementy nie moga stanac miedzy dziecmi. */
+    .hero { justify-content: flex-start; padding-block: calc(2vh + 74px) calc(4.5vh + env(safe-area-inset-bottom)); }
+    .hero::before, .hero::after { content: ''; flex: 1 1 0; }
+    .hero::before { order: -1; }
+    .hero::after { order: 1; flex-grow: 2; min-height: 5vh; max-height: 22vh; }
+    .hero-b { order: 2; }
     /* Rytm hero na telefonie grupuje, zamiast rozdzielac wszystko po rowno:
        label klei sie do H1, kreska + akapit + CTA tworza drugi blok. Wczesniej
        najwiekszy odstep w hero (8vh) siedzial miedzy H1 a kreska, czyli w miejscu
        najslabszego przejscia — kreska wisiala w pustce zamiast cokolwiek grupowac. */
-    .hero-b { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-start; gap: 0; margin-top: 4.4vh; }
+    .hero-b { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-start; gap: 0; margin-top: 0; }
     /* odstepy ustawione jawnie: <p> wnosi wlasny margin 1em, a odziedziczone
        space-between dokladalo resztke wysokosci w losowym miejscu */
     .hero-b > .hero-sub { margin: 0 0 2.3rem; }
@@ -2084,6 +2102,18 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     .work, .serv, .foot, .lead, .how, .proc, .faq { padding-inline: 5vw; }
     .manif-in { padding-inline: 6vw; }
     .sec-head { flex-direction: column; gap: 6px; margin-bottom: 7vh; }
+    /* REALIZACJE na telefonie (14.09.2026): dwie etykiety 11px w rozstrzelonych
+       wersalikach nie ogłaszały nowej sekcji — przejście z problemu ginęło, a dopisek
+       łamał się na dwie linie i czytał jak szum. Tytuł dostaje krój i skalę .sec-h
+       z innych sekcji, dopisek staje się zwykłym zdaniem pod nim. Desktop bez zmian. */
+    .work { padding-top: 6vh; }
+    .work .sec-head { gap: 0.55rem; padding-top: 1.4rem; margin-bottom: 6vh; }
+    .work .sec-head .label { margin: 0; }
+    .work .sec-head .label:not(.dim) {
+      font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520; font-size: clamp(1.8rem, 8.2vw, 2.4rem);
+      line-height: 1.08; letter-spacing: -0.02em; text-transform: none; color: var(--ink);
+    }
+    .work .sec-head .label.dim { font-size: 14.5px; line-height: 1.5; letter-spacing: 0; text-transform: none; text-wrap: balance; }
     .lrow { grid-template-columns: 44px 1fr; grid-template-rows: auto auto; row-gap: 8px; padding: 22px 2px; }
     .lrow .idx { grid-row: 1; }
     .lrow h3 { grid-column: 2; grid-row: 1; }
