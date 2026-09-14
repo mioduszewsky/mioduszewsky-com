@@ -38,12 +38,12 @@ const title = titleProp || p?.meta.title || 'W5 — ATELIER · mioduszewsky';
 const beyondEn = [
   { nr: '01', n: 'AI implementation', p: 'from $1,200', d: 'For companies that already have customers and want to improve a specific process. I map it, define what to automate and build the workflow, agent, integration or dashboard.', href: serviceEnPath(servicesEn[0]) },
   { nr: '02', n: 'Application or system', p: 'from $3,000', d: 'A first working version of a product, application, dashboard or business system. Something that works for the business from day one.', href: serviceEnPath(servicesEn[1]) },
-  { nr: '03', n: 'Cofounder as a Service', p: "Let's talk about it ↗", d: 'A business partner on your project, on terms agreed up front: direction, how the work runs and the technology behind it. We set the priorities together and split the delivery.', href: serviceEnPath(servicesEn[2]) },
+  { nr: '03', n: 'Cofounder as a Service', p: "Let's talk about it", d: 'A business partner on your project, on terms agreed up front: direction, how the work runs and the technology behind it. We set the priorities together and split the delivery.', href: serviceEnPath(servicesEn[2]) },
 ];
 const beyond = isPl ? [
   { ...homePl.offer.beyond[0], nr: '01', href: servicePath(services[0]) },
   { ...homePl.offer.beyond[1], nr: '02', href: servicePath(services[1]) },
-  { nr: '03', n: 'Cofounder as a Service', p: 'Porozmawiajmy o współpracy ↗', d: 'Stała współpraca przy Twoim projekcie: od kierunku biznesowego i organizacji pracy po technologię. Wspólnie ustalamy priorytety i kolejne działania.', href: '/pl/uslugi/cofounder-as-a-service/' },
+  { nr: '03', n: 'Cofounder as a Service', p: 'Porozmawiajmy o współpracy', d: 'Stała współpraca przy Twoim projekcie: od kierunku biznesowego i organizacji pracy po technologię. Wspólnie ustalamy priorytety i kolejne działania.', href: '/pl/uslugi/cofounder-as-a-service/' },
 ] : beyondEn;
 /* Manifest: spray przekresla fraze z pierwszej linii. Tekst zostaje jednym stringiem
    w tresci, a tutaj dzielimy go na trzy czesci — inaczej kazdy jezyk musialby trzymac
@@ -245,6 +245,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           <span class="ln"><span class="ln-in idx">№ 02</span></span>
           <h2 class="ln"><span class="ln-in">aigor.grabowski</span></h2>
           <p class="proj-d rv">{p?.work.aigor || <Fragment>A website for an art collection: works, artists and acquisition history. <em>Designed to sell a story.</em></Fragment>}</p>
+          <a class="tlink rv" href={isPl ? 'https://www.igorgrabowski.com/' : 'https://www.igorgrabowski.com/?lang=en'} target="_blank" rel="noopener">igorgrabowski.com<i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></i></a>
         </div>
         <div class="proj-f" data-parallax>
           <div class="phone-hold">
@@ -373,7 +374,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           <div class:list={["deal-beyond-grid", isPl && "deal-beyond-grid-pl"]}>
             {beyond.map((u) => (
               <a class="deal-bcard rv" href={u.href}>
-                <span class="deal-bn">{u.n}</span>
+                <span class="deal-bn">{u.n}<span class="deal-barr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span>
                 <span class="deal-bd">{u.d}</span>
                 <span class="deal-bp">{u.p}</span>
               </a>
@@ -1531,7 +1532,9 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   }
   .mrow:last-of-type { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
   .mrow:hover { padding-left: 18px; background: color-mix(in srgb, var(--ink) 4%, transparent); }
-  .mrow:hover .sarr { opacity: 1; translate: 0 0; }
+  /* strzałka przy realizacjach widoczna na stałe — od razu wiadomo, że link otwiera stronę */
+  .mrow .sarr { opacity: 1; translate: 0 0; }
+  .mrow:hover .sarr { translate: 3px -3px; }
   .mname { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.2rem, 2.2vw, 1.9rem); letter-spacing: -0.015em; }
   .mdesc { font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 62ch; }
   .work-note { margin-top: 3.5vh; font-size: 12px; line-height: 1.6; color: var(--dim); max-width: 62ch; }
@@ -1704,7 +1707,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .deal-for p b { color: var(--brand); font-weight: 640; }
   /* niebieska hairline: delikatnie oddziela front oferty od „beyond the website" */
   .deal-beyond { position: relative; border-top: 1px solid var(--blue); padding: clamp(2.2rem, 3.2vw, 3rem) clamp(2.3rem, 3.6vw, 3.6rem) 0; }
-  .deal-beyond-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: color-mix(in srgb, var(--blue) 78%, var(--ivory)); margin-bottom: 1.4vh; }
+  .deal-beyond-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brand); margin-bottom: 1.4vh; }
   .deal-beyond-intro { font-size: 13.5px; line-height: 1.6; color: rgba(248, 249, 242, 0.72); max-width: 60ch; }
   .deal-beyond-grid { margin-top: 2.6vh; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 3vw; }
   .deal-beyond-grid-pl { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(20px, 2.5vw, 48px); }
@@ -1714,6 +1717,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .deal-bcard { display: flex; flex-direction: column; gap: 0.55rem; padding: 1.5rem 0 2.2rem; text-decoration: none; color: var(--ivory); border-top: 2px solid rgba(248, 249, 242, 0.22); transition: border-color 0.3s; }
   .deal-bcard:hover { border-color: var(--brand); }
   .deal-bn { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: 1.15rem; }
+  /* strzałka = sygnał „klikalne", widoczna zawsze (na telefonie nie ma hovera) */
+  .deal-barr { display: inline-flex; vertical-align: -0.1em; margin-left: 0.4em; color: var(--blue); transition: translate 0.35s; }
+  .deal-barr svg { display: block; width: 1em; height: 1em; }
+  .deal-bcard:hover .deal-barr { translate: 3px -3px; }
   .deal-bd { font-size: 12.5px; line-height: 1.5; color: rgba(248, 249, 242, 0.6); max-width: 30ch; }
   .deal-bp { font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(248, 249, 242, 0.78); margin-top: auto; }
   .deal-fine { position: relative; padding: 2.6vh clamp(2.3rem, 3.6vw, 3.6rem); border-top: 1px solid rgba(248, 249, 242, 0.16); font-size: 12px; color: rgba(248, 249, 242, 0.5); }
