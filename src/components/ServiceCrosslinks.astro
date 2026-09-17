@@ -15,8 +15,8 @@ const { locale = 'pl', current } = Astro.props;
 const isPl = locale === 'pl';
 const r = routes[locale];
 const t = isPl
-  ? { label: 'Co jeszcze buduję', flag: 'Kompletna strona internetowa', all: 'Wszystkie usługi' }
-  : { label: 'What else I build', flag: 'Complete website build', all: 'All services' };
+  ? { label: 'Co jeszcze robię', flag: 'Kompletna strona internetowa', all: 'Wszystkie usługi' }
+  : { label: 'What else I do', flag: 'Complete website build', all: 'All services' };
 
 const others = (isPl ? services : servicesEn)
   .filter((s) => !s.consultation && s.slug !== current)

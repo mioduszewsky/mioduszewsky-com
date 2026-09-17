@@ -85,7 +85,7 @@ export const homePl = {
       '30 dni poprawek po starcie',
     ],
     forWhom: 'Dla osób, które wiedzą, że potrzebują strony, i wolą oddać ten temat komuś, kto zrobi całość.',
-    other: 'Co jeszcze buduję',
+    other: 'Co jeszcze robię',
     otherIntro: 'To osobne zakresy, wyceniane oddzielnie.',
     beyond: [
       { nr: '01', n: 'Wdrożenie AI', p: 'od 4 500 zł', d: 'Masz konkretny proces, który zabiera za dużo ręcznej pracy. Rozpisuję go i buduję rozwiązanie: automatyzację, agenta, integrację albo panel.' },

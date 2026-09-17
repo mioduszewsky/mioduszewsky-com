@@ -169,8 +169,9 @@ test('services index lists four equal scopes, website first but not privileged',
 test('every locale is complete: EN mirrors PL and leaves to the EN Cannversity', async () => {
   // Kacper obsluguje klientow polskich i anglojezycznych — komplet tresci w obu jezykach.
   // Etykieta bloku dodatkowych uslug nie moze ich degradowac w zadnym jezyku.
-  assert.ok((await page('/pl/')).includes('Co jeszcze buduję'));
-  assert.ok((await page('/')).includes('What else I build'));
+  // „buduję" nie obejmuje Cofoundera (to wspólnik, nie rzecz do zbudowania) — Kacper 17.09
+  assert.ok((await page('/pl/')).includes('Co jeszcze robię'));
+  assert.ok((await page('/')).includes('What else I do'));
   assert.ok(!(await page('/')).includes('Other services'));
   const pl = await page('/pl/uslugi/');
   const en = await page('/services/');
