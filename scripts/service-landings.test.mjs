@@ -127,7 +127,7 @@ test('nav carries both entries and they survive scrolling past the hero', async 
 });
 
 test('cannabis entry always leaves the site in a new tab and always carries UTM', async () => {
-  for (const path of ['/pl/', '/', '/pl/uslugi/', '/services/']) {
+  for (const path of ['/pl/', '/', '/pl/uslugi/', '/services/', '/pl/uslugi/wdrozenie-ai/', '/services/ai-implementation/']) {
     const html = await page(path);
     const hits = [...html.matchAll(/href="(https:\/\/www\.cannversity\.com\/[^"]*)"/g)].map(m => m[1]);
     assert.ok(hits.length > 0, `${path}: brak wejscia konopnego`);

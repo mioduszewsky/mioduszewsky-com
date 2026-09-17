@@ -65,6 +65,7 @@ const ui = isPl
       </a>
       <nav class="nav-actions" aria-label={ui.nav}>
         <a class="home-link" href={r.home}>{ui.home}</a>
+        <a class="home-link home-link-out" href={cannabisHref('nav')} target="_blank" rel="noopener" aria-label={cann.navAria}><span class="cann-full">{cann.nav}</span><span class="cann-short">{cann.navShort}</span><span class="home-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></a>
         <LanguageSwitch locale={locale} href={alternatePath} class="service-lang" />
       </nav>
     </header>
@@ -352,5 +353,22 @@ const ui = isPl
     .mark video { height: 34px; }
     .nav-actions { gap: 10px; }
     .home-link { font-size: 12px; }
+  }
+
+  .home-link-out { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
+  .home-link-out:hover { color: var(--blue); }
+  .home-arr { display: inline-flex; color: var(--blue); }
+  .home-arr svg { width: 12px; height: 12px; display: block; }
+  .cann-short { display: none; }
+  @media (max-width: 420px) {
+    .cann-full { display: none; }
+    .cann-short { display: inline; }
+  }
+
+  /* Ponizej 420 px nav podstrony mial pieć elementow (logo, Strona glowna, Uslugi, Konopie,
+     jezyk) i wypychal przelacznik jezyka poza kadr przy 320 px. „Strona glowna" wypada,
+     bo logo obok prowadzi dokladnie tam i zostaje z etykieta dla czytnikow ekranu. */
+  @media (max-width: 420px) {
+    .nav-actions > .home-link:first-of-type { display: none; }
   }
 </style>
