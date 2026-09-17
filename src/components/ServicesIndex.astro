@@ -23,11 +23,10 @@ const alternatePath = isPl ? '/services/' : '/pl/uslugi/';
 // Strona internetowa zostaje pierwsza, bo jest najczestszym punktem wejscia — ale ta sama
 // waga wizualna co pozostale trzy.
 const items = [
-  { nr: '01', name: t.webName, lead: t.webLead, price: t.webPrice, href: `${r.home}#oferta` },
+  { name: t.webName, lead: t.webLead, price: t.webPrice, href: `${r.home}#oferta` },
   ...(isPl ? services : servicesEn)
     .filter((s) => !s.consultation)
-    .map((s, i) => ({
-      nr: String(i + 2).padStart(2, '0'),
+    .map((s) => ({
       name: s.name,
       lead: (t.leads as Record<string, string>)[s.slug] ?? s.description,
       price: s.price || (isPl ? 'Porozmawiajmy o współpracy' : "Let's talk about it"),
@@ -58,21 +57,16 @@ const ui = isPl
     </header>
 
     <main id="main">
-      <section class="hero" aria-labelledby="hero-title">
-        <p class="label">( {t.label} )</p>
-        <h1 id="hero-title">{t.h1a} <em>{t.h1b}</em></h1>
-        <div class="hero-b">
-          <div class="hero-sub"><p>{t.lead}</p></div>
-        </div>
-      </section>
+      <header class="page-head">
+        <h1 id="hero-title">{t.h1}</h1>
+        <p class="page-lead">{t.lead}</p>
+      </header>
 
-      <section class="rest" aria-labelledby="rest-title">
-        <h2 class="rest-label" id="rest-title">{t.restLabel}</h2>
+      <section class="rest" aria-label={t.h1}>
         <ul class="rest-list">
           {items.map((s) => (
             <li class="rest-row">
               <a class="rest-link" href={s.href}>
-                <span class="rest-nr" aria-hidden="true">{s.nr}</span>
                 <span class="rest-body">
                   <span class="rest-name">{s.name}<span class="rest-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span>
                   <span class="rest-lead">{s.lead}</span>
@@ -89,13 +83,11 @@ const ui = isPl
         </a>
       </section>
 
-      <section class="closing" aria-labelledby="closing-title">
-        <h2 class="sec-h" id="closing-title">{t.closingH}</h2>
-        <div class="closing-copy">
-          <p>{t.closingP}</p>
-          <a class="btn mag big" href={r.contact}><span class="btn-in">{t.closingCta}</span></a>
-        </div>
+      <section class="closing">
+        <p>{t.closingP}</p>
+        <a class="btn mag big" href={r.contact}><span class="btn-in">{t.closingCta}</span></a>
       </section>
+
     </main>
 
     <footer class="service-footer">
@@ -261,16 +253,19 @@ const ui = isPl
   /* ——— Strona „Usługi": spis, nie drugi front marki ———
      Flagowa oferta (01) dostaje wagę wizualną trzech pozostałych razem.
      Kontekst: docs/STRUKTURA-NAWIGACJA.md §3. */
-  .services-index .hero { min-height: auto; padding-block: clamp(120px, 14vh, 190px) clamp(48px, 6vh, 72px); justify-content: flex-start; }
-  .services-index .hero-b { grid-template-columns: minmax(0, 1fr); margin-top: 28px; }
-  .services-index .hero-sub { max-width: 62ch; }
+  /* Przesiadka, nie landing: naglowek zajmuje tyle, ile potrzebuje, a lista zaczyna sie
+     od razu. Hero na caly ekran odrzucone przez Kacpra 17.09.2026 — ta strona ma prowadzic
+     dalej, nie sprzedawac drugi raz tego, co sprzedaje strona glowna. */
+  .page-head { padding: clamp(96px, 12vh, 130px) var(--gutter) clamp(20px, 3vw, 30px); }
+  .page-head h1 { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; letter-spacing: -.02em; font-size: clamp(30px, 3.4vw, 46px); line-height: 1.05; }
+  .page-lead { margin-top: 14px; max-width: 56ch; font-size: clamp(15px, 1.2vw, 17px); line-height: 1.6; color: var(--body-ink); text-wrap: pretty; }
 
 
-  .rest { padding: clamp(8px, 1.5vw, 18px) var(--gutter) clamp(48px, 6vw, 80px); }
+  .rest { padding: clamp(8px, 1.5vw, 18px) var(--gutter) clamp(40px, 5vw, 64px); }
   .rest-label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); font-weight: 650; margin-bottom: 6px; }
   .rest-list { list-style: none; margin: 0; padding: 0; }
   .rest-row { border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
-  .rest-link { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: clamp(14px, 2vw, 34px); align-items: baseline; padding: clamp(18px, 2.4vw, 28px) 0; text-decoration: none; color: inherit; transition: background 0.25s; }
+  .rest-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(14px, 2vw, 34px); align-items: baseline; padding: clamp(18px, 2.4vw, 28px) 0; text-decoration: none; color: inherit; transition: background 0.25s; }
   .rest-link:hover { background: color-mix(in srgb, var(--ink) 4%, transparent); }
   .rest-nr { font-size: 12px; font-weight: 650; color: var(--dim); font-variant-numeric: tabular-nums; }
   .rest-name { display: inline-flex; align-items: center; gap: 7px; font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 530; font-size: clamp(19px, 1.9vw, 25px); letter-spacing: -.01em; }
@@ -287,16 +282,17 @@ const ui = isPl
   .cann-arr svg { width: 14px; height: 14px; display: block; }
   .cann:hover .cann-a { color: var(--ink); }
 
-  .closing { padding: clamp(40px, 5vw, 72px) var(--gutter) clamp(56px, 7vw, 96px); border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 88px); align-items: start; }
-  .closing-copy p { max-width: 52ch; font-size: clamp(15px, 1.2vw, 17px); line-height: 1.6; color: var(--body-ink); text-wrap: pretty; }
-  .closing-copy .btn.big { margin-top: 24px; }
+  .closing { padding: clamp(28px, 3.5vw, 44px) var(--gutter) clamp(48px, 6vw, 76px); border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .closing p { max-width: 52ch; font-size: clamp(15px, 1.2vw, 17px); line-height: 1.6; color: var(--body-ink); text-wrap: pretty; }
+  .closing .btn.big { margin-top: 22px; }
 
   /* Telefon: jedna os tekstu w calym bloku, bez dwoch krawedzi (ROLES/slawek.md). */
   @media (max-width: 860px) {
     .rest-link { grid-template-columns: auto minmax(0, 1fr); }
     .rest-price { grid-column: 2; margin-top: 8px; }
     .cann { flex-direction: column; gap: 4px; align-items: flex-start; }
-    .services-index .hero h1 { font-size: clamp(30px, 8.4vw, 46px); text-wrap: balance; }
+    .page-head { padding-top: clamp(76px, 11vh, 100px); }
+    .page-head h1 { font-size: clamp(26px, 7vw, 34px); text-wrap: balance; }
   }
 
   /* Nav podstron ma teraz cztery elementy (logo, Strona glowna, Uslugi, jezyk).

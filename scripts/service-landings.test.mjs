@@ -159,6 +159,11 @@ test('services index lists four equal scopes, website first but not privileged',
   const rows = [...html.matchAll(/class="rest-row"/g)].length;
   assert.equal(rows, 4, 'cztery rownorzedne pozycje');
   assert.ok(!html.includes('flag-grid') && !html.includes('Zacznij tutaj'), 'brak wyrozniowego bloku');
+  // ROLES/ghost.md sek. 5: bez numerkow sekcji typu „01 -". Strona jest przesiadka,
+  // wiec nie ma tez hero na caly ekran (odrzucone przez Kacpra 17.09.2026).
+  assert.ok(!html.includes('rest-nr'), 'bez numerkow pozycji');
+  assert.ok(!html.includes('class="hero"'), 'bez hero na caly ekran');
+  assert.ok(html.includes('page-head'), 'naglowek strony zamiast hero');
 });
 
 test('every locale is complete: EN mirrors PL and leaves to the EN Cannversity', async () => {
