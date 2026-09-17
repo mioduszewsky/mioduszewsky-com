@@ -5,7 +5,6 @@ import { services, servicePath } from '../content/services-pl';
 import { servicesEn, serviceEnPath } from '../content/services-en';
 import { servicesIndex } from '../content/services-index';
 import { cannabisHref, cannabisCopy } from '../content/cannabis';
-import { homePl } from '../content/home-pl';
 import { routes, type Locale } from '../i18n/site';
 interface Props { locale?: Locale }
 const { locale = 'pl' } = Astro.props;
@@ -15,38 +14,26 @@ const cann = cannabisCopy[locale];
 const r = routes[locale];
 const alternatePath = isPl ? '/services/' : '/pl/uslugi/';
 
-// Pozycja 01 = flagowa oferta strony. Zrodlo prawdy dla PL to ten sam obiekt,
-// ktory zasila strone glowna — zeby cena i punkty nie rozjechaly sie miedzy stronami.
-const flag = isPl ? {
-  price: homePl.offer.price.replace(/\*/g, ''),
-  say: homePl.offer.say,
-  includes: homePl.offer.includes,
-  forWhom: homePl.offer.forWhom,
-} : {
-  price: 'from $1,000',
-  say: 'You are not coming to me for a design alone, or a build alone. We work out what your business needs, then I take on the copy, the design, the technology and the launch.',
-  includes: [
-    'The copy and the structure of the page',
-    'A design built for your business',
-    'The mobile version',
-    'Forms and the integrations you need',
-    'Domain and SSL',
-    'Basic measurement from launch day',
-    '30 days of fixes after launch',
-  ],
-  forWhom: 'For people who know they need a website and would rather hand the whole thing to one person.',
-};
-
-// Pozostale zakresy: te same trzy uslugi, ktore maja wlasne podstrony.
-const rest = (isPl ? services : servicesEn)
-  .filter((s) => !s.consultation)
-  .map((s, i) => ({
-    nr: String(i + 2).padStart(2, '0'),
-    name: s.name,
-    lead: (t.leads as Record<string, string>)[s.slug] ?? s.description,
-    price: s.price || (isPl ? 'Porozmawiajmy o współpracy' : "Let's talk about it"),
-    href: isPl ? servicePath(s) : serviceEnPath(s),
-  }));
+// Cztery rownorzedne pozycje (decyzja Kacpra 17.09.2026, po pierwszym wdrozeniu).
+// Poprzednia wersja otwierala ta strone wyroznionym blokiem strony internetowej. Kacper:
+// „caly landing jest pod strone internetowa, a moze sie okazac, ze ktos trafi i nie bedzie
+// potrzebowal strony, tylko czegos innego". Strona glowna jest w calosci pitchem pod www,
+// wiec to jedyne miejsce, w ktorym widac reszte oferty — i nie moze powtarzac tego samego
+// komunikatu. Flagowosci broni strona glowna, ta lista ma byc mapa, nie kolejnym pitchem.
+// Strona internetowa zostaje pierwsza, bo jest najczestszym punktem wejscia — ale ta sama
+// waga wizualna co pozostale trzy.
+const items = [
+  { nr: '01', name: t.webName, lead: t.webLead, price: t.webPrice, href: `${r.home}#oferta` },
+  ...(isPl ? services : servicesEn)
+    .filter((s) => !s.consultation)
+    .map((s, i) => ({
+      nr: String(i + 2).padStart(2, '0'),
+      name: s.name,
+      lead: (t.leads as Record<string, string>)[s.slug] ?? s.description,
+      price: s.price || (isPl ? 'Porozmawiajmy o współpracy' : "Let's talk about it"),
+      href: isPl ? servicePath(s) : serviceEnPath(s),
+    })),
+];
 
 const contactFor = (service: string) => `${r.contact}?service=${encodeURIComponent(service)}#ctForm`;
 const ui = isPl
@@ -65,7 +52,7 @@ const ui = isPl
       </a>
       <nav class="nav-actions" aria-label={ui.nav}>
         <a class="home-link" href={r.home}>{ui.home}</a>
-        <a class="home-link home-link-out" href={cannabisHref('nav')} target="_blank" rel="noopener" aria-label={cann.navAria}><span class="cann-full">{cann.nav}</span><span class="cann-short">{cann.navShort}</span><span class="home-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></a>
+        <a class="home-link home-link-out" href={cannabisHref('nav', locale)} target="_blank" rel="noopener" aria-label={cann.navAria}><span class="cann-full">{cann.nav}</span><span class="cann-short">{cann.navShort}</span><span class="home-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></a>
         <LanguageSwitch locale={locale} href={alternatePath} class="service-lang" />
       </nav>
     </header>
@@ -79,28 +66,10 @@ const ui = isPl
         </div>
       </section>
 
-      <!-- 01: flagowa oferta. Zajmuje tyle, co pozostale trzy razem — flagowosc broni sie
-           proporcja, nie ukrywaniem reszty (decyzja Kacpra 17.09.2026). -->
-      <section class="flag" aria-labelledby="flag-title">
-        <p class="flag-kicker"><span class="flag-nr">{t.flagNr}</span>{t.flagLabel}</p>
-        <div class="flag-grid">
-          <div class="flag-main">
-            <h2 class="flag-h" id="flag-title">{t.flagName}</h2>
-            <p class="flag-price">{flag.price}</p>
-            <p class="flag-say">{flag.say}</p>
-            <a class="btn mag big" href={contactFor(t.flagService)}><span class="btn-in">{t.flagCta}</span></a>
-            <p class="flag-for">{flag.forWhom}</p>
-          </div>
-          <ul class="flag-list">
-            {flag.includes.map((item) => <li>{item}</li>)}
-          </ul>
-        </div>
-      </section>
-
       <section class="rest" aria-labelledby="rest-title">
         <h2 class="rest-label" id="rest-title">{t.restLabel}</h2>
         <ul class="rest-list">
-          {rest.map((s) => (
+          {items.map((s) => (
             <li class="rest-row">
               <a class="rest-link" href={s.href}>
                 <span class="rest-nr" aria-hidden="true">{s.nr}</span>
@@ -114,9 +83,7 @@ const ui = isPl
           ))}
         </ul>
 
-        <!-- Wejscie konopne: nie jest piata usluga, tylko innym wejsciem do tych samych.
-             Prowadzi wprost na cannversity.com — src/content/cannabis.ts. -->
-        <a class="cann" href={cannabisHref('uslugi')} target="_blank" rel="noopener">
+        <a class="cann" href={cannabisHref('uslugi', locale)} target="_blank" rel="noopener">
           <span class="cann-q">{cann.q}</span>
           <span class="cann-a">{cann.a}<span class="cann-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span>
         </a>
@@ -298,21 +265,8 @@ const ui = isPl
   .services-index .hero-b { grid-template-columns: minmax(0, 1fr); margin-top: 28px; }
   .services-index .hero-sub { max-width: 62ch; }
 
-  .flag { padding: clamp(28px, 4vw, 48px) var(--gutter) clamp(36px, 5vw, 64px); }
-  .flag-kicker { display: flex; align-items: baseline; gap: 10px; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); margin-bottom: 18px; }
-  .flag-nr { font-size: 12px; font-weight: 650; color: var(--dim); letter-spacing: .06em; font-variant-numeric: tabular-nums; }
-  .flag-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 88px); align-items: start; padding-top: clamp(22px, 3vw, 34px); border-top: 2px solid var(--ink); }
-  .flag-h { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; letter-spacing: -.02em; font-size: clamp(30px, 3.6vw, 52px); line-height: 1.08; max-width: 16ch; }
-  .flag-price { margin-top: 14px; font-size: clamp(17px, 1.6vw, 21px); font-weight: 620; }
-  .flag-price::after { content: ''; display: block; width: 46px; height: 7px; margin-top: 6px; background: var(--brand); }
-  .flag-say { margin-top: 20px; max-width: 52ch; font-size: clamp(15px, 1.2vw, 17px); line-height: 1.6; color: var(--body-ink); text-wrap: pretty; }
-  .flag .btn.big { margin-top: 26px; }
-  .flag-for { margin-top: 16px; max-width: 48ch; font-size: 13.5px; line-height: 1.55; color: var(--dim); }
-  .flag-list { list-style: none; margin: 0; padding: 0; }
-  .flag-list li { position: relative; padding: 11px 0 11px 22px; font-size: 14.5px; line-height: 1.5; border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); }
-  .flag-list li::before { content: ''; position: absolute; left: 0; top: 19px; width: 9px; height: 2px; background: var(--blue); }
 
-  .rest { padding: clamp(24px, 3.5vw, 40px) var(--gutter) clamp(48px, 6vw, 80px); }
+  .rest { padding: clamp(8px, 1.5vw, 18px) var(--gutter) clamp(48px, 6vw, 80px); }
   .rest-label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); font-weight: 650; margin-bottom: 6px; }
   .rest-list { list-style: none; margin: 0; padding: 0; }
   .rest-row { border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
@@ -339,7 +293,6 @@ const ui = isPl
 
   /* Telefon: jedna os tekstu w calym bloku, bez dwoch krawedzi (ROLES/slawek.md). */
   @media (max-width: 860px) {
-    .flag-grid, .closing { grid-template-columns: minmax(0, 1fr); }
     .rest-link { grid-template-columns: auto minmax(0, 1fr); }
     .rest-price { grid-column: 2; margin-top: 8px; }
     .cann { flex-direction: column; gap: 4px; align-items: flex-start; }

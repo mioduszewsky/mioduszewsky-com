@@ -95,7 +95,7 @@ const cann = cannabisCopy[locale];
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <nav class="nav-actions" aria-label={ui.nav}><a class="home-link" href={isPl ? '/pl/' : '/'}>{ui.home}</a><a class="home-link" href={isPl ? '/pl/uslugi/' : '/services/'}>{isPl ? 'Usługi' : 'Services'}</a><a class="home-link home-link-out" href={cannabisHref('nav')} target="_blank" rel="noopener" aria-label={cann.navAria}><span class="cann-full">{cann.nav}</span><span class="cann-short">{cann.navShort}</span><span class="home-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></a><LanguageSwitch locale={locale} href={alternatePath} class="service-lang" /></nav>
+      <nav class="nav-actions" aria-label={ui.nav}><a class="home-link" href={isPl ? '/pl/' : '/'}>{ui.home}</a><a class="home-link" href={isPl ? '/pl/uslugi/' : '/services/'}>{isPl ? 'Usługi' : 'Services'}</a><a class="home-link home-link-out" href={cannabisHref('nav', locale)} target="_blank" rel="noopener" aria-label={cann.navAria}><span class="cann-full">{cann.nav}</span><span class="cann-short">{cann.navShort}</span><span class="home-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></a><LanguageSwitch locale={locale} href={alternatePath} class="service-lang" /></nav>
     </header>
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">

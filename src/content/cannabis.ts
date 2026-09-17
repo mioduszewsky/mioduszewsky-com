@@ -11,11 +11,17 @@
  *
  * Kontekst i uzasadnienie: docs/STRUKTURA-NAWIGACJA.md §4.
  */
-const BASE = 'https://www.cannversity.com/';
+/** Cannversity ma pełną wersję angielską pod /en — anglojęzyczny klik nie może lądować
+ *  na polskiej stronie. Komplet treści w obu językach jest wymogiem Kacpra (17.09.2026):
+ *  obsługuje klientów polskich i anglojęzycznych. */
+const BASE = {
+  pl: 'https://www.cannversity.com/',
+  en: 'https://www.cannversity.com/en',
+} as const;
 
 /** medium rozróżnia miejsce kliknięcia: nav | uslugi | home */
-export const cannabisHref = (medium: 'nav' | 'uslugi' | 'home') =>
-  `${BASE}?utm_source=mioduszewsky&utm_medium=${medium}&utm_campaign=branza-konopna`;
+export const cannabisHref = (medium: 'nav' | 'uslugi' | 'home', locale: 'pl' | 'en' = 'pl') =>
+  `${BASE[locale]}?utm_source=mioduszewsky&utm_medium=${medium}&utm_campaign=branza-konopna`;
 
 export const cannabisCopy = {
   pl: {

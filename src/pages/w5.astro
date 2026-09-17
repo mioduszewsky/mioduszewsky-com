@@ -129,7 +129,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       <div class="nav-right">
         <nav class="nav-links" aria-label={isPl ? 'Nawigacja' : 'Navigation'}>
           <a class="nav-link" href={r.services}>{p?.nav.services || 'Services'}</a>
-          <a class="nav-link nav-link-out" href={cannabisHref('nav')} target="_blank" rel="noopener" aria-label={cann.navAria}>
+          <a class="nav-link nav-link-out" href={cannabisHref('nav', locale)} target="_blank" rel="noopener" aria-label={cann.navAria}>
             <span class="nav-full">{cann.nav}</span><span class="nav-short">{cann.navShort}</span><span class="nav-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
           </a>
         </nav>
@@ -390,7 +390,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         </div>
 
         <div class="deal-beyond">
-          <p class="deal-beyond-label rv">{p?.offer.other || 'Other services'}</p>
+          <p class="deal-beyond-label rv">{p?.offer.other || 'What else I build'}</p>
           <p class="deal-beyond-intro rv">{p?.offer.otherIntro || 'Separate from the website build, each priced on its own. Most people start with a website, but you can come straight here if this is the actual job.'}</p>
           <div class:list={["deal-beyond-grid", isPl && "deal-beyond-grid-pl"]}>
             {beyond.map((u) => (
@@ -403,7 +403,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           </div>
         </div>
 
-        <a class="deal-cann rv" href={cannabisHref('home')} target="_blank" rel="noopener">
+        <a class="deal-cann rv" href={cannabisHref('home', locale)} target="_blank" rel="noopener">
           <span class="deal-cann-q">{cann.q}</span>
           <span class="deal-cann-a">{cann.a}<span class="deal-cann-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span>
         </a>

@@ -148,11 +148,32 @@ test('service landings are no longer dead ends', async () => {
   }
 });
 
-test('services index leads with the flagship offer and links every service', async () => {
+test('services index lists four equal scopes, website first but not privileged', async () => {
   const html = await page('/pl/uslugi/');
   assert.ok(html.includes('Kompletna strona internetowa'));
   for (const slug of slugs) assert.ok(html.includes(`/pl/uslugi/${slug}/`), `brak linku do ${slug}`);
   assert.ok(!html.includes('konsultacja-biznesowa'));
-  // Flagowa oferta stoi przed pozostalymi zakresami — flagowosc broni sie kolejnoscia i proporcja.
-  assert.ok(html.indexOf('Kompletna strona internetowa') < html.indexOf('Wdrożenie AI'));
+  assert.ok(html.indexOf('Kompletna strona internetowa') < html.indexOf('Wdrożenie AI'), 'strona www zostaje pierwsza');
+  // Decyzja Kacpra 17.09: zadna pozycja nie moze miec wiekszej wagi wizualnej — lista jest
+  // mapa, nie kolejnym pitchem pod strone www (tym jest cala strona glowna).
+  const rows = [...html.matchAll(/class="rest-row"/g)].length;
+  assert.equal(rows, 4, 'cztery rownorzedne pozycje');
+  assert.ok(!html.includes('flag-grid') && !html.includes('Zacznij tutaj'), 'brak wyrozniowego bloku');
+});
+
+test('every locale is complete: EN mirrors PL and leaves to the EN Cannversity', async () => {
+  // Kacper obsluguje klientow polskich i anglojezycznych — komplet tresci w obu jezykach.
+  // Etykieta bloku dodatkowych uslug nie moze ich degradowac w zadnym jezyku.
+  assert.ok((await page('/pl/')).includes('Co jeszcze buduję'));
+  assert.ok((await page('/')).includes('What else I build'));
+  assert.ok(!(await page('/')).includes('Other services'));
+  const pl = await page('/pl/uslugi/');
+  const en = await page('/services/');
+  assert.equal([...pl.matchAll(/class="rest-row"/g)].length, [...en.matchAll(/class="rest-row"/g)].length);
+  for (const [path, base] of [['/pl/', 'cannversity.com/?'], ['/', 'cannversity.com/en?'],
+                              ['/pl/uslugi/', 'cannversity.com/?'], ['/services/', 'cannversity.com/en?'],
+                              ['/pl/uslugi/wdrozenie-ai/', 'cannversity.com/?'], ['/services/ai-implementation/', 'cannversity.com/en?']]) {
+    const html = await page(path);
+    assert.ok(html.includes(base), `${path}: wejscie konopne musi celowac w ${base}`);
+  }
 });
