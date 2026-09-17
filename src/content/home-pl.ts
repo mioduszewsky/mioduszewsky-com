@@ -3,7 +3,7 @@ export const homePl = {
     title: 'mioduszewsky · strony internetowe, AI i aplikacje',
     description: 'Strony internetowe od pierwszej rozmowy do publikacji. Układam treść, projektuję i buduję. Tworzę też wdrożenia AI, aplikacje i systemy.',
   },
-  nav: { cta: 'Umów 15 minut', sticky: 'Umów 15 minut', stickyAria: 'Umów 15 minut — rozmowa wideo' },
+  nav: { cta: 'Umów 15 minut', sticky: 'Umów 15 minut', stickyAria: 'Umów 15 minut — rozmowa wideo', services: 'Usługi', cannabis: 'Branża konopna' },
   hero: {
     label: '( Strony · AI · aplikacje )',
     aria: 'Dobra strona mówi za Ciebie.',
@@ -85,7 +85,7 @@ export const homePl = {
       '30 dni poprawek po starcie',
     ],
     forWhom: 'Dla osób, które wiedzą, że potrzebują strony, i wolą oddać ten temat komuś, kto zrobi całość.',
-    other: 'Pozostałe usługi',
+    other: 'Co jeszcze buduję',
     otherIntro: 'To osobne zakresy, wyceniane oddzielnie.',
     beyond: [
       { nr: '01', n: 'Wdrożenie AI', p: 'od 4 500 zł', d: 'Masz konkretny proces, który zabiera za dużo ręcznej pracy. Rozpisuję go i buduję rozwiązanie: automatyzację, agenta, integrację albo panel.' },

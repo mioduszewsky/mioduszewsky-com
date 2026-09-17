@@ -13,6 +13,7 @@ import { routes, type Locale } from '../i18n/site';
 import thumbWoodspot from '../assets/live/thumb-woodspot.webp';
 import thumbGlassstone from '../assets/live/thumb-glassstone.webp';
 import thumbCannversity from '../assets/live/thumb-cannversity.webp';
+import { cannabisHref, cannabisCopy } from '../content/cannabis';
 
 // Tryb prod (index): bez przełącznika wariantów, z indeksowaniem i meta description.
 interface Props { prod?: boolean; title?: string; locale?: Locale; }
@@ -23,6 +24,12 @@ const isPl = locale === 'pl';
    Wstrzykujemy wlasny, statyczny tekst z content/, nie dane z zewnatrz. */
 const mark = (s: string) => s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 const p = isPl ? homePl : undefined;
+/* Nav (17.09.2026, decyzja Kacpra): .nav-links jest widoczne ZAWSZE, też po zjechaniu
+   z hero — to jedyna nawigacja na tej stronie i jedyny kanał dystrybucji Cannversity.
+   Nie przenosić tych linków do .nav-actions: tamten kontener chowa się razem z CTA.
+   Wejście konopne jest filtrem, nie piątą usługą, i prowadzi wprost na cannversity.com
+   (src/content/cannabis.ts). Kontekst: docs/STRUKTURA-NAWIGACJA.md */
+const cann = cannabisCopy[locale];
 const r = routes[locale];
 const alt = routes[isPl ? 'en' : 'pl'];
 const title = titleProp || p?.meta.title || 'W5 — ATELIER · mioduszewsky';
@@ -119,9 +126,17 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <div class="nav-actions">
-        <LanguageSwitch locale={locale} href={alt.home} />
-        <a class="btn mag" href={r.contact}><span class="btn-in">{p?.nav.cta || 'Book a call'}</span></a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label={isPl ? 'Nawigacja' : 'Navigation'}>
+          <a class="nav-link" href={r.services}>{p?.nav.services || 'Services'}</a>
+          <a class="nav-link nav-link-out" href={cannabisHref('nav')} target="_blank" rel="noopener" aria-label={cann.navAria}>
+            <span class="nav-full">{cann.nav}</span><span class="nav-short">{cann.navShort}</span><span class="nav-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
+          </a>
+        </nav>
+        <div class="nav-actions">
+          <LanguageSwitch locale={locale} href={alt.home} />
+          <a class="btn mag" href={r.contact}><span class="btn-in">{p?.nav.cta || 'Book a call'}</span></a>
+        </div>
       </div>
     </header>
 
@@ -387,6 +402,11 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
             ))}
           </div>
         </div>
+
+        <a class="deal-cann rv" href={cannabisHref('home')} target="_blank" rel="noopener">
+          <span class="deal-cann-q">{cann.q}</span>
+          <span class="deal-cann-a">{cann.a}<span class="deal-cann-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span>
+        </a>
 
         <p class="deal-fine rv">{p?.offer.fine || 'Landing from $1,000 · full company website from $1,500 · a maximum of three projects at a time.'}</p>
       </div>
@@ -1296,6 +1316,26 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     padding: 24px 3vw; pointer-events: none;
   }
   .nav a { pointer-events: auto; }
+  .nav-right { display: flex; align-items: center; gap: clamp(14px, 1.8vw, 28px); pointer-events: auto; }
+  /* Linki nawigacyjne: ta sama skala i waga co przelacznik jezyka, zeby nav zostal cichy.
+     Podkreslenie wjezdza od lewej — tak samo jak slowa z podgladem w tresci. */
+  .nav-links { display: flex; align-items: center; gap: clamp(12px, 1.4vw, 22px); }
+  .nav-link {
+    position: relative; color: var(--ink); text-decoration: none;
+    font-size: 11px; font-weight: 650; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 10px 0; transition: color 0.25s; white-space: nowrap;
+  }
+  .nav-link::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 4px; height: 1px;
+    background: var(--blue); scale: 0 1; transform-origin: left;
+    transition: scale 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .nav-link:hover { color: var(--blue); }
+  .nav-link:hover::after { scale: 1 1; }
+  .nav-link-out { display: inline-flex; align-items: center; gap: 5px; }
+  .nav-short { display: none; }
+  .nav-arr { display: inline-flex; color: var(--blue); }
+  .nav-arr svg { width: 11px; height: 11px; display: block; }
   .nav-actions { display: flex; align-items: center; gap: 14px; pointer-events: auto; }
   :global(.nav .language-switch) {
     color: var(--ink); text-decoration: none; font-size: 11px; font-weight: 650;
@@ -1719,6 +1759,27 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .deal-beyond-grid-pl { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(20px, 2.5vw, 48px); }
   .deal-beyond-grid-pl .deal-bd { max-width: 32ch; }
   .deal-beyond-grid-pl .deal-bcard { padding: 1.1rem 0 1.5rem; }
+  /* Wejscie konopne: osobny pas, wizualnie odciety od trzech uslug zolta linia.
+     Ma czytac sie jak inne wejscie, nie jak kolejna pozycja oferty. */
+  .deal-cann {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem 1rem;
+    margin: clamp(2rem, 3vw, 2.8rem) clamp(2.3rem, 3.6vw, 3.6rem) 0;
+    padding: clamp(1rem, 1.6vw, 1.4rem) 0 0;
+    border-top: 1px solid color-mix(in srgb, var(--brand) 42%, transparent);
+    text-decoration: none; color: inherit;
+  }
+  .deal-cann-q { font-size: clamp(15px, 1.4vw, 17px); font-weight: 650; color: var(--brand); }
+  .deal-cann-a {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: clamp(14px, 1.3vw, 16px); color: rgba(248, 249, 242, 0.78);
+    transition: color 0.25s;
+  }
+  .deal-cann-arr { display: inline-flex; color: var(--blue); }
+  .deal-cann-arr svg { width: 13px; height: 13px; display: block; }
+  .deal-cann:hover .deal-cann-a { color: rgba(248, 249, 242, 1); }
+  @media (max-width: 860px) {
+    .deal-cann { margin-inline: clamp(1.2rem, 5vw, 2rem); flex-direction: column; gap: 0.3rem; align-items: flex-start; }
+  }
   .deal-beyond-grid-pl .deal-bn { font-size: clamp(15px, 1.25vw, 18px); }
   .deal-bcard { display: flex; flex-direction: column; gap: 0.55rem; padding: 1.5rem 0 2.2rem; text-decoration: none; color: var(--ivory); border-top: 2px solid rgba(248, 249, 242, 0.22); transition: border-color 0.3s; }
   .deal-bcard:hover { border-color: var(--brand); }
@@ -2062,6 +2123,19 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   @media (max-width: 860px) {
     .nav { padding: 14px 5vw; }
     .nav-actions { gap: 8px; }
+    /* Na telefonie logo + dwa linki + jezyk + CTA nie mieszcza sie w jednym rzedzie.
+       CTA wypada z navu, bo jego role pelni .sticky-cta przy dolnej krawedzi, a hero
+       ma wlasny duzy przycisk. Linki nawigacyjne zostaja — one sa tu powodem zmiany. */
+    .nav-actions .btn { display: none; }
+    /* Nav na telefonie ma teraz cztery elementy zamiast trzech (logo, dwa linki, jezyk).
+       Logo w domyslnej skali (166 px przy 390 px ekranu) wypychalo przelacznik jezyka
+       11 px poza kadr. Mniejsze logo i ciasniejszy padding mieszcza caly rzad. */
+    .nav { padding: 16px 4vw; }
+    .mark video { height: 34px; }
+    .nav-right { gap: 10px; }
+    .nav-links { gap: 10px; }
+    .nav-link { font-size: 10px; letter-spacing: 0.08em; padding: 8px 0; }
+    .nav-arr svg { width: 9px; height: 9px; }
     :global(.nav .language-switch) { padding-inline: 6px; }
     .nav .btn { white-space: nowrap; letter-spacing: .08em; padding-inline: 18px; }
     .hero { padding-inline: 5vw; }
@@ -2174,6 +2248,17 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     .foot-bar { grid-template-columns: minmax(0, 1fr) auto; gap: 1.6rem 2rem; margin-top: 6vh; text-align: left; align-items: center; }
     .fcol-badge { align-items: flex-start; }
     .meta { flex-direction: column; gap: 6px; }
+  }
+
+  /* Ponizej 420 px caly rzad navu nie miesci sie nawet przy mniejszym logo: pelna etykieta
+     konopna wypychala przelacznik jezyka poza kadr (zmierzone na 320 i 360 px).
+     Skrot zostaje czytelnym filtrem dla branzy. */
+  @media (max-width: 420px) {
+    .mark video { height: 28px; }
+    .nav-full { display: none; }
+    .nav-short { display: inline; }
+    .nav-right { gap: 8px; }
+    .nav-links { gap: 8px; }
   }
 </style>
 

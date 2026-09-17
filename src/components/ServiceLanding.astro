@@ -4,6 +4,7 @@ import { serviceContact, type Service } from '../content/services-pl';
 import { serviceEnContact } from '../content/services-en';
 import LanguageSwitch from './LanguageSwitch.astro';
 import LandingCopyEditor from './LandingCopyEditor.astro';
+import ServiceCrosslinks from './ServiceCrosslinks.astro';
 import type { Locale } from '../i18n/site';
 interface Props { service: Service; locale?: Locale }
 const { service: s, locale = 'pl' } = Astro.props;
@@ -90,7 +91,7 @@ const note = s.consultation ? ui.consultationNote : ui.note;
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <nav class="nav-actions" aria-label={ui.nav}><a class="home-link" href={isPl ? '/pl/' : '/'}>{ui.home}</a><LanguageSwitch locale={locale} href={alternatePath} class="service-lang" /></nav>
+      <nav class="nav-actions" aria-label={ui.nav}><a class="home-link" href={isPl ? '/pl/' : '/'}>{ui.home}</a><a class="home-link" href={isPl ? '/pl/uslugi/' : '/services/'}>{isPl ? 'Usługi' : 'Services'}</a><LanguageSwitch locale={locale} href={alternatePath} class="service-lang" /></nav>
     </header>
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
@@ -125,6 +126,7 @@ const note = s.consultation ? ui.consultationNote : ui.note;
         </section>)}
       </div>
     </main>
+    <ServiceCrosslinks locale={locale} current={s.slug} />
     <footer class="service-footer">
       <a href="mailto:kacper@mioduszewsky.com" class="footer-mail">kacper@mioduszewsky.com</a>
       <nav aria-label={ui.legal}><a href={ui.privacyHref}>{ui.privacy}</a><a href={ui.termsHref}>{ui.terms}</a></nav>
@@ -375,5 +377,14 @@ const note = s.consultation ? ui.consultationNote : ui.note;
   @media (prefers-reduced-motion: reduce) {
     .service-page *, .service-page *::before { animation: none!important; transition: none!important; }
     .cur { display: none; }
+  }
+
+  /* Nav podstron ma teraz cztery elementy (logo, Strona glowna, Uslugi, jezyk).
+     Ta sama poprawka co na glownej: mniejsze logo i ciasniejszy padding przy waskim ekranie. */
+  @media (max-width: 640px) {
+    .nav { padding: 16px 4vw; gap: 8px; }
+    .mark video { height: 34px; }
+    .nav-actions { gap: 10px; }
+    .home-link { font-size: 12px; }
   }
 </style>

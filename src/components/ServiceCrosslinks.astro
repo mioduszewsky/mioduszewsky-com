@@ -1,0 +1,58 @@
+---
+/** Pasek na dole podstrony usługi.
+ *
+ * Powód (pomiar 17.09.2026): podstrony usług były ślepymi zaułkami — jedyne linki wychodzące
+ * prowadziły na główną, do formularza i do stron prawnych. Ktoś, kto wszedł na „Wdrożenie AI"
+ * z wyszukiwarki albo z wklejonego linku, nie miał jak dowiedzieć się, że istnieją aplikacje
+ * i Cofounder. Flagowa oferta jest tu pierwsza, bo to jedyne miejsce, w którym się na podstronie
+ * pojawia. Kontekst: docs/STRUKTURA-NAWIGACJA.md §5.
+ */
+import { services, servicePath } from '../content/services-pl';
+import { servicesEn, serviceEnPath } from '../content/services-en';
+import { routes, type Locale } from '../i18n/site';
+interface Props { locale?: Locale; current?: string }
+const { locale = 'pl', current } = Astro.props;
+const isPl = locale === 'pl';
+const r = routes[locale];
+const t = isPl
+  ? { label: 'Co jeszcze buduję', flag: 'Kompletna strona internetowa', all: 'Wszystkie usługi' }
+  : { label: 'What else I build', flag: 'Complete website build', all: 'All services' };
+
+const others = (isPl ? services : servicesEn)
+  .filter((s) => !s.consultation && s.slug !== current)
+  .map((s) => ({ name: s.name, href: isPl ? servicePath(s) : serviceEnPath(s) }));
+
+const items = [{ name: t.flag, href: r.services }, ...others, { name: t.all, href: r.services }];
+---
+<nav class="xlinks" aria-label={t.label}>
+  <p class="xlinks-label">( {t.label} )</p>
+  <ul class="xlinks-list">
+    {items.map((item) => (
+      <li>
+        <a href={item.href}>{item.name}<span class="xarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .xlinks {
+    padding: clamp(32px, 4vw, 52px) var(--gutter, 6vw) clamp(28px, 3.5vw, 44px);
+    border-top: 1px solid color-mix(in srgb, #000 16%, transparent);
+  }
+  .xlinks-label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #777265; margin-bottom: 18px; }
+  .xlinks-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px clamp(20px, 3vw, 44px); }
+  .xlinks-list a {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 44px;
+    font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520;
+    font-size: clamp(15px, 1.4vw, 18px); color: #000; text-decoration: none;
+    border-bottom: 1px solid transparent; transition: border-color .25s, color .25s;
+  }
+  .xlinks-list a:hover { color: #0522ff; border-bottom-color: #0522ff; }
+  .xarr { display: inline-flex; color: #0522ff; }
+  .xarr svg { width: 13px; height: 13px; display: block; }
+  /* Telefon: jedna oś, pozycje pod sobą — poziomy rząd zawijał się w dwie poszarpane linie. */
+  @media (max-width: 640px) {
+    .xlinks-list { flex-direction: column; gap: 2px; align-items: flex-start; }
+  }
+</style>

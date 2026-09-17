@@ -3,12 +3,14 @@ export type Locale = 'en' | 'pl';
 export const routes = {
   en: {
     home: '/',
+    services: '/services/',
     contact: '/contact/',
     privacy: '/privacy/',
     terms: '/terms/',
   },
   pl: {
     home: '/pl/',
+    services: '/pl/uslugi/',
     contact: '/pl/kontakt/',
     privacy: '/pl/polityka-prywatnosci/',
     terms: '/pl/regulamin/',

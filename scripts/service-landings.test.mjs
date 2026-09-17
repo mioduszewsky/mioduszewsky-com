@@ -93,14 +93,17 @@ test('all supplied copy survives the final HTML verbatim', async () => {
       assert.ok(text.includes(fragment), `${s.slug}: ${fragment}`);
     }
     assert.ok(!text.includes('60 minut'));
-    assert.ok(!text.includes('Wszystkie usługi'));
   }
   const app = services.find(s => s.slug === 'aplikacje-i-systemy');
   assert.equal(app.title, 'Zbuduj własną aplikację. Bez szukania wspólnika technicznego.');
 });
 
-test('only three secondary pages; no hub or development landing; consultation stays off sitemap', async () => {
-  await assert.rejects(access(new URL('../dist/pl/uslugi/index.html', import.meta.url)));
+test('services index exists (owner decision 17.09.2026), consultation stays off sitemap', async () => {
+  // 09.09.2026 hub byl odrzucony; 17.09.2026 Kacper te decyzje odwrocil, bo podstrony uslug
+  // byly niewidoczne (zero linkow w navie, blok na 67% wysokosci glownej). Nowa strona ma inna
+  // hierarchie niz odrzucona wersja: flagowa oferta jako pozycja 01. docs/STRUKTURA-NAWIGACJA.md
+  await access(new URL('../dist/pl/uslugi/index.html', import.meta.url));
+  await access(new URL('../dist/services/index.html', import.meta.url));
   await assert.rejects(access(new URL('../dist/pl/uslugi/rozwoj-produktu/index.html', import.meta.url)));
   const html = await page('/pl/');
   for (const slug of slugs) assert.ok(html.includes(`/pl/uslugi/${slug}/`));
@@ -108,4 +111,48 @@ test('only three secondary pages; no hub or development landing; consultation st
   const sitemap = await readFile(new URL('../dist/sitemap.xml', import.meta.url), 'utf8');
   assert.ok(!sitemap.includes('konsultacja'));
   for (const slug of slugs) assert.ok(sitemap.includes(`/pl/uslugi/${slug}/`));
+  assert.ok(sitemap.includes('<loc>https://mioduszewsky.com/pl/uslugi/</loc>'));
+  assert.ok(sitemap.includes('<loc>https://mioduszewsky.com/services/</loc>'));
+});
+
+test('nav carries both entries and they survive scrolling past the hero', async () => {
+  for (const [path, services, cannabis] of [['/pl/', 'Usługi', 'Branża konopna'], ['/', 'Services', 'Cannabis industry']]) {
+    const html = await page(path);
+    // Linki musza byc POZA .nav-actions — ten kontener chowa sie razem z CTA po zjechaniu z hero.
+    const navLinks = html.slice(html.indexOf('class="nav-links"'), html.indexOf('class="nav-actions"'));
+    assert.ok(navLinks.length > 0 && html.indexOf('class="nav-links"') < html.indexOf('class="nav-actions"'), `${path}: .nav-links musi stac przed .nav-actions`);
+    assert.ok(navLinks.includes(services), `${path}: brak linku uslug w .nav-links`);
+    assert.ok(navLinks.includes(cannabis), `${path}: brak linku konopnego w .nav-links`);
+  }
+});
+
+test('cannabis entry always leaves the site in a new tab and always carries UTM', async () => {
+  for (const path of ['/pl/', '/', '/pl/uslugi/', '/services/']) {
+    const html = await page(path);
+    const hits = [...html.matchAll(/href="(https:\/\/www\.cannversity\.com\/[^"]*)"/g)].map(m => m[1]);
+    assert.ok(hits.length > 0, `${path}: brak wejscia konopnego`);
+    for (const href of hits) {
+      assert.ok(href.includes('utm_source=mioduszewsky'), `${path}: link konopny bez UTM (${href})`);
+      assert.ok(href.includes('utm_campaign=branza-konopna'), `${path}: link konopny bez kampanii`);
+    }
+    assert.ok(html.includes('rel="noopener"'), `${path}: link wychodzacy bez rel=noopener`);
+  }
+});
+
+test('service landings are no longer dead ends', async () => {
+  for (const slug of slugs) {
+    const html = await page(`/pl/uslugi/${slug}/`);
+    const others = slugs.filter(other => other !== slug);
+    for (const other of others) assert.ok(html.includes(`/pl/uslugi/${other}/`), `${slug}: brak linku do ${other}`);
+    assert.ok(html.includes('/pl/uslugi/'), `${slug}: brak powrotu na liste uslug`);
+  }
+});
+
+test('services index leads with the flagship offer and links every service', async () => {
+  const html = await page('/pl/uslugi/');
+  assert.ok(html.includes('Kompletna strona internetowa'));
+  for (const slug of slugs) assert.ok(html.includes(`/pl/uslugi/${slug}/`), `brak linku do ${slug}`);
+  assert.ok(!html.includes('konsultacja-biznesowa'));
+  // Flagowa oferta stoi przed pozostalymi zakresami — flagowosc broni sie kolejnoscia i proporcja.
+  assert.ok(html.indexOf('Kompletna strona internetowa') < html.indexOf('Wdrożenie AI'));
 });
