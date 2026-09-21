@@ -1,5 +1,5 @@
 ---
-// /contact — dedykowana strona domykająca (research 16.07.2026: hybryda
+// /contact - dedykowana strona domykająca (research 16.07.2026: hybryda
 // „umów rozmowę" + krótki formularz konwertuje najlepiej dla high-ticket
 // founder-led). Styl 1:1 z W5 (ivory/ink/blue/brand, Nohemi + General Sans).
 import VariantLayout from '../layouts/VariantLayout.astro';
@@ -29,7 +29,7 @@ const alt = routes[isPl ? 'en' : 'pl'];
 // https://calendar.app.google/GhHdELRtMzaYqnJk6
 const GOOGLE_BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ39wrl4iSUoqCtoj5VJq-7MT070YyXr1xMDsy1ncUfS8g-bHiVCisccj1MjHpkPjRlwDlJSw1kU?gv=true';
 // Endpoint = API Gateway HTTP API → Lambda → SES (eu-central-1).
-// (Function URL z publicznym auth NIE działa na tym koncie — guardrail; użyto API GW.)
+// (Function URL z publicznym auth NIE działa na tym koncie - guardrail; użyto API GW.)
 const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.com/';
 // =======================
 ---
@@ -46,7 +46,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
 >
   <main class="ct">
     <header class="ct-nav">
-      <a class="mark" href={r.home} aria-label={p?.logoAria || 'mioduszewsky — back home'}>
+      <a class="mark" href={r.home} aria-label={p?.logoAria || 'mioduszewsky - back home'}>
         <video autoplay loop muted playsinline preload="auto" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
           <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
@@ -84,10 +84,10 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
               <p>{p?.call.consent || 'The booking calendar is provided by Google and, once shown, sets a cookie on your device to display available times.'}</p>
               <button type="button" class="btn" id="calLoadBtn"><span class="btn-in">{p?.call.show || 'Show calendar'}</span></button>
             </div>
-            {/* Pokazywane tylko wtedy, gdy ramka nie wstala — najczesciej przez blokera. */}
+            {/* Pokazywane tylko wtedy, gdy ramka nie wstala - najczesciej przez blokera. */}
             <div class="cal-blocked" id="calBlocked" hidden>
               <p class="cal-blocked-t">{p?.call.blockedTitle || 'The calendar will not load here'}</p>
-              <p class="cal-blocked-n">{p?.call.blockedNote || 'A privacy extension is usually the reason. Open it in a new window instead — it works there.'}</p>
+              <p class="cal-blocked-n">{p?.call.blockedNote || 'A privacy extension is usually the reason. Open it in a new window instead - it works there.'}</p>
             </div>
           </div>
           <div class="cal-actions">
@@ -145,7 +145,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
         </form>
 
         <div class="ct-success" id="ctSuccess" hidden>
-          <h3>{p?.form.successTitle || 'Thanks — message sent.'}</h3>
+          <h3>{p?.form.successTitle || 'Thanks - message sent.'}</h3>
           <p>{p?.form.successText || 'I read every message myself and reply within a day. Want it faster? Grab a call slot:'}</p>
           {!consultation && <a class="btn big" href={GOOGLE_BOOKING_URL || `mailto:kacper@mioduszewsky.com?subject=${encodeURIComponent(p?.call.mailSubject || 'Book a call')}`}>
             <span class="btn-in">{isPl ? 'Umów 15 minut' : 'Book a 15-min call'}</span>
@@ -176,8 +176,8 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     // Kalendarz Google ustawia cookie NID gdy się ładuje. Dwie ścieżki zgody:
     // 1) TRACKING_ENABLED (baner site-wide w VariantLayout skonfigurowany): jeśli user
     //    kliknął Accept w bannerze (mioduszewsky_consent), kalendarz ładuje się od razu,
-    //    bez dodatkowego klika — zgoda już jest załatwiona wcześniej w wizycie.
-    // 2) Bez tego (TRACKING_ENABLED=false, stan obecny — żadne ID jeszcze nie ustawione,
+    //    bez dodatkowego klika - zgoda już jest załatwiona wcześniej w wizycie.
+    // 2) Bez tego (TRACKING_ENABLED=false, stan obecny - żadne ID jeszcze nie ustawione,
     //    więc bannera nie ma): zostaje lokalny gate "Show calendar" per-widget.
     const CAL_CONSENT_KEY = 'mioduszewsky_cal_consent';
     const SITE_CONSENT_KEY = 'mioduszewsky_consent';
@@ -186,10 +186,10 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     const calLoadBtn = document.getElementById('calLoadBtn');
     const calBlocked = document.getElementById('calBlocked');
     /* Ramka Google Calendar to czesty cel rozszerzen prywatnosci. Rozpoznajemy dwa
-       przypadki: (1) zadanie w ogole nie doszlo — brak zdarzenia `load` w oknie czasu;
-       (2) bloker podmienil ramke na pusta strone — wtedy `load` jest, ale dokument
+       przypadki: (1) zadanie w ogole nie doszlo - brak zdarzenia `load` w oknie czasu;
+       (2) bloker podmienil ramke na pusta strone - wtedy `load` jest, ale dokument
        staje sie SAME-ORIGIN i da sie go odczytac. Prawdziwy kalendarz jest cross-origin,
-       wiec proba odczytu rzuca wyjatkiem — i to wlasnie oznacza, ze wszystko dziala. */
+       wiec proba odczytu rzuca wyjatkiem - i to wlasnie oznacza, ze wszystko dziala. */
     function markCalendarBlocked() {
       if (!calBlocked || !calBlocked.hidden) return;
       calBlocked.hidden = false;
@@ -211,7 +211,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       /* Sama ramka nie powie, czy kalendarz wstal: `contentDocument` zwraca null
          i dla dzialajacego kalendarza (cross-origin), i dla strony bledu blokera,
          a `load` odpala sie w obu przypadkach. Pytamy wiec o domene osobno, tym
-         samym probe co PhoneFrame — bloker tnie takze to zadanie. */
+         samym probe co PhoneFrame - bloker tnie takze to zadanie. */
       fetch(iframe.src, { mode: 'no-cors' }).catch(() => markCalendarBlocked());
       try { localStorage.setItem(CAL_CONSENT_KEY, '1'); } catch {}
     }
@@ -250,7 +250,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       ? '\n\n[utm] ' + Object.entries(utm).filter(([, v]) => v).map(([k, v]) => k + '=' + v).join(' ')
       : '';
 
-    // Event celu "Lead" po realnym wysłaniu formularza — patrz TRACKING-GATE.md.
+    // Event celu "Lead" po realnym wysłaniu formularza - patrz TRACKING-GATE.md.
     function fireLeadConversion() {
       try {
         if (window.gtag && GOOGLE_ADS_ID && GOOGLE_ADS_LABEL) {
@@ -279,7 +279,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
       fields.forEach((n) => {
         const input = form.querySelector(`[name="${n}"]`);
         input?.setAttribute('aria-invalid', 'true');
-        // consent leży w label.consent, nie w .fld — closest łapie oba przypadki
+        // consent leży w label.consent, nie w .fld - closest łapie oba przypadki
         input?.closest('.fld, .consent')?.classList.add('err');
       });
       msg.textContent = text;
@@ -317,11 +317,11 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
 
       const messageWithUtm = message + serviceSuffix + utmSuffix;
 
-      // Bez skonfigurowanego endpointu — fallback do maila (nic nie ginie).
+      // Bez skonfigurowanego endpointu - fallback do maila (nic nie ginie).
       if (!CONTACT_ENDPOINT) {
         window.location.href =
           'mailto:kacper@mioduszewsky.com?subject=' + encodeURIComponent((formCopy?.fallbackSubject || 'Contact from ') + name) +
-          '&body=' + encodeURIComponent(messageWithUtm + '\n\n— ' + name + ' (' + email + ')');
+          '&body=' + encodeURIComponent(messageWithUtm + '\n\n- ' + name + ' (' + email + ')');
         fireLeadConversion();
         return;
       }
@@ -385,7 +385,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     .pdesc { color: #4c483c; font-size: 14px; line-height: 1.5; margin-bottom: 1.3rem; max-width: 40ch; }
 
     .btn { display: inline-block; position: relative; overflow: clip; text-decoration: none; color: var(--ink); border: 1px solid var(--ink); border-radius: 999px; padding: 10px 22px; font-size: 12px; letter-spacing: 0.06em; background: var(--ivory); cursor: pointer; transition: color 0.3s, border-color 0.3s, scale 0.18s ease-out; font-family: inherit; }
-    /* hover: tusz nalewa się od dołu — 1:1 z przyciskami na stronie głównej */
+    /* hover: tusz nalewa się od dołu - 1:1 z przyciskami na stronie głównej */
     .btn::before { content: ""; position: absolute; inset: 0; z-index: 0; background: var(--ink); transform: scaleY(0); transform-origin: bottom; transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1); }
     .btn .btn-in { display: inline-block; position: relative; z-index: 1; }
     .btn:hover { color: var(--ivory); }
@@ -404,7 +404,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     .cal-consent p { font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 34ch; margin: 0; }
     /* Komunikat o zablokowanej ramce lezy NA niej: pusta ramka zostaje pod spodem,
        wiec nie ma skoku ukladu, gdy blokada zostanie wykryta po chwili. */
-    /* przy wykrytej blokadzie pusta ramka znika, a komunikat wraca do przeplywu —
+    /* przy wykrytej blokadzie pusta ramka znika, a komunikat wraca do przeplywu -
        inaczej zostawaloby 560 px bieli wokol trzech linijek tekstu */
     .cal-is-blocked { min-height: 0; }
     .cal-is-blocked iframe { display: none; }
@@ -423,7 +423,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     .cal-actions { margin-top: 1.1rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.4rem; }
     .cal-open { white-space: nowrap; }
     /* gdy ramka jest zablokowana, przycisk „otworz w nowym oknie" przestaje byc
-       alternatywa i staje sie glowna droga — dostaje wypelnienie jak CTA */
+       alternatywa i staje sie glowna droga - dostaje wypelnienie jak CTA */
     .cal-is-blocked ~ .cal-actions .cal-open { background: var(--ink); color: var(--ivory); }
     .cal-note { margin: 0; font-size: 12px; color: var(--dim); }
     .cal-note a { color: var(--blue); }
@@ -432,7 +432,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     .fld { display: block; margin-bottom: 0.8rem; }
     .fld span { display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); margin-bottom: 0.35rem; }
     .fld input, .fld textarea {
-      /* globalny border-box z layoutu jest scope'owany przez Astro i tu NIE działa —
+      /* globalny border-box z layoutu jest scope'owany przez Astro i tu NIE działa -
          bez tego width:100% + padding wystaje poza ekran na mobile */
       box-sizing: border-box;
       width: 100%; font-family: inherit; font-size: 16px; color: var(--ink);
@@ -488,7 +488,7 @@ const CONTACT_ENDPOINT = 'https://fdoy7mjmtd.execute-api.eu-central-1.amazonaws.
     .alt-grid .sc-i { width: 0.82em; height: 0.82em; fill: currentColor; flex: none; }
     .alt-grid .sc-i-contra { width: 0.76em; height: 0.76em; }
     /* glif LinkedIn wypelnia caly viewBox, wiec w tej samej ramce co reszta
-       siedzi optycznie nizej — mniejszy i podniesiony do linii liter */
+       siedzi optycznie nizej - mniejszy i podniesiony do linii liter */
     .alt-grid .sc-i-in { width: 0.74em; height: 0.74em; transform: translateY(-0.045em); }
 
     .ct-foot { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: auto; padding-top: 3.5vh; font-size: 12px; color: var(--dim); letter-spacing: 0.04em; }

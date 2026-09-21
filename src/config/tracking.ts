@@ -1,4 +1,4 @@
-// Tracking IDs — puste = wyłączone. Nie ładujemy żadnego skryptu ani nie pokazujemy
+// Tracking IDs - puste = wyłączone. Nie ładujemy żadnego skryptu ani nie pokazujemy
 // bannera zgody dopóki chociaż jedno z poniższych nie jest wypełnione. Wypełnić po
 // utworzeniu zasobów: PostHog nowy projekt (mioduszewsky, osobny od projektu eskapizm),
 // GA4 property (Measurement ID), Google Ads conversion action "Lead" (Conversion ID +
@@ -11,7 +11,7 @@ export const GA4_ID = 'G-GP28BXV0BF'; // property "mioduszewsky" pod kacper@miod
 export const GOOGLE_ADS_ID = 'AW-18337997825';
 export const GOOGLE_ADS_LABEL = '9E3oCK6Qu9ccEIHInqhE'; // conversion action "Lead", utworzona 27.07.2026
 
-// Meta Pixel — zestaw danych "mioduszewsky.com" w portfolio 1505850470627052,
+// Meta Pixel - zestaw danych "mioduszewsky.com" w portfolio 1505850470627052,
 // utworzony 01.08.2026 po zdjęciu blokady antyfraudowej z konta 1046984581251618.
 // Ładowany wyłącznie po zgodzie, tak samo jak PostHog/GA4/Ads.
 export const META_PIXEL_ID = '1367848401377087';

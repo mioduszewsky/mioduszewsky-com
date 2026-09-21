@@ -1,4 +1,4 @@
-# Balonowe logo 3D „mioduszewsky" — jak edytować i renderować
+# Balonowe logo 3D „mioduszewsky" - jak edytować i renderować
 
 Efekt logotypu w stylu flayks.com: napis jako napompowane, błyszczące rurki 3D,
 przezroczyste wideo w pętli (VP9 alpha webm + HEVC alpha mp4), osadzane zwykłym `<video>`.
@@ -10,7 +10,7 @@ Zbudowane 14.07.2026. Kolor zaakceptowany: **#FFCC33**.
 ~/mioduszewsky-com/assets/logo3d/
   logo.webm        ← FINAŁ dla Chrome/Firefox (VP9 z alfą, ~1.3 MB)
   logo.mp4         ← FINAŁ dla Safari (HEVC hvc1 z alfą, ~2.0 MB)
-  tube_logo.py     ← GENERATOR sceny (jedyne źródło prawdy — tu się edytuje)
+  tube_logo.py     ← GENERATOR sceny (jedyne źródło prawdy - tu się edytuje)
   tube.blend       ← zbudowana scena (artefakt, można zawsze odtworzyć skryptem)
   preview.html     ← podgląd w przeglądarce (header/czerń/krem/żółty)
   INSTRUKCJA.md    ← ten plik
@@ -28,7 +28,7 @@ Wymagane narzędzia (zainstalowane przez Homebrew 14.07.2026): `blender` (cask),
 </video>
 ```
 
-Kolejność źródeł ma znaczenie: mp4 (hvc1) pierwszy — Safari nie umie VP9 alpha.
+Kolejność źródeł ma znaczenie: mp4 (hvc1) pierwszy - Safari nie umie VP9 alpha.
 Alfa działa na dowolnym tle strony.
 
 ## WORKFLOW EDYCJI (zawsze w tej kolejności!)
@@ -67,8 +67,8 @@ Godzinny render finalny odpala się DOPIERO po akceptacji stillki. Kolejność:
 
 ### Kolor
 Hex podaje się ARGUMENTEM (nie w kodzie): `blender -b -P tube_logo.py -- FF5733 ...`
-UWAGA: jeśli kolor na renderze „nie łapie" zmiany — winne za mocne światła
-(przepalają bazę do bieli). Moce lamp: sekcja `# ── Światła` — key 700, fill 160,
+UWAGA: jeśli kolor na renderze „nie łapie" zmiany - winne za mocne światła
+(przepalają bazę do bieli). Moce lamp: sekcja `# ── Światła` - key 700, fill 160,
 rimy 240 (dobrane pomiarem pikseli pod #FFCC33). Ciemniejszy/głębszy kolor =
 najpierw zmniejsz `energy`, dopiero potem kombinuj z hexem.
 
@@ -79,7 +79,7 @@ Metaliczny balon: `Metallic` 1.0 + Roughness ~0.25.
 
 ### Kształty liter
 Słownik `LETTERS` na górze pliku. Każda litera = szkielet monoline:
-- `strokes`: listy punktów (x, y) — Blender prowadzi przez nie gładką krzywą
+- `strokes`: listy punktów (x, y) - Blender prowadzi przez nie gładką krzywą
   beziera i nakłada rurę o promieniu `R` (0.30). Układ współrzędnych:
   x-height = 1.0, baseline y=0, wydłużenia górne ~1.68, dolne do ~-0.68.
 - `circle`: (cx, cy, promień) dla brzuszków o/d.
@@ -94,7 +94,7 @@ Twarde lekcje (nie powtarzać błędów):
 - Dziurka w literze istnieje tylko, gdy odstęp osi rur > 2×promień + ~0.15 zapasu
   (voxel remesh skleja styczne powierzchnie).
 - Kropka „i" min. ~0.25 nad szczytem laski, inaczej remesh zrobi szyjkę.
-- Rozmiary liter ujednolicone (JIGGLE skala = 1.0) — decyzja Kacpra 14.07.
+- Rozmiary liter ujednolicone (JIGGLE skala = 1.0) - decyzja Kacpra 14.07.
 
 ### Animacja
 Sekcja `# ── Animacja`: kołysanie pivotu (±7.5° Y, ±3° X), galaretka per litera
@@ -118,14 +118,14 @@ strokes → voxel remesh (0.03) zlewa w balonową powierzchnię → corrective s
 Pełna notatka wiedzy: memory `reference-flayks-logo-technika` (Claude) +
 wpis w `projekty/mioduszewsky (AUTOFIRMA)/mioduszewsky-com/STATUS.md`.
 
-## Wariant „dalmatyńczyk" (futro) — 15.07.2026
+## Wariant „dalmatyńczyk" (futro) - 15.07.2026
 
 Druga wersja logotypu: białe futro z czarnymi łatami (hair particles Cycles).
 
 ```
 tube_logo_fur.py        ← generator wariantu (te same LETTERS, osobne FUR_*/SPOT_*)
 fur.blend               ← zbudowana scena futrzana
-logo-dalmatian.webm/mp4 ← finały (obok logo.webm/mp4 balona — NIE nadpisują)
+logo-dalmatian.webm/mp4 ← finały (obok logo.webm/mp4 balona - NIE nadpisują)
 render_dalmatian.sh     ← finał: render 180 kl. + enkodowanie + sprzątanie klatek
 ```
 
@@ -134,18 +134,18 @@ Stillka: `blender -b -P tube_logo_fur.py -- "$PWD/fur.blend"` →
 się dużo wolniej niż balon; finał 180 klatek ≈ 12 h).
 
 Twarde lekcje wariantu futrzanego:
-- **NIE ustawiaj `tangent_factor`/`normal_factor`** w hair particles — w Blenderze
+- **NIE ustawiaj `tangent_factor`/`normal_factor`** w hair particles - w Blenderze
   5.x skalują DŁUGOŚĆ włosa, nie tylko kierunek (włosy eksplodują na całą scenę).
 - Przyjemny plusz = fala (`kink='WAVE'`, mała amplituda), NIE `CURL` (wychodzi
   karakuł/popcorn) i NIE krótki prosty włos (wychodzi proszek/pleśń).
 - Biel = jasny kolor + domieszka Diffuse do Hair BSDF + więcej bounces
   (max 24 / transmission 16) + mocne ŚWIATŁO KIERUNKOWE. **Ambient (`world`) NIE
-  liczy się jako „mocne lampy" — patrz sekcja niżej, to była kosztowna pomyłka.**
+  liczy się jako „mocne lampy" - patrz sekcja niżej, to była kosztowna pomyłka.**
 
-### Dlaczego futro czytało się jak filc — korekta 17.07.2026
+### Dlaczego futro czytało się jak filc - korekta 17.07.2026
 
 Pierwsza wersja (LIVE 16-17.07) miała fakturę zlaną w filc. Diagnoza: **nie
-rozdzielczość i nie kompresja — oświetlenie.**
+rozdzielczość i nie kompresja - oświetlenie.**
 
 **Reguła, o którą tu chodzi:** oko czyta futro wyłącznie przez **cień rzucany
 między włosami**. Zatem:
@@ -155,7 +155,7 @@ między włosami**. Zatem:
   To był główny sprawca. Jeśli futro szarzeje, **NIGDY nie podnoś tego z powrotem.**
 - **Światło kierunkowe (`key`, `rim`) jest sojusznikiem, nie wrogiem.** Rozjaśnia
   futro i JEDNOCZEŚNIE rzeźbi cień. Dziś key = `1150`, czyli WYŻEJ niż pierwotne
-  `820` — i mimo to faktura jest, bo ambient jest ścięty.
+  `820` - i mimo to faktura jest, bo ambient jest ścięty.
 - **Chcesz bielej bez utraty faktury? Podnoś ALBEDO, nie ambient.** Albedo
   (`WHITE`, jasność skóry, `root To Min`) podnosi ogólny poziom, zostawiając cień
   relatywnie ciemnym → kontrast lokalny zostaje. Ambient go kasuje.
@@ -175,27 +175,27 @@ między włosami**. Zatem:
   końcu, przez co korekta samej kompresji wymagała pełnego re-renderu. Klatki
   kasuj RĘCZNIE po akceptacji.
 - Ocena stillki **musi iść na czarnym tle** (stopka `.finale` ma `background:
-  #000000`) — na białym miękki obrys wygląda znacznie lepiej, niż jest naprawdę:
+  #000000`) - na białym miękki obrys wygląda znacznie lepiej, niż jest naprawdę:
   ```bash
   ffmpeg -y -f lavfi -i color=c=black:s=2400x700 -i still_fur_0001.png \
     -filter_complex "[0][1]overlay=(W-w)/2:(H-h)/2" -frames:v 1 black.png
   ```
 - Czarne łaty leżące na krawędzi liter zlewają się z czarnym tłem stopki i lekko
-  wygryzają sylwetkę. **Świadomie zaakceptowane przez Kacpra 17.07** — nie
+  wygryzają sylwetkę. **Świadomie zaakceptowane przez Kacpra 17.07** - nie
   „naprawiać" tego bez polecenia.
 - Czytelność liter: rura odchudzona globalnie (R 0.165 + futro 0.13 ≈ waga balona
-  0.30). Kacper wymaga JEDNOLITEJ grubości liter — bez per-literowych ścienień
+  0.30). Kacper wymaga JEDNOLITEJ grubości liter - bez per-literowych ścienień
   poza `s` (rscale 0.92, poniżej progu percepcji, inaczej pasma S się zlewają).
 - Litery otwarte pod futro: `w` szerszy zygzak (adv 2.08), `k` adv 1.22
   (prześwit przed y), `s` minimalnie rozciągnięte (1.14 / -0.12).
 - Łaty: voronoi + noise w coords lokalnych obiektu, per-litera offset z Object
-  Info Random — reroll układu = zmiana mnożników 21.4/11.9/15.3 w `build_spot_mask`.
+  Info Random - reroll układu = zmiana mnożników 21.4/11.9/15.3 w `build_spot_mask`.
 
-## Favicon — pojedyncze „m" (20.07.2026)
+## Favicon - pojedyncze „m" (20.07.2026)
 
-`tube_favicon_m.py` — wariant sceny z TEXT="m" pod favicon (wybór Kacpra: opcja A).
+`tube_favicon_m.py` - wariant sceny z TEXT="m" pod favicon (wybór Kacpra: opcja A).
 Światła ściszone ~4,5× względem pełnego napisu i przesunięte w bok (+2.4 x), bo
-pojedyncza litera w centrum kadru przepalała się na cytrynowo — w napisie „m" stoi
+pojedyncza litera w centrum kadru przepalała się na cytrynowo - w napisie „m" stoi
 na lewym skraju i dostaje światło pod kątem. Dobrane iteracyjnie na stillkach
 porównywanych z posterem nav na tle ivory (key 150, fill 34, rimy 50).
 
@@ -205,7 +205,7 @@ cd ~/mioduszewsky-com/assets/logo3d
 blender -b -P tube_favicon_m.py -- FFCC33 "$PWD/tube_m.blend"
 blender -b tube_m.blend -o "$PWD/still_m_####" -F PNG -f 1
 # master: crop + kwadrat; potem scale 96/32/16, ico z 32, apple-touch 180 na 0xf8f9f2,
-# favicon.svg = wrapper <image> na PNG 128 — komendy 1:1 w memory sesji 19-20.07.
+# favicon.svg = wrapper <image> na PNG 128 - komendy 1:1 w memory sesji 19-20.07.
 ```
 
 Archiwum porównania 6 opcji (offline HTML, bez zależności od artifactu claude.ai):
@@ -214,8 +214,8 @@ Archiwum porównania 6 opcji (offline HTML, bez zależności od artifactu claude
 **ODRZUCONE 20.07: wariant dalmatyńczyka jako favicon.** Ta sama litera „m" w
 fakturze futra (`tube_logo_fur.py` z TEXT="m") wyglądała dobrze na czarnym tle,
 ale na jasnym pasku kart (domyślny motyw większości przeglądarek) białe futro
-prawie znikało — nawet po dodaniu dylatowanego ciemnego konturu pod spodem.
+prawie znikało - nawet po dodaniu dylatowanego ciemnego konturu pod spodem.
 Werdykt Kacpra: „lipa, nie działa". **Nie podchodzić do tego ponownie** bez
-nowego pomysłu na kontrast — na stronie dalmatyńczyk działa wyłącznie dlatego,
+nowego pomysłu na kontrast - na stronie dalmatyńczyk działa wyłącznie dlatego,
 że stoi na kontrolowanej czystej czerni (`.finale` tło #000000), a favicon tej
 kontroli nad tłem nie ma.

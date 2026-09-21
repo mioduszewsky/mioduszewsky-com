@@ -1,4 +1,4 @@
-# Futrzane tube-lettering "mioduszewsky" — wariant dalmatyńczyk (białe futro + czarne łaty)
+# Futrzane tube-lettering "mioduszewsky" - wariant dalmatyńczyk (białe futro + czarne łaty)
 # Bazuje na tube_logo.py (balon); różnice: hair particles Cycles + proceduralne łaty.
 # Uruchomienie: blender -b -P tube_logo_fur.py -- [output.blend]
 import bpy, math, sys
@@ -7,11 +7,11 @@ from mathutils import Vector
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 OUT_BLEND = argv[0] if len(argv) > 0 else "/tmp/tube_logo_fur.blend"
 
-R = 0.165         # promień rury — cieńsza niż balon (0.30), futro dobija grubość
+R = 0.165         # promień rury - cieńsza niż balon (0.30), futro dobija grubość
 FPS = 30
 LOOP = 180
 
-# ── Futro / łaty — parametry do strojenia ──────────────────────────
+# ── Futro / łaty - parametry do strojenia ──────────────────────────
 FUR_LEN = 0.13            # długość włosa (R=0.30)
 FUR_LEN_RANDOM = 0.18     # losowość długości
 FUR_DENSITY = 340         # parenty na jednostkę² powierzchni
@@ -182,7 +182,7 @@ fnt.links.new(fmask, fmix.inputs['Factor'])
 # głębia futra: ciemniejsza nasada, jaśniejsze końcówki + lekki random per włos
 hi = fnt.nodes.new('ShaderNodeHairInfo'); hi.location = (-560, -260)
 root = fnt.nodes.new('ShaderNodeMapRange'); root.location = (-380, -260)
-# Intercept: 0 = nasada, 1 = końcówka. Ciemna nasada daje głębię — bez niej futro jest płaskie.
+# Intercept: 0 = nasada, 1 = końcówka. Ciemna nasada daje głębię - bez niej futro jest płaskie.
 # Ale to mnożnik koloru: przy gęstym futrze widać głównie środek pasma, więc za niska
 # wartość szarzy CAŁOŚĆ. Historia: 0.45 = futro szare, 0.62 = wciąż za szare (odrzucone
 # przez Kacpra 17.07). Głębię ma robić CIEŃ RZUCANY między włosami, nie mnożnik koloru.
@@ -390,12 +390,12 @@ scene.world = world
 world.use_nodes = True
 bg = world.node_tree.nodes['Background']
 bg.inputs['Color'].default_value = (0.96, 0.93, 0.88, 1.0)
-# Ambient wypełnia cień MIĘDZY włosami — to on zabijał fakturę. Biel futra trzymają
+# Ambient wypełnia cień MIĘDZY włosami - to on zabijał fakturę. Biel futra trzymają
 # bounces (24/16), nie world. Jeśli futro szarzeje: podnieś WHITE albo key, NIE to.
 bg.inputs['Strength'].default_value = 0.12
 
 # ── Kamera ─────────────────────────────────────────────────────────
-pad_x, pad_y = 1.18, 1.55   # ciut więcej luzu niż balon — futro wystaje poza bryłę
+pad_x, pad_y = 1.18, 1.55   # ciut więcej luzu niż balon - futro wystaje poza bryłę
 cam_data = bpy.data.cameras.new('cam')
 cam_data.lens = 50
 cam = bpy.data.objects.new('cam', cam_data)

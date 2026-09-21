@@ -18,9 +18,9 @@ const alternatePath = isPl ? '/services/' : '/pl/uslugi/';
 // Poprzednia wersja otwierala ta strone wyroznionym blokiem strony internetowej. Kacper:
 // „caly landing jest pod strone internetowa, a moze sie okazac, ze ktos trafi i nie bedzie
 // potrzebowal strony, tylko czegos innego". Strona glowna jest w calosci pitchem pod www,
-// wiec to jedyne miejsce, w ktorym widac reszte oferty — i nie moze powtarzac tego samego
+// wiec to jedyne miejsce, w ktorym widac reszte oferty - i nie moze powtarzac tego samego
 // komunikatu. Flagowosci broni strona glowna, ta lista ma byc mapa, nie kolejnym pitchem.
-// Strona internetowa zostaje pierwsza, bo jest najczestszym punktem wejscia — ale ta sama
+// Strona internetowa zostaje pierwsza, bo jest najczestszym punktem wejscia - ale ta sama
 // waga wizualna co pozostale trzy.
 const items = [
   { name: t.webName, lead: t.webLead, price: t.webPrice, href: `${r.home}#oferta` },
@@ -108,7 +108,7 @@ const ui = isPl
     --blue: #0522ff;
     --brand: #ffcc33;
     /* ring focusu: niebieski trzyma 7.4:1 na kremie, na czarnych bryłach
-       przejmuje go żółć marki (13.9:1) — niebieski dawał tam 2.5:1 */
+       przejmuje go żółć marki (13.9:1) - niebieski dawał tam 2.5:1 */
     --focus: var(--blue);
     font-family: 'GeneralSansV', sans-serif;
     background: var(--ivory);
@@ -171,7 +171,7 @@ const ui = isPl
   /* nav „Book a call": nalewa się niebieskim (ujednolicenie z resztą niebieskich akcentów) */
   .nav .btn::before { background: var(--blue); }
   .nav .btn:hover { border-color: var(--blue); }
-  /* chowa się, gdy poza hero — sticky-cta albo CTA stopki i tak są wtedy widoczne */
+  /* chowa się, gdy poza hero - sticky-cta albo CTA stopki i tak są wtedy widoczne */
   .nav .btn { transition: opacity 0.3s, translate 0.3s, color 0.3s, border-color 0.3s, scale 0.18s ease-out; }
   .nav .btn.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
   /* baton w navie byl w tej samej skali co CTA w tresci i dusil gore strony */
@@ -250,11 +250,11 @@ const ui = isPl
     .service-page *, .service-page *::before { animation: none!important; transition: none!important; }
   }
 
-  /* ——— Strona „Usługi": spis, nie drugi front marki ———
+  /* --- Strona „Usługi": spis, nie drugi front marki ---
      Flagowa oferta (01) dostaje wagę wizualną trzech pozostałych razem.
      Kontekst: docs/STRUKTURA-NAWIGACJA.md §3. */
   /* Przesiadka, nie landing: naglowek zajmuje tyle, ile potrzebuje, a lista zaczyna sie
-     od razu. Hero na caly ekran odrzucone przez Kacpra 17.09.2026 — ta strona ma prowadzic
+     od razu. Hero na caly ekran odrzucone przez Kacpra 17.09.2026 - ta strona ma prowadzic
      dalej, nie sprzedawac drugi raz tego, co sprzedaje strona glowna. */
   .page-head { padding: clamp(96px, 12vh, 130px) var(--gutter) clamp(20px, 3vw, 30px); }
   .page-head h1 { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; letter-spacing: -.02em; font-size: clamp(30px, 3.4vw, 46px); line-height: 1.05; }
@@ -274,7 +274,7 @@ const ui = isPl
   .rest-lead { display: block; margin-top: 7px; max-width: 58ch; font-size: 14.5px; line-height: 1.55; color: var(--body-ink); text-wrap: pretty; }
   .rest-price { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); white-space: nowrap; }
 
-  /* Wejscie konopne: filtr, nie piata usluga — odciete zolta linia i wlasnym rytmem. */
+  /* Wejscie konopne: filtr, nie piata usluga - odciete zolta linia i wlasnym rytmem. */
   .cann { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1rem; margin-top: clamp(30px, 4vw, 46px); padding-top: clamp(16px, 2vw, 22px); border-top: 2px solid var(--brand); text-decoration: none; color: inherit; }
   .cann-q { font-size: clamp(16px, 1.5vw, 19px); font-weight: 650; }
   .cann-a { display: inline-flex; align-items: center; gap: 6px; font-size: clamp(14px, 1.3vw, 16px); color: var(--dim); transition: color 0.25s; }

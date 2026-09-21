@@ -32,7 +32,7 @@ docs
 .vercel
 backend/contact-form/function.zip
 
-# logo3d: klatki renderu i checkpointy Blendera — residuum robocze wg workflow
+# logo3d: klatki renderu i checkpointy Blendera - residuum robocze wg workflow
 # w assets/logo3d/INSTRUKCJA.md (finalne .webm/.mp4 zostaja wersjonowane, klatki nie)
 assets/logo3d/frames/
 assets/logo3d/frames_dal/

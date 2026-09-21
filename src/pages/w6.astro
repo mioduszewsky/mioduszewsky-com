@@ -1,5 +1,5 @@
 ---
-// W6 „KOLEKTYW" — wierne odwzorowanie języka The Bon Collectif (ref #6, "MEGA"):
+// W6 „KOLEKTYW" - wierne odwzorowanie języka The Bon Collectif (ref #6, "MEGA"):
 // noir #010101 / creme #fef9e7 / żółty #ffb703, gigant stacked wordmark na pełnoekranowym
 // żywym medium, sekcja DNA z PIN+scrub (001/002/003), theme switch noir→creme, footer > hero.
 import VariantLayout from '../layouts/VariantLayout.astro';
@@ -9,13 +9,13 @@ import eskapizmScroll from '../assets/live/eskapizm-scroll.webp';
 import woodspotScroll from '../assets/live/woodspot-scroll.webp';
 
 const dna = [
-  { nr: '001', n: 'Myślenie biznesowe', d: 'Zanim powstanie piksel, patrzę na rynek, model i cel. Strona bez planu wejścia to tylko ładny obrazek — u mnie plan jest częścią roboty.', bg: '#d8d3c3' },
+  { nr: '001', n: 'Myślenie biznesowe', d: 'Zanim powstanie piksel, patrzę na rynek, model i cel. Strona bez planu wejścia to tylko ładny obrazek - u mnie plan jest częścią roboty.', bg: '#d8d3c3' },
   { nr: '002', n: 'Projekt i treść', d: 'Układ, słowa i rytm, które prowadzą klienta za rękę. Piszę i projektuję pod jeden test: czy obcy człowiek rozumie w 5 sekund, po co tu jest.', bg: '#ece5d0' },
-  { nr: '003', n: 'Techniczny build', d: 'Od pierwszej linijki po wdrożenie i domenę. Szybkie, dopracowane i mierzalne — bez podwykonawców i bez zgadywania.', bg: '#fef9e7' },
+  { nr: '003', n: 'Techniczny build', d: 'Od pierwszej linijki po wdrożenie i domenę. Szybkie, dopracowane i mierzalne - bez podwykonawców i bez zgadywania.', bg: '#fef9e7' },
 ];
 ---
 
-<VariantLayout title="W6 — KOLEKTYW · mioduszewsky" bg="#010101" fg="#fef9e7">
+<VariantLayout title="W6 - KOLEKTYW · mioduszewsky" bg="#010101" fg="#fef9e7">
   <main class="w6">
     <!-- NAV (Bon: stacked logo / center links / żółte CTA) -->
     <header class="nav">
@@ -39,7 +39,7 @@ const dna = [
         <span>SZEWSKY</span>
       </h1>
       <div class="hero-foot">
-        <p class="mini">PROJEKT <i>✳</i> TREŚĆ <i>✳</i> WDROŻENIE — W JEDNYCH RĘKACH</p>
+        <p class="mini">PROJEKT <i>✳</i> TREŚĆ <i>✳</i> WDROŻENIE - W JEDNYCH RĘKACH</p>
         <p class="state">STRONY, APLIKACJE<br />I PLANY PROJEKTÓW</p>
       </div>
     </section>
@@ -69,13 +69,13 @@ const dna = [
 
     <!-- PROJEKTY -->
     <section id="projekty" class="work">
-      <p class="eyebrow" data-reveal6>( WYBRANE PROJEKTY — EKRANY SĄ PRZEWIJALNE )</p>
+      <p class="eyebrow" data-reveal6>( WYBRANE PROJEKTY - EKRANY SĄ PRZEWIJALNE )</p>
       <div class="work-grid">
         <figure class="wcard" data-reveal6>
-          <PhoneFrame src={eskapizmScroll} alt="eskapizm.com" label="ESKAPIZM — PLANY PODRÓŻY PO AZJI" href="https://eskapizm.com" />
+          <PhoneFrame src={eskapizmScroll} alt="eskapizm.com" label="ESKAPIZM - PLANY PODRÓŻY PO AZJI" href="https://eskapizm.com" />
         </figure>
         <figure class="wcard" data-reveal6>
-          <PhoneFrame src={woodspotScroll} alt="WoodSpot" label="WOODSPOT — DECK WYDARZENIA" />
+          <PhoneFrame src={woodspotScroll} alt="WoodSpot" label="WOODSPOT - DECK WYDARZENIA" />
         </figure>
       </div>
     </section>
@@ -94,7 +94,7 @@ const dna = [
 
     <!-- FOOTER > HERO, theme switch noir → creme -->
     <footer class="foot" data-footer6>
-      <p class="eyebrow" data-reveal6>( OSTATNI EKRAN — TWÓJ RUCH )</p>
+      <p class="eyebrow" data-reveal6>( OSTATNI EKRAN - TWÓJ RUCH )</p>
       <a class="ready" href="mailto:kacper@mioduszewsky.com" data-reveal6>
         JESTEM<br />GOTOWY<span class="dot">.</span><br /><em>a Ty?</em>
       </a>
@@ -135,7 +135,7 @@ const dna = [
         scrollTrigger: { trigger: '[data-hero]', start: '40% top', end: 'bottom top', scrub: 0.6 },
       });
 
-      /* DNA pillars: PIN + scrub (Bon #2) — desktop */
+      /* DNA pillars: PIN + scrub (Bon #2) - desktop */
       const mm = gsap.matchMedia();
       mm.add('(min-width: 820px)', () => {
         const cards = gsap.utils.toArray<HTMLElement>('[data-pillar]');

@@ -3,7 +3,7 @@ export const homePl = {
     title: 'mioduszewsky · strony internetowe, AI i aplikacje',
     description: 'Strony internetowe od pierwszej rozmowy do publikacji. Układam treść, projektuję i buduję. Tworzę też wdrożenia AI, aplikacje i systemy.',
   },
-  nav: { cta: 'Umów 15 minut', sticky: 'Umów 15 minut', stickyAria: 'Umów 15 minut — rozmowa wideo', services: 'Usługi', cannabis: 'Branża konopna' },
+  nav: { cta: 'Umów 15 minut', sticky: 'Umów 15 minut', stickyAria: 'Umów 15 minut - rozmowa wideo', services: 'Usługi', cannabis: 'Branża konopna' },
   hero: {
     label: '( Strony · AI · aplikacje )',
     aria: 'Dobra strona mówi za Ciebie.',
@@ -44,7 +44,7 @@ export const homePl = {
   },
   manifest: {
     line1: 'Nie chodzi o kolejny etap.',
-    /* fraza z line1, ktora spray przekresla — napiecie robi teraz pierwsza linia,
+    /* fraza z line1, ktora spray przekresla - napiecie robi teraz pierwsza linia,
        wiec odreczny dopisek „teraz." przestal byc potrzebny */
     cross: 'kolejny etap',
     line2: 'Chodzi o *ten ostatni*.',

@@ -1,4 +1,4 @@
-// mioduszewsky.com — handler formularza kontaktowego.
+// mioduszewsky.com - handler formularza kontaktowego.
 // AWS Lambda (Node.js 20, region eu-central-1) za Lambda Function URL.
 // Odbiera POST JSON { name, email, message, consent, hp } z /contact,
 // waliduje, wysyła powiadomienie przez SES na kacper@mioduszewsky.com.
@@ -51,7 +51,7 @@ export const handler = async (event) => {
     return reply(400, { error: 'bad_json' }, origin);
   }
 
-  // Honeypot — boty wypełniają ukryte pole "hp", ludzie nie.
+  // Honeypot - boty wypełniają ukryte pole "hp", ludzie nie.
   if (data.hp) return reply(200, { ok: true }, origin);
 
   const name = clip(data.name, 120).trim();
@@ -63,7 +63,7 @@ export const handler = async (event) => {
   if (!EMAIL_RE.test(email)) return reply(400, { error: 'bad_email' }, origin);
   if (!consent) return reply(400, { error: 'no_consent' }, origin);
 
-  const subject = `Nowy kontakt ze strony — ${name}`;
+  const subject = `Nowy kontakt ze strony - ${name}`;
   const text =
     `Imię:  ${name}\n` +
     `Mail:  ${email}\n` +

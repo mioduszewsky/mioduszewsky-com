@@ -32,7 +32,7 @@ if (!prefersReducedMotion) {
   intro
     .fromTo(
       '.hero-line > span',
-      // CSS trzyma start w translateY(110%) — animujemy TEN SAM komponent `y`
+      // CSS trzyma start w translateY(110%) - animujemy TEN SAM komponent `y`
       // (yPercent to w GSAP osobna składowa i bazowy offset z CSS by został)
       { y: '110%' },
       { y: 0, duration: 1.1, stagger: 0.14 },
@@ -59,7 +59,7 @@ if (!prefersReducedMotion) {
     scrollTrigger: { trigger: '[data-hero]', start: 'top top', end: 'bottom top', scrub: 0.6 },
   });
 
-  /* Hero: outro — typografia odjeżdża wolniej niż scroll (ST #2) */
+  /* Hero: outro - typografia odjeżdża wolniej niż scroll (ST #2) */
   gsap.to('[data-hero] h1', {
     yPercent: 18,
     opacity: 0.25,
@@ -68,7 +68,7 @@ if (!prefersReducedMotion) {
   });
 }
 
-/* ── Oferta: PIN + scrub stack (Bon pattern) — desktop only ─────── */
+/* ── Oferta: PIN + scrub stack (Bon pattern) - desktop only ─────── */
 if (!prefersReducedMotion) {
   const mm = gsap.matchMedia();
 

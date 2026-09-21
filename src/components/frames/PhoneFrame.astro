@@ -1,12 +1,12 @@
 ---
-// iPhone frame z żywą stroną w środku — scrollujesz palcem/kółkiem po projekcie.
+// iPhone frame z żywą stroną w środku - scrollujesz palcem/kółkiem po projekcie.
 // Proporcje i detale wg iPhone 15 Pro: cienki bezel, tytanowa rama, Dynamic Island,
 // boczne przyciski, pasek statusu iOS przypięty nad przewijaną treścią.
 // Dwa tryby: `url` = żywa, klikalna strona w iframe (skalowana do 393px logicznej
 // szerokości iPhone'a); `src` = przewijany screenshot (fallback / starsze warianty).
 interface Props {
   src?: ImageMetadata;
-  /** żywa strona w środku — pełna interakcja: klik, scroll, nawigacja */
+  /** żywa strona w środku - pełna interakcja: klik, scroll, nawigacja */
   url?: string;
   alt: string;
   label?: string;
@@ -14,7 +14,7 @@ interface Props {
   class?: string;
   /** kolor ikon paska statusu: 'dark' na jasnych stronach, 'light' na ciemnych */
   statusbar?: 'dark' | 'light';
-  /** kolor tła ekranu (strip pod paskiem statusu) — dopasuj do tła strony w środku */
+  /** kolor tła ekranu (strip pod paskiem statusu) - dopasuj do tła strony w środku */
   screenbg?: string;
   fallbackText?: string;
   fallbackLinkText?: string;
@@ -48,7 +48,7 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
         </a>
       </div>
     ) : (
-      <div class="phone-screen" tabindex="0" data-lenis-prevent style={`background:${screenbg}`} aria-label={`${alt} — przewiń, żeby zobaczyć całość`}>
+      <div class="phone-screen" tabindex="0" data-lenis-prevent style={`background:${screenbg}`} aria-label={`${alt} - przewiń, żeby zobaczyć całość`}>
         <img src={src!.src} alt={alt} draggable="false" />
       </div>
     )}
@@ -64,7 +64,7 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
   // Żywy ekran: strona renderuje się w logicznej szerokości iPhone'a (393px)
   // i jest skalowana transformem do faktycznej szerokości ekranu ramki.
   const LOGICAL_W = 393;
-  const TOPBAR = 44; // strip pod paskiem statusu — treść startuje pod nim jak na iPhone
+  const TOPBAR = 44; // strip pod paskiem statusu - treść startuje pod nim jak na iPhone
   document.querySelectorAll<HTMLElement>('.phone-live').forEach((screen) => {
     const frame = screen.querySelector<HTMLIFrameElement>('iframe');
     if (!frame) return;
@@ -77,7 +77,7 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
     fit();
     new ResizeObserver(fit).observe(screen);
 
-    // Żywa strona ładuje się w tle zaraz po tym, jak reszta strony jest gotowa —
+    // Żywa strona ładuje się w tle zaraz po tym, jak reszta strony jest gotowa -
     // NIE czeka na scroll. Ma stać gotowa, zanim user tam dojedzie, zamiast
     // ładować się na jego oczach w trakcie dojazdu do sekcji.
     const startLoad = () => {
@@ -90,13 +90,13 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
 
     // Awaria żywej strony (host nie odpowiada, brak sieci): iframe ZAWSZE odpala
     // `load` (nawet dla błędu nawigacji), więc jedyny wiarygodny sygnał to probe
-    // fetch no-cors — odrzuca wyłącznie przy realnym błędzie sieciowym. Sprawdzamy
+    // fetch no-cors - odrzuca wyłącznie przy realnym błędzie sieciowym. Sprawdzamy
     // dopiero przy wejściu makiety w okolice viewportu (wtedy src jest już ustawiony
     // od dawna; startLoad() tu tylko jako zabezpieczenie na wypadek bardzo wolnej sieci).
     /* Klikniecie w zywa strone przewijalo CALA nasza strone o kilkadziesiat pikseli.
        Powod: iframe jest wyzszy niz ramka (cala strona w skali), a jego dolna czesc
        jest tylko UKRYTA przez overflow. Po kliknieciu przegladarka nadaje mu focus
-       i przewija dokument tak, zeby „pokazac" zafokusowany element — czyli w gore.
+       i przewija dokument tak, zeby „pokazac" zafokusowany element - czyli w gore.
        Zdarzenie focusu leci w dokumencie iframe (inna domena), wiec nie da sie go
        zlapac ani anulowac. Zamiast tego zapamietujemy pozycje tuz przed kliknieciem
        i przywracamy ja w nastepnej klatce, jesli przegladarka ja ruszyla. */
@@ -162,7 +162,7 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
   .btn-vol-down { left: -3px; top: 35.5%; height: 8%; }
   .btn-power    { right: -3px; top: 29%; height: 12%; background: linear-gradient(270deg, #5a5a5e, #38383c); }
 
-  /* pasek statusu iOS — przypięty NAD przewijaną treścią, jak na prawdziwym iPhone */
+  /* pasek statusu iOS - przypięty NAD przewijaną treścią, jak na prawdziwym iPhone */
   .phone-statusbar {
     position: absolute;
     inset: 9px 9px auto;
@@ -229,7 +229,7 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
     transform-origin: 0 0;
     background: transparent;
   }
-  /* fallback awarii żywej strony — widoczny tylko z klasą .live-failed */
+  /* fallback awarii żywej strony - widoczny tylko z klasą .live-failed */
   .live-fail {
     display: none; position: absolute; inset: 0; z-index: 6;
     flex-direction: column; align-items: center; justify-content: center; gap: 8px;

@@ -28,7 +28,7 @@ for (const t of targets) {
     console.warn(`${t.name}: networkidle timeout, kontynuuję`);
   }
   await page.evaluate(() => document.fonts?.ready).catch(() => {});
-  // zamknij cookie banner (eskapizm i podobne) — klik po tekście, także w iframe'ach
+  // zamknij cookie banner (eskapizm i podobne) - klik po tekście, także w iframe'ach
   await page.waitForTimeout(1500);
   const labels = ['Accept all', 'Akceptuję', 'Akceptuj', 'Zgadzam się'];
   let clicked = false;

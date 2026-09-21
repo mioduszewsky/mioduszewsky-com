@@ -1,6 +1,6 @@
-# Service subpages QA — 2026-09-09
+# Service subpages QA - 2026-09-09
 
-## Current delivery — consultation hidden, Cofounder added
+## Current delivery - consultation hidden, Cofounder added
 Supersedes the handoff below. Three public secondary pages: AI, applications, Cofounder as a Service. Consultation data and `src/components/ConsultationContact.astro` retained but both public routes excluded from the build. No checkout.
 
 - Build: 21 pages; public URL guard 2/2; landing tests 8/8 PASS.
@@ -13,7 +13,7 @@ Supersedes the handoff below. Three public secondary pages: AI, applications, Co
 
 Production has not been changed. Current scope documented at the top of Drive `docs/SERVICE-LANDINGS.md`.
 
-## Final handoff — owner explicitly paused publication, 2026-09-09
+## Final handoff - owner explicitly paused publication, 2026-09-09
 All code saved locally, uncommitted; no push/deploy. Resume from Drive `mioduszewsky-com/docs/SERVICE-LANDINGS.md` (opening handoff), not older iteration notes below.
 - Homepage PL: one desktop row, consultation (200 zł netto + VAT), AI, application, Cofounder as a Service. Application development remains on its subpage, omitted from homepage.
 - Cofounder covers business direction, operations and technology for a project; direct contact. Owner agreed no separate landing yet, pending offer definition.

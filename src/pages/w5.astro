@@ -1,5 +1,5 @@
 ---
-// W5 „ATELIER × WANDAL" — quiet luxury z warstwą buntu: sprayowe skreślenia,
+// W5 „ATELIER × WANDAL" - quiet luxury z warstwą buntu: sprayowe skreślenia,
 // odręczne dopiski (Shantell Sans, pełny PL), splaty po kliknięciu.
 // Baza: Clash Display + Sentient, Lenis, maskowane reveale, magnetyczne CTA.
 import '@fontsource-variable/shantell-sans';
@@ -25,19 +25,19 @@ const isPl = locale === 'pl';
 const mark = (s: string) => s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 const p = isPl ? homePl : undefined;
 /* Nav (17.09.2026, decyzja Kacpra): .nav-links jest widoczne ZAWSZE, też po zjechaniu
-   z hero — to jedyna nawigacja na tej stronie i jedyny kanał dystrybucji Cannversity.
+   z hero - to jedyna nawigacja na tej stronie i jedyny kanał dystrybucji Cannversity.
    Nie przenosić tych linków do .nav-actions: tamten kontener chowa się razem z CTA.
    Wejście konopne jest filtrem, nie piątą usługą, i prowadzi wprost na cannversity.com
    (src/content/cannabis.ts). Kontekst: docs/STRUKTURA-NAWIGACJA.md */
 const cann = cannabisCopy[locale];
 const r = routes[locale];
 const alt = routes[isPl ? 'en' : 'pl'];
-const title = titleProp || p?.meta.title || 'W5 — ATELIER · mioduszewsky';
+const title = titleProp || p?.meta.title || 'W5 - ATELIER · mioduszewsky';
 
 // Copy EN wg docs/strategy/LANDING_COPY_DRAFT.md (decyzja Kacpra 16.07.2026:
 // strona po angielsku, ceny USD jak na Contrze).
 // Flagowy produkt „Complete Website Build" = JEDEN produkt (decyzja 21.07.2026).
-// Klient NIE wybiera landing vs company — to Kacper decyduje na rozmowie o zakresie.
+// Klient NIE wybiera landing vs company - to Kacper decyduje na rozmowie o zakresie.
 // Landing/company to tylko widełki-przewodnik ceny, nie dwie osobne oferty do wyboru.
 // Plan projektu zdjęty ze strony (zostaje na Contrze); reszta = dodatki „beyond the website".
 // EN karty prowadza na wlasne landingi uslug (parytet z PL, 10.09.2026).
@@ -53,7 +53,7 @@ const beyond = isPl ? [
   { nr: '03', n: 'Cofounder as a Service', p: 'Porozmawiajmy o współpracy', d: 'Stała współpraca przy Twoim projekcie: od kierunku biznesowego i organizacji pracy po technologię. Wspólnie ustalamy priorytety i kolejne działania.', href: '/pl/uslugi/cofounder-as-a-service/' },
 ] : beyondEn;
 /* Manifest: spray przekresla fraze z pierwszej linii. Tekst zostaje jednym stringiem
-   w tresci, a tutaj dzielimy go na trzy czesci — inaczej kazdy jezyk musialby trzymac
+   w tresci, a tutaj dzielimy go na trzy czesci - inaczej kazdy jezyk musialby trzymac
    zdanie w kawalkach i latwo bylo je rozjechac przy redakcji. */
 const manifLine1 = p?.manifest.line1 || 'The goal is not another step.';
 const manifCross = p?.manifest.cross || 'another step';
@@ -92,7 +92,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 
     <!-- Kurtyna wejściowa -->
     <div class="veil" aria-hidden="true">
-      <!-- Mobile bierze mały wariant nav (200-560 KB zamiast 1.3-2 MB) — na
+      <!-- Mobile bierze mały wariant nav (200-560 KB zamiast 1.3-2 MB) - na
            ~370px szerokości kurtyny pełna rozdzielczość i tak się nie przydaje -->
       <video class="veil-word" autoplay loop muted playsinline preload="auto" poster="/logo3d/logo-poster.webp">
         <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" media="(max-width: 640px)" />
@@ -142,7 +142,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 
     <!-- Sticky CTA (pojawia się po zjechaniu z hero). Wrapper trzyma slide-in/centrowanie
          (transform), .sticky-cta w środku jest .mag i dostaje SWÓJ własny transform od
-         magnetyzmu — rozdzielone, żeby oba się nie nadpisywały. -->
+         magnetyzmu - rozdzielone, żeby oba się nie nadpisywały. -->
     <div class="sticky-cta-wrap">
       <a class="sticky-cta mag" href={r.contact} aria-label={p?.nav.stickyAria || 'Book a 15-minute call'}>
         <span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span>
@@ -153,14 +153,14 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     <!-- HERO + PROBLEM: sprayowa nitka rysowana scrollem -->
     <div class="thread-zone">
       {/* Dolny odcinek MUSI falowac tak jak gorny. Przy przedluzaniu sciezki latwo
-          dopisac krzywe o zerowej amplitudzie poziomej — wychodzi wtedy prosty zjazd,
+          dopisac krzywe o zerowej amplitudzie poziomej - wychodzi wtedy prosty zjazd,
           ktory zabija charakter gestu. Amplituda ma byc NIEROWNA
-          (108 → 92 → 114 jednostek, rozne dlugosci lukow) — rowne, malejace fale czytaja
+          (108 → 92 → 114 jednostek, rozne dlugosci lukow) - rowne, malejace fale czytaja
           sie jak wykres, nie jak ruch reki. Ostatni wymach idzie mocno w LEWO, w strone
           przycisku CTA, zeby kreska nie jechala rownolegle do kolumny tekstu po prawej;
           dopiero potem domyka sie do pionu przed grotem.
           KSZTALT ZATWIERDZONY przez Kacpra 25.08 (wariant „C" z porownania czterech
-          historycznych wersji). NIE przerabiac trasy bez jego decyzji — kazda proba
+          historycznych wersji). NIE przerabiac trasy bez jego decyzji - kazda proba
           „ulepszenia" konczyla sie odrzuceniem. Zasieg i punkt koncowy steruje kotwica
           w JS, nie ta sciezka. */}
       <div class="thread t-wide" data-start="560,13" data-end-y="774" data-max-w="900" aria-hidden="true">
@@ -558,7 +558,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     const EASE = 'cubic-bezier(0.19, 1, 0.22, 1)';
     const coarse = matchMedia('(pointer: coarse)').matches;
 
-    /* iOS Safari nie odpala :active bez JAKIEGOKOLWIEK listenera touchstart —
+    /* iOS Safari nie odpala :active bez JAKIEGOKOLWIEK listenera touchstart -
        bez tej linii cały tap-feedback (scale 0.96, tła wierszy) nie działa na iPhone */
     addEventListener('touchstart', () => {}, { passive: true });
 
@@ -613,7 +613,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         .to(veil, {
           yPercent: -100, duration: afterLanguageSwitch ? 0.42 : 0.9, ease: 'expo.inOut',
           // Kurtyna sunie w górę, więc dół ekranu odsłania się pierwszy. Baner zgody
-          // może wyjść już na starcie tego ruchu zamiast czekać na jego koniec —
+          // może wyjść już na starcie tego ruchu zamiast czekać na jego koniec -
           // na telefonie to 0.9 s wcześniej, a tyle wystarczy, żeby ruch z reklam
           // zdążył go zobaczyć przed odbiciem.
           onStart: () => document.dispatchEvent(new CustomEvent('mioduszewsky:curtainLifting')),
@@ -640,10 +640,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       intro();
     }
     /* Watchdog odwołany DOPIERO gdy los kurtyny jest przesądzony (intro
-       zaplanowane albo veil usunięty) — wcześniejszy throw = kurtyna znika po 5 s */
+       zaplanowane albo veil usunięty) - wcześniejszy throw = kurtyna znika po 5 s */
     (window as any).__w5ok = true;
 
-    /* Kółko sprayem na 001 — rysuje się gdy wjedzie w kadr */
+    /* Kółko sprayem na 001 - rysuje się gdy wjedzie w kadr */
     const circlePath = document.querySelector<SVGPathElement>('.spray-circle .draw');
     if (circlePath && !reduced) {
       const len = circlePath.getTotalLength();
@@ -678,7 +678,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         });
       });
       /* Proces na dotyku: brak hovera, więc numer podświetla się na niebiesko, gdy
-         krok mija środek ekranu — 1..6 zapalają się w rytmie czytania na scrollu */
+         krok mija środek ekranu - 1..6 zapalają się w rytmie czytania na scrollu */
       if (matchMedia('(hover: none)').matches) {
         document.querySelectorAll<HTMLElement>('.pstep').forEach((step) => {
           const pn = step.querySelector<HTMLElement>('.pn');
@@ -690,7 +690,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         });
       }
       /* Żółty marker „maluje się" od lewej, gdy tekst wjeżdża w kadr
-         (hero ma własny moment w timeline intro — patrz wyżej) */
+         (hero ma własny moment w timeline intro - patrz wyżej) */
       document.querySelector('.w5')?.classList.add('em-anim');
       /* Zakreslacz zeruje sie inline, a nie regula z `:not(.lit)`: czesc fraz jest
          wstrzykiwana przez set:html i nie dostaje atrybutu scope'u Astro, wiec
@@ -702,7 +702,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           onEnter: () => { el.classList.add('lit'); el.style.backgroundSize = '100% var(--mk-h, 56%)'; },
         });
       });
-      /* OFERTA: spray-podkreślenie rysuje się, kropka i dopisek „psikają" — ten sam
+      /* OFERTA: spray-podkreślenie rysuje się, kropka i dopisek „psikają" - ten sam
          język gestów co hero (te same filtry sprayF/sprayMist, kolor --spray). */
       /* Nitka sprayem rysuje sie w rytmie scrolla przez hero i problem. Ten sam
          mechanizm co skreslenie: dlugosc sciezki na dasharray, scroll odsłania ją
@@ -725,7 +725,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           let x = 0, y = 0;
           let n: HTMLElement | null = dot;
           while (n && n !== zone) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
-          /* kolo jest mniejsze od pudelka i siedzi w nim nizej (baseline) — roznice
+          /* kolo jest mniejsze od pudelka i siedzi w nim nizej (baseline) - roznice
              obu prostokatow liczymy na zywo, oba lapia ten sam transform */
           const dRect = dot.getBoundingClientRect();
           const cRect = circle.getBoundingClientRect();
@@ -757,10 +757,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
               /* Celujemy PONIZEJ etykiety sekcji, nie nad nia: grot konczacy sie
                  26 px nad malym, szarym „( Problem )" wisial w pustce po prawej.
                  Grot zatrzymuje sie TUZ NAD pierwszym wierszem listy, po prawej stronie
-                 kolumny tekstu — dlatego dolny odcinek wraca w prawo i domyka sie pionowo. */
+                 kolumny tekstu - dlatego dolny odcinek wraca w prawo i domyka sie pionowo. */
               const dist = Math.max(320, leadTop - (y + dot.offsetHeight / 2 + dy) + 8);
               let wpx = (dist / (endY - py)) * svg.viewBox.baseVal.width;
-              /* wariant szeroki ma trzymac swoja skale — dopasowanie moze go tylko
+              /* wariant szeroki ma trzymac swoja skale - dopasowanie moze go tylko
                  przyciac, gdy zabraknie miejsca, nigdy rozdmuchac ani zmniejszyc
                  ponizej rozsadku */
               const cap = Number(wrap.dataset.maxW || 0);
@@ -776,7 +776,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         };
         anchorThread();
         addEventListener('resize', anchorThread);
-        /* pierwszy pomiar leci przed dojsciem fontow — bez tego kotwica laduje obok */
+        /* pierwszy pomiar leci przed dojsciem fontow - bez tego kotwica laduje obok */
         document.fonts?.ready.then(anchorThread);
         ScrollTrigger.addEventListener('refresh', anchorThread);
         /* Grot jest czescia tej samej, NIEPRZERWANEJ sciezki: dash w SVG startuje od
@@ -813,13 +813,13 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         });
       }
       /* Manifest: czarna plama (jak psiknięcie sprayem) rozlewa się na pełny
-         ekran w rytmie scrolla — pełny bleed, zero pasków po bokach */
+         ekran w rytmie scrolla - pełny bleed, zero pasków po bokach */
       gsap.fromTo('.manif-in', { clipPath: 'circle(9% at 50% 52%)' }, {
         clipPath: 'circle(125% at 50% 52%)', ease: 'none',
         scrollTrigger: { trigger: '.manif', start: 'top 78%', end: 'top 12%', scrub: 0.5 },
       });
       /* Spray przekreslajacy fraze w manifescie: ten sam gest co w hero, ale wlasny
-         moment. Sciezki celowo NIE maja klasy `.draw` — ta jest zbierana globalnie do
+         moment. Sciezki celowo NIE maja klasy `.draw` - ta jest zbierana globalnie do
          intro hero i psiknelaby sie kilka ekranow przed swoja sekcja. */
       const manifDraw = gsap.utils.toArray<SVGPathElement>('.manif-strike .mdraw');
       if (manifDraw.length) {
@@ -842,7 +842,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 
     /* Nav (żółte logo + „Book a call") jest WIDOCZNY cały czas.
        Chowa się TYLKO gdy odsłania się finał dalmatyńczyka (żeby nie śmiecił na
-       czystej ciemnej scenie). Poza finałem — zawsze na wierzchu. */
+       czystej ciemnej scenie). Poza finałem - zawsze na wierzchu. */
     const navEl = document.querySelector<HTMLElement>('.nav')!;
     const footForNav = document.querySelector<HTMLElement>('.foot');
     const updateNav = () => {
@@ -885,7 +885,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         if (!peekOn) {
           peekOn = true;
           place(x, y);
-          /* teleport na pozycję kursora — bez przelotu przez pół ekranu */
+          /* teleport na pozycję kursora - bez przelotu przez pół ekranu */
           pkx.tween?.progress(1);
           pky.tween?.progress(1);
           gsap.to(peek, { opacity: 1, scale: 1, duration: 0.35, ease: 'power3.out' });
@@ -898,7 +898,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
          więc działa i przy ruchu myszy, i gdy treść przewija się pod nieruchomym
          kursorem. Koniec z gubionym pointerleave i przyklejoną miniaturą. */
       let lastX = -1, lastY = -1;
-      /* canShow tylko z realnego ruchu myszy. Ticker moze WYLACZNIE chowac —
+      /* canShow tylko z realnego ruchu myszy. Ticker moze WYLACZNIE chowac -
          wczesniej tez pokazywal, wiec przy scrollu pod nieruchomym kursorem
          miniatura wisiala i przeskakiwala po kolejnych wierszach, ktore same
          wjezdzaly pod kursor. */
@@ -912,12 +912,12 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       document.addEventListener('pointermove', (e) => { lastX = e.clientX; lastY = e.clientY; evaluate(true); });
 
       /* Bulletproof: dopóki miniatura jest widoczna, co KLATKĘ sprawdzaj co realnie
-         jest pod kursorem (działa dla każdego scrolla — Lenis, natywny, momentum).
+         jest pod kursorem (działa dla każdego scrolla - Lenis, natywny, momentum).
          Gdy wiersz zjedzie spod nieruchomego kursora przy scrollu → natychmiast chowa.
          Pokazujemy tylko na realny ruch myszy (pointermove), więc scroll pod
          nieruchomym kursorem NIE „przyklei" miniatury. */
       /* Kursor stoi, a tresc ucieka = chowamy. Porownujemy pozycje scrolla z ta
-         z momentu pokazania, zamiast sluchac zdarzenia 'scroll' — Lenis dowozi je
+         z momentu pokazania, zamiast sluchac zdarzenia 'scroll' - Lenis dowozi je
          tez w bezruchu (inercja, rAF), wiec miniatura nie pokazalaby sie wcale. */
       gsap.ticker.add(() => {
         if (!peekOn) return;
@@ -944,15 +944,15 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           gsap.to([btn, inner], { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.4)' });
         });
         /* press przez GSAP: magnetyzm wpisuje inline scale:none, więc CSS :active
-           nie działa na .mag — dociśnięcie musi iść tym samym kanałem */
+           nie działa na .mag - dociśnięcie musi iść tym samym kanałem */
         btn.addEventListener('pointerdown', () => gsap.to(btn, { scale: 0.96, duration: 0.15, ease: 'power2.out' }));
         const release = () => gsap.to(btn, { scale: 1, duration: 0.35, ease: 'back.out(2.2)' });
         btn.addEventListener('pointerup', release);
         btn.addEventListener('pointerleave', release);
       });
 
-      /* Custom cursor — kropka siedzi DOKŁADNIE na czubku pointera (bez smyczy).
-         cursor:none tylko gdy kropka realnie istnieje (klasa has-cur na body) —
+      /* Custom cursor - kropka siedzi DOKŁADNIE na czubku pointera (bez smyczy).
+         cursor:none tylko gdy kropka realnie istnieje (klasa has-cur na body) -
          przy reduced-motion zostaje natywny kursor. */
       const cur = document.querySelector<HTMLElement>('.cur')!;
       document.body.classList.add('has-cur');
@@ -966,7 +966,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       /* tactile press: kropka dociska się przy wciśnięciu i odbija po puszczeniu */
       addEventListener('pointerdown', () => gsap.to(cur, { scale: curScale * 0.55, duration: 0.15, ease: 'power2.out' }));
       addEventListener('pointerup', () => gsap.to(cur, { scale: curScale, duration: 0.35, ease: 'back.out(2.2)' }));
-      /* nad żywym ekranem iPhone'a kursor przejmuje strona w środku — nasz znika */
+      /* nad żywym ekranem iPhone'a kursor przejmuje strona w środku - nasz znika */
       document.querySelectorAll('.phone-live').forEach((s) => {
         s.addEventListener('pointerenter', () => gsap.to(cur, { opacity: 0, duration: 0.2 }));
         s.addEventListener('pointerleave', () => gsap.to(cur, { opacity: 1, duration: 0.2 }));
@@ -976,7 +976,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     }
 
     /* Spray-paint: TRZYMAJ I PRZECIĄGNIJ = malowanie po stronie (jak puszka).
-       TYLKO desktop (pointer: fine) — na dotyku wyłączone. Jeden kolor na pociągnięcie
+       TYLKO desktop (pointer: fine) - na dotyku wyłączone. Jeden kolor na pociągnięcie
        (cyklują po palecie marki), ślad z drobnych psiknięć aerozolu. */
     if (!reduced && matchMedia('(pointer: fine)').matches) {
       const NS = 'http://www.w3.org/2000/svg';
@@ -1020,7 +1020,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         gsap.to(svg, { opacity: 0, duration: 1.1, delay: 2.4, onComplete: () => svg.remove() });
       };
       const valid = (t: HTMLElement) => !t.closest('a, button, input, textarea, label, .phone-screen, .variant-switch');
-      /* spray tylko z wciśniętym Alt/Option — normalny drag ma zaznaczać tekst */
+      /* spray tylko z wciśniętym Alt/Option - normalny drag ma zaznaczać tekst */
       addEventListener('pointerdown', (e) => {
         if (e.button !== 0 || !e.altKey || !valid(e.target as HTMLElement)) return;
         spraying = true;
@@ -1046,7 +1046,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     }
 
     /* Sticky CTA: widoczny po zjechaniu z hero, chowany gdy jasna stopka blisko dołu.
-       Finał (.finale) jest fixed pod treścią — go nie obserwujemy. */
+       Finał (.finale) jest fixed pod treścią - go nie obserwujemy. */
     const sticky = document.querySelector<HTMLElement>('.sticky-cta-wrap');
     const navBtn = document.querySelector<HTMLElement>('.nav-actions');
     const heroEl = document.querySelector<HTMLElement>('.hero');
@@ -1063,7 +1063,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       addEventListener('resize', updateSticky);
       updateSticky();
     }
-    /* „Back to top" w finale — płynny powrót na górę (Lenis) */
+    /* „Back to top" w finale - płynny powrót na górę (Lenis) */
     document.querySelector('.finale-top')?.addEventListener('click', () => {
       const l = (window as any).__lenis;
       if (l?.scrollTo) l.scrollTo(0, { duration: 1.4 });
@@ -1077,7 +1077,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       else scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    /* FAQ: płynne otwieranie/zamykanie <details> — natywnie treść skacze bez
+    /* FAQ: płynne otwieranie/zamykanie <details> - natywnie treść skacze bez
        przejścia. Reduced motion → natywny toggle. Po zmianie wysokości strony
        odświeżamy pozycje ScrollTriggerów (sekcje niżej mają swoje reveale). */
     if (!reduced) {
@@ -1116,12 +1116,12 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     }
 
     /* Futro w stopce (11 MB webm/mp4) ładuje się w tle zaraz po tym, jak reszta
-       strony jest gotowa — NIE czeka aż user dojedzie do finału scrollem. Ma stać
+       strony jest gotowa - NIE czeka aż user dojedzie do finału scrollem. Ma stać
        gotowe na czas, zamiast ładować się na jego oczach w trakcie dojazdu. */
     {
       const fv = document.querySelector('.finale-video') as HTMLVideoElement | null;
       /* Save-Data i wolne lacza: 6-12 MB futra zostaje na posterze, nie dociagamy.
-         Warunek obejmuje 2G, 3G i slow-4g — przy ruchu z reklam czesc ludzi wchodzi
+         Warunek obejmuje 2G, 3G i slow-4g - przy ruchu z reklam czesc ludzi wchodzi
          z komorki w gorszym zasiegu i nie ma powodu zjadac im pakietu danych na
          dekoracje w stopce, ktorej moga nigdy nie zobaczyc. Poster zostaje. */
       const conn = (navigator as any).connection;
@@ -1198,10 +1198,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           }
         });
       } else {
-        // Dotyk: bez hovera. Domyślnie karta odsłania się na scrollu — dokładnie ten
+        // Dotyk: bez hovera. Domyślnie karta odsłania się na scrollu - dokładnie ten
         // sam moment co podświetlenie numerów w Process (słowo mija środek ekranu),
         // żeby pojawiało się w rytmie czytania, a nie akurat w trakcie tapa. Słowa
-        // oznaczone [data-tap] (eskapizm/Cannversity/my own business — trzy w tym
+        // oznaczone [data-tap] (eskapizm/Cannversity/my own business - trzy w tym
         // samym zdaniu na tej samej linijce, ich okna scrolla zawsze by się pokryły)
         // dostają zamiast tego tap. Tylko JEDNA karta otwarta naraz w obu trybach.
         let openEl: HTMLElement | null = null;
@@ -1221,7 +1221,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
             img.decoding = 'async';
             card.appendChild(img);
             el.appendChild(card);
-            // karta wyśrodkowana na słowie — przy krawędzi ekranu dogięta z powrotem w kadr
+            // karta wyśrodkowana na słowie - przy krawędzi ekranu dogięta z powrotem w kadr
             requestAnimationFrame(() => {
               const r = card!.getBoundingClientRect();
               let shift = 0;
@@ -1244,7 +1244,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
             });
           } else {
             ScrollTrigger.create({
-              // Słowo samo w sobie ma ~17px wysokości — "top center/bottom center" dałoby
+              // Słowo samo w sobie ma ~17px wysokości - "top center/bottom center" dałoby
               // okno aktywne tylko na te 17px scrolla (mignięcie, nie efekt). Pasmo liczone
               // od procentu wysokości ekranu (nie od wysokości słowa) daje spokojny czas na
               // przeczytanie, zanim karta zniknie.
@@ -1271,7 +1271,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     --blue: #0522ff;
     --brand: #ffcc33;
     /* ring focusu: niebieski trzyma 7.4:1 na kremie, na czarnych bryłach
-       przejmuje go żółć marki (13.9:1) — niebieski dawał tam 2.5:1 */
+       przejmuje go żółć marki (13.9:1) - niebieski dawał tam 2.5:1 */
     --focus: var(--blue);
     font-family: 'GeneralSansV', sans-serif;
     background: var(--ivory);
@@ -1318,7 +1318,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .nav a { pointer-events: auto; }
   .nav-right { display: flex; align-items: center; gap: clamp(14px, 1.8vw, 28px); pointer-events: auto; }
   /* Linki nawigacyjne: ta sama skala i waga co przelacznik jezyka, zeby nav zostal cichy.
-     Podkreslenie wjezdza od lewej — tak samo jak slowa z podgladem w tresci. */
+     Podkreslenie wjezdza od lewej - tak samo jak slowa z podgladem w tresci. */
   .nav-links { display: flex; align-items: center; gap: clamp(12px, 1.4vw, 22px); }
   .nav-link {
     position: relative; color: var(--ink); text-decoration: none;
@@ -1381,7 +1381,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   /* nav „Book a call": nalewa się niebieskim (ujednolicenie z resztą niebieskich akcentów) */
   .nav .btn::before { background: var(--blue); }
   .nav .btn:hover { border-color: var(--blue); }
-  /* chowa się, gdy poza hero — sticky-cta albo CTA stopki i tak są wtedy widoczne */
+  /* chowa się, gdy poza hero - sticky-cta albo CTA stopki i tak są wtedy widoczne */
   .nav .btn { transition: opacity 0.3s, translate 0.3s, color 0.3s, border-color 0.3s, scale 0.18s ease-out; }
   .nav .btn.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
   /* baton w navie byl w tej samej skali co CTA w tresci i dusil gore strony */
@@ -1389,7 +1389,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .nav-actions { transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1), translate 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
   .nav-actions.hide { opacity: 0; translate: 0 -8px; pointer-events: none; }
 
-  /* Sticky CTA — powtarzany główny cel konwersji.
+  /* Sticky CTA - powtarzany główny cel konwersji.
      Wrapper = fixed + centrowanie + slide-in/out (swój transform).
      .sticky-cta w środku = .mag, dostaje x/y od magnetyzmu na WŁASNYM transformie. */
   .sticky-cta-wrap {
@@ -1424,7 +1424,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   @media (max-width: 620px) {
     .nav { padding: 14px 5vw; }
     .nav-actions { gap: 10px; }
-    /* Na telefonie CTA stoi w samym hero, a po zjechaniu przejmuje je sticky —
+    /* Na telefonie CTA stoi w samym hero, a po zjechaniu przejmuje je sticky -
        baton w navie tylko dublowal akcje i scisnal gore obok logo. */
     .nav .btn { display: none; }
     .sticky-cta { font-size: 12px; padding: 12px 20px; }
@@ -1447,7 +1447,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
      mial 100svh + 28vh paddingu i podtytul wystawal ucięty przy dolnej krawedzi.
      Pelny ekran bierze teraz samo h1, a .hero rosnie naturalnie. CTA nie ginie:
      na desktopie przycisk „Umow 15 minut" siedzi w navie przez caly czas. */
-  /* `display: contents` znaczy „tego diva nie ma w ukladzie" — na telefonie label
+  /* `display: contents` znaczy „tego diva nie ma w ukladzie" - na telefonie label
      i haslo zostaja bezposrednimi dziecmi .hero, dokladnie jak wczesniej. */
   .hero-top { display: contents; }
   @media (min-width: 861px) {
@@ -1516,7 +1516,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     background-size: 0% var(--mk-h, 56%);
   }
   /* marker startuje pusty i „maluje się" od lewej po dodaniu .lit (JS, tylko
-     bez reduced-motion — inaczej .em-anim nie istnieje i marker jest pełny) */
+     bez reduced-motion - inaczej .em-anim nie istnieje i marker jest pełny) */
   .em-anim .hero h1 em:not(.lit), .em-anim .hero-sub em:not(.lit), .em-anim .proj-d em:not(.lit),
   .em-anim .foot-h em:not(.lit), .em-anim .sec-h em:not(.lit), .em-anim .lead-close em:not(.lit),
   .em-anim .how-out em:not(.lit), .em-anim .how-why-t em:not(.lit) {
@@ -1527,7 +1527,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .hero-price { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
   .hero-sub { max-width: 40ch; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.65; color: #4c483c; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-top: 1.4rem; }
 
-  /* wspólny nagłówek sekcji (lead / how / serv / proc) — celowo o oczko
+  /* wspólny nagłówek sekcji (lead / how / serv / proc) - celowo o oczko
      mniejszy niż hero, żeby sekcje nie atakowały (feedback 16.07) */
   .sec-h {
     font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 520;
@@ -1561,14 +1561,14 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .proj-d { max-width: 40ch; font-size: clamp(1rem, 1.35vw, 1.15rem); line-height: 1.65; color: #4c483c; }
   .tlink { display: inline-block; margin-top: 1.6rem; color: var(--ink); text-decoration: none; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; position: relative; }
   .tlink i { font-style: normal; margin-left: 8px; color: var(--blue); display: inline-block; transition: translate 0.3s; }
-  /* strzałki jako SVG, nie znak „↗" — iOS podmienia go na emoji i psuje branding */
+  /* strzałki jako SVG, nie znak „↗" - iOS podmienia go na emoji i psuje branding */
   .tlink i svg { display: block; width: 14px; height: 14px; }
   .tlink::after { content: ""; position: absolute; left: 0; bottom: -5px; height: 1px; width: 100%; background: var(--ink); transform-origin: right; transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1); }
   .tlink:hover::after { transform: scaleX(0.2); }
   .tlink:hover i { translate: 4px -4px; }
   .proj-f { display: flex; justify-content: center; }
 
-  /* MORE WORK — kompaktowa lista pod żywymi makietami */
+  /* MORE WORK - kompaktowa lista pod żywymi makietami */
   .more { margin-top: -4vh; }
   .mrow {
     display: grid; grid-template-columns: 1fr 1.6fr 40px; gap: 3vw; align-items: baseline;
@@ -1578,7 +1578,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   }
   .mrow:last-of-type { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
   .mrow:hover { padding-left: 18px; background: color-mix(in srgb, var(--ink) 4%, transparent); }
-  /* strzałka przy realizacjach widoczna na stałe — od razu wiadomo, że link otwiera stronę */
+  /* strzałka przy realizacjach widoczna na stałe - od razu wiadomo, że link otwiera stronę */
   .mrow .sarr { opacity: 1; translate: 0 0; }
   .mrow:hover .sarr { translate: 3px -3px; }
   .mname { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.2rem, 2.2vw, 1.9rem); letter-spacing: -0.015em; }
@@ -1614,7 +1614,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   }
   .how-list li:first-child { border-top: none; }
   .how-out { margin-top: 1.4rem; font-size: 16px; line-height: 1.6; font-weight: 500; color: var(--ink); }
-  /* WHY ME: dwa statementy obok siebie — widoczne, ale bez połaci pustki */
+  /* WHY ME: dwa statementy obok siebie - widoczne, ale bez połaci pustki */
   .how-why {
     margin-top: 7vh; display: grid; grid-template-columns: 1fr 1fr; gap: 4vw;
     border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); padding-top: 4vh;
@@ -1628,7 +1628,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .how-me { margin-bottom: 0.2rem; }
   .dim2 { color: var(--dim); }
 
-  /* Subtelny link inline w treści (np. proces krok 01) — nie button, nie hover-preview */
+  /* Subtelny link inline w treści (np. proces krok 01) - nie button, nie hover-preview */
   .ilink {
     color: var(--blue); text-decoration: underline;
     text-decoration-color: color-mix(in srgb, var(--blue) 40%, transparent);
@@ -1637,8 +1637,8 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .ilink:hover { text-decoration-color: var(--blue); }
 
   /* LINK-PREVIEW: słowa, które po najechaniu odsłaniają zdjęcie Kacpra.
-     Świadomie inne od żółtego markera (em) — cienkie podkreślenie = "tu jest coś do zobaczenia". */
-  /* Slowa z podgladem mialy podkreslenie w 30% czerni — praktycznie niewidoczne,
+     Świadomie inne od żółtego markera (em) - cienkie podkreślenie = "tu jest coś do zobaczenia". */
+  /* Slowa z podgladem mialy podkreslenie w 30% czerni - praktycznie niewidoczne,
      wiec nikt nie wiedzial, ze da sie w nie wejsc. Jednoczesnie przygaszony szary
      tekst obok (.dim2), ktory linkiem NIE jest, ludzie brali za interaktywny.
      Niebieski rozdziela te dwa sygnaly: to kolor interakcji na calej stronie. */
@@ -1695,7 +1695,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .serv-note { margin-top: 3vh; font-size: 12px; line-height: 1.6; color: var(--dim); }
   /* OFERTA jako kontrastowy ciemny panel-zlecenie (fokus konwersji na jasnej stronie).
      Lewa = tytuł/cena/pitch/CTA; prawa = co dostajesz. Żółte CTA = jedyny mocny akcent. */
-  /* OFERTA: czarna bryła-zlecenie mówiąca językiem strony — spray (#c70404) jak w hero,
+  /* OFERTA: czarna bryła-zlecenie mówiąca językiem strony - spray (#c70404) jak w hero,
      żółć (--brand) jako cena/CTA, spray-dot + spray-strike rysowany na scrollu, tag Shantell.
      Beyond WEWNĄTRZ bryły (zero przeskoku). */
   .deal {
@@ -1792,7 +1792,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .deal-bp { font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(248, 249, 242, 0.78); margin-top: auto; }
   .deal-fine { position: relative; padding: 2.6vh clamp(2.3rem, 3.6vw, 3.6rem); border-top: 1px solid rgba(248, 249, 242, 0.16); font-size: 12px; color: rgba(248, 249, 242, 0.5); }
 
-  /* PROCES — kompaktowe wiersze: numer | krok | opis (jedna linia wysokości) */
+  /* PROCES - kompaktowe wiersze: numer | krok | opis (jedna linia wysokości) */
   .proc { padding: 8vh 3vw; }
   /* Proces = siatka z gigantycznymi „ghost" numerami (celowo NIE lista jak serv/faq) */
   .proc-flow {
@@ -1807,7 +1807,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     color: transparent; -webkit-text-stroke: 1.4px color-mix(in srgb, var(--ink) 45%, transparent);
     margin-bottom: 0.7rem; transition: color 0.4s, -webkit-text-stroke-color 0.4s;
   }
-  /* hover tylko na urządzeniach z realnym hoverem — na dotyku iOS „przykleja"
+  /* hover tylko na urządzeniach z realnym hoverem - na dotyku iOS „przykleja"
      :hover do dotkniętego kroku i świeciłyby się DWA numery naraz (dotknięty + ten
      na środku ze scrolla). Na dotyku podświetla wyłącznie scroll (.pn-lit). */
   @media (hover: hover) {
@@ -1848,7 +1848,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .fbody { padding: 0 6px 28px; overflow: hidden; }
   .fbody p { max-width: 68ch; font-size: 15px; line-height: 1.7; color: #4c483c; margin: 0; }
 
-  /* STOPKA — jasna, pełnoekranowa sekcja domykająca (decyzja).
+  /* STOPKA - jasna, pełnoekranowa sekcja domykająca (decyzja).
      Nagłówek + CTA wyśrodkowane, info + meta u dołu. Ciemny FINAŁ odsłania się niżej. */
   .foot { position: relative; min-height: 100vh; display: flex; flex-direction: column; padding: 9vh 3vw 3.5vh; }
   .foot-lead { flex: 1; display: flex; flex-direction: column; justify-content: center; }
@@ -1861,7 +1861,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 
   .foot-bar {
     /* dwie kolumny: kontakt po lewej, pieczatka po prawej. Trzecia („Dostepnosc")
-       zdjeta 24.08 — nie wnosila nic, czego nie ma w FAQ i w ofercie. */
+       zdjeta 24.08 - nie wnosila nic, czego nie ma w FAQ i w ofercie. */
     display: grid; grid-template-columns: 1fr auto; gap: 4vw; align-items: center;
     margin-top: 5vh; padding-top: 3vh;
     border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
@@ -1876,7 +1876,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .fcol a.sc { display: inline-flex; align-items: center; gap: 9px; }
   .fcol a.sc::after { display: none; }
   .sc-i { flex: none; width: 15px; height: 15px; fill: currentColor; }
-  /* znak Contry wypełnia kwadrat gęściej niż pozostałe dwa — zmniejszamy sam glif,
+  /* znak Contry wypełnia kwadrat gęściej niż pozostałe dwa - zmniejszamy sam glif,
      box zostaje 15px, więc wszystkie trzy nazwy startują z tej samej osi */
   .sc-i-contra { transform: scale(0.9); }
   .fcol a.sc span { position: relative; }
@@ -1894,7 +1894,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .spin-badge svg { width: 100%; height: 100%; animation: badgeSpin 24s linear infinite; }
   .spin-badge text { font-family: 'Space Grotesk Variable', monospace; font-size: 12.5px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; fill: var(--ink); }
   /* Napis jest rozciagany do pelnego obwodu (textLength), a wersja PL ma 36 znakow
-     wobec 51 w EN — przy tym samym stopniu pisma litery rozjezdzaly sie na boki.
+     wobec 51 w EN - przy tym samym stopniu pisma litery rozjezdzaly sie na boki.
      Wiekszy stopien wyrownuje gestosc obu wersji. */
   .spin-badge svg.sb-pl text { font-size: 14.5px; }
   .spin-core { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
@@ -1903,10 +1903,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 
   .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 3vh; padding-top: 1.2rem; border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
 
-  /* FINAŁ jako CURTAIN REVEAL — przypięty do dołu okna, odsłaniany gdy .w5 się unosi.
+  /* FINAŁ jako CURTAIN REVEAL - przypięty do dołu okna, odsłaniany gdy .w5 się unosi.
      Naturalne, przyjemne zakończenie z głównym CTA „Book a call". */
   .finale {
-    /* finał jest poza .w5 — własne zmienne palety I czcionka (inaczej serif z przeglądarki) */
+    /* finał jest poza .w5 - własne zmienne palety I czcionka (inaczej serif z przeglądarki) */
     --ink: #000000; --ivory: #f8f9f2; --brand: #ffcc33; --dim: #8b8677; --blue: #0522ff;
     --focus: var(--brand);
     --dal-w: min(80vw, 1100px);            /* szerokość wordmarku */
@@ -1928,7 +1928,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     position: absolute; left: 50%; top: 50%; translate: -50% 0;
     margin-top: calc(var(--dal-w) * 0.106 + 3.5vh);
     z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 1.1rem;
-    /* absolute + left:50% liczy dostępną szerokość od połowy — bez tego CTA
+    /* absolute + left:50% liczy dostępną szerokość od połowy - bez tego CTA
        łamie się do dwóch linii na wąskich ekranach */
     width: max-content; max-width: 92vw;
   }
@@ -1963,10 +1963,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .finale-meta a { color: inherit; text-decoration: none; transition: color 0.25s; }
   .finale-meta a:hover { color: var(--ivory); }
   .finale-legal { display: inline-flex; gap: 2rem; }
-  /* poniżej ~800px jeden rząd łamie się na 2,5 linii z osieroconym „Privacy" —
+  /* poniżej ~800px jeden rząd łamie się na 2,5 linii z osieroconym „Privacy" -
      wymuszamy czyste trzy wiersze: copyright / autorstwo / Terms + Privacy */
   @media (max-width: 800px) {
-    /* w kolumnie `justify-content` steruje osią pionową — centrowanie robi `align-items` */
+    /* w kolumnie `justify-content` steruje osią pionową - centrowanie robi `align-items` */
     .finale-meta { flex-direction: column; align-items: center; gap: 0.55rem; }
   }
   @media (max-width: 560px) { .finale-cta { padding: 16px 30px; } .finale-dal { width: 92vw; } }
@@ -1977,16 +1977,16 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
        (zmierzone 360-640px). */
     .hero h1 { font-size: clamp(2.2rem, 12vw, 3.6rem); letter-spacing: -0.05em; }
     /* PL ma dwie linie i dluzsza („mowi za Ciebie" z kropka) wypelniala tylko 92%
-       szerokosci — haslo bylo mniejsze, niz pozwala ekran. 12.9vw dociaga ja do
+       szerokosci - haslo bylo mniejsze, niz pozwala ekran. 12.9vw dociaga ja do
        krawedzi (zmierzone 320-430 px). EN zostaje na 12vw, bo „A generic website"
        juz dobija do prawej. */
     .hero h1.h1-pl { font-size: clamp(2.2rem, 12.9vw, 3.9rem); }
   }
   @media (max-width: 640px) {
     /* bez batonu w navie cały hero (label, hasło, podtytuł, CTA) ma się zmieścić
-       w jednym ekranie — MUSI stać PO bazowej regule .hero, inaczej przegrywa */
+       w jednym ekranie - MUSI stać PO bazowej regule .hero, inaczej przegrywa */
     /* min-height liczylo sie do CONTENT-BOXa, wiec hero mial 100svh + 14vh
-       paddingu i wystawal poza ekran o kilkanascie procent — stad pol ekranu
+       paddingu i wystawal poza ekran o kilkanascie procent - stad pol ekranu
        pustki pod CTA. border-box sprawia, ze „jeden ekran" znaczy jeden ekran. */
     /* min-height liczylo sie do CONTENT-BOXa, wiec hero mial 100svh + 14vh paddingu
        i wystawal poza ekran. border-box sprawia, ze „jeden ekran" znaczy jeden ekran.
@@ -2007,7 +2007,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .finale-top-arrow { font-size: 15px; letter-spacing: 0; transition: translate 0.35s cubic-bezier(0.19,1,0.22,1); }
   .finale-top:hover .finale-top-arrow { translate: 0 -4px; }
   @media (max-width: 640px) {
-    /* pasek URL Safari przycina górę 100vh finału (box kotwiczony do dołu) —
+    /* pasek URL Safari przycina górę 100vh finału (box kotwiczony do dołu) -
        zsuwamy „Back to top" o maksymalną różnicę viewportów, żeby nigdy nie znikał.
        MUSI stać PO bazowej regule .finale-top (ta sama specyficzność). */
     .finale-top { top: calc(clamp(26px, 6vh, 60px) + (100lvh - 100svh)); }
@@ -2029,7 +2029,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   /* skreslenie rysuje sie na caly blok, wiec zawiniecie wrzuciloby kreske miedzy linie */
   .fix { position: relative; display: inline-block; white-space: nowrap; }
   /* odreczny dopisek siedzi nad skreslonym slowem. Gdy skreslenie nie jest w pierwszej
-     linii naglowka (PL), nad soba ma tekst — bez tego powietrza dopisek go zasłania. */
+     linii naglowka (PL), nad soba ma tekst - bez tego powietrza dopisek go zasłania. */
   .hero h1 .ln:not(:first-child):has(.fix) { margin-top: 0.4em; }
   .fix .strike {
     position: absolute; inset: 14% -5% auto; width: 110%; height: 66%;
@@ -2059,15 +2059,15 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .hero, .lead { position: relative; z-index: 1; }
   .thread { position: absolute; z-index: 0; pointer-events: none; }
   /* max-width przycina szerokosc PO obliczeniach w JS, wiec musi miec zapas ponad
-     limit z kodu (innerWidth * 0.78) — inaczej kreska cicho sie kurczy i nie dojezdza
+     limit z kodu (innerWidth * 0.78) - inaczej kreska cicho sie kurczy i nie dojezdza
      do celu, mimo ze wyliczona szerokosc byla poprawna. */
   .t-wide { left: 24vw; top: 50vh; width: min(58vw, 760px); max-width: 84vw; }
-  /* Na telefonie tresc zajmuje cala szerokosc, wiec kreska nie miala gdzie biec —
+  /* Na telefonie tresc zajmuje cala szerokosc, wiec kreska nie miala gdzie biec -
      ruch przejmuje tam zakreslacz malujacy sie na frazach przy wjezdzie w kadr. */
   @media (max-width: 900px) { .t-wide { display: none; } }
   .thread svg { display: block; width: 100%; height: auto; overflow: visible; }
   /* 9 to grubosc, przy ktorej kreska ma ciezar sladu pisaka. Cienka (7) czyta sie
-     jak wykres. NIE dokladac filtrow znieksztalcajacych — probowane, wychodzi
+     jak wykres. NIE dokladac filtrow znieksztalcajacych - probowane, wychodzi
      postrzepiona linia, nie odreczna. Charakter daje trasa i grubosc, nie szum. */
   .thread path { fill: none; stroke: var(--spray); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
 
@@ -2102,7 +2102,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   .btn:focus-visible { border-radius: 999px; }
 
   /* Dotyk: hover nie istnieje, więc tap dostaje własny feedback.
-     Szary systemowy flash iOS wyłączony — feedback dają nasze stany. */
+     Szary systemowy flash iOS wyłączony - feedback dają nasze stany. */
   .w5 a, .w5 button, .w5 summary, .finale a, .finale button {
     -webkit-tap-highlight-color: transparent;
   }
@@ -2125,7 +2125,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     .nav-actions { gap: 8px; }
     /* Na telefonie logo + dwa linki + jezyk + CTA nie mieszcza sie w jednym rzedzie.
        CTA wypada z navu, bo jego role pelni .sticky-cta przy dolnej krawedzi, a hero
-       ma wlasny duzy przycisk. Linki nawigacyjne zostaja — one sa tu powodem zmiany. */
+       ma wlasny duzy przycisk. Linki nawigacyjne zostaja - one sa tu powodem zmiany. */
     .nav-actions .btn { display: none; }
     /* Nav na telefonie ma teraz cztery elementy zamiast trzech (logo, dwa linki, jezyk).
        Logo w domyslnej skali (166 px przy 390 px ekranu) wypychalo przelacznik jezyka
@@ -2163,7 +2163,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     /* Rytm hero na telefonie grupuje, zamiast rozdzielac wszystko po rowno:
        label klei sie do H1, kreska + akapit + CTA tworza drugi blok. Wczesniej
        najwiekszy odstep w hero (8vh) siedzial miedzy H1 a kreska, czyli w miejscu
-       najslabszego przejscia — kreska wisiala w pustce zamiast cokolwiek grupowac. */
+       najslabszego przejscia - kreska wisiala w pustce zamiast cokolwiek grupowac. */
     .hero-b { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-start; gap: 0; margin-top: 0; }
     /* odstepy ustawione jawnie: <p> wnosi wlasny margin 1em, a odziedziczone
        space-between dokladalo resztke wysokosci w losowym miejscu */
@@ -2188,7 +2188,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     .lrow h3 { grid-column: 2; grid-row: 1; }
     .lrow p { grid-column: 2; grid-row: 2; }
     /* Hero konczy sie dokladnie na zagieciu, wiec sekcja problemu nie potrzebuje
-       juz wlasnych 12vh rozbiegu — inaczej po CTA leci pol ekranu pustki
+       juz wlasnych 12vh rozbiegu - inaczej po CTA leci pol ekranu pustki
        (kiedys mieszkala tam linia, na telefonie jej nie ma). */
     .lead { padding-top: 2vh; }
     .lead-close { margin-top: 5vh; }

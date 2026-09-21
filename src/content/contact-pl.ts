@@ -20,7 +20,7 @@ export const contactPl = {
     noteAfter: 'i znajdziemy termin.',
     openNew: 'Otwórz kalendarz w nowym oknie',
     blockedTitle: 'Kalendarz nie chce się tu załadować',
-    blockedNote: 'Najczęściej blokuje go rozszerzenie prywatności w przeglądarce. Otwórz kalendarz w nowym oknie — tam zadziała.',
+    blockedNote: 'Najczęściej blokuje go rozszerzenie prywatności w przeglądarce. Otwórz kalendarz w nowym oknie - tam zadziała.',
     fallback: 'Napisz, żeby umówić rozmowę',
     fallbackNote: 'Kalendarz jest właśnie podłączany. Na razie napisz maila. Wrócę z terminem.',
     iframeTitle: 'Umów bezpłatne 15 minut rozmowy',

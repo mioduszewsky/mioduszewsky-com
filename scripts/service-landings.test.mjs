@@ -118,7 +118,7 @@ test('services index exists (owner decision 17.09.2026), consultation stays off 
 test('nav carries both entries and they survive scrolling past the hero', async () => {
   for (const [path, services, cannabis] of [['/pl/', 'Usługi', 'Branża konopna'], ['/', 'Services', 'Cannabis industry']]) {
     const html = await page(path);
-    // Linki musza byc POZA .nav-actions — ten kontener chowa sie razem z CTA po zjechaniu z hero.
+    // Linki musza byc POZA .nav-actions - ten kontener chowa sie razem z CTA po zjechaniu z hero.
     const navLinks = html.slice(html.indexOf('class="nav-links"'), html.indexOf('class="nav-actions"'));
     assert.ok(navLinks.length > 0 && html.indexOf('class="nav-links"') < html.indexOf('class="nav-actions"'), `${path}: .nav-links musi stac przed .nav-actions`);
     assert.ok(navLinks.includes(services), `${path}: brak linku uslug w .nav-links`);
@@ -154,7 +154,7 @@ test('services index lists four equal scopes, website first but not privileged',
   for (const slug of slugs) assert.ok(html.includes(`/pl/uslugi/${slug}/`), `brak linku do ${slug}`);
   assert.ok(!html.includes('konsultacja-biznesowa'));
   assert.ok(html.indexOf('Kompletna strona internetowa') < html.indexOf('Wdrożenie AI'), 'strona www zostaje pierwsza');
-  // Decyzja Kacpra 17.09: zadna pozycja nie moze miec wiekszej wagi wizualnej — lista jest
+  // Decyzja Kacpra 17.09: zadna pozycja nie moze miec wiekszej wagi wizualnej - lista jest
   // mapa, nie kolejnym pitchem pod strone www (tym jest cala strona glowna).
   const rows = [...html.matchAll(/class="rest-row"/g)].length;
   assert.equal(rows, 4, 'cztery rownorzedne pozycje');
@@ -167,9 +167,9 @@ test('services index lists four equal scopes, website first but not privileged',
 });
 
 test('every locale is complete: EN mirrors PL and leaves to the EN Cannversity', async () => {
-  // Kacper obsluguje klientow polskich i anglojezycznych — komplet tresci w obu jezykach.
+  // Kacper obsluguje klientow polskich i anglojezycznych - komplet tresci w obu jezykach.
   // Etykieta bloku dodatkowych uslug nie moze ich degradowac w zadnym jezyku.
-  // „buduję" nie obejmuje Cofoundera (to wspólnik, nie rzecz do zbudowania) — Kacper 17.09
+  // „buduję" nie obejmuje Cofoundera (to wspólnik, nie rzecz do zbudowania) - Kacper 17.09
   assert.ok((await page('/pl/')).includes('Co jeszcze robię'));
   assert.ok((await page('/')).includes('What else I do'));
   assert.ok(!(await page('/')).includes('Other services'));

@@ -5,7 +5,7 @@ const p = await ctx.newPage();
 // 1. wejdź, ustaw PL w localStorage (symulacja przeglądarki Kacpra)
 await p.goto('https://www.igorgrabowski.com/', { waitUntil: 'networkidle', timeout: 20000 });
 await p.evaluate(() => { try { localStorage.setItem('lang','pl'); localStorage.setItem('language','pl'); localStorage.setItem('locale','pl'); localStorage.setItem('i18nextLng','pl'); } catch(e){} });
-// 2. teraz wejdź z ?lang=en — czy nadpisze PL?
+// 2. teraz wejdź z ?lang=en - czy nadpisze PL?
 await p.goto('https://www.igorgrabowski.com/?lang=en', { waitUntil: 'networkidle', timeout: 20000 });
 await p.waitForTimeout(1800);
 const txt = await p.evaluate(() => document.body.innerText.replace(/\s+/g,' ').slice(0,160));

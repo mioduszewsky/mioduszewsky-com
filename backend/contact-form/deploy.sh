@@ -66,7 +66,7 @@ aws logs put-retention-policy --log-group-name "$LAMBDA_LOG_GROUP" \
 
 # UWAGA: Lambda Function URL z auth=NONE NIE działa publicznie na tym koncie
 # (uporczywe 403 AccessDeniedException mimo poprawnej resource-policy; konto NIE
-# jest w organizacji, więc to nie SCP/RCP — jakiś guardrail Function URL).
+# jest w organizacji, więc to nie SCP/RCP - jakiś guardrail Function URL).
 # Dlatego publiczny endpoint = API Gateway HTTP API (API GW woła Lambdę własnym
 # uprawnieniem, nie polega na public-invoke). CORS obsługuje sam handler.
 echo "==> API Gateway HTTP API"

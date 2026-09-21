@@ -1,5 +1,5 @@
 ---
-// W3 „NOKTURN v2" — PRAWDZIWE scrollytelling: jedna przypięta scena, kadry Higgsfield
+// W3 „NOKTURN v2" - PRAWDZIWE scrollytelling: jedna przypięta scena, kadry Higgsfield
 // przenikają się crossfade'em + Ken Burns, słońce wschodzi razem ze scrollem,
 // rozdziały wjeżdżają i gasną w oknach progresu. Zero twardych cięć.
 import VariantLayout from '../layouts/VariantLayout.astro';
@@ -11,7 +11,7 @@ import s3 from '../assets/scenes/s3-zlota.webp';
 import s4 from '../assets/scenes/s4-dzien.webp';
 ---
 
-<VariantLayout title="W3 — NOKTURN · mioduszewsky" bg="#12101f" fg="#fdf6e9">
+<VariantLayout title="W3 - NOKTURN · mioduszewsky" bg="#12101f" fg="#fdf6e9">
   <main class="w3">
     <header class="topline">
       <span>mioduszewsky</span>
@@ -52,7 +52,7 @@ import s4 from '../assets/scenes/s4-dzien.webp';
             <p class="eyebrow">Rozdział trzeci</p>
             <h2 class="serif">To nie makieta.</h2>
             <p class="sub">
-              eskapizm.com — zaprojektowane i zbudowane od zera.<br />
+              eskapizm.com - zaprojektowane i zbudowane od zera.<br />
               <strong>Poskroluj po nim palcem, tu, w telefonie obok.</strong>
             </p>
             <ul class="uslugi-mini">
@@ -62,12 +62,12 @@ import s4 from '../assets/scenes/s4-dzien.webp';
             </ul>
           </div>
           <div class="phone-wrap">
-            <PhoneFrame src={eskapizmScroll} alt="eskapizm.com — żywy projekt" label="eskapizm.com" href="https://eskapizm.com" />
+            <PhoneFrame src={eskapizmScroll} alt="eskapizm.com - żywy projekt" label="eskapizm.com" href="https://eskapizm.com" />
           </div>
         </div>
 
         <div class="ch" data-ch="3">
-          <p class="eyebrow">Rozdział ostatni — Twój</p>
+          <p class="eyebrow">Rozdział ostatni - Twój</p>
           <h2 class="serif dark">Opowiedz mi<br /><em>o swoim projekcie.</em></h2>
           <a class="cta" href="mailto:kacper@mioduszewsky.com">kacper@mioduszewsky.com ↳</a>
           <p class="micro">© 2026 mioduszewsky · Wrocław · Kacper Mioduszewski</p>
@@ -81,7 +81,7 @@ import s4 from '../assets/scenes/s4-dzien.webp';
           ))}
         </nav>
 
-        <span class="cue" data-cue aria-hidden="true">przewiń — zaczyna się w nocy ↓</span>
+        <span class="cue" data-cue aria-hidden="true">przewiń - zaczyna się w nocy ↓</span>
       </div>
     </section>
   </main>
@@ -108,7 +108,7 @@ import s4 from '../assets/scenes/s4-dzien.webp';
     const ease = (t: number) => t * t * (3 - 2 * t); // smoothstep
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-    /* okna kadrów (globalny progres 0..1) — celowo zachodzą na siebie */
+    /* okna kadrów (globalny progres 0..1) - celowo zachodzą na siebie */
     const BG: [number, number, number, number][] = [
       [-0.1, -0.05, 0.14, 0.3],
       [0.14, 0.3, 0.42, 0.56],

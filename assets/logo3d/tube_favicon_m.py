@@ -1,4 +1,4 @@
-# Balonowe tube-lettering "mioduszewsky" w stylu flayks — Blender headless
+# Balonowe tube-lettering "mioduszewsky" w stylu flayks - Blender headless
 # Uruchomienie: blender -b -P tube_logo.py -- [hex_koloru] [output.blend]
 import bpy, math, sys
 from mathutils import Vector

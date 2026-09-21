@@ -23,7 +23,7 @@ try {
 await page.evaluate(() => document.fonts?.ready).catch(() => {});
 await page.waitForTimeout(2500);
 
-// Zamknij modal — klik na X (close button) lub przez Escape
+// Zamknij modal - klik na X (close button) lub przez Escape
 await page.evaluate(() => {
   // znajdź wszystkie elementy z aria-label='Close' lub klasą close
   const closers = document.querySelectorAll('[aria-label*="lose" i], [class*="close" i], [class*="dismiss" i]');

@@ -1,10 +1,10 @@
-/** Strona „Usługi" — spis tego, co robię, w jednym miejscu.
+/** Strona „Usługi" - spis tego, co robię, w jednym miejscu.
  *
  * Decyzja Kacpra 17.09.2026, zastępuje odrzucenie hubu z 09.09: podstrony usług były dla
  * klienta niewidoczne (blok na 67% wysokości strony głównej, zero linków w navie), a człowiek,
  * który przyszedł po stronę www, a potrzebuje czegoś innego, zostawał bez niczego.
  *
- * To NIE jest równorzędny front marki — tym była odrzucona wersja z 09.09
+ * To NIE jest równorzędny front marki - tym była odrzucona wersja z 09.09
  * (src/pages/pl/uslugi/index.astro.rejected w worktree service-landings; nie przywracać).
  * Flagowa oferta broni się proporcją: pozycja 01 zajmuje tyle co pozostałe trzy razem.
  *

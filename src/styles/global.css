@@ -144,7 +144,7 @@ html.theme-creme {
   animation: marquee 28s linear infinite;
 }
 
-/* ── Grain overlay (ciepły, filmowy — anty-sterylność) ─────────── */
+/* ── Grain overlay (ciepły, filmowy - anty-sterylność) ─────────── */
 .grain::after {
   content: "";
   position: fixed;

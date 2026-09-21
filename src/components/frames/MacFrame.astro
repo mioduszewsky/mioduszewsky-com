@@ -15,7 +15,7 @@ const { src, alt, url = '', class: cls } = Astro.props;
     <span class="mac-dots" aria-hidden="true"><i></i><i></i><i></i></span>
     {url && <span class="mac-url">{url}</span>}
   </div>
-  <div class="mac-screen" tabindex="0" aria-label={`${alt} — przewiń, żeby zobaczyć całość`}>
+  <div class="mac-screen" tabindex="0" aria-label={`${alt} - przewiń, żeby zobaczyć całość`}>
     <img src={src.src} alt={alt} draggable="false" />
   </div>
 </figure>

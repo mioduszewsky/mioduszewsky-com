@@ -16,7 +16,7 @@ for (const w of widths) {
       document.querySelectorAll('body *').forEach(e => {
         const r = e.getBoundingClientRect();
         if (r.width === 0 && r.height === 0) return;
-        // .cur (kursor-blob) i .sr-only sa celowo poza kadrem — nie sa trescia strony
+        // .cur (kursor-blob) i .sr-only sa celowo poza kadrem - nie sa trescia strony
         if (e.closest('.cur') || e.classList.contains('cur') || e.classList.contains('sr-only')) return;
         if (r.right > innerWidth + 1 || r.left < -1) {
           const cls = (typeof e.className === 'string' ? e.className : '').split(' ')[0] || e.tagName;

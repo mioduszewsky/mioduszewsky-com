@@ -7,12 +7,12 @@ set -e
 cd ~/mioduszewsky-com/assets/logo3d
 
 if pgrep -f "render_dalmatian.sh" > /dev/null 2>&1; then
-  echo "STOP: render już leci. Nie odpalaj drugiego naraz — zabiją się o GPU."
+  echo "STOP: render już leci. Nie odpalaj drugiego naraz - zabiją się o GPU."
   exit 1
 fi
 
 have=$(ls frames_dal/ 2>/dev/null | wc -l | tr -d ' ')
-echo "START WZNOWIENIA: $(date) — na dysku $have/180 klatek"
+echo "START WZNOWIENIA: $(date) - na dysku $have/180 klatek"
 
 blender -b fur.blend --python-expr "
 import bpy

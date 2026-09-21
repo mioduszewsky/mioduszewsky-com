@@ -36,7 +36,7 @@ export const layoutCopy = {
     },
   },
   pl: {
-    defaultDescription: 'Landing page’e, strony firmowe, wdrożenia AI i aplikacje webowe. Od pomysłu do uruchomienia — strategia, treść, design i kod po jednej stronie.',
+    defaultDescription: 'Landing page’e, strony firmowe, wdrożenia AI i aplikacje webowe. Od pomysłu do uruchomienia - strategia, treść, design i kod po jednej stronie.',
     areaServed: 'Polska i zagranica',
     cookie: {
       text: 'Ciasteczka pokazują mi, jak korzystasz ze strony i czy reklamy działają. Podstawowe statystyki działają bez nich. Szczegóły w',

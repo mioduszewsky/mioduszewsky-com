@@ -17268,7 +17268,7 @@ frame=   72 fps=0.0 q=-0.0 size=    2304KiB time=00:00:02.36 bitrate=7975.2kbits
 frame=  180 fps=0.0 q=-0.0 Lsize=    6283KiB time=00:00:05.96 bitrate=8626.9kbits/s speed=6.39x elapsed=0:00:00.93    
 ALPHA CHECK (musi być 1): 1
 ALL DONE: sob. 18 lip 2026 18:07:34 CEST
-UWAGA: frames_dal/ zostaje (setki MB). Skasuj RĘCZNIE dopiero po akceptacji —
+UWAGA: frames_dal/ zostaje (setki MB). Skasuj RĘCZNIE dopiero po akceptacji -
 dzięki temu korekta kompresji to 2 minuty re-enkodowania, a nie 12 h renderu.
 -rw-r--r--@ 1 kacpermioduszewski  staff   6,1M 18 lip 18:07 logo-dalmatian.mp4
 -rw-r--r--@ 1 kacpermioduszewski  staff    11M 18 lip 18:07 logo-dalmatian.webm

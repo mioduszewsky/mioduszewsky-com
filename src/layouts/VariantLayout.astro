@@ -1,6 +1,6 @@
 ---
 // Wspólny layout eksperymentalnych wariantów designu (/w1-/w4).
-// Fonty: WSZYSTKIE z pełnym latin-ext (ą ć ę ł ń ó ś ź ż) — warunek zero.
+// Fonty: WSZYSTKIE z pełnym latin-ext (ą ć ę ł ń ó ś ź ż) - warunek zero.
 import '@fontsource-variable/unbounded';
 import '@fontsource-variable/anybody';
 import '@fontsource-variable/bricolage-grotesque';
@@ -16,11 +16,11 @@ interface Props {
   title: string;
   bg?: string;
   fg?: string;
-  /** przełącznik W1-W7 w rogu — wyłączany na produkcyjnym indexie */
+  /** przełącznik W1-W7 w rogu - wyłączany na produkcyjnym indexie */
   switcher?: boolean;
   /** nadpisanie meta robots (warianty domyślnie noindex) */
   robots?: string;
-  /** meta description — podawana tylko na produkcyjnym indexie */
+  /** meta description - podawana tylko na produkcyjnym indexie */
   description?: string;
   /** język dokumentu i komunikatów wspólnych */
   locale?: Locale;
@@ -256,7 +256,7 @@ const current = Astro.url.pathname.replace(/\/$/, '');
             // Przed zgodą zbieramy WYŁĄCZNIE to, co mieści się w pomiarze ruchu:
             // odsłony i głębokość scrolla. Autocapture zbiera kliknięcia razem
             // z treścią klikniętych elementów, czyli analitykę produktu, a nie
-            // pomiar ruchu — na to zgoda jest potrzebna. Patrz TRACKING-GATE.md.
+            // pomiar ruchu - na to zgoda jest potrzebna. Patrz TRACKING-GATE.md.
             autocapture: false,
             capture_heatmaps: false,
             capture_performance: false,
@@ -351,7 +351,7 @@ const current = Astro.url.pathname.replace(/\/$/, '');
           const reveal = () => { if (banner) banner.hidden = false; };
           // Strony z kurtyną wejściową (.veil, np. w5) nie mogą pokazać bannera
           // na zaciągniętej kurtynie. Czekamy więc na moment, w którym kurtyna
-          // ZACZYNA wjeżdżać do góry — dół ekranu jest wtedy już odsłonięty.
+          // ZACZYNA wjeżdżać do góry - dół ekranu jest wtedy już odsłonięty.
           // `curtainDone` (koniec animacji) zostaje jako zapas dla stron, które
           // nie wysyłają `curtainLifting`.
           // Watchdog to wyłącznie bezpiecznik na wypadek, gdyby żaden z tych
