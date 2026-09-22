@@ -1,9 +1,10 @@
 ---
+import BrandFooter from '../components/BrandFooter.astro';
 // /privacy - polityka prywatności (RODO/GDPR). Administrator = Kacper Mioduszewski
 // jako osoba fizyczna (decyzja 16.07.2026: bez zawieszonej działalności).
 // Aktualizować przy każdej zmianie procesorów (hosting, mail, kalendarz, analityka).
 import VariantLayout from '../layouts/VariantLayout.astro';
-import LanguageSwitch from '../components/LanguageSwitch.astro';
+import SiteMenu from '../components/SiteMenu.astro';
 const updated = '11 August 2026';
 ---
 
@@ -25,7 +26,7 @@ const updated = '11 August 2026';
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <div class="nav-actions"><LanguageSwitch locale="en" href="/pl/polityka-prywatnosci/" /><a class="back" href="/">← Back</a></div>
+<SiteMenu locale="en" alternatePath="/pl/polityka-prywatnosci/" />
     </header>
 
     <article class="doc-body">
@@ -162,12 +163,7 @@ const updated = '11 August 2026';
       <p>If this policy changes, the “last updated” date above will change too.</p>
     </article>
 
-    <footer class="doc-foot">
-      <span>© 2026 mioduszewsky</span>
-      <a href="/terms/">Terms</a>
-      <a href="/contact/">Contact</a>
-      <a href="/">Home</a>
-    </footer>
+    <BrandFooter locale="en" />
   </main>
 
   <style>

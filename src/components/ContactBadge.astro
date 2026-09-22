@@ -1,0 +1,23 @@
+---
+import type { Locale } from '../i18n/site';
+import { homePl } from '../content/home-pl';
+interface Props { locale?: Locale; id?: string }
+const { locale = 'pl', id = 'contact-badge' } = Astro.props;
+const pl = locale === 'pl';
+---
+<div class="contact-badge" aria-label={pl ? homePl.footer.badge : 'Currently in Wrocław, Poland. Working worldwide.'} role="img">
+  <svg class:list={['orbit', { 'sb-pl': pl }]} viewBox="0 0 200 200" aria-hidden="true">
+    <defs><path id={id} d="M100,100 m-70,0 a70,70 0 1,1 140,0 a70,70 0 1,1 -140,0" /></defs>
+    <text><textPath href={`#${id}`} startOffset="0" textLength="439" lengthAdjust="spacing">{pl ? homePl.footer.badge : 'CURRENTLY IN WROCŁAW, POLAND · WORKING WORLDWIDE · '}</textPath></text>
+  </svg>
+  <span class="spin-core" aria-hidden="true"></span>
+</div>
+<style>
+  .contact-badge { position: relative; width: clamp(118px, 12vw, 150px); aspect-ratio: 1; display: grid; place-items: center; }
+  .orbit { width: 100%; height: 100%; animation: badgeSpin 24s linear infinite; }
+  text { font-family: 'Space Grotesk Variable', monospace; font-size: 12.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; fill: #000; }
+  .sb-pl text { font-size: 14.5px; }
+  .spin-core { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: #0522ff; }
+  @keyframes badgeSpin { to { rotate: 360deg; } }
+  @media (prefers-reduced-motion: reduce) { .orbit { animation: none; } }
+</style>

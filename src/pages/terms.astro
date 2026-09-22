@@ -1,4 +1,5 @@
 ---
+import BrandFooter from '../components/BrandFooter.astro';
 // /terms - regulamin świadczenia usług drogą elektroniczną (Art. 8 ustawy z 18.07.2002
 // o świadczeniu usług drogą elektroniczną). Zakres celowo ograniczony do usług REALNIE
 // działających dziś na stronie (formularz kontaktowy + booking rozmowy) - żadna płatna
@@ -8,7 +9,7 @@
 // patrz mioduszewsky-com/STATUS.md - gate prawny 27.07.2026). Aktualizować przy każdej
 // zmianie zakresu usług elektronicznych na stronie lub przy reaktywacji działalności.
 import VariantLayout from '../layouts/VariantLayout.astro';
-import LanguageSwitch from '../components/LanguageSwitch.astro';
+import SiteMenu from '../components/SiteMenu.astro';
 const updated = '27 July 2026';
 ---
 
@@ -30,7 +31,7 @@ const updated = '27 July 2026';
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <div class="nav-actions"><LanguageSwitch locale="en" href="/pl/regulamin/" /><a class="back" href="/">← Back</a></div>
+<SiteMenu locale="en" alternatePath="/pl/regulamin/" />
     </header>
 
     <article class="doc-body">
@@ -111,12 +112,7 @@ const updated = '27 July 2026';
       </p>
     </article>
 
-    <footer class="doc-foot">
-      <span>© 2026 mioduszewsky</span>
-      <a href="/privacy/">Privacy</a>
-      <a href="/contact/">Contact</a>
-      <a href="/">Home</a>
-    </footer>
+    <BrandFooter locale="en" />
   </main>
 
   <style>

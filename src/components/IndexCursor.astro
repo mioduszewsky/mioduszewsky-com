@@ -1,0 +1,70 @@
+<div class="index-cursor" aria-hidden="true"></div>
+<style>
+  .index-cursor { position: fixed; top: -7px; left: -7px; z-index: 1200; width: 14px; height: 14px; border-radius: 50%; background: #0522ff; pointer-events: none; mix-blend-mode: exclusion; opacity: 0; }
+  :global(.services-index.cursor-active) :global(a) { cursor: none; }
+</style>
+<script>
+  import { gsap } from 'gsap';
+  const media = gsap.matchMedia();
+  media.add('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)', () => {
+    const dot = document.querySelector<HTMLElement>('.index-cursor');
+    const surface = document.querySelector<HTMLElement>('.services-index');
+    if (!dot || !surface) return;
+    // Same magnetic response as W5. The card's tilt remains on its parent link.
+    const magneticCleanup = Array.from(surface.querySelectorAll<HTMLElement>('.mag')).map(btn => {
+      const inner = btn.querySelector<HTMLElement>('.btn-in');
+      const targets = inner ? [btn, inner] : [btn];
+      const move = (event: PointerEvent) => {
+        if (event.pointerType !== 'mouse') return;
+        const rect = btn.getBoundingClientRect();
+        const x = (event.clientX - rect.left - rect.width / 2) * .35;
+        const y = (event.clientY - rect.top - rect.height / 2) * .45;
+        gsap.to(btn, { x, y, duration: .4, ease: 'power2.out', overwrite: 'auto' });
+        if (inner) gsap.to(inner, { x: x * .4, y: y * .4, duration: .4, overwrite: 'auto' });
+      };
+      const reset = () => gsap.to(targets, { x: 0, y: 0, scale: 1, duration: .7, ease: 'elastic.out(1, 0.4)', overwrite: true });
+      const press = () => gsap.to(btn, { scale: .96, duration: .15, ease: 'power2.out' });
+      const release = () => gsap.to(btn, { scale: 1, duration: .35, ease: 'back.out(2.2)' });
+      const keyboardReset = () => { gsap.killTweensOf(targets); gsap.set(targets, { x: 0, y: 0, scale: 1 }); };
+      const focusTarget = btn.closest('a') || btn;
+      btn.addEventListener('pointermove', move);
+      btn.addEventListener('pointerleave', reset);
+      btn.addEventListener('pointercancel', reset);
+      btn.addEventListener('pointerdown', press);
+      btn.addEventListener('pointerup', release);
+      focusTarget.addEventListener('focus', keyboardReset);
+      window.addEventListener('blur', keyboardReset);
+      return () => {
+        btn.removeEventListener('pointermove', move);
+        btn.removeEventListener('pointerleave', reset);
+        btn.removeEventListener('pointercancel', reset);
+        btn.removeEventListener('pointerdown', press);
+        btn.removeEventListener('pointerup', release);
+        focusTarget.removeEventListener('focus', keyboardReset);
+        window.removeEventListener('blur', keyboardReset);
+        keyboardReset();
+      };
+    });
+    const track = (event: MouseEvent) => {
+      surface.classList.add('cursor-active');
+      gsap.set(dot, { x: event.clientX, y: event.clientY, opacity: 1 });
+    };
+    const hide = () => { surface.classList.remove('cursor-active'); gsap.set(dot, { opacity: 0 }); };
+    const hover = (event: PointerEvent) => gsap.to(dot, { scale: (event.target as Element).closest('a,button') ? 2.6 : 1, duration: .15, ease: 'power3.out', overwrite: 'auto' });
+    const keyboard = (event: KeyboardEvent) => { if (event.key === 'Tab') hide(); };
+    window.addEventListener('mousemove', track);
+    window.addEventListener('pointerover', hover);
+    window.addEventListener('blur', hide);
+    document.addEventListener('pointerleave', hide);
+    window.addEventListener('keydown', keyboard);
+    return () => {
+      magneticCleanup.forEach(cleanup => cleanup());
+      window.removeEventListener('mousemove', track); window.removeEventListener('pointerover', hover);
+      window.removeEventListener('blur', hide); document.removeEventListener('pointerleave', hide);
+      window.removeEventListener('keydown', keyboard); hide();
+    };
+  });
+  media.add('(prefers-reduced-motion: reduce)', () => {
+    document.querySelectorAll<HTMLVideoElement>('.services-index video').forEach(video => { video.pause(); video.autoplay = false; });
+  });
+</script>

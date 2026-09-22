@@ -1,6 +1,7 @@
 ---
 import VariantLayout from '../layouts/VariantLayout.astro';
-import LanguageSwitch from './LanguageSwitch.astro';
+import SiteMenu from './SiteMenu.astro';
+import BrandFooter from './BrandFooter.astro';
 import type { Locale } from '../i18n/site';
 
 interface Props {
@@ -27,21 +28,12 @@ const terms = isPl ? '/pl/regulamin/' : '/terms/';
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <div class="nav-actions">
-        <LanguageSwitch locale={locale} href={alternatePath} />
-        <a class="back" href={home}>← {isPl ? 'Wróć' : 'Back'}</a>
-      </div>
+<SiteMenu locale={locale} alternatePath={alternatePath} />
     </header>
 
     <article class="doc-body"><slot /></article>
 
-    <footer class="doc-foot">
-      <span>© 2026 mioduszewsky</span>
-      <a href={privacy}>{isPl ? 'Prywatność' : 'Privacy'}</a>
-      <a href={terms}>{isPl ? 'Warunki' : 'Terms'}</a>
-      <a href={contact}>{isPl ? 'Kontakt' : 'Contact'}</a>
-      <a href={home}>{isPl ? 'Strona główna' : 'Home'}</a>
-    </footer>
+    <BrandFooter locale={locale} />
   </main>
 
   <style>

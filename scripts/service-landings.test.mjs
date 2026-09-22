@@ -115,14 +115,25 @@ test('services index exists (owner decision 17.09.2026), consultation stays off 
   assert.ok(sitemap.includes('<loc>https://mioduszewsky.com/services/</loc>'));
 });
 
-test('nav carries both entries and they survive scrolling past the hero', async () => {
+test('compact shared menu retains services and cannabis outside the disappearing CTA', async () => {
   for (const [path, services, cannabis] of [['/pl/', 'Usługi', 'Branża konopna'], ['/', 'Services', 'Cannabis industry']]) {
     const html = await page(path);
-    // Linki musza byc POZA .nav-actions - ten kontener chowa sie razem z CTA po zjechaniu z hero.
-    const navLinks = html.slice(html.indexOf('class="nav-links"'), html.indexOf('class="nav-actions"'));
-    assert.ok(navLinks.length > 0 && html.indexOf('class="nav-links"') < html.indexOf('class="nav-actions"'), `${path}: .nav-links musi stac przed .nav-actions`);
-    assert.ok(navLinks.includes(services), `${path}: brak linku uslug w .nav-links`);
-    assert.ok(navLinks.includes(cannabis), `${path}: brak linku konopnego w .nav-links`);
+    // 22.09: owner requested a compact menu on desktop and mobile.
+    const navLinks = html.slice(html.indexOf('id="site-navigation"'), html.indexOf('</header>'));
+    assert.ok(html.includes('popovertarget="site-navigation"'), `${path}: missing menu trigger`);
+    assert.ok(navLinks.includes('popover="auto"'), `${path}: native Escape/light-dismiss required`);
+    assert.ok(navLinks.includes(`aria-label="${services}"`), `${path}: missing services`);
+    assert.ok(navLinks.includes(`aria-label="${cannabis}`), `${path}: missing cannabis`);
+    assert.ok(!html.slice(0, html.indexOf('</header>')).includes('class="nav-actions"'), `${path}: menu must not hide with CTA`);
+  }
+});
+
+test('shared menu is present once on public service, contact and legal routes', async () => {
+  for (const path of ['/pl/uslugi/', '/services/', '/pl/uslugi/wdrozenie-ai/', '/services/ai-implementation/', '/pl/kontakt/', '/contact/', '/pl/regulamin/', '/terms/', '/pl/polityka-prywatnosci/', '/privacy/']) {
+    const html = await page(path);
+    assert.equal([...html.matchAll(/id="site-navigation"/g)].length, 1, path);
+    assert.ok(html.includes('popovertargetaction="hide"'), `${path}: close button`);
+    assert.ok(html.includes('class="text-roll" aria-hidden="true"'), `${path}: decorative duplicate labels`);
   }
 });
 
@@ -164,6 +175,19 @@ test('services index lists four equal scopes, website first but not privileged',
   assert.ok(!html.includes('rest-nr'), 'bez numerkow pozycji');
   assert.ok(!html.includes('class="hero"'), 'bez hero na caly ekran');
   assert.ok(html.includes('page-head'), 'naglowek strony zamiast hero');
+});
+
+test('services index has one contact ending, with cannabis as a contextual text link', async () => {
+  for (const path of ['/pl/uslugi/', '/services/']) {
+    const html = await page(path);
+    assert.ok(!html.includes('class="closing"'), `${path}: no separate CTA section`);
+    assert.ok(!html.includes('cann-cta'), `${path}: no competing cannabis button`);
+    assert.ok(html.includes('class="cann-note"'), `${path}: cannabis stays by the services`);
+    const footer = html.slice(html.indexOf('<footer'), html.indexOf('</footer>'));
+    assert.ok(footer.includes('contact-invitation'), `${path}: invitation inside footer`);
+    assert.equal([...footer.matchAll(/class="btn mag big"/g)].length, 1, `${path}: one primary footer action`);
+    assert.equal([...footer.matchAll(/mailto:kacper@mioduszewsky.com/g)].length, 1, `${path}: no duplicate email`);
+  }
 });
 
 test('every locale is complete: EN mirrors PL and leaves to the EN Cannversity', async () => {

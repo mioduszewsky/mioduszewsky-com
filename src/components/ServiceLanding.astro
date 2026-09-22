@@ -2,7 +2,8 @@
 import VariantLayout from '../layouts/VariantLayout.astro';
 import { serviceContact, type Service } from '../content/services-pl';
 import { serviceEnContact } from '../content/services-en';
-import LanguageSwitch from './LanguageSwitch.astro';
+import SiteMenu from './SiteMenu.astro';
+import BrandFooter from './BrandFooter.astro';
 import LandingCopyEditor from './LandingCopyEditor.astro';
 import ServiceCrosslinks from './ServiceCrosslinks.astro';
 import { cannabisHref, cannabisCopy } from '../content/cannabis';
@@ -95,7 +96,7 @@ const cann = cannabisCopy[locale];
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <nav class="nav-actions" aria-label={ui.nav}><a class="home-link" href={isPl ? '/pl/' : '/'}>{ui.home}</a><a class="home-link" href={isPl ? '/pl/uslugi/' : '/services/'}>{isPl ? 'Usługi' : 'Services'}</a><a class="home-link home-link-out" href={cannabisHref('nav', locale)} target="_blank" rel="noopener" aria-label={cann.navAria}><span class="cann-full">{cann.nav}</span><span class="cann-short">{cann.navShort}</span><span class="home-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></a><LanguageSwitch locale={locale} href={alternatePath} class="service-lang" /></nav>
+<SiteMenu locale={locale} alternatePath={alternatePath} />
     </header>
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
@@ -105,6 +106,7 @@ const cann = cannabisCopy[locale];
         <div class="hero-b">
           <div class="hero-sub">{paragraphs(s.lead).map(text => <Fragment><p set:html={emphasize(text)} />{' '}</Fragment>)}</div>
           <div class="hero-cta">
+            {s.price && <p class="hero-price">{s.price}</p>}
             <a class="btn mag big" href={contact}><span class="btn-in">{s.cta}</span></a>
             <p class="cta-note">{note}</p>
             {s.consultation && <p class="consultation-price">{ui.consultationPrice}</p>}
@@ -131,10 +133,7 @@ const cann = cannabisCopy[locale];
       </div>
     </main>
     <ServiceCrosslinks locale={locale} current={s.slug} />
-    <footer class="service-footer">
-      <a href="mailto:kacper@mioduszewsky.com" class="footer-mail">kacper@mioduszewsky.com</a>
-      <nav aria-label={ui.legal}><a href={ui.privacyHref}>{ui.privacy}</a><a href={ui.termsHref}>{ui.terms}</a></nav>
-    </footer>
+    <BrandFooter locale={locale} inset />
     {import.meta.env.DEV && <LandingCopyEditor />}
   </div>
 </VariantLayout>
@@ -330,6 +329,7 @@ const cann = cannabisCopy[locale];
   .hero-sub p + p { margin-top: 20px; }
   .hero-sub :global(strong), .section-copy :global(strong) { font-weight: 650; color: var(--ink); }
   .hero-cta { padding-top: 4px; }
+  .hero-price { font-family: 'NohemiV', sans-serif; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.2; margin-bottom: 24px!important; color: var(--ink); }
   .btn { text-align: center; max-width: 100%; line-height: 1.45; }
   .cta-note { font-size: 13px; line-height: 1.6; color: var(--body-ink); max-width: 42ch; margin-top: 20px!important; text-wrap: pretty; }
   .consultation-price { font-size: 13px; line-height: 1.6; color: var(--body-ink); max-width: 42ch; margin-top: 12px!important; }
@@ -407,5 +407,14 @@ const cann = cannabisCopy[locale];
      bo logo obok prowadzi dokladnie tam i zostaje z etykieta dla czytnikow ekranu. */
   @media (max-width: 420px) {
     .nav-actions > .home-link:first-of-type { display: none; }
+  }
+  @media (max-width: 700px) {
+    .nav { height: 80px; min-height: 80px; flex-wrap: nowrap; gap: 8px; }
+    .nav-actions { width: 100%; justify-content: space-between; gap: 12px; }
+    .nav-actions > .home-link:first-of-type { display: none; }
+    .cann-full { display: inline; }
+    .cann-short { display: none; }
+    .home-link { font-size: 13px; }
+    .hero h1 { overflow-wrap: normal; text-wrap: balance; }
   }
 </style>
