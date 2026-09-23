@@ -274,16 +274,19 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           <span class="mname">GlassStone</span>
           <span class="mdesc">{p?.work.glassstone || 'Company website with a portfolio gallery, publishing tools and an admin panel. A system the business keeps using after launch.'}</span>
           <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
+          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbGlassstone.src} alt="" loading="lazy" decoding="async" width="640" height="400" /><span class="mpeek-cta">{isPl ? 'Otwórz stronę' : 'Open the website'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span></span>
         </a>
         <a class="mrow rv" href="https://www.cannversity.com" target="_blank" rel="noopener" data-thumb={thumbCannversity.src}>
           <span class="mname">Cannversity</span>
           <span class="mdesc">{p?.work.cannversity || 'A platform translating a complex offer and a broader strategy into a structure people can understand and navigate.'}</span>
           <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
+          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbCannversity.src} alt="" loading="lazy" decoding="async" width="640" height="400" /><span class="mpeek-cta">{isPl ? 'Otwórz stronę' : 'Open the website'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span></span>
         </a>
         <!-- Wewnętrzny dokument, nie strona publiczna: bez linku, tylko podgląd na hover -->
         <div class="mrow mrow-static rv" data-thumb={thumbWoodspot.src}>
           <span class="mname">{p?.work.decksName || 'Internal project decks'}</span>
           <span class="mdesc">{p?.work.decks || 'Interactive presentations and financial models connecting an idea to real limits and a business decision.'}</span>
+          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbWoodspot.src} alt="" loading="lazy" decoding="async" width="640" height="400" /></span></span>
         </div>
         <p class="work-note rv">{p?.work.disclaimer || 'These examples show the scope and type of work delivered, not proof of guaranteed revenue, conversion or cost savings.'}</p>
       </div>
@@ -807,6 +810,21 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     addEventListener('scroll', updateNav, { passive: true });
     addEventListener('resize', updateNav);
     updateNav();
+
+    /* Dotyk: pierwsze stuknięcie w realizację rozwija podgląd, drugie otwiera stronę */
+    if (matchMedia('(hover: none), (pointer: coarse)').matches) {
+      const rows = [...document.querySelectorAll<HTMLElement>('.mrow[data-thumb]')];
+      rows.forEach((row) => {
+        row.addEventListener('click', (e) => {
+          if (row.classList.contains('open') && row.hasAttribute('href')) return;
+          e.preventDefault();
+          const willOpen = !row.classList.contains('open');
+          rows.forEach((r) => r.classList.remove('open'));
+          row.classList.toggle('open', willOpen);
+          row.setAttribute('aria-expanded', String(willOpen));
+        });
+      });
+    }
 
     /* Hover-reveal: miniatura realizacji płynie przy kursorze nad wierszem usługi */
     if (!reduced && matchMedia('(pointer: fine)').matches) {
@@ -1536,6 +1554,18 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   /* strzałka przy realizacjach widoczna na stałe - od razu wiadomo, że link otwiera stronę */
   .mrow .sarr { opacity: 1; translate: 0 0; }
   .mrow:hover .sarr { translate: 3px -3px; }
+  /* Podgląd realizacji na dotyku (Kacper 23.09.2026): na desktopie miniatura płynie przy kursorze,
+     na telefonie pierwsze stuknięcie rozwija ten sam kadr hero pod wierszem, drugie otwiera stronę. */
+  .mpeek { display: none; }
+  @media (hover: none), (pointer: coarse) {
+    .mpeek { display: grid; grid-column: 1 / -1; grid-template-rows: 0fr; transition: grid-template-rows 0.45s cubic-bezier(0.19, 1, 0.22, 1); }
+    .mpeek-in { overflow: hidden; min-height: 0; display: grid; gap: 12px; }
+    .mpeek img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; margin-top: 8px; border-radius: 10px; box-shadow: 0 0 0 1px rgba(23, 21, 15, 0.08), 0 14px 32px rgba(23, 21, 15, 0.16); }
+    .mpeek-cta { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14px; font-weight: 500; }
+    .mpeek-cta svg { width: 15px; height: 15px; color: var(--blue, #0522ff); }
+    .mrow.open .mpeek { grid-template-rows: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { .mpeek { transition: none; } }
   .mname { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.2rem, 2.2vw, 1.9rem); letter-spacing: -0.015em; }
   .mdesc { font-size: 14px; line-height: 1.6; color: #4c483c; max-width: 62ch; }
   .work-note { margin-top: 3.5vh; font-size: 12px; line-height: 1.6; color: var(--dim); max-width: 62ch; }
