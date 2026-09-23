@@ -822,8 +822,31 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           rows.forEach((r) => r.classList.remove('open'));
           row.classList.toggle('open', willOpen);
           row.setAttribute('aria-expanded', String(willOpen));
+          /* rozwinięcie zmienia wysokość strony - animacje niżej muszą przeliczyć pozycje */
+          setTimeout(() => ScrollTrigger.refresh(), 500);
         });
       });
+      /* Kto przewija dalej, ten zamyka podgląd. Gdy lista jest już nad ekranem, zwijamy bez animacji
+         i oddajemy tę samą wysokość scrollowi, żeby treść pod palcem nie podskoczyła. */
+      const more = document.querySelector<HTMLElement>('.more');
+      if (more) new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) return;
+        const row = rows.find((r) => r.classList.contains('open'));
+        if (!row) return;
+        const peekEl = row.querySelector<HTMLElement>('.mpeek')!;
+        /* kotwica = pierwszy element pod listą; mierzymy realne przesunięcie, bo Chrome sam
+           kompensuje zwinięcie (scroll anchoring), a Safari nie */
+        const anchor = more.nextElementSibling as HTMLElement | null ?? more.parentElement!.nextElementSibling as HTMLElement;
+        const y0 = anchor.getBoundingClientRect().top;
+        peekEl.style.transition = 'none';
+        row.classList.remove('open');
+        row.setAttribute('aria-expanded', 'false');
+        const dy = anchor.getBoundingClientRect().top - y0;
+        if (entry.boundingClientRect.bottom < 0 && dy) scrollBy(0, dy);
+        peekEl.offsetHeight;
+        peekEl.style.transition = '';
+        ScrollTrigger.refresh();
+      }).observe(more);
     }
 
     /* Hover-reveal: miniatura realizacji płynie przy kursorze nad wierszem usługi */
