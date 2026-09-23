@@ -274,19 +274,19 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
           <span class="mname">GlassStone</span>
           <span class="mdesc">{p?.work.glassstone || 'Company website with a portfolio gallery, publishing tools and an admin panel. A system the business keeps using after launch.'}</span>
           <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
-          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbGlassstone.src} alt="" loading="lazy" decoding="async" width="640" height="400" /><span class="mpeek-cta">{isPl ? 'Otwórz stronę' : 'Open the website'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span></span>
+          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbGlassstone.src} alt="" loading="lazy" decoding="async" /><span class="mpeek-cta">{isPl ? 'Otwórz stronę' : 'Open the website'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span></span>
         </a>
         <a class="mrow rv" href="https://www.cannversity.com" target="_blank" rel="noopener" data-thumb={thumbCannversity.src}>
           <span class="mname">Cannversity</span>
           <span class="mdesc">{p?.work.cannversity || 'A platform translating a complex offer and a broader strategy into a structure people can understand and navigate.'}</span>
           <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
-          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbCannversity.src} alt="" loading="lazy" decoding="async" width="640" height="400" /><span class="mpeek-cta">{isPl ? 'Otwórz stronę' : 'Open the website'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span></span>
+          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbCannversity.src} alt="" loading="lazy" decoding="async" /><span class="mpeek-cta">{isPl ? 'Otwórz stronę' : 'Open the website'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span></span>
         </a>
         <!-- Wewnętrzny dokument, nie strona publiczna: bez linku, tylko podgląd na hover -->
         <div class="mrow mrow-static rv" data-thumb={thumbWoodspot.src}>
           <span class="mname">{p?.work.decksName || 'Internal project decks'}</span>
           <span class="mdesc">{p?.work.decks || 'Interactive presentations and financial models connecting an idea to real limits and a business decision.'}</span>
-          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbWoodspot.src} alt="" loading="lazy" decoding="async" width="640" height="400" /></span></span>
+          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbWoodspot.src} alt="" loading="lazy" decoding="async" /></span></span>
         </div>
         <p class="work-note rv">{p?.work.disclaimer || 'These examples show the scope and type of work delivered, not proof of guaranteed revenue, conversion or cost savings.'}</p>
       </div>
@@ -814,39 +814,56 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     /* Dotyk: pierwsze stuknięcie w realizację rozwija podgląd, drugie otwiera stronę */
     if (matchMedia('(hover: none), (pointer: coarse)').matches) {
       const rows = [...document.querySelectorAll<HTMLElement>('.mrow[data-thumb]')];
+      const setOpen = (row: HTMLElement, open: boolean, animate = true) => {
+        const el = row.querySelector<HTMLElement>('.mpeek')!;
+        row.classList.toggle('open', open);
+        row.setAttribute('aria-expanded', String(open));
+        if (!animate) el.style.transition = 'none';
+        el.style.height = `${el.scrollHeight}px`;
+        if (!open) { el.offsetHeight; el.style.height = '0px'; }
+        if (!animate) { el.offsetHeight; el.style.transition = ''; }
+      };
+      /* po rozwinięciu wysokość „auto”, żeby obrót telefonu nie ucinał podglądu */
+      rows.forEach((row) => row.querySelector<HTMLElement>('.mpeek')!.addEventListener('transitionend', (e) => {
+        if (e.propertyName === 'height' && row.classList.contains('open')) (e.currentTarget as HTMLElement).style.height = 'auto';
+      }));
       rows.forEach((row) => {
         row.addEventListener('click', (e) => {
           if (row.classList.contains('open') && row.hasAttribute('href')) return;
           e.preventDefault();
           const willOpen = !row.classList.contains('open');
-          rows.forEach((r) => r.classList.remove('open'));
-          row.classList.toggle('open', willOpen);
-          row.setAttribute('aria-expanded', String(willOpen));
+          rows.forEach((r) => { if (r !== row && r.classList.contains('open')) setOpen(r, false); });
+          setOpen(row, willOpen);
           /* rozwinięcie zmienia wysokość strony - animacje niżej muszą przeliczyć pozycje */
           setTimeout(() => ScrollTrigger.refresh(), 500);
         });
       });
-      /* Kto przewija dalej, ten zamyka podgląd. Gdy lista jest już nad ekranem, zwijamy bez animacji
-         i oddajemy tę samą wysokość scrollowi, żeby treść pod palcem nie podskoczyła. */
+      /* Kto przewija dalej, ten zamyka podgląd. Zwijamy dopiero, gdy przewijanie stanie:
+         na iPhonie zmiana wysokości albo korekta scrolla w trakcie rozpędu daje widoczny skok.
+         Gdy lista jest nad ekranem, oddajemy scrollowi dokładnie tyle, o ile przesunęła się
+         treść (Chrome kompensuje sam, Safari nie), w jednej klatce, bez animacji. */
       const more = document.querySelector<HTMLElement>('.more');
-      if (more) new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) return;
-        const row = rows.find((r) => r.classList.contains('open'));
-        if (!row) return;
-        const peekEl = row.querySelector<HTMLElement>('.mpeek')!;
-        /* kotwica = pierwszy element pod listą; mierzymy realne przesunięcie, bo Chrome sam
-           kompensuje zwinięcie (scroll anchoring), a Safari nie */
-        const anchor = more.nextElementSibling as HTMLElement | null ?? more.parentElement!.nextElementSibling as HTMLElement;
-        const y0 = anchor.getBoundingClientRect().top;
-        peekEl.style.transition = 'none';
-        row.classList.remove('open');
-        row.setAttribute('aria-expanded', 'false');
-        const dy = anchor.getBoundingClientRect().top - y0;
-        if (entry.boundingClientRect.bottom < 0 && dy) scrollBy(0, dy);
-        peekEl.offsetHeight;
-        peekEl.style.transition = '';
-        ScrollTrigger.refresh();
-      }).observe(more);
+      if (more) {
+        let away = false;
+        let idle = 0;
+        const collapse = () => {
+          const row = rows.find((r) => r.classList.contains('open'));
+          if (!row || !away) return;
+          const anchor = (more.nextElementSibling ?? more.parentElement!.nextElementSibling) as HTMLElement;
+          const above = more.getBoundingClientRect().bottom < 0;
+          const y0 = anchor.getBoundingClientRect().top;
+          setOpen(row, false, false);
+          const dy = anchor.getBoundingClientRect().top - y0;
+          if (above && dy) scrollTo(0, scrollY + dy);
+          ScrollTrigger.refresh();
+        };
+        new IntersectionObserver(([entry]) => { away = !entry.isIntersecting; }).observe(more);
+        addEventListener('scroll', () => {
+          if (!away) return;
+          clearTimeout(idle);
+          idle = window.setTimeout(collapse, 250);
+        }, { passive: true });
+      }
     }
 
     /* Hover-reveal: miniatura realizacji płynie przy kursorze nad wierszem usługi */
@@ -1581,12 +1598,12 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
      na telefonie pierwsze stuknięcie rozwija ten sam kadr hero pod wierszem, drugie otwiera stronę. */
   .mpeek { display: none; }
   @media (hover: none), (pointer: coarse) {
-    .mpeek { display: grid; grid-column: 1 / -1; grid-template-rows: 0fr; transition: grid-template-rows 0.45s cubic-bezier(0.19, 1, 0.22, 1); }
-    .mpeek-in { overflow: hidden; min-height: 0; display: grid; gap: 12px; }
+    /* wysokość sterowana z JS (0 ↔ zmierzona): trik z grid-template-rows 0fr/1fr Safari rozdmuchuje do naturalnej wysokości obrazka */
+    .mpeek { display: block; grid-column: 1 / -1; height: 0; overflow: hidden; transition: height 0.45s cubic-bezier(0.19, 1, 0.22, 1); }
+    .mpeek-in { display: block; padding-bottom: 4px; }
     .mpeek img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; margin-top: 8px; border-radius: 10px; box-shadow: 0 0 0 1px rgba(23, 21, 15, 0.08), 0 14px 32px rgba(23, 21, 15, 0.16); }
-    .mpeek-cta { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14px; font-weight: 500; }
+    .mpeek-cta { display: flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 8px; font-size: 14px; font-weight: 500; }
     .mpeek-cta svg { width: 15px; height: 15px; color: var(--blue, #0522ff); }
-    .mrow.open .mpeek { grid-template-rows: 1fr; }
   }
   @media (prefers-reduced-motion: reduce) { .mpeek { transition: none; } }
   .mname { font-family: 'NohemiV', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.2rem, 2.2vw, 1.9rem); letter-spacing: -0.015em; }
