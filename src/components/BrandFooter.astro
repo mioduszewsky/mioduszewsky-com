@@ -82,6 +82,11 @@ const r = routes[locale];
     .fcol > a { min-height: 44px; }
     .fcol > a[href^="mailto:"] { overflow-wrap: anywhere; display: block; min-height: 0; line-height: 1.6; }
     .brand-footer :global(.contact-badge) { width: 104px; }
+    /* plakietka na środku wysokości kolumny kontaktu, nie przyklejona do jej góry */
+    .brand-footer :global(.contact-badge) { align-self: center; }
+    /* stopka prawna: linki w siatce 2x2 (ta sama w PL i EN, bez sierot), copyright osobnym wierszem pod nimi */
+    .legal { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+    .copyright { order: 1; grid-column: 1 / -1; min-height: 36px; }
   }
   @media (prefers-reduced-motion: reduce) { .fcol a::after, .fcol a.sc span::after { transition: none; } }
   @media (max-width: 380px) {
