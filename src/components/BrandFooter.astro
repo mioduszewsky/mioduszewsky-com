@@ -92,6 +92,14 @@ const r = routes[locale];
     .legal a { font-size: clamp(10.5px, 3vw, 12px); white-space: nowrap; }
     .copyright { display: none; }
     .copyright-m { display: block; margin: 0; text-align: center; font-size: 11px; color: #4c483c; grid-column: 1 / -1; }
+    /* dół stopki ma zajmować mniej miejsca (Kacper 23.09.2026): linki kontaktu bez dodatkowego
+       odstępu (cel dotyku 44 px zostaje), niższy pasek prawny, copyright tuż pod nim */
+    .fcol { gap: 0; }
+    .flabel { margin-bottom: 4px; }
+    .legal { padding-top: 8px; }
+    .legal a { min-height: 36px; }
+    .copyright-m { margin-top: -16px; }
+    .brand-footer { padding-bottom: 16px; }
   }
   @media (prefers-reduced-motion: reduce) { .fcol a::after, .fcol a.sc span::after { transition: none; } }
   @media (max-width: 380px) {
