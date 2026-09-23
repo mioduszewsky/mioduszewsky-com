@@ -33,6 +33,7 @@ const r = routes[locale];
     <a href={pl ? '/pl/polityka-prywatnosci/' : '/privacy/'}>{pl ? 'Polityka prywatności' : 'Privacy policy'}</a>
     <a href={pl ? '/pl/regulamin/' : '/terms/'}>{pl ? 'Regulamin' : 'Terms of service'}</a>
   </nav>
+  <p class="copyright-m">© 2026 mioduszewsky</p>
 </Tag>
 <style>
   .brand-footer { --ink: #000; --blue: #0522ff; --dim: #777265; font-family: 'GeneralSansV', sans-serif; color: var(--ink); background: #f8f9f2; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 4vw; align-items: center; padding-block: 3vh 24px; border-top: 1px solid #0002; }
@@ -67,6 +68,7 @@ const r = routes[locale];
   .legal { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 24px; border-top: 1px solid #0002; padding-top: 16px; }
   .legal a, .copyright { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; color: #4c483c; text-decoration: none; }
   .legal a:hover { color: var(--blue); }
+  .copyright-m { display: none; }
   /* Services index: one contact composition, not a CTA followed by another footer. */
   .invitation { grid-template-columns: minmax(0, 1.4fr) minmax(0, .8fr) auto; gap: 48px; align-items: start; border-top: 0; padding-top: 0; margin-top: clamp(64px, 8vw, 120px); }
   .invitation .fcol { padding-top: 8px; }
@@ -84,9 +86,12 @@ const r = routes[locale];
     .brand-footer :global(.contact-badge) { width: 104px; }
     /* plakietka na środku wysokości kolumny kontaktu, nie przyklejona do jej góry */
     .brand-footer :global(.contact-badge) { align-self: center; }
-    /* stopka prawna: linki w siatce 2x2 (ta sama w PL i EN, bez sierot), copyright osobnym wierszem pod nimi */
-    .legal { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
-    .copyright { order: 1; grid-column: 1 / -1; min-height: 36px; }
+    /* stopka prawna: cztery linki w jednej linii od krawędzi do krawędzi (decyzja Kacpra 23.09.2026),
+       copyright osobnym wierszem pod nimi */
+    .legal { flex-wrap: nowrap; justify-content: space-between; gap: 0; }
+    .legal a { font-size: clamp(10.5px, 3vw, 12px); white-space: nowrap; }
+    .copyright { display: none; }
+    .copyright-m { display: block; margin: 0; font-size: 11px; color: #4c483c; grid-column: 1 / -1; }
   }
   @media (prefers-reduced-motion: reduce) { .fcol a::after, .fcol a.sc span::after { transition: none; } }
   @media (max-width: 380px) {
