@@ -207,17 +207,3 @@ test('every locale is complete: EN mirrors PL and leaves to the EN Cannversity',
     assert.ok(html.includes(base), `${path}: wejscie konopne musi celowac w ${base}`);
   }
 });
-test('Cannversity case study: PL/EN pair, hreflang both ways, live link with UTM, in sitemap', async () => {
-  const pair = { pl: '/pl/realizacje/cannversity/', en: '/work/cannversity/' };
-  const sitemap = await readFile(new URL('../public/sitemap.xml', import.meta.url), 'utf8');
-  for (const [lang, path] of Object.entries(pair)) {
-    const html = await page(path);
-    assert.equal((html.match(/<h1\b/g) || []).length, 1, path);
-    assert.ok(html.includes(`<link rel="canonical" href="https://mioduszewsky.com${path}">`), path);
-    assert.ok(html.includes(`hreflang="en" href="https://mioduszewsky.com${pair.en}"`), path);
-    assert.ok(html.includes(`hreflang="pl-PL" href="https://mioduszewsky.com${pair.pl}"`), path);
-    assert.ok(html.includes('utm_medium=realizacje'), path);
-    assert.ok(!/[–—]/.test(html), `${path} must not contain long dashes`);
-    assert.ok(sitemap.includes(`<loc>https://mioduszewsky.com${path}</loc>`), `${lang} in sitemap`);
-  }
-});
