@@ -128,4 +128,20 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/services/cofounder-as-a-service/" />
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://mioduszewsky.com/work/cannversity/</loc>
+    <lastmod>2026-09-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/cannversity/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/cannversity/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/cannversity/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/pl/realizacje/cannversity/</loc>
+    <lastmod>2026-09-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/cannversity/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/cannversity/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/cannversity/" />
+    <priority>0.7</priority>
+  </url>
 </urlset>

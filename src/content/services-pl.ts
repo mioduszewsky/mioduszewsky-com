@@ -6,6 +6,14 @@ export type Service = {
   altSlug?: string;
   lead: string; description: string; cta: string; price: string; consultation: boolean;
   sections: { title: string; paragraphs: string[] }[];
+  /** case study: exact path of the other-language page (overrides altSlug) */
+  altPath?: string;
+  /** case study: hero button opens the live site in a new tab instead of the contact form */
+  live?: { href: string; cta: string; note: string };
+  /** case study: closing button target (defaults to the contact form for this service) */
+  contactHref?: string;
+  /** extra phrases to bold on this page */
+  emphasis?: string[];
 };
 export const services: Service[] = [
   {

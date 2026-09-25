@@ -19,8 +19,8 @@ const BASE = {
   en: 'https://www.cannversity.com/en',
 } as const;
 
-/** medium rozróżnia miejsce kliknięcia: nav | uslugi | home */
-export const cannabisHref = (medium: 'nav' | 'uslugi' | 'home', locale: 'pl' | 'en' = 'pl') =>
+/** medium rozróżnia miejsce kliknięcia: nav | uslugi | home | realizacje (case study) */
+export const cannabisHref = (medium: 'nav' | 'uslugi' | 'home' | 'realizacje', locale: 'pl' | 'en' = 'pl') =>
   `${BASE[locale]}?utm_source=mioduszewsky&utm_medium=${medium}&utm_campaign=branza-konopna`;
 
 export const cannabisCopy = {

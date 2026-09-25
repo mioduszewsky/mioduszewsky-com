@@ -11,11 +11,11 @@ import type { Locale } from '../i18n/site';
 interface Props { service: Service; locale?: Locale }
 const { service: s, locale = 'pl' } = Astro.props;
 const isPl = locale === 'pl';
-const contact = isPl ? serviceContact(s) : serviceEnContact(s);
+const contact = s.contactHref ?? (isPl ? serviceContact(s) : serviceEnContact(s));
 // Ta sama usluga w drugim jezyku; bez altSlug przelacznik wraca na strone glowna.
-const alternatePath = s.altSlug
+const alternatePath = s.altPath ?? (s.altSlug
   ? (isPl ? `/services/${s.altSlug}/` : `/pl/uslugi/${s.altSlug}/`)
-  : (isPl ? '/' : '/pl/');
+  : (isPl ? '/' : '/pl/'));
 const ui = isPl ? {
   skip: 'Przejdź do treści', home: 'Strona główna', homeAria: 'mioduszewsky. Strona główna.',
   nav: 'Nawigacja', legal: 'Informacje', privacy: 'Polityka prywatności', privacyHref: '/pl/polityka-prywatnosci/',
@@ -65,7 +65,7 @@ const emphasisEn = [
   "the scope, who's responsible for what, how we work and how I get paid",
   'Cofounder here means a business partner on your project', "I don't work for equity alone.",
 ];
-const emphasis = isPl ? emphasisPl : emphasisEn;
+const emphasis = [...(isPl ? emphasisPl : emphasisEn), ...(s.emphasis ?? [])];
 const escape = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const emphasize = (text: string) => {
   let html = escape(text);
@@ -107,8 +107,10 @@ const cann = cannabisCopy[locale];
           <div class="hero-sub">{paragraphs(s.lead).map(text => <Fragment><p set:html={emphasize(text)} />{' '}</Fragment>)}</div>
           <div class="hero-cta">
             {s.price && <p class="hero-price">{s.price}</p>}
-            <a class="btn mag big" href={contact}><span class="btn-in">{s.cta}</span></a>
-            <p class="cta-note">{note}</p>
+            {s.live
+              ? <a class="btn mag big" href={s.live.href} target="_blank" rel="noopener"><span class="btn-in">{s.live.cta}</span></a>
+              : <a class="btn mag big" href={contact}><span class="btn-in">{s.cta}</span></a>}
+            <p class="cta-note">{s.live ? s.live.note : note}</p>
             {s.consultation && <p class="consultation-price">{ui.consultationPrice}</p>}
           </div>
         </div>
