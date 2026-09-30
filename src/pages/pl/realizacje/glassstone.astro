@@ -1,9 +1,10 @@
 ---
-// Case study GlassStone, wersja 2 (30.09.2026): jedna kolumna do czytania.
-// Wersja 1 (18f736f) odrzucona przez Kacpra: za dużo rozmiarów pisma, drobne etykiety
-// wersalikami, wklejane kawałki zrzutów, układ jak podstrony usług. Zasady tej wersji:
-// dwa kroje, cztery rozmiary (tytuł, śródtytuł, tekst, podpis), jeden eksponat.
-// Treść: docs/case-studies/glassstone/COPY.md, fakty: FAKTY.md (Drive).
+// Case study GlassStone, wersja 3 (30.09.2026), kierunek „Arkusz”.
+// Strona jest złożona jak arkusz produkcyjny GlassStone: rysunek klienta jest głównym
+// eksponatem, metryczka to tabelka rysunkowa, każdy rysunek ma ten sam panel i podpis „Rys.”.
+// v1 (18f736f) i v2 (97b2cb6) odrzucone; opis kierunku i referencje: docs/case-studies/RUNDA-3.md (Drive).
+// Treść: docs/case-studies/glassstone/COPY.md, fakty: FAKTY.md. Nowe są tylko podpisy rysunków.
+// Skala pisma: tytuł, śródtytuł, tekst, podpis (+ liczby w rozmiarze tytułu). Mono tylko w rysunkach.
 import VariantLayout from '../../../layouts/VariantLayout.astro';
 import SiteMenu from '../../../components/SiteMenu.astro';
 import BrandFooter from '../../../components/BrandFooter.astro';
@@ -11,7 +12,7 @@ import BrandFooter from '../../../components/BrandFooter.astro';
 const contact = '/pl/kontakt/?service=' + encodeURIComponent('Aplikacja lub system') + '#ctForm';
 // Opinia pojawia się dopiero po akceptacji Filipa (docs/case-studies/OPINIE-ROZMOWA.md).
 const quote: { text: string; name: string; role: string } | null = null;
-const nbsp = (t: string) => t.replace(/(^|[\s(])([wziouaWZIOUA]) /g, '$1$2 ');
+const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;');
 const ld = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -25,7 +26,122 @@ const ld = {
       { '@type': 'ListItem', position: 2, name: 'GlassStone', item: 'https://mioduszewsky.com/pl/realizacje/glassstone/' } ] },
   ],
 };
-const P = (t: string) => nbsp(t);
+
+// Arkusz Z-19618 odtworzony wektorowo z rysunku generatora (jednostka = 1 mm).
+// Bez numeru zlecenia i bez pola montażysty (FAKTY.md, zgoda na publikację).
+const dimH = (x1: number, x2: number, y: number, ext: number, label: string, ty = -14) =>
+  `<path d="M${x1} ${y - ext} V${y + 12} M${x2} ${y - ext} V${y + 12} M${x1} ${y} H${x2}" pathLength="1"/>` +
+  `<text class="t-dim" x="${(x1 + x2) / 2}" y="${y + ty}" text-anchor="middle">${label}</text>`;
+const dimV = (y1: number, y2: number, x: number, ext: number, label: string) =>
+  `<path d="M${x + ext} ${y1} H${x - 12} M${x + ext} ${y2} H${x - 12} M${x} ${y1} V${y2}" pathLength="1"/>` +
+  `<text class="t-dim" x="${x - 16}" y="${(y1 + y2) / 2}" text-anchor="middle" transform="rotate(-90 ${x - 16} ${(y1 + y2) / 2})">${label}</text>`;
+const cross = (x: number, y: number) => `<path d="M${x - 18} ${y - 18} L${x + 18} ${y + 18} M${x + 18} ${y - 18} L${x - 18} ${y + 18}" pathLength="1"/>`;
+
+const blatGlowny = `
+  <g class="ln-body">
+    <rect x="0" y="0" width="1707" height="600" pathLength="1"/>
+    <rect x="112.5" y="115" width="345" height="395" rx="10" pathLength="1"/>
+    <rect x="1269" y="65" width="275" height="485" pathLength="1"/>
+    <circle cx="200" cy="55" r="15" pathLength="1"/>
+    <circle cx="285" cy="55" r="17.5" pathLength="1"/>
+    ${cross(1180, 0)}${cross(1707, 0)}
+  </g>
+  <g class="ln-dim">
+    ${dimH(0, 1707, 700, 90, '1707')}
+    ${dimV(0, 600, -110, 90, '600')}
+    ${dimH(0, 285, -90, -70, '285')}
+    ${dimH(1406.5, 1707, -90, -70, '300')}
+    <path d="M285 510 V600" pathLength="1"/><text class="t-dim" x="300" y="572">90</text>
+    <path d="M1406.5 550 V600" pathLength="1"/><text class="t-dim" x="1421" y="590">50</text>
+  </g>
+  <g class="ln-note">
+    <path d="M1725 -18 L1790 -120 H2000" pathLength="1"/>
+    <path d="M1198 -18 L1250 -170 H1420" pathLength="1"/>
+  </g>
+  <g class="tx">
+    <text class="t-dim t-dia" x="322" y="70">ø30 ø35</text>
+    <text class="t-body" x="285" y="326" text-anchor="middle">ZLEW</text>
+    <text class="t-body" x="1406" y="322" text-anchor="middle">PŁYTA</text>
+    <text class="t-note" x="1800" y="-134">FAZA+POLER 30 MM</text>
+    <text class="t-note" x="1260" y="-184">FAZA+POLER</text>
+    <text class="t-body" x="0" y="800">BLAT GŁÓWNY</text>
+    <text class="t-note" x="0" y="850">PRZEDNIA KRAWĘDŹ BLATU U4 DO 10 CM</text>
+  </g>`;
+const blat563 = `
+  <g class="ln-body">
+    <rect x="0" y="0" width="1707" height="563" pathLength="1"/>
+    <circle cx="763" cy="284" r="17.5" pathLength="1"/>
+  </g>
+  <g class="ln-dim">
+    ${dimH(0, 1707, 640, 60, '1707')}
+    ${dimH(0, 763, 720, 157, '763')}
+    ${dimV(0, 563, -110, 90, '563')}
+  </g>
+  <g class="ln-note"><path d="M763 266 V-60 H880" pathLength="1"/></g>
+  <g class="tx">
+    <text class="t-dim" x="890" y="-48">ø35</text>
+    <text class="t-body" x="0" y="820">BLAT 563</text>
+  </g>`;
+const baner = `
+  <g class="ln-body">
+    <rect x="0" y="0" width="600" height="300" pathLength="1"/>
+    <rect x="62" y="109" width="210" height="70" rx="35" pathLength="1"/>
+  </g>
+  <g class="ln-dim">
+    ${dimH(0, 600, 380, 60, '600')}
+    ${dimH(0, 167, 460, 160, '165')}
+    ${dimV(0, 300, -90, 70, '300')}
+  </g>
+  <g class="ln-note"><path d="M167 109 V-50 H300" pathLength="1"/></g>
+  <g class="tx">
+    <text class="t-dim" x="310" y="-38">210×70</text>
+    <text class="t-body" x="0" y="560">BANER ŚCIENNY</text>
+  </g>`;
+const tabelka = `
+  <g class="ln-frame">
+    <rect x="0" y="0" width="2430" height="130" pathLength="1"/>
+    <path d="M0 50 H2430 M360 0 V130 M1400 0 V130 M1750 0 V130 M2100 0 V130" pathLength="1"/>
+  </g>
+  <g class="tx">
+    <text class="t-lab" x="16" y="36">PRODUKT</text><text class="t-tab" x="16" y="104">Blaty</text>
+    <text class="t-lab" x="376" y="36">MATERIAŁ</text><text class="t-tab" x="376" y="104">Technistone Noble Imperial Grey</text>
+    <text class="t-lab" x="1416" y="36">GRUBOŚĆ</text><text class="t-tab" x="1416" y="104">20 mm</text>
+    <text class="t-lab" x="1766" y="36">WYKOŃCZENIE</text><text class="t-tab" x="1766" y="104">poler</text>
+    <text class="t-lab" x="2116" y="36">PROFIL</text><text class="t-tab" x="2116" y="104">P1</text>
+    <text class="t-sm" x="2430" y="-24" text-anchor="end">TOLERANCJA WYKONANIA BLATÓW WYNOSI +/- 3 MM</text>
+  </g>`;
+const sheetFull = `
+  <g transform="translate(250 1380)">${blatGlowny}</g>
+  <g transform="translate(250 250)">${blat563}</g>
+  <g transform="translate(2140 230)">${baner}</g>
+  <g transform="translate(250 2330)">${tabelka}</g>`;
+const sheetCrop = `<g transform="translate(250 1380)">${blatGlowny}</g>`;
+
+// Rys. 2: trzy reguły z ich rysunków, każda na wycinku płyty.
+const rules = [
+  { title: 'Każde wycięcie jest kotowane do środka, od bliższej krawędzi płyty.', svg: `
+      <g class="ln-body"><path d="M0 40 H560 M0 40 V400"/><rect x="100" y="150" width="240" height="200" rx="10"/></g>
+      <g class="ln-axis"><path d="M220 120 V380 M70 250 H370"/></g>
+      <g class="ln-dim">${dimH(0, 220, 110, 60, '285', -14)}</g>
+      <g class="tx"><text class="t-body" x="220" y="320" text-anchor="middle">ZLEW</text></g>` },
+  { title: 'Czerwona przerywana linia to podpórki od spodu blatu, 65 mm od krawędzi.', svg: `
+      <g class="ln-body"><path d="M0 360 H560 M0 40 V360"/></g>
+      <g class="ln-sup"><path d="M40 295 H540"/></g>
+      <g class="ln-dim">${dimV(295, 360, 470, -20, '65')}</g>
+      <g class="tx"><text class="t-note" x="40" y="270">PODPÓRKI</text></g>` },
+  { title: 'Krzyżyk to miejsce obróbki, zawsze o tej samej wielkości.', svg: `
+      <g class="ln-body"><path d="M0 120 H400 V400"/><path d="M362 82 L438 158 M438 82 L362 158"/></g>
+      <g class="ln-note"><path d="M438 82 L470 30 H560"/></g>
+      <g class="ln-dim"><path d="M380 140 L418 178 M400 120 L374 146 M438 158 L412 184"/></g>
+      <g class="tx"><text class="t-note" x="330" y="18">FAZA+POLER</text><text class="t-dim" x="300" y="200">25</text></g>` },
+];
+
+const steps = [
+  { t: 'Zdjęcie kartki', d: 'Filip fotografuje szkic na pomiarze.' },
+  { t: 'Propozycja modelu', d: 'Model odczytuje wymiary i wypełnia formularz.' },
+  { t: 'Sprawdzenie i podpis', d: 'Człowiek porównuje ze zdjęciem i poprawia.', check: true },
+  { t: 'DXF i PDF', d: 'Dopiero wtedy powstaje rysunek na produkcję.' },
+];
 ---
 <VariantLayout
   title="Narzędzie pomiarowe dla GlassStone: szkic zamienia się w rysunek produkcyjny · mioduszewsky"
@@ -46,118 +162,180 @@ const P = (t: string) => nbsp(t);
 
     <main id="main">
       <article>
-        <header class="col head">
+        <header class="wrap hero">
           <p class="kicker">Realizacja dla GlassStone</p>
           <h1>Szkic z pomiaru zamienia się w&nbsp;rysunek na produkcję.</h1>
           <p class="lead" set:html={P('GlassStone robi blaty z kamienia, lustra i balustrady szklane. Każdy pomiar kończy się odręcznym szkicem, który ktoś w biurze przerysowuje w AutoCADzie. Zbudowałem w ich aplikacji narzędzie, które robi z tego szkicu rysunek DXF i PDF. Człowiek sprawdza wymiary i podpisuje.')} />
-          <dl class="facts">
-            <div><dt>Zakres</dt><dd>narzędzie pomiarowe w ich aplikacji</dd></div>
-            <div><dt>Wynik testów</dt><dd>100% wymiarów zgodnych co do milimetra</dd></div>
+          <dl class="block">
+            <div><dt>Klient</dt><dd>GlassStone, kamień, szkło, wnętrza</dd></div>
+            <div><dt>Zakres</dt><dd>strona, panel, narzędzie pomiarowe</dd></div>
+            <div><dt>Kto używa</dt><dd>pomiarowiec i biuro</dd></div>
             <div><dt>Stan</dt><dd>testy beta od września 2026</dd></div>
           </dl>
         </header>
 
-        <figure class="wide pair">
-          <div class="pane">
-            <img src="/case/glassstone/szkic.webp" srcset="/case/glassstone/szkic-800.webp 800w, /case/glassstone/szkic.webp 1600w" sizes="(min-width: 1000px) 460px, 92vw" width="1600" height="1535" alt="Odręczny szkic trzech elementów blatu na kartce przypiętej do deski: blat główny 1707 na 600 z wycięciem zlewu i płyty, blat 563 i baner ścienny z otworem na gniazdka." fetchpriority="high" />
+        <figure class="wrap fig fig-hero">
+          <div class="panel pair">
+            <div class="photo">
+              <img src="/case/glassstone/szkic.webp" srcset="/case/glassstone/szkic-800.webp 800w, /case/glassstone/szkic.webp 1600w" sizes="(min-width: 900px) 40vw, 92vw" width="1600" height="1535" alt="Odręczny szkic trzech elementów blatu na kartce trzymanej w dłoni: blat główny 1707 na 600 z wycięciem zlewu i płyty, blat 563 i baner ścienny z otworem na gniazdka." fetchpriority="high" />
+              <p class="tag">Szkic z pomiaru</p>
+            </div>
+            <div class="sheet">
+              <svg class="dwg dwg-full" viewBox="0 0 2800 2500" role="img" aria-label="Rysunek produkcyjny z generatora: baner ścienny 600 na 300 z otworem 210 na 70, blat 563 na 1707 z otworem 35 mm, blat główny 1707 na 600 z wycięciem zlewu i płyty, dwa punkty obróbki krawędzi i tabelka z materiałem, grubością 20 mm i wykończeniem." set:html={sheetFull} />
+              <svg class="dwg dwg-crop" viewBox="70 1200 2000 1050" role="img" aria-label="Rysunek blatu głównego z generatora: obrys 1707 na 600 mm, wycięcie zlewu i płyty, dwa otwory na baterię i dozownik, dwa punkty obróbki krawędzi." set:html={sheetCrop} />
+              <p class="tag">Rysunek z generatora</p>
+            </div>
           </div>
-          <div class="pane sheet">
-            <svg class="dwg" viewBox="-280 -230 2600 1130" role="img" aria-label="Rysunek techniczny blatu głównego z generatora: obrys 1707 na 600 mm, wycięcie zlewu 285 od lewej krawędzi i 90 od przedniej, wycięcie płyty 300 od prawej i 50 od przedniej, dwa otwory na baterię i dozownik, dwa punkty obróbki krawędzi.">
-              <g class="ln-body">
-                <rect x="0" y="0" width="1707" height="600" pathLength="1" />
-                <rect x="112.5" y="115" width="345" height="395" rx="10" pathLength="1" />
-                <rect x="1269" y="65" width="275" height="485" pathLength="1" />
-                <circle cx="200" cy="55" r="15" pathLength="1" />
-                <circle cx="285" cy="55" r="17.5" pathLength="1" />
-                <path d="M1162 -18 L1198 18 M1198 -18 L1162 18" pathLength="1" />
-                <path d="M1689 -18 L1725 18 M1725 -18 L1689 18" pathLength="1" />
-              </g>
-              <g class="ln-dim">
-                <path d="M0 620 V740 M1707 620 V740 M0 710 H1707" pathLength="1" />
-                <path d="M-20 0 H-150 M-20 600 H-150 M-120 0 V600" pathLength="1" />
-                <path d="M0 -30 V-130 M285 -30 V-130 M0 -100 H285" pathLength="1" />
-                <path d="M1406.5 -30 V-130 M1707 -40 V-130 M1406.5 -100 H1707" pathLength="1" />
-                <path d="M285 510 V600" pathLength="1" />
-                <path d="M1406.5 550 V600" pathLength="1" />
-              </g>
-              <g class="ln-note">
-                <path d="M1725 -18 L1800 -110 H2020" pathLength="1" />
-                <path d="M1198 -18 L1260 -160 H1440" pathLength="1" />
-              </g>
-              <g class="tx">
-                <text class="t-dim" x="853" y="690" text-anchor="middle">1707</text>
-                <text class="t-dim" x="-140" y="300" text-anchor="middle" transform="rotate(-90 -140 300)">600</text>
-                <text class="t-dim" x="142" y="-118" text-anchor="middle">285</text>
-                <text class="t-dim" x="1556" y="-118" text-anchor="middle">300</text>
-                <text class="t-dim" x="305" y="570">90</text>
-                <text class="t-dim" x="1426" y="590">50</text>
-                <text class="t-dim t-sm" x="232" y="-12" text-anchor="middle">ø30 ø35</text>
-                <text class="t-body" x="285" y="325" text-anchor="middle">ZLEW</text>
-                <text class="t-body" x="1406" y="320" text-anchor="middle">PŁYTA</text>
-                <text class="t-note" x="1810" y="-128">FAZA+POLER 30 MM</text>
-                <text class="t-note" x="1270" y="-178">FAZA+POLER</text>
-                <text class="t-body t-sm" x="0" y="820">BLAT GŁÓWNY</text>
-                <text class="t-note t-sm" x="0" y="870">PRZEDNIA KRAWĘDŹ BLATU U4 DO 10 CM</text>
-              </g>
-            </svg>
-          </div>
-          <figcaption>Ten sam blat: kartka z pomiaru i rysunek, który z niej powstał.</figcaption>
+          <figcaption><span>Rys. 1</span> Ten sam blat: kartka z pomiaru i rysunek, który z niej powstał.</figcaption>
         </figure>
 
-        <div class="col body">
-          <h2>Długopis, kartka i 20 do 40 minut w AutoCADzie</h2>
-          <p set:html={P('Filip jeździ na pomiary. Mierzy kuchnię i rysuje blat na kartce przypiętej do deski, na miejscu albo w samochodzie. Potem ktoś w biurze przerysowuje ten szkic w AutoCADzie. Według zespołu zajmuje to od 20 do 40 minut na jedno zlecenie. Gotowy rysunek jedzie do zakładu, który tnie płytę.')} />
-          <p set:html={P('Najdroższe jest to, czego nie widać na kartce. Jeden zły wymiar i płyta idzie do kosza.')} />
+        <section class="wrap sec">
+          <h2>Długopis, kartka i&nbsp;20 do 40 minut w&nbsp;AutoCADzie.</h2>
+          <div class="txt">
+            <p set:html={P('Filip jeździ na pomiary. Mierzy kuchnię i rysuje blat na kartce przypiętej do deski, na miejscu albo w samochodzie. Potem ktoś w biurze przerysowuje ten szkic w AutoCADzie. Według zespołu zajmuje to od 20 do 40 minut na jedno zlecenie. Gotowy rysunek jedzie do zakładu, który tnie płytę.')} />
+            <p class="strong" set:html={P('Najdroższe jest to, czego nie widać na kartce. Jeden zły wymiar i płyta idzie do kosza.')} />
+          </div>
+        </section>
 
-          <h2>Najpierw nauczyłem się czytać ich rysunki</h2>
-          <p set:html={P('Dostałem pary: zdjęcie szkicu i gotowy rysunek tego samego zlecenia. Położyłem je obok siebie i szukałem reguł, których nikt nie spisał:')} />
-          <ul>
-            <li>każde wycięcie jest kotowane do środka, od bliższej krawędzi płyty;</li>
-            <li>czerwona przerywana linia to podpórki od spodu blatu, 65&nbsp;mm od krawędzi;</li>
-            <li>krzyżyk to miejsce obróbki, zawsze o tej samej wielkości.</li>
+        <section class="wrap sec">
+          <h2>Najpierw nauczyłem się czytać ich rysunki.</h2>
+          <div class="txt">
+            <p set:html={P('Dostałem pary: zdjęcie szkicu i gotowy rysunek tego samego zlecenia. Położyłem je obok siebie i szukałem reguł, których nikt nie spisał.')} />
+          </div>
+        </section>
+
+        <figure class="wrap fig">
+          <ol class="panel rules">
+            {rules.map((r) => (
+              <li>
+                <svg class="dwg" viewBox="-40 -10 640 440" aria-hidden="true" set:html={r.svg} />
+                <p set:html={P(r.title)} />
+              </li>
+            ))}
+          </ol>
+          <figcaption><span>Rys. 2</span> Trzy reguły odczytane z ich gotowych rysunków.</figcaption>
+        </figure>
+
+        <section class="wrap sec">
+          <div aria-hidden="true"></div>
+          <div class="txt">
+            <p set:html={P('Czego nie umiałem odczytać, o to pytałem. „60” na szkicu to odległość od tylnej krawędzi zlewu do środka otworu na baterię. „165” to odległość od krawędzi baneru ściennego do gniazdka. Wyjaśnił mi to Filip i obie liczby stały się regułami w kodzie.')} />
+            <p set:html={P('Jedną rzecz wymyśliłem sam i musiałem ją wyrzucić: nazywałem elementy po swojemu, a pomiarowiec nazywa je inaczej. Dziś podpisy są takie, jak na jego kartce.')} />
+            <p class="soft">U Ciebie też ktoś przepisuje papier do systemu? <a href={contact}>Zacznijmy od takiej samej rozmowy.</a></p>
+          </div>
+        </section>
+
+        <section class="wrap sec">
+          <h2>Ten sam rysunek, tylko bez przerysowywania.</h2>
+          <div class="txt">
+            <p set:html={P('Generator odtworzył wszystkie wymiary na dwóch zleceniach referencyjnych, co do milimetra: 8 z 8 i 20 z 20. Rysunek wychodzi w ich formacie, z ich tabelką i kolorami warstw, więc zakład nie musi niczego zmieniać po swojej stronie.')} />
+          </div>
+        </section>
+
+        <figure class="wrap fig">
+          <div class="panel nums">
+            <p><strong>8<small>/8</small></strong><span>wymiarów zgodnych, zlecenie referencyjne pierwsze</span></p>
+            <p><strong>20<small>/20</small></strong><span>wymiarów zgodnych, zlecenie referencyjne drugie</span></p>
+          </div>
+          <figcaption><span>Rys. 3</span> Rysunek z generatora porównany z rysunkiem zrobionym ręcznie w AutoCADzie.</figcaption>
+        </figure>
+
+        <section class="wrap sec">
+          <h2>Zły wymiar nie przejdzie dalej.</h2>
+          <div class="txt">
+            <p set:html={P('Pod generatorem stoi walidator. Sprawdza geometrię i sens: blat kuchenny ma inne dopuszczalne otwory niż baner ścienny. Wstrzyknąłem mu 20 celowych błędów i wyłapał 20. Na prawdziwym zleceniu sam zadał dwa pytania, których nikt nie zadał: czy 325 mm głębokości to na pewno blat kuchenny i dlaczego wycięcie zlewu nie ma otworu na baterię.')} />
+            <p set:html={P('Sprawdzenie działa dwa razy: od razu w przeglądarce i drugi raz na serwerze. Przeglądarka nie ma prawa sama zapisać rysunku na produkcję.')} />
+          </div>
+        </section>
+
+        <figure class="wrap fig">
+          <div class="panel valid">
+            <ol class="ticks" aria-label="20 celowych błędów, wszystkie zatrzymane">
+              {Array.from({ length: 20 }, (_, i) => (
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 L10 17 L19 7" pathLength="1" /></svg><span class="sr">błąd {i + 1} zatrzymany</span></li>
+              ))}
+            </ol>
+            <div class="asks">
+              <p>Czy 325 mm głębokości to na pewno blat kuchenny?</p>
+              <p>Dlaczego wycięcie zlewu nie ma otworu na baterię?</p>
+            </div>
+          </div>
+          <figcaption><span>Rys. 4</span> 20 celowych błędów, 20 zatrzymanych. Obok dwa pytania, które walidator zadał sam na prawdziwym zleceniu.</figcaption>
+        </figure>
+
+        <section class="wrap sec">
+          <h2>Zdjęcie szkicu wypełnia formularz. Decyzja zostaje u&nbsp;ludzi.</h2>
+          <div class="txt">
+            <p set:html={P('Filip robi zdjęcie kartki. Model odczytuje wymiary i wypełnia formularz. To jest dopiero propozycja. Człowiek porównuje ją ze zdjęciem, poprawia, zaznacza, że sprawdził wszystkie wymiary, i podpisuje. Dopiero wtedy powstaje DXF i PDF.')} />
+            <p class="strong" set:html={P('Tak to zaprojektowałem z jednego powodu: odczyt pisma odręcznego się myli, a pomyłka kosztuje płytę.')} />
+          </div>
+        </section>
+
+        <figure class="wrap fig">
+          <ol class="panel flow">
+            {steps.map((s) => (
+              <li>
+                <h3>{s.t}</h3>
+                <p set:html={P(s.d)} />
+                {s.check && <p class="check"><span aria-hidden="true"></span>Sprawdziłem wszystkie wymiary</p>}
+              </li>
+            ))}
+          </ol>
+          <figcaption><span>Rys. 5</span> Model proponuje, człowiek sprawdza i podpisuje.</figcaption>
+        </figure>
+
+        <section class="wrap sec">
+          <div class="side">
+            <h2>Działa tam, gdzie jest pomiar.</h2>
+            <p class="big" aria-hidden="true">6,5&nbsp;s</p>
+          </div>
+          <div class="txt">
+            <p set:html={P('Pomiar nie zawsze jest tam, gdzie jest zasięg. Narzędzie ściąga wszystko, czego potrzebuje, jednym przyciskiem przy zasięgu. Przy odciętej sieci rysunek powstaje w 6,5 sekundy.')} />
+            <p set:html={P('Przy okazji znalazłem dwa błędy w ich istniejącej aplikacji, przez które nigdy nie działała bez sieci, choć miała to w założeniach. Naprawiłem oba.')} />
+          </div>
+        </section>
+
+        <section class="wrap sec">
+          <h2>Narzędzie należy do firmy.</h2>
+          <div class="txt">
+            <p set:html={P('Dane, zdjęcia i klucze do AI są na koncie GlassStone i na ich rachunku. Rozważałem postawienie części na moim koncie w chmurze. Odrzuciłem to, bo przy rozstaniu firma zostałaby z narzędziem, które nie jest jej.')} />
+          </div>
+        </section>
+
+        <section class="wrap sec">
+          <h2>Uczciwie o&nbsp;tym, gdzie jesteśmy.</h2>
+          <div class="txt">
+            <p set:html={P('Narzędzie jest w testach u Filipa i Marcina. Nie zastępuje jeszcze AutoCADa w każdym zleceniu. Blaty w kształcie L i U, skosy i nieregularne obrysy narzędzie dziś zatrzymuje, żeby nie narysowało ich źle. Pierwszą wersję edytora wyrzuciłem, bo miała trzy kolumny i za dużo naraz. Druga prowadzi krok po kroku: zdjęcie, rysunek, eksport. Na telefonie ma osobny układ.')} />
+          </div>
+        </section>
+
+        <figure class="wrap fig">
+          <ul class="panel shapes">
+            <li><svg class="dwg" viewBox="-20 -20 440 340" aria-hidden="true"><path class="ln-stop" d="M0 0 H400 V120 H140 V300 H0 Z"/></svg><p>Kształt L</p></li>
+            <li><svg class="dwg" viewBox="-20 -20 440 340" aria-hidden="true"><path class="ln-stop" d="M0 0 H400 V300 H280 V120 H120 V300 H0 Z"/></svg><p>Kształt U</p></li>
+            <li><svg class="dwg" viewBox="-20 -20 440 340" aria-hidden="true"><path class="ln-stop" d="M0 0 H400 L300 300 H0 Z"/></svg><p>Skos</p></li>
           </ul>
-          <p set:html={P('Czego nie umiałem odczytać, o to pytałem. „60” na szkicu to odległość od tylnej krawędzi zlewu do środka otworu na baterię. „165” to odległość od krawędzi baneru ściennego do gniazdka. Wyjaśnił mi to Filip i obie liczby stały się regułami w kodzie.')} />
-          <p set:html={P('Jedną rzecz wymyśliłem sam i musiałem ją wyrzucić: nazywałem elementy po swojemu, a pomiarowiec nazywa je inaczej. Dziś podpisy są takie, jak na jego kartce.')} />
-          <p class="soft">U Ciebie też ktoś przepisuje papier do systemu? <a href={contact}>Zacznijmy od takiej samej rozmowy.</a></p>
+          <figcaption><span>Rys. 6</span> Tych blatów narzędzie dziś nie rysuje. Zatrzymuje je bramka.</figcaption>
+        </figure>
 
-          <h2>Ten sam rysunek, tylko bez przerysowywania</h2>
-          <p set:html={P('Generator odtworzył wszystkie wymiary na dwóch zleceniach referencyjnych, co do milimetra: 8 z 8 i 20 z 20. Rysunek wychodzi w ich formacie, z ich tabelką i kolorami warstw, więc zakład nie musi niczego zmieniać po swojej stronie.')} />
-
-          <h2>Zły wymiar nie przejdzie dalej</h2>
-          <p set:html={P('Pod generatorem stoi walidator. Sprawdza geometrię i sens: blat kuchenny ma inne dopuszczalne otwory niż baner ścienny. Wstrzyknąłem mu 20 celowych błędów i wyłapał 20. Na prawdziwym zleceniu sam zadał dwa pytania, których nikt nie zadał: czy 325 mm głębokości to na pewno blat kuchenny i dlaczego wycięcie zlewu nie ma otworu na baterię.')} />
-          <p set:html={P('Sprawdzenie działa dwa razy: od razu w przeglądarce i drugi raz na serwerze. Przeglądarka nie ma prawa sama zapisać rysunku na produkcję.')} />
-
-          <h2>Zdjęcie szkicu wypełnia formularz, decyzja zostaje u&nbsp;ludzi</h2>
-          <p set:html={P('Filip robi zdjęcie kartki. Model odczytuje wymiary i wypełnia formularz. To jest dopiero propozycja. Człowiek porównuje ją ze zdjęciem, poprawia, zaznacza, że sprawdził wszystkie wymiary, i podpisuje. Dopiero wtedy powstaje DXF i PDF.')} />
-          <p set:html={P('Tak to zaprojektowałem z jednego powodu: odczyt pisma odręcznego się myli, a pomyłka kosztuje płytę.')} />
-
-          <h2>Działa tam, gdzie jest pomiar</h2>
-          <p set:html={P('Pomiar nie zawsze jest tam, gdzie jest zasięg. Narzędzie ściąga wszystko, czego potrzebuje, jednym przyciskiem przy zasięgu. Przy odciętej sieci rysunek powstaje w 6,5 sekundy.')} />
-          <p set:html={P('Przy okazji znalazłem dwa błędy w ich istniejącej aplikacji, przez które nigdy nie działała bez sieci, choć miała to w założeniach. Naprawiłem oba.')} />
-
-          <h2>Narzędzie należy do firmy</h2>
-          <p set:html={P('Dane, zdjęcia i klucze do AI są na koncie GlassStone i na ich rachunku. Rozważałem postawienie części na moim koncie w chmurze. Odrzuciłem to, bo przy rozstaniu firma zostałaby z narzędziem, które nie jest jej.')} />
-
-          <h2>Uczciwie o tym, gdzie jesteśmy</h2>
-          <p set:html={P('Narzędzie jest w testach u Filipa i Marcina. Nie zastępuje jeszcze AutoCADa w każdym zleceniu. Blaty w kształcie L i U, skosy i nieregularne obrysy narzędzie dziś zatrzymuje, żeby nie narysowało ich źle. Pierwszą wersję edytora wyrzuciłem, bo miała trzy kolumny i za dużo naraz. Druga prowadzi krok po kroku: zdjęcie, rysunek, eksport. Na telefonie ma osobny układ.')} />
-
-          {quote ? (
-            <figure class="quote">
-              <blockquote><p>{quote.text}</p></blockquote>
-              <figcaption>{quote.name}, {quote.role}</figcaption>
-            </figure>
-          ) : import.meta.env.DEV && (
-            <aside class="quote-todo" aria-hidden="true">Tu stanie cytat Filipa po rozmowie. Na produkcji blok się nie pokaże, dopóki cytat nie jest zaakceptowany.</aside>
-          )}
-        </div>
+        {quote ? (
+          <figure class="wrap quote">
+            <blockquote><p>{quote.text}</p></blockquote>
+            <figcaption>{quote.name}, {quote.role}</figcaption>
+          </figure>
+        ) : import.meta.env.DEV && (
+          <aside class="wrap quote-todo" aria-hidden="true">Tu stanie cytat Filipa po rozmowie. Na produkcji blok się nie pokaże, dopóki cytat nie jest zaakceptowany.</aside>
+        )}
       </article>
 
       <section class="end" aria-labelledby="end-h">
-        <div class="col">
-          <h2 id="end-h">Masz w firmie coś, co ktoś przepisuje ręcznie?</h2>
-          <p>Opisz mi to w&nbsp;15 minut. Powiem, czy da się to zautomatyzować i&nbsp;co by to zmieniło.</p>
-          <a class="btn" href={contact}>Umów 15 minut</a>
-          <p class="more"><a href="/pl/uslugi/aplikacje-i-systemy/">Jak pracuję przy aplikacjach i systemach</a></p>
+        <div class="wrap end-in">
+          <h2 id="end-h">Masz w&nbsp;firmie coś, co ktoś przepisuje ręcznie?</h2>
+          <div>
+            <p>Opisz mi to w&nbsp;15 minut. Powiem, czy da się to zautomatyzować i&nbsp;co by to zmieniło.</p>
+            <a class="btn" href={contact}>Umów 15 minut</a>
+            <p class="more"><a href="/pl/uslugi/aplikacje-i-systemy/">Aplikacja lub system: jak pracuję</a></p>
+          </div>
         </div>
       </section>
     </main>
@@ -171,95 +349,198 @@ const P = (t: string) => nbsp(t);
   gsap.registerPlugin(ScrollTrigger);
   const mm = gsap.matchMedia();
   mm.add('(prefers-reduced-motion: no-preference)', () => {
-    const dwg = document.querySelector<SVGSVGElement>('.dwg');
-    if (!dwg) return;
-    // Jedyny ruch na stronie: rysunek kreśli się raz, gdy wjeżdża w ekran.
-    const q = (sel: string) => dwg.querySelectorAll(sel);
-    gsap.set(q('.ln-body > *, .ln-dim > *, .ln-note > *'), { strokeDasharray: 1, strokeDashoffset: 1 });
-    gsap.set(q('.tx text'), { opacity: 0 });
-    gsap.timeline({ scrollTrigger: { trigger: dwg, start: 'top 85%', once: true } })
-      .to(q('.ln-body > *'), { strokeDashoffset: 0, duration: 1, stagger: .1, ease: 'power2.inOut' })
-      .to(q('.ln-dim > *'), { strokeDashoffset: 0, duration: .6, stagger: .06 }, '-=.4')
-      .to(q('.tx text'), { opacity: 1, duration: .3, stagger: .03 }, '-=.3')
-      .to(q('.ln-note > *'), { strokeDashoffset: 0, duration: .4 }, '-=.2');
+    // Dwa ruchy na stronie: arkusz kreśli się raz, gdy wjeżdża w ekran, i 20 błędów odhacza się po kolei.
+    document.querySelectorAll<SVGSVGElement>('.fig-hero .dwg').forEach((dwg) => {
+      const q = (sel: string) => dwg.querySelectorAll(sel);
+      gsap.set(q('.ln-body > *, .ln-dim > path, .ln-note > *, .ln-frame > *'), { strokeDasharray: 1, strokeDashoffset: 1 });
+      gsap.set(q('text'), { opacity: 0 });
+      gsap.timeline({ scrollTrigger: { trigger: dwg, start: 'top 85%', once: true } })
+        .to(q('.ln-body > *'), { strokeDashoffset: 0, duration: 1.1, stagger: .05, ease: 'power2.inOut' })
+        .to(q('.ln-dim > path, .ln-frame > *'), { strokeDashoffset: 0, duration: .6, stagger: .02 }, '-=.5')
+        .to(q('text'), { opacity: 1, duration: .3, stagger: .01 }, '-=.3')
+        .to(q('.ln-note > *'), { strokeDashoffset: 0, duration: .4 }, '-=.2');
+    });
+    const ticks = document.querySelectorAll('.ticks path');
+    if (ticks.length) {
+      gsap.set(ticks, { strokeDasharray: 1, strokeDashoffset: 1 });
+      gsap.to(ticks, { strokeDashoffset: 0, duration: .25, stagger: .06, ease: 'power1.out',
+        scrollTrigger: { trigger: '.ticks', start: 'top 80%', once: true } });
+    }
   });
   window.addEventListener('pagehide', () => mm.revert(), { once: true });
 </script>
 
 <style>
   .case {
-    --ivory: #f8f9f2; --ink: #111; --dim: #6b6759; --blue: #0522ff; --brand: #ffcc33;
-    --cad-dim: #1c9a3c; --cad-note: #e06a1b;
+    --ivory: #f8f9f2; --paper: #f0f1e8; --ink: #111; --dim: #5f5b4e; --rule: rgb(17 17 17 / .16);
+    --blue: #0522ff; --brand: #ffcc33;
+    --cad-dim: #178a34; --cad-note: #c95a12; --cad-red: #c70404;
     --gutter: clamp(20px, 5vw, 96px); --focus: var(--blue);
     font-family: 'GeneralSansV', sans-serif; background: var(--ivory); color: var(--ink); overflow-x: clip;
   }
   @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
   @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
-  .case :is(h1,h2,p,figure,dl,dd,ul,blockquote) { margin: 0; }
+  @font-face { font-family: 'JBMono'; src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+  .case :is(h1,h2,h3,p,figure,dl,dd,ul,ol,blockquote) { margin: 0; }
+  .case :is(ul,ol) { padding: 0; list-style: none; }
   .case :is(h1,h2) { text-wrap: balance; }
+  .case p { text-wrap: pretty; }
   .case :is(a,button):focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
   .case ::selection { background: var(--brand); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
   .skip:focus { transform: none; }
   .nav { height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
   .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
 
-  /* Jedna kolumna. Cztery rozmiary pisma: tytuł, śródtytuł, tekst, podpis. */
-  .col { box-sizing: content-box; max-width: 660px; margin-inline: auto; padding-inline: 20px; }
-  .head { padding-top: clamp(40px, 10vh, 112px); }
-  .kicker { font-size: 16px; color: var(--dim); margin-bottom: 20px !important; }
-  h1 { font-family: 'NohemiV', sans-serif; font-weight: 520; font-size: clamp(36px, 5vw, 60px); line-height: 1.08; letter-spacing: -.025em; }
-  .lead { margin-top: 28px !important; font-size: 21px; line-height: 1.6; }
-  .facts { margin-top: 36px !important; border-top: 1px solid rgb(0 0 0 / .14); }
-  .facts div { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid rgb(0 0 0 / .14); font-size: 16px; }
-  .facts dt { width: 120px; flex: none; color: var(--dim); }
+  .wrap { max-width: 1320px; margin-inline: auto; padding-inline: var(--gutter); }
 
-  .case .wide { max-width: 1000px; margin: clamp(56px, 9vh, 96px) auto 0; padding-inline: 20px; box-sizing: content-box; }
-  .pair { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 16px; }
-  .pair figcaption { grid-column: 1 / -1; }
-  .pane { border-radius: 6px; overflow: hidden; background: #fff; border: 1px solid rgb(0 0 0 / .1); display: grid; place-items: center; }
-  .pane img { width: 100%; height: auto; display: block; }
-  .sheet { padding: 20px; }
-  .dwg { width: 100%; height: auto; }
-  .dwg :is(rect, circle, path) { fill: none; vector-effect: non-scaling-stroke; }
-  .ln-body > * { stroke: #111; stroke-width: 1.5; }
-  .ln-dim > * { stroke: var(--cad-dim); stroke-width: 1; }
-  .ln-note > * { stroke: #111; stroke-width: 1; }
-  .dwg text { font-family: 'GeneralSansV', sans-serif; font-size: 52px; }
-  .t-dim { fill: var(--cad-dim); } .t-body { fill: #111; font-weight: 560; } .t-note { fill: var(--cad-note); }
-  .dwg .t-sm { font-size: 40px; }
-  figcaption { margin-top: 12px; font-size: 16px; color: var(--dim); }
+  /* Cztery rozmiary pisma: tytuł (też liczby), śródtytuł, tekst, podpis. */
+  .hero { padding-top: clamp(32px, 9vh, 104px); }
+  .kicker { font-size: 16px; color: var(--dim); }
+  h1 { margin-top: 20px !important; max-width: 13em; font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(36px, 6.6vw, 100px); line-height: 1.02; letter-spacing: -.035em; }
+  .lead { margin-top: clamp(28px, 4vw, 48px) !important; max-width: 36em; font-size: 21px; line-height: 1.6; }
 
-  .body { padding-top: 24px; font-size: 19px; line-height: 1.7; }
-  .body h2 { font-family: 'NohemiV', sans-serif; font-weight: 540; font-size: 28px; line-height: 1.2; letter-spacing: -.015em; margin-top: 64px !important; }
-  .body h2 + p, .body h2 + ul { margin-top: 16px !important; }
-  .body p + p, .body ul + p, .body p + ul { margin-top: 20px !important; }
-  .body ul { padding-left: 1.2em; }
-  .body li + li { margin-top: 8px; }
-  .body a { color: var(--ink); text-decoration-color: var(--blue); text-decoration-thickness: 2px; text-underline-offset: 4px; }
-  .soft { padding: 16px 20px; background: #fff; border-radius: 6px; }
-  .quote { margin-top: 64px !important; padding-left: 24px; border-left: 3px solid var(--brand); }
-  .quote p { font-size: 24px; line-height: 1.5; }
-  .quote figcaption { font-size: 16px; }
-  .quote-todo { margin-top: 64px; padding: 16px; border: 1px dashed #c70404; color: #c70404; font-size: 16px; }
+  /* Metryczka jako tabelka rysunkowa: cztery pola w ramce, jak na ich arkuszu. */
+  .block { margin-top: clamp(40px, 5vw, 64px) !important; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1.5px solid var(--ink); }
+  .block div { padding: 12px 16px 16px; border-left: 1px solid var(--ink); }
+  .block div:first-child { border-left: 0; }
+  .block dt { font-size: 14px; color: var(--cad-red); }
+  .block dd { margin-top: 8px; font-size: 16px; line-height: 1.4; }
 
-  .end { margin-top: 120px; padding: 96px 0; background: var(--ink); color: var(--ivory); }
-  .end h2 { font-family: 'NohemiV', sans-serif; font-weight: 520; font-size: clamp(30px, 4vw, 44px); line-height: 1.12; letter-spacing: -.02em; }
-  .end p { margin-top: 20px !important; font-size: 19px; line-height: 1.6; color: rgb(248 249 242 / .75); }
+  .fig { margin-top: clamp(48px, 7vw, 96px) !important; }
+  .panel {
+    background-color: var(--paper);
+    background-image: linear-gradient(rgb(17 17 17 / .045) 1px, transparent 1px), linear-gradient(90deg, rgb(17 17 17 / .045) 1px, transparent 1px);
+    background-size: 24px 24px; background-position: -1px -1px;
+    border: 1px solid var(--rule);
+  }
+  .fig figcaption { margin-top: 14px; font-size: 16px; line-height: 1.5; color: var(--dim); max-width: 48em; }
+  .fig figcaption span { font-family: 'JBMono', monospace; font-size: 14px; color: var(--ink); margin-right: 10px; }
+
+  .pair { display: grid; grid-template-columns: minmax(0, 42fr) minmax(0, 58fr); gap: clamp(16px, 2.4vw, 32px); padding: clamp(16px, 2.4vw, 32px); align-items: center; }
+  .photo img { width: 100%; height: auto; display: block; }
+  .sheet { background: #fff; border: 1px solid var(--rule); padding: clamp(12px, 1.6vw, 24px); }
+  .tag { margin-top: 12px !important; font-family: 'JBMono', monospace; font-size: 14px; color: var(--dim); }
+  .dwg { width: 100%; height: auto; display: block; overflow: visible; }
+  .dwg-crop { display: none; }
+  /* Wnętrze rysunków wchodzi przez set:html, więc bez atrybutu zakresu Astro: reguły globalne pod .dwg. */
+  .case :global(.dwg :is(rect, circle, path)) { fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+  .case :global(.dwg :is(.ln-body, .ln-frame) > *) { stroke: var(--ink); stroke-width: 1.4; }
+  .case :global(.dwg .ln-frame > path) { stroke-width: 1; }
+  .case :global(.dwg .ln-dim > *) { stroke: var(--cad-dim); stroke-width: 1; }
+  .case :global(.dwg .ln-note > *) { stroke: var(--ink); stroke-width: 1; }
+  .case :global(.dwg .ln-axis > *) { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 14 5 3 5; }
+  .case :global(.dwg .ln-sup > *) { stroke: var(--cad-red); stroke-width: 1.6; stroke-dasharray: 12 8; }
+  .case :global(.dwg .ln-stop) { stroke: var(--ink); stroke-width: 1.4; stroke-dasharray: 10 7; }
+  .case :global(.dwg text) { font-family: 'JBMono', monospace; font-size: 44px; }
+  .case :global(.dwg-full text) { font-size: 60px; }
+  .case :global(.dwg .t-dim) { fill: var(--cad-dim); }
+  .case :global(.dwg .t-body) { fill: var(--ink); }
+  .case :global(.dwg .t-note) { fill: var(--cad-note); }
+  .case :global(.dwg .t-lab) { fill: var(--cad-red); font-size: 34px; }
+  .case :global(.dwg .t-sm) { fill: var(--ink); font-size: 36px; }
+  .case :global(.dwg .t-tab) { fill: var(--ink); font-size: 42px; }
+
+  /* Sekcja: śródtytuł po lewej, tekst po prawej. */
+  .sec { margin-top: clamp(64px, 9vw, 128px) !important; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 96px); align-items: start; }
+  .fig + .sec { margin-top: clamp(56px, 7vw, 96px) !important; }
+  .sec + .sec:has(> [aria-hidden]) { margin-top: 40px !important; }
+  .sec h2, .side { position: sticky; top: 32px; }
+  .side h2 { position: static; }
+  h2 { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(28px, 2.9vw, 42px); line-height: 1.1; letter-spacing: -.022em; }
+  .txt { max-width: 36em; font-size: 19px; line-height: 1.65; border-top: 1.5px solid var(--ink); padding-top: 20px; }
+  .sec:has(> [aria-hidden]) .txt { border-top: 0; padding-top: 0; }
+  .txt p + p { margin-top: 20px !important; }
+  .txt .strong { font-weight: 560; }
+  .txt a { color: var(--ink); text-decoration-color: var(--blue); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .soft { margin-top: 32px !important; padding: 16px 20px; border: 1px solid var(--ink); }
+  .big { margin-top: 24px !important; font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(42px, 6.6vw, 100px); line-height: 1; letter-spacing: -.035em; color: var(--cad-dim); }
+
+  .rules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .rules li { padding: clamp(20px, 2.4vw, 32px); border-left: 1px solid var(--rule); display: flex; flex-direction: column; gap: 20px; }
+  .rules li:first-child { border-left: 0; }
+  .rules .dwg { background: #fff; border: 1px solid var(--rule); padding: 12px; box-sizing: border-box; }
+  .rules p { font-size: 16px; line-height: 1.5; }
+
+  .nums { display: grid; grid-template-columns: 1fr 1fr; }
+  .nums p { padding: clamp(24px, 3.2vw, 48px); display: flex; flex-direction: column; gap: 12px; }
+  .nums p + p { border-left: 1px solid var(--rule); }
+  .nums strong { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(64px, 11vw, 168px); line-height: .9; letter-spacing: -.04em; }
+  .nums small { font-size: .42em; color: var(--dim); letter-spacing: -.02em; margin-left: .06em; }
+  .nums span { font-size: 16px; color: var(--dim); }
+
+  .valid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+  .ticks { padding: clamp(20px, 3vw, 40px); display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 8px; align-content: center; }
+  .ticks li { aspect-ratio: 1; background: #fff; border: 1px solid var(--rule); display: grid; place-items: center; }
+  .ticks svg { width: 62%; }
+  .ticks path { fill: none; stroke: var(--cad-dim); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .asks { padding: clamp(20px, 3vw, 40px); border-left: 1px solid var(--rule); display: grid; gap: 16px; align-content: center; }
+  .asks p { font-size: 19px; line-height: 1.45; padding-left: 16px; border-left: 3px solid var(--cad-note); }
+
+  .flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); counter-reset: st; }
+  .flow li { padding: clamp(20px, 2.4vw, 32px); border-left: 1px solid var(--rule); counter-increment: st; position: relative; }
+  .flow li:first-child { border-left: 0; }
+  .flow li::before { content: counter(st); display: grid; place-items: center; width: 32px; height: 32px; border: 1.5px solid var(--ink); border-radius: 50%; font-family: 'JBMono', monospace; font-size: 14px; background: var(--ivory); margin-bottom: 20px; }
+  .flow li:nth-child(3)::before { background: var(--brand); }
+  .flow h3 { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: 21px; line-height: 1.2; letter-spacing: -.01em; }
+  .flow p { margin-top: 8px !important; font-size: 16px; line-height: 1.5; color: var(--dim); }
+  .flow .check { margin-top: 16px !important; display: flex; align-items: center; gap: 10px; color: var(--ink); background: #fff; border: 1px solid var(--rule); padding: 10px 12px; }
+  .flow .check span { flex: none; width: 18px; height: 18px; border: 1.5px solid var(--ink); background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5 10 17 19 7' fill='none' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E") center / 14px no-repeat; }
+
+  .shapes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .shapes li { padding: clamp(20px, 3vw, 40px); border-left: 1px solid var(--rule); }
+  .shapes li:first-child { border-left: 0; }
+  .shapes .dwg { max-width: 260px; }
+  .shapes p { margin-top: 16px !important; font-size: 16px; color: var(--dim); }
+
+  .quote { margin-top: 96px !important; }
+  .quote p { font-size: 28px; line-height: 1.4; max-width: 30em; }
+  .quote figcaption { margin-top: 12px; font-size: 16px; }
+  .quote-todo { margin-top: 64px; padding: 16px var(--gutter); color: var(--cad-red); font-size: 16px; }
+
+  .end { margin-top: clamp(96px, 12vw, 160px); padding: clamp(72px, 9vw, 128px) 0; background: var(--ink); color: var(--ivory); }
+  .end-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 96px); align-items: start; }
+  .end h2 { font-size: clamp(32px, 4vw, 56px); line-height: 1.05; letter-spacing: -.03em; }
+  .end p { font-size: 19px; line-height: 1.6; color: rgb(248 249 242 / .78); max-width: 30em; }
   .btn { display: inline-block; margin-top: 32px; padding: 16px 32px; border-radius: 999px; background: var(--brand); color: var(--ink); text-decoration: none; font-size: 16px; font-weight: 600; }
   .btn:hover { background: var(--ivory); }
   .end :focus-visible { outline-color: var(--brand); }
+  .end .more { margin-top: 24px !important; }
   .end .more a { color: var(--ivory); text-underline-offset: 4px; font-size: 16px; }
 
-  @media (max-width: 700px) {
-    .lead { font-size: 19px; }
-    .body { font-size: 18px; }
-    .body h2 { font-size: 24px; margin-top: 48px !important; }
+  @media (max-width: 900px) {
     .pair { grid-template-columns: 1fr; }
-    .facts div { flex-direction: column; gap: 2px; }
-    .dwg text { font-size: 84px; }
-    .dwg .t-body { font-size: 68px; }
-    .dwg .t-note, .dwg .t-sm, .ln-note { display: none; }
-    .end { padding: 72px 0; }
+    .dwg-full { display: none; }
+    .dwg-crop { display: block; }
+    .case :global(.dwg-crop text) { font-size: 110px; }
+    .case :global(.dwg-crop :is(.t-note, .t-dia, .ln-note)) { display: none; }
+    .sec, .end-in { grid-template-columns: 1fr; gap: 20px; }
+    .sec h2, .side { position: static; }
+    .sec:has(> [aria-hidden]) > [aria-hidden] { display: none; }
+    .block { grid-template-columns: 1fr 1fr; }
+    .block div:nth-child(3) { border-left: 0; }
+    .block div:nth-child(n+3) { border-top: 1px solid var(--ink); }
+    .rules, .flow { grid-template-columns: 1fr; }
+    .rules li, .flow li { border-left: 0; border-top: 1px solid var(--rule); }
+    .rules li:first-child, .flow li:first-child { border-top: 0; }
+    .rules .dwg { max-width: 420px; }
+    .valid { grid-template-columns: 1fr; }
+    .asks { border-left: 0; border-top: 1px solid var(--rule); }
+  }
+  @media (max-width: 600px) {
+    .lead, .txt { font-size: 18px; }
+    .ticks { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .nums { grid-template-columns: 1fr; }
+    .nums p + p { border-left: 0; border-top: 1px solid var(--rule); }
+    .shapes { grid-template-columns: 1fr 1fr 1fr; }
+    .shapes li { padding: 14px; }
+    .shapes p { font-size: 14px; }
+    .asks p { font-size: 18px; }
+  }
+  @media (max-width: 380px) {
+    .block { grid-template-columns: 1fr; }
+    .block div { border-left: 0 !important; }
+    .block div + div { border-top: 1px solid var(--ink); }
   }
 </style>
