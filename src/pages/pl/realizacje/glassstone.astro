@@ -37,7 +37,7 @@ const dimV = (y1: number, y2: number, x: number, ext: number, label: string) =>
   `<text class="t-dim" x="${x - 16}" y="${(y1 + y2) / 2}" text-anchor="middle" transform="rotate(-90 ${x - 16} ${(y1 + y2) / 2})">${label}</text>`;
 const cross = (x: number, y: number) => `<path d="M${x - 18} ${y - 18} L${x + 18} ${y + 18} M${x + 18} ${y - 18} L${x - 18} ${y + 18}" pathLength="1"/>`;
 
-const blatGlowny = `
+const blatGlownyFn = (mob = false) => `
   <g class="ln-body">
     <rect x="0" y="0" width="1707" height="600" pathLength="1"/>
     <rect x="112.5" y="115" width="345" height="395" rx="10" pathLength="1"/>
@@ -51,36 +51,37 @@ const blatGlowny = `
     ${dimV(0, 600, -110, 90, '600')}
     ${dimH(0, 285, -90, -70, '285')}
     ${dimH(1406.5, 1707, -90, -70, '300')}
-    <path class="t-in" d="M285 510 V600" pathLength="1"/><text class="t-dim t-in" x="300" y="572">90</text>
-    <path class="t-in" d="M1406.5 550 V660" pathLength="1"/><text class="t-dim t-in" x="1421" y="656">50</text>
+    <path d="M285 510 V600" pathLength="1"/><text class="t-dim t-cut" x="300" y="586">90</text>
+    <path d="M1544 550 H1600 M1580 550 V600" pathLength="1"/><text class="t-dim t-cut" x="1592" y="590">50</text>
   </g>
   <g class="ln-note">
-    <path d="M1725 -18 L1790 -120 H2000" pathLength="1"/>
-    <path d="M1198 -18 L1250 -170 H1420" pathLength="1"/>
+    ${mob ? '<path d="M1725 -18 L1660 -380 H1180" pathLength="1"/><path d="M1198 -18 L1150 -250 H700" pathLength="1"/>'
+         : '<path d="M1725 -18 L1790 -120 H2000" pathLength="1"/><path d="M1198 -18 L1250 -170 H1420" pathLength="1"/>'}
   </g>
   <g class="tx">
-    <text class="t-dim t-dia" x="322" y="70">ø30 ø35</text>
-    <text class="t-body" x="285" y="326" text-anchor="middle">ZLEW</text>
-    <text class="t-body" x="1406" y="322" text-anchor="middle">PŁYTA</text>
-    <text class="t-note" x="1800" y="-134">FAZA+POLER 30 MM</text>
-    <text class="t-note" x="1260" y="-184">FAZA+POLER</text>
+    <text class="t-dim t-dia" x="322" y="96">ø30 ø35</text>
+    <text class="t-body t-cut" x="285" y="326" text-anchor="middle">ZLEW</text>
+    <text class="t-body t-cut" x="1406" y="322" text-anchor="middle">PŁYTA</text>
+    ${mob ? '<text class="t-note" x="1650" y="-396" text-anchor="end">FAZA+POLER 30 MM</text><text class="t-note" x="1140" y="-266" text-anchor="end">FAZA+POLER</text>'
+         : '<text class="t-note" x="1800" y="-134">FAZA+POLER 30 MM</text><text class="t-note" x="1260" y="-184">FAZA+POLER</text>'}
     <text class="t-body" x="0" y="800">BLAT GŁÓWNY</text>
     <text class="t-note" x="0" y="890">PRZEDNIA KRAWĘDŹ BLATU U4 DO 10 CM</text>
   </g>`;
+const blatGlowny = blatGlownyFn();
 const blat563 = `
   <g class="ln-body">
     <rect x="0" y="0" width="1707" height="563" pathLength="1"/>
     <circle cx="763" cy="284" r="17.5" pathLength="1"/>
   </g>
   <g class="ln-dim">
-    ${dimH(0, 1707, 640, 60, '1707')}
-    ${dimH(0, 763, 720, 60, '763')}
+    ${dimH(0, 1707, 680, 100, '1707')}
+    ${dimH(0, 763, 800, 100, '763')}
     ${dimV(0, 563, -110, 90, '563')}
   </g>
   <g class="ln-note"><path d="M763 266 V-60 H880" pathLength="1"/></g>
   <g class="tx">
     <text class="t-dim" x="890" y="-48">ø35</text>
-    <text class="t-body" x="0" y="820">BLAT 563</text>
+    <text class="t-body" x="0" y="910">BLAT 563</text>
   </g>`;
 const baner = `
   <g class="ln-body">
@@ -89,13 +90,13 @@ const baner = `
   </g>
   <g class="ln-dim">
     ${dimH(0, 600, 380, 60, '600')}
-    ${dimH(0, 167, 460, 160, '165')}
+    ${dimH(0, 167, 500, 200, '165')}
     ${dimV(0, 300, -90, 70, '300')}
   </g>
   <g class="ln-note"><path d="M167 109 V-50 H300" pathLength="1"/></g>
   <g class="tx">
     <text class="t-dim" x="310" y="-38">210×70</text>
-    <text class="t-body" x="0" y="560">BANER ŚCIENNY</text>
+    <text class="t-body" x="0" y="620">BANER ŚCIENNY</text>
   </g>`;
 const tabelka = `
   <g class="ln-frame">
@@ -115,7 +116,24 @@ const sheetFull = `
   <g transform="translate(250 250)">${blat563}</g>
   <g transform="translate(2140 230)">${baner}</g>
   <g transform="translate(250 2400)">${tabelka}</g>`;
-const sheetCrop = `<g transform="translate(250 1380)">${blatGlowny}</g>`;
+const tabelkaMob = `
+  <g class="ln-frame">
+    <rect x="0" y="0" width="1707" height="300" pathLength="1"/>
+    <path d="M0 150 H1707 M0 50 H1707 M0 200 H1707 M420 0 V150 M560 150 V300 M1140 150 V300" pathLength="1"/>
+  </g>
+  <g class="tx">
+    <text class="t-lab" x="16" y="38">PRODUKT</text><text class="t-tab" x="16" y="124">Blaty</text>
+    <text class="t-lab" x="436" y="38">MATERIAŁ</text><text class="t-tab" x="436" y="124">kamień kwarcowy</text>
+    <text class="t-lab" x="16" y="188">GRUBOŚĆ</text><text class="t-tab" x="16" y="274">20 mm</text>
+    <text class="t-lab" x="576" y="188">WYKOŃCZENIE</text><text class="t-tab" x="576" y="274">poler</text>
+    <text class="t-lab" x="1156" y="188">PROFIL</text><text class="t-tab" x="1156" y="274">P1</text>
+    <text class="t-sm" x="1707" y="-24" text-anchor="end">TOLERANCJA WYKONANIA BLATÓW +/- 3 MM</text>
+  </g>`;
+const sheetMob = `
+  <g transform="translate(250 230)">${baner}</g>
+  <g transform="translate(250 1010)">${blat563}</g>
+  <g transform="translate(250 2480)">${blatGlownyFn(true)}</g>
+  <g transform="translate(250 3490)">${tabelkaMob}</g>`;
 
 // Rys. 2: trzy reguły z ich rysunków, każda na wycinku płyty.
 const rules = [
@@ -138,7 +156,7 @@ const rules = [
 ];
 
 const steps = [
-  { t: 'Zdjęcie kartki', d: 'Filip fotografuje szkic na pomiarze.' },
+  { t: 'Zdjęcie kartki', d: 'Filip robi zdjęcie szkicu.' },
   { t: 'Propozycja modelu', d: 'Model odczytuje wymiary i wypełnia formularz.' },
   { t: 'Sprawdzenie i podpis', d: 'Człowiek porównuje ze zdjęciem i poprawia.', check: true },
   { t: 'DXF i PDF', d: 'Dopiero wtedy powstaje rysunek na produkcję.' },
@@ -183,18 +201,23 @@ const steps = [
             </div>
             <div class="sheet">
               <svg class="dwg dwg-full" viewBox="0 0 2800 2570" role="img" aria-label="Rysunek produkcyjny z generatora: baner ścienny 600 na 300 z otworem 210 na 70, blat 563 na 1707 z otworem 35 mm, blat główny 1707 na 600 z wycięciem zlewu i płyty, dwa punkty obróbki krawędzi i tabelka z materiałem, grubością 20 mm i wykończeniem." set:html={sheetFull} />
-              <svg class="dwg dwg-crop" viewBox="70 1200 2000 1050" role="img" aria-label="Rysunek blatu głównego z generatora: obrys 1707 na 600 mm, wycięcie zlewu i płyty, dwa otwory na baterię i dozownik, dwa punkty obróbki krawędzi." set:html={sheetCrop} />
+              <svg class="dwg dwg-mob" viewBox="20 0 2040 3830" role="img" aria-label="Rysunek produkcyjny z generatora: baner ścienny 600 na 300 z otworem 210 na 70, blat 563 na 1707 z otworem 35 mm, blat główny 1707 na 600 z wycięciem zlewu i płyty, dwa punkty obróbki krawędzi i tabelka z materiałem, grubością 20 mm i wykończeniem." set:html={sheetMob} />
               <p class="tag">Rysunek z generatora</p>
             </div>
           </div>
-          <figcaption><span>Rys. 1</span> Ten sam blat: kartka z pomiaru i rysunek, który z niej powstał.</figcaption>
+          <figcaption><span>Rys. 1</span> To samo zlecenie: kartka z pomiaru i rysunek, który z niej powstał.</figcaption>
         </figure>
 
         <section class="wrap sec">
-          <h2>Długopis, kartka i&nbsp;20 do 40 minut w&nbsp;AutoCADzie.</h2>
+          <div class="side">
+            <h2>Długopis, kartka i&nbsp;20 do 40 minut w&nbsp;AutoCADzie.</h2>
+            <p class="big cost">9&nbsp;834&nbsp;zł</p>
+            <p class="big-cap">rocznie za jedno stanowisko AutoCADa, cennik Autodesk z&nbsp;30.09.2026</p>
+          </div>
           <div class="txt">
             <p set:html={P('Filip jeździ na pomiary. Mierzy kuchnię i rysuje blat na kartce przypiętej do deski, na miejscu albo w samochodzie. Potem ktoś w biurze przerysowuje ten szkic w AutoCADzie. Według zespołu zajmuje to od 20 do 40 minut na jedno zlecenie. Gotowy rysunek jedzie do zakładu, który tnie płytę.')} />
             <p class="strong" set:html={P('Najdroższe jest to, czego nie widać na kartce. Jeden zły wymiar i płyta idzie do kosza.')} />
+            <p set:html={P('Do tego licencja. Roczna subskrypcja AutoCADa kosztuje 9&nbsp;834&nbsp;zł na jedno stanowisko. Wersja LT, tylko do rysunków 2D, kosztuje 2&nbsp;510&nbsp;zł. Kiedy narzędzie przejmie wszystkie kształty blatów, przerysowywanie szkiców przestanie wymagać stanowiska z AutoCADem. Dziś jeszcze tego nie robi, piszę o tym niżej.')} />
           </div>
         </section>
 
@@ -235,10 +258,10 @@ const steps = [
 
         <figure class="wrap fig">
           <div class="panel nums">
-            <p><strong>8<small>/8</small></strong><span>wymiarów zgodnych, zlecenie referencyjne pierwsze</span></p>
-            <p><strong>20<small>/20</small></strong><span>wymiarów zgodnych, zlecenie referencyjne drugie</span></p>
+            <p><strong>20<small>/20</small></strong><span>wymiarów zgodnych na zleceniu z rysunku 1: trzy elementy, szkic obrócony</span></p>
+            <p><strong>8<small>/8</small></strong><span>wymiarów zgodnych na drugim zleceniu referencyjnym</span></p>
           </div>
-          <figcaption><span>Rys. 3</span> Rysunek z generatora porównany z rysunkiem zrobionym ręcznie w AutoCADzie.</figcaption>
+          <figcaption><span>Rys. 3</span> Wymiary z generatora porównane z gotowym rysunkiem produkcyjnym tego samego zlecenia.</figcaption>
         </figure>
 
         <section class="wrap sec">
@@ -261,7 +284,7 @@ const steps = [
               <p>Dlaczego wycięcie zlewu nie ma otworu na baterię?</p>
             </div>
           </div>
-          <figcaption><span>Rys. 4</span> 20 celowych błędów, 20 zatrzymanych. Obok dwa pytania, które walidator zadał sam na prawdziwym zleceniu.</figcaption>
+          <figcaption><span>Rys. 4</span> 20 celowych błędów, 20 zatrzymanych. Do tego dwa pytania, które walidator zadał sam na prawdziwym zleceniu.</figcaption>
         </figure>
 
         <section class="wrap sec">
@@ -292,7 +315,6 @@ const steps = [
           </div>
           <div class="txt">
             <p set:html={P('Pomiar nie zawsze jest tam, gdzie jest zasięg. Narzędzie ściąga wszystko, czego potrzebuje, jednym przyciskiem przy zasięgu. Przy odciętej sieci rysunek powstaje w 6,5 sekundy.')} />
-            <p set:html={P('Przy okazji znalazłem dwa błędy w ich istniejącej aplikacji, przez które nigdy nie działała bez sieci, choć miała to w założeniach. Naprawiłem oba.')} />
           </div>
         </section>
 
@@ -424,7 +446,7 @@ const steps = [
   .sheet { background: #fff; border: 1px solid var(--rule); padding: clamp(12px, 1.6vw, 24px); }
   .tag { margin-top: 12px !important; font-family: 'JBMono', monospace; font-size: 14px; color: var(--dim); }
   .dwg { width: 100%; height: auto; display: block; overflow: visible; }
-  .dwg-crop { display: none; }
+  .dwg-mob { display: none; }
   /* Wnętrze rysunków wchodzi przez set:html, więc bez atrybutu zakresu Astro: reguły globalne pod .dwg. */
   .case :global(.dwg :is(rect, circle, path)) { fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; }
   .case :global(.dwg :is(.ln-body, .ln-frame) > *) { stroke: var(--ink); stroke-width: 1.4; }
@@ -456,6 +478,8 @@ const steps = [
   .txt .strong { font-weight: 560; }
   .txt a { color: var(--ink); text-decoration-color: var(--blue); text-decoration-thickness: 2px; text-underline-offset: 4px; }
   .soft { margin-top: 32px !important; padding: 16px 20px; border: 1px solid var(--ink); }
+  .big.cost { color: var(--ink); }
+  .big-cap { margin-top: 8px !important; font-size: 16px; line-height: 1.5; color: var(--dim); max-width: 18em; }
   .big { margin-top: 24px !important; font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(42px, 6.6vw, 100px); line-height: 1; letter-spacing: -.035em; color: var(--cad-dim); }
 
   .rules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -514,10 +538,19 @@ const steps = [
   @media (max-width: 900px) {
     .pair { grid-template-columns: 1fr; }
     .dwg-full { display: none; }
-    .dwg-crop { display: block; }
-    .case :global(.dwg-crop text) { font-size: 110px; }
-    .case :global(.dwg-crop :is(.t-note, .t-dia, .ln-note, .t-in)) { display: none; }
-    .case :global(.dwg-crop .t-body) { font-size: 80px; }
+    .dwg-mob { display: block; }
+    .case :global(.dwg-mob text) { font-size: 88px; }
+    .case :global(.dwg-mob .t-lab) { font-size: 46px; }
+    .case :global(.dwg-mob .t-tab) { font-size: 72px; }
+    .case :global(.dwg-mob .t-sm) { font-size: 46px; }
+    .case :global(.dwg-mob .t-cut) { font-size: 64px; }
+    .case :global(.dwg-mob .t-note) { font-size: 76px; }
+    /* Na telefonie arkusz od krawędzi do krawędzi: każdy piksel szerokości idzie na rysunek. */
+    .fig-hero .panel { margin-inline: calc(var(--gutter) * -1); border-inline: 0; padding-inline: 0; }
+    .fig-hero .photo { padding-inline: var(--gutter); }
+    .fig-hero .sheet { border-inline: 0; padding: 20px 6px 16px; }
+    .fig-hero .sheet .tag { padding-inline: calc(var(--gutter) - 6px); }
+    .fig-hero figcaption { margin-top: 14px; }
     .sec, .end-in { grid-template-columns: 1fr; gap: 20px; }
     .sec h2, .side { position: static; }
     .sec:has(> [aria-hidden]) > [aria-hidden] { display: none; }
