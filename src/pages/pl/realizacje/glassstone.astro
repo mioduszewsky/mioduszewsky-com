@@ -1,0 +1,451 @@
+---
+// Case study GlassStone. Treść: docs/case-studies/glassstone/COPY.md, fakty ze źródłami: FAKTY.md
+// (projekty/mioduszewsky (AUTOFIRMA)/mioduszewsky-com/docs/case-studies/ na Drive).
+// Ekrany i rysunki: prawdziwy szkic pomiarowca (kadr bez adresu klienta) i wektorowe
+// odtworzenie rysunku z generatora, bez danych osobowych z tabelki.
+import '@fontsource-variable/shantell-sans';
+import VariantLayout from '../../../layouts/VariantLayout.astro';
+import SiteMenu from '../../../components/SiteMenu.astro';
+import BrandFooter from '../../../components/BrandFooter.astro';
+
+const contact = '/pl/kontakt/?service=' + encodeURIComponent('Aplikacja lub system') + '#ctForm';
+// Opinia pojawia się dopiero po akceptacji Filipa (docs/case-studies/OPINIE-ROZMOWA.md).
+const quote: { text: string; name: string; role: string } | null = null;
+const nbsp = (t: string) => t.replace(/(^|[\s(])([wziouaWZIOUA]) /g, '$1$2 ');
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Article', headline: 'Szkic z pomiaru zamienia się w rysunek na produkcję', inLanguage: 'pl',
+      about: 'Narzędzie pomiarowe dla GlassStone: odręczny szkic blatu zamieniany na rysunek DXF i PDF',
+      author: { '@type': 'Person', name: 'Kacper Mioduszewski', url: 'https://mioduszewsky.com/pl/' },
+      image: 'https://mioduszewsky.com/case/glassstone/szkic.webp',
+      mainEntityOfPage: 'https://mioduszewsky.com/pl/realizacje/glassstone/' },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'mioduszewsky', item: 'https://mioduszewsky.com/pl/' },
+      { '@type': 'ListItem', position: 2, name: 'GlassStone', item: 'https://mioduszewsky.com/pl/realizacje/glassstone/' } ] },
+  ],
+};
+---
+<VariantLayout
+  title="Narzędzie pomiarowe dla GlassStone: szkic zamienia się w rysunek produkcyjny · mioduszewsky"
+  description="Pomiarowiec GlassStone rysuje blat długopisem. Zbudowałem narzędzie, które robi z tego rysunek DXF i PDF na produkcję. Człowiek sprawdza i podpisuje. Jak do tego doszliśmy."
+  bg="#f8f9f2" fg="#000000" switcher={false} robots="index, follow, max-image-preview:large" locale="pl" alternatePath="/">
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <div class="case">
+    <a class="skip" href="#main">Przejdź do treści</a>
+    <header class="nav">
+      <a class="mark" href="/pl/" aria-label="mioduszewsky. Strona główna.">
+        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+      </a>
+      <SiteMenu locale="pl" alternatePath="/" />
+    </header>
+
+    <main id="main">
+      <article>
+        <header class="hero">
+          <p class="label">( Realizacja · GlassStone )</p>
+          <h1><span class="mk">Szkic z pomiaru</span> zamienia się w&nbsp;rysunek na produkcję.</h1>
+          <p class="lead" set:html={nbsp('GlassStone robi blaty z kamienia, lustra i balustrady szklane. Każdy pomiar kończy się odręcznym szkicem, który ktoś w biurze przerysowuje w AutoCADzie. Zbudowałem w ich aplikacji narzędzie, które robi z tego szkicu rysunek DXF i PDF. Człowiek sprawdza wymiary i podpisuje.')} />
+
+          <dl class="tblock" aria-label="Metryczka realizacji">
+            <div><dt>Klient</dt><dd>GlassStone<span>kamień, szkło, wnętrza</span></dd></div>
+            <div><dt>Zakres</dt><dd>Narzędzie pomiarowe<span>w ich aplikacji, obok strony i panelu</span></dd></div>
+            <div><dt>Wynik testów</dt><dd>100% wymiarów<span>zgodnych co do milimetra na zleceniach referencyjnych</span></dd></div>
+            <div><dt>Stan</dt><dd>Testy beta<span>praca od sierpnia 2026, testy od września</span></dd></div>
+          </dl>
+        </header>
+
+        <!-- Eksponat 1: ten sam blat dwa razy. Lewa: kartka Filipa. Prawa: rysunek generatora. -->
+        <figure class="exhibit pair" aria-labelledby="pair-cap">
+          <div class="pane paper">
+            <img src="/case/glassstone/szkic.webp" srcset="/case/glassstone/szkic-800.webp 800w, /case/glassstone/szkic.webp 1600w" sizes="(min-width: 900px) 46vw, 92vw" width="1600" height="1535" alt="Odręczny szkic trzech elementów blatu na kartce przypiętej do deski: blat główny 1707 na 600 z wycięciem zlewu i płyty, blat 563 i baner ścienny z otworem na gniazdka." fetchpriority="high" />
+            <span class="pane-tag">kartka z pomiaru</span>
+          </div>
+          <div class="pane sheet">
+            <svg class="dwg" viewBox="-280 -230 2600 1130" role="img" aria-label="Rysunek techniczny blatu głównego z generatora: obrys 1707 na 600 mm, wycięcie zlewu 285 od lewej krawędzi i 90 od przedniej, wycięcie płyty 300 od prawej i 50 od przedniej, dwa otwory na baterię i dozownik, dwa punkty obróbki krawędzi.">
+              <g class="ln-body">
+                <rect x="0" y="0" width="1707" height="600" pathLength="1" />
+                <rect x="112.5" y="115" width="345" height="395" rx="10" pathLength="1" />
+                <rect x="1269" y="65" width="275" height="485" pathLength="1" />
+                <circle cx="200" cy="55" r="15" pathLength="1" />
+                <circle cx="285" cy="55" r="17.5" pathLength="1" />
+                <path d="M1162 -18 L1198 18 M1198 -18 L1162 18" pathLength="1" />
+                <path d="M1689 -18 L1725 18 M1725 -18 L1689 18" pathLength="1" />
+              </g>
+              <g class="ln-dim">
+                <path d="M0 620 V740 M1707 620 V740 M0 710 H1707" pathLength="1" />
+                <path d="M-20 0 H-150 M-20 600 H-150 M-120 0 V600" pathLength="1" />
+                <path d="M0 -30 V-130 M285 -30 V-130 M0 -100 H285" pathLength="1" />
+                <path d="M1406.5 -30 V-130 M1707 -40 V-130 M1406.5 -100 H1707" pathLength="1" />
+                <path d="M285 510 V600" pathLength="1" />
+                <path d="M1406.5 550 V600" pathLength="1" />
+              </g>
+              <g class="ln-note">
+                <path d="M1725 -18 L1800 -110 H2020" pathLength="1" />
+                <path d="M1198 -18 L1260 -160 H1440" pathLength="1" />
+              </g>
+              <g class="tx">
+                <text class="t-dim" x="853" y="690" text-anchor="middle">1707</text>
+                <text class="t-dim" x="-140" y="300" text-anchor="middle" transform="rotate(-90 -140 300)">600</text>
+                <text class="t-dim" x="142" y="-118" text-anchor="middle">285</text>
+                <text class="t-dim" x="1556" y="-118" text-anchor="middle">300</text>
+                <text class="t-dim" x="305" y="570">90</text>
+                <text class="t-dim" x="1426" y="590">50</text>
+                <text class="t-dim t-sm" x="232" y="-12" text-anchor="middle">ø30 ø35</text>
+                <text class="t-body" x="285" y="325" text-anchor="middle">ZLEW</text>
+                <text class="t-body" x="1406" y="320" text-anchor="middle">PŁYTA</text>
+                <text class="t-note" x="1810" y="-128">FAZA+POLER 30 MM</text>
+                <text class="t-note" x="1270" y="-178">FAZA+POLER</text>
+                <text class="t-body t-sm" x="0" y="820">BLAT GŁÓWNY</text>
+                <text class="t-note t-sm" x="0" y="870">PRZEDNIA KRAWĘDŹ BLATU U4 DO 10 CM</text>
+              </g>
+            </svg>
+            <span class="pane-tag">rysunek z generatora</span>
+          </div>
+          <figcaption id="pair-cap">Ten sam blat. Po lewej kartka z pomiaru, po prawej rysunek, który z niej powstał. Rysunek odtworzony wektorowo, bez danych z tabelki zlecenia.</figcaption>
+        </figure>
+
+        <section class="ch" aria-labelledby="c1">
+          <p class="kick">Jak to wyglądało</p>
+          <div class="ch-b">
+            <h2 id="c1">Długopis, kartka i 20 do 40 minut w AutoCADzie.</h2>
+            <div class="copy">
+              <p set:html={nbsp('Filip jeździ na pomiary. Mierzy kuchnię i rysuje blat na kartce przypiętej do deski, na miejscu albo w samochodzie. Potem ktoś w biurze przerysowuje ten szkic w AutoCADzie. Według zespołu zajmuje to od 20 do 40 minut na jedno zlecenie. Gotowy rysunek jedzie do zakładu, który tnie płytę.')} />
+              <p class="punch">Najdroższe jest to, czego nie widać na kartce. Jeden zły wymiar i&nbsp;płyta idzie do kosza.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="ch" aria-labelledby="c2">
+          <p class="kick">Zanim napisałem kod</p>
+          <div class="ch-b">
+            <h2 id="c2">Najpierw nauczyłem się czytać ich rysunki.</h2>
+            <div class="copy">
+              <p set:html={nbsp('Dostałem pary: zdjęcie szkicu i gotowy rysunek tego samego zlecenia. Położyłem je obok siebie i szukałem reguł, których nikt nie spisał:')} />
+              <ul class="rules">
+                <li>każde wycięcie jest kotowane do środka, od bliższej krawędzi płyty;</li>
+                <li>czerwona przerywana linia to podpórki od spodu blatu, 65&nbsp;mm od krawędzi;</li>
+                <li>krzyżyk to miejsce obróbki, zawsze o tej samej wielkości.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Eksponat 2: detal kartki z dopiskami Kacpra. Dwie ręce: długopis Filipa, czerwony marker Kacpra. -->
+        <figure class="exhibit detail" aria-labelledby="detail-cap">
+          <div class="detail-in">
+            <img src="/case/glassstone/szkic-detal.webp" width="1248" height="783" loading="lazy" decoding="async" alt="Zbliżenie dwóch blatów ze szkicu: wymiar do środka 763, odległość 165 do otworu na gniazdka, otwory ø30 i ø35 przy zlewie." />
+            <span class="note n1"><b>do środka,</b><br />od bliższej krawędzi</span>
+            <span class="note n2"><b>165</b> = krawędź do gniazdek.<br />wyjaśnił Filip</span>
+            <span class="note n3">otwory liczę ze zlewu,<br />nie czytam z pisma</span>
+          </div>
+          <figcaption id="detail-cap">Czerwonym: to, czego musiałem się nauczyć, zanim cokolwiek zbudowałem.</figcaption>
+        </figure>
+
+        <section class="ch" aria-labelledby="c2b">
+          <p class="kick">Pytania</p>
+          <div class="ch-b">
+            <h2 id="c2b" class="sr">Czego nie umiałem odczytać, o to pytałem</h2>
+            <div class="copy">
+              <p set:html={nbsp('Czego nie umiałem odczytać, o to pytałem. „60” na szkicu to odległość od tylnej krawędzi zlewu do środka otworu na baterię. „165” to odległość od krawędzi baneru ściennego do gniazdka. Wyjaśnił mi to Filip i obie liczby stały się regułami w kodzie.')} />
+              <p set:html={nbsp('Jedną rzecz wymyśliłem sam i musiałem ją wyrzucić: nazywałem elementy po swojemu, a pomiarowiec nazywa je inaczej. Dziś podpisy są takie, jak na jego kartce.')} />
+              <p class="soft">U Ciebie też ktoś przepisuje papier do systemu? <a href={contact}>Zacznijmy od takiej samej rozmowy.</a></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="ch figs-ch" aria-labelledby="c3">
+          <p class="kick">Rysunek</p>
+          <div class="ch-b">
+            <h2 id="c3">Ten sam rysunek, tylko bez przerysowywania.</h2>
+            <div class="copy">
+              <p set:html={nbsp('Generator odtworzył wszystkie wymiary na dwóch zleceniach referencyjnych, co do milimetra. Rysunek wychodzi w ich formacie, z ich tabelką i kolorami warstw, więc zakład nie musi niczego zmieniać po swojej stronie.')} />
+            </div>
+          </div>
+          <ul class="figs one" aria-label="Wynik na zleceniach referencyjnych">
+            <li><span class="dimline" aria-hidden="true"></span><strong>100%</strong><span>wymiarów zgodnych co do milimetra na dwóch zleceniach referencyjnych (8 z 8 i 20 z 20)</span></li>
+          </ul>
+        </section>
+
+        <section class="ch figs-ch" aria-labelledby="c4">
+          <p class="kick">Kontrola</p>
+          <div class="ch-b">
+            <h2 id="c4">Zły wymiar nie przejdzie dalej.</h2>
+            <div class="copy">
+              <p set:html={nbsp('Pod generatorem stoi walidator. Sprawdza geometrię i sens: blat kuchenny ma inne dopuszczalne otwory niż baner ścienny. Wstrzyknąłem mu 20 celowych błędów i wyłapał 20. Na prawdziwym zleceniu sam zadał dwa pytania, których nikt nie zadał: czy 325 mm głębokości to na pewno blat kuchenny i dlaczego wycięcie zlewu nie ma otworu na baterię.')} />
+              <p set:html={nbsp('Sprawdzenie działa dwa razy: od razu w przeglądarce i drugi raz na serwerze. Przeglądarka nie ma prawa sama zapisać rysunku na produkcję.')} />
+            </div>
+          </div>
+          <ul class="figs one" aria-label="Test walidatora">
+            <li><span class="dimline" aria-hidden="true"></span><strong>20/20</strong><span>celowych błędów wyłapanych przez walidator</span></li>
+          </ul>
+        </section>
+
+        <!-- Eksponat 3: przepływ decyzji, typografia zamiast zrzutu ekranu. -->
+        <section class="ch flow-ch" aria-labelledby="c5">
+          <p class="kick">AI i człowiek</p>
+          <div class="ch-b">
+            <h2 id="c5">Zdjęcie szkicu wypełnia formularz. Decyzja zostaje u&nbsp;ludzi.</h2>
+            <div class="copy">
+              <p set:html={nbsp('Filip robi zdjęcie kartki. Model odczytuje wymiary i wypełnia formularz. To jest dopiero propozycja. Człowiek porównuje ją ze zdjęciem, poprawia, zaznacza, że sprawdził wszystkie wymiary, i podpisuje. Dopiero wtedy powstaje DXF i PDF.')} />
+              <p set:html={nbsp('Tak to zaprojektowałem z jednego powodu: odczyt pisma odręcznego się myli, a pomyłka kosztuje płytę.')} />
+            </div>
+          </div>
+          <ol class="flow" aria-label="Przepływ od zdjęcia do rysunku">
+            <li><span class="who">Pomiarowiec</span><strong>Zdjęcie kartki</strong></li>
+            <li><span class="who ai">AI</span><strong>Propozycja wymiarów</strong></li>
+            <li><span class="who">Człowiek</span><strong>Sprawdza i poprawia</strong></li>
+            <li class="gate"><span class="who">Walidator</span><strong>Zatrzymuje zły wymiar</strong></li>
+            <li><span class="who">Człowiek</span><strong>Podpis</strong></li>
+            <li class="out"><span class="who">Produkcja</span><strong>DXF + PDF</strong></li>
+          </ol>
+        </section>
+
+        <section class="ch" aria-labelledby="c6">
+          <p class="kick">Teren</p>
+          <div class="ch-b">
+            <h2 id="c6">Działa tam, gdzie jest pomiar.</h2>
+            <div class="copy">
+              <p set:html={nbsp('Pomiar nie zawsze jest tam, gdzie jest zasięg. Narzędzie ściąga wszystko, czego potrzebuje, jednym przyciskiem przy zasięgu. Przy odciętej sieci rysunek powstaje w 6,5 sekundy.')} />
+              <p set:html={nbsp('Przy okazji znalazłem dwa błędy w ich istniejącej aplikacji, przez które nigdy nie działała bez sieci, choć miała to w założeniach. Naprawiłem oba.')} />
+            </div>
+          </div>
+        </section>
+
+        <section class="ch" aria-labelledby="c7">
+          <p class="kick">Własność</p>
+          <div class="ch-b">
+            <h2 id="c7">Narzędzie należy do firmy.</h2>
+            <div class="copy">
+              <p set:html={nbsp('Dane, zdjęcia i klucze do AI są na koncie GlassStone i na ich rachunku. Rozważałem postawienie części na moim koncie w chmurze. Odrzuciłem to, bo przy rozstaniu firma zostałaby z narzędziem, które nie jest jej.')} />
+            </div>
+          </div>
+        </section>
+
+        <section class="ch honest" aria-labelledby="c8">
+          <p class="kick">Uwagi</p>
+          <div class="ch-b">
+            <h2 id="c8">Uczciwie o tym, gdzie jesteśmy.</h2>
+            <div class="copy">
+              <p class="uwagi" set:html={nbsp('Narzędzie jest w testach u Filipa i Marcina. Nie zastępuje jeszcze AutoCADa w każdym zleceniu. Blaty w kształcie L i U, skosy i nieregularne obrysy narzędzie dziś zatrzymuje, żeby nie narysowało ich źle. Pierwszą wersję edytora wyrzuciłem, bo miała trzy kolumny i za dużo naraz. Druga prowadzi krok po kroku: zdjęcie, rysunek, eksport. Na telefonie ma osobny układ.')} />
+            </div>
+          </div>
+        </section>
+
+        {quote ? (
+          <figure class="quote">
+            <blockquote><p>{quote.text}</p></blockquote>
+            <figcaption><strong>{quote.name}</strong>{quote.role}</figcaption>
+          </figure>
+        ) : import.meta.env.DEV && (
+          <aside class="quote-todo" aria-hidden="true">Tu stanie cytat Filipa po rozmowie. Blok nie renderuje się na produkcji, dopóki cytat nie jest zaakceptowany.</aside>
+        )}
+      </article>
+
+      <section class="end" aria-labelledby="end-h">
+        <h2 id="end-h">Masz w firmie coś, co ktoś <em>przepisuje ręcznie</em>?</h2>
+        <p>Opisz mi to w&nbsp;15 minut. Powiem, czy da się to zautomatyzować i&nbsp;co by to zmieniło.</p>
+        <div class="end-a">
+          <a class="btn" href={contact}>Umów 15 minut</a>
+          <a class="more" href="/pl/uslugi/aplikacje-i-systemy/">Aplikacja lub system: jak pracuję</a>
+        </div>
+      </section>
+    </main>
+    <BrandFooter locale="pl" inset />
+  </div>
+</VariantLayout>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+  const mm = gsap.matchMedia();
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const dwg = document.querySelector<SVGSVGElement>('.dwg');
+    if (dwg) {
+      // Rysunek kreśli się, gdy para wjeżdża w ekran: kontur, potem wymiary, potem opisy.
+      const lines = (sel: string) => dwg.querySelectorAll(sel);
+      gsap.set(lines('.ln-body > *, .ln-dim > *, .ln-note > *'), { strokeDasharray: 1, strokeDashoffset: 1 });
+      gsap.set(lines('.tx text'), { opacity: 0 });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: dwg, start: 'top 80%', once: true } });
+      tl.to(lines('.ln-body > *'), { strokeDashoffset: 0, duration: 1.1, stagger: .12, ease: 'power2.inOut' })
+        .to(lines('.ln-dim > *'), { strokeDashoffset: 0, duration: .7, stagger: .08, ease: 'power1.inOut' }, '-=.4')
+        .to(lines('.tx text'), { opacity: 1, duration: .35, stagger: .04 }, '-=.3')
+        .to(lines('.ln-note > *'), { strokeDashoffset: 0, duration: .5, stagger: .1 }, '-=.2');
+    }
+    gsap.utils.toArray<HTMLElement>('.note').forEach((n, i) => {
+      gsap.from(n, { opacity: 0, scale: .9, duration: .5, delay: i * .25, ease: 'back.out(2)', scrollTrigger: { trigger: '.detail-in', start: 'top 70%', once: true } });
+    });
+    gsap.utils.toArray<HTMLElement>('.dimline').forEach(d => {
+      gsap.from(d, { scaleX: 0, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: d, start: 'top 90%', once: true } });
+    });
+    gsap.utils.toArray<HTMLElement>('.flow li').forEach((li, i) => {
+      gsap.from(li, { y: 14, opacity: 0, duration: .45, delay: i * .08, ease: 'power3.out', scrollTrigger: { trigger: '.flow', start: 'top 85%', once: true } });
+    });
+  });
+  window.addEventListener('pagehide', () => mm.revert(), { once: true });
+</script>
+
+<style>
+  .case {
+    --ivory: #f8f9f2; --ink: #000; --dim: #777265; --blue: #0522ff; --brand: #ffcc33;
+    --spray: #c70404; --body-ink: #4c483c; --hair: color-mix(in srgb, var(--ink) 16%, transparent);
+    /* kolory warstw z rysunków GlassStone: tylko wewnątrz eksponatów */
+    --cad-dim: #1c9a3c; --cad-note: #e06a1b; --cad-red: #d5261e;
+    --gutter: clamp(20px, 5vw, 96px); --nav-height: 104px; --focus: var(--blue);
+    font-family: 'GeneralSansV', sans-serif; background: var(--ivory); color: var(--ink); overflow-x: clip;
+  }
+  @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  .case :is(h1,h2,p,figure,dl,dd,ul,ol,blockquote) { margin: 0; }
+  .case :is(h1,h2) { text-wrap: balance; overflow-wrap: break-word; }
+  .case :is(a,button):focus-visible { outline: 3px solid var(--focus); outline-offset: 5px; }
+  .case ::selection { background: var(--brand); color: var(--ink); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
+  .skip:focus { transform: none; }
+  .nav { position: relative; z-index: 90; height: var(--nav-height); box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; }
+  .mark { display: block; }
+  .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px color-mix(in srgb, var(--ink) 26%, transparent)); }
+
+  /* Hero */
+  .hero { padding: clamp(40px, 9vh, 120px) var(--gutter) clamp(48px, 8vh, 96px); }
+  .label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); margin-bottom: 32px !important; }
+  h1 { font-family: 'NohemiV', sans-serif; font-weight: 520; letter-spacing: -.03em; font-size: clamp(40px, 6.6vw, 112px); line-height: 1.02; max-width: 15ch; }
+  .mk {
+    font-style: normal; padding: 0 .08em; margin: 0 -.08em;
+    background: linear-gradient(100deg, transparent 1.5%, color-mix(in srgb, var(--brand) 72%, transparent) 6% 94%, transparent 98.5%) no-repeat 0 72% / 100% 46%;
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  }
+  .lead { margin-top: clamp(28px, 4vh, 48px) !important; max-width: 60ch; font-size: clamp(17px, 1.35vw, 20px); line-height: 1.6; color: var(--body-ink); text-wrap: pretty; }
+
+  /* Metryczka jak tabelka produkcyjna na ich rysunkach: włosowa siatka, czerwone etykiety. */
+  .tblock { margin-top: clamp(40px, 7vh, 80px) !important; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--ink); }
+  .tblock > div { padding: 14px 16px 18px; border-left: 1px solid var(--ink); min-width: 0; }
+  .tblock > div:first-child { border-left: 0; }
+  .tblock dt { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--cad-red); }
+  .tblock dd { margin-top: 10px; font-family: 'NohemiV', sans-serif; font-weight: 520; font-size: clamp(17px, 1.5vw, 22px); letter-spacing: -.01em; line-height: 1.2; }
+  .tblock dd span { display: block; margin-top: 6px; font-family: 'GeneralSansV', sans-serif; font-weight: 450; font-size: 13px; letter-spacing: 0; color: var(--dim); }
+
+  /* Eksponaty */
+  .exhibit { padding-inline: var(--gutter); }
+  .exhibit figcaption { margin-top: 16px; font-size: 13px; line-height: 1.55; color: var(--dim); max-width: 64ch; }
+  .pair { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(12px, 1.4vw, 20px); }
+  .pair figcaption { grid-column: 1 / -1; }
+  .pane { position: relative; border-radius: 4px; overflow: hidden; min-height: 0; }
+  .paper { background: #1d1f22; aspect-ratio: 1600 / 1535; }
+  .paper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .sheet { background: #fff; border: 1px solid var(--hair); display: grid; place-items: center; padding: clamp(16px, 3vw, 48px); }
+  .dwg { width: 100%; height: auto; overflow: visible; }
+  .dwg :is(rect, circle, path) { fill: none; vector-effect: non-scaling-stroke; }
+  .ln-body > * { stroke: #111; stroke-width: 1.6; }
+  .ln-dim > * { stroke: var(--cad-dim); stroke-width: 1; }
+  .ln-note > * { stroke: #111; stroke-width: 1; }
+  .dwg text { font-family: 'GeneralSansV', sans-serif; font-size: 44px; letter-spacing: .02em; }
+  .t-dim { fill: var(--cad-dim); }
+  .t-body { fill: #111; font-weight: 560; }
+  .t-note { fill: var(--cad-note); }
+  .dwg .t-sm { font-size: 34px; }
+  .pane-tag { position: absolute; left: 12px; top: 12px; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; background: color-mix(in srgb, var(--ivory) 92%, transparent); color: var(--ink); }
+
+  /* Rozdziały: etykieta po lewej, treść w jednej kolumnie do czytania. */
+  .ch { padding: clamp(72px, 12vh, 136px) var(--gutter) 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: clamp(24px, 4vw, 64px); }
+  .kick { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); padding-top: .9em; border-top: 1px solid var(--ink); align-self: start; }
+  .ch-b { max-width: 820px; }
+  .ch h2 { font-family: 'NohemiV', sans-serif; font-weight: 520; font-size: clamp(30px, 3.4vw, 52px); line-height: 1.08; letter-spacing: -.025em; max-width: 20ch; }
+  .copy { margin-top: 28px; max-width: 62ch; font-size: clamp(16px, 1.25vw, 18.5px); line-height: 1.7; color: var(--body-ink); text-wrap: pretty; }
+  .copy > * + * { margin-top: 22px !important; }
+  .h2less .copy, .ch:has(h2.sr) .copy { margin-top: 0; }
+  .punch { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(21px, 1.9vw, 28px); line-height: 1.3; letter-spacing: -.015em; color: var(--ink); }
+  .rules { list-style: none; padding: 0; display: grid; gap: 14px; }
+  .rules li { position: relative; padding-left: 28px; }
+  .rules li::before { content: ''; position: absolute; left: 0; top: .78em; width: 16px; height: 1px; background: var(--cad-dim); box-shadow: 0 -5px 0 -0px transparent; }
+  .rules li::after { content: ''; position: absolute; left: 0; top: calc(.78em - 4px); width: 1px; height: 9px; background: var(--cad-dim); }
+
+  /* Detal kartki z dopiskami Kacpra */
+  .detail { margin-top: clamp(48px, 8vh, 88px); }
+  .detail-in { position: relative; border-radius: 4px; overflow: hidden; max-width: 1180px; }
+  .detail-in img { width: 100%; height: auto; display: block; }
+  .note {
+    position: absolute;
+    font-family: 'Shantell Sans Variable', cursive; font-weight: 560; color: var(--spray);
+    font-size: clamp(12px, 1.55vw, 22px); line-height: 1.05; white-space: nowrap;
+    padding: .25em .45em; background: color-mix(in srgb, #fff 55%, transparent); border-radius: 3px;
+  }
+  .note b { font-weight: 720; }
+  .n1 { left: 3%; top: 10%; rotate: -6deg; }
+  .n2 { left: 47%; top: 40%; rotate: 4deg; }
+  .n3 { left: 26%; top: 47%; rotate: -4deg; }
+
+  /* Liczby jako kotowanie: linia wymiarowa nad liczbą, jak na rysunku */
+  .figs { grid-column: 2; list-style: none; padding: 0; margin-top: 48px !important; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 4vw, 56px); max-width: 820px; }
+  .figs.one { grid-template-columns: minmax(0, 1fr); max-width: 400px; }
+  .figs li { display: grid; gap: 10px; }
+  .dimline { position: relative; height: 12px; transform-origin: left; }
+  .dimline::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--cad-dim); }
+  .dimline::after { content: ''; position: absolute; inset: 0; border-inline: 1px solid var(--cad-dim); }
+  .figs strong { font-family: 'NohemiV', sans-serif; font-weight: 480; font-size: clamp(56px, 7vw, 112px); line-height: .95; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+  .figs li > span:last-child { font-size: 14px; line-height: 1.5; color: var(--dim); max-width: 30ch; }
+
+  /* Przepływ decyzji */
+  .flow { grid-column: 2; list-style: none; padding: 0; margin-top: 48px !important; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--ink); max-width: 1100px; }
+  .flow li { padding: 16px 14px 0 0; display: grid; gap: 8px; align-content: start; position: relative; }
+  .flow li + li { padding-left: 14px; border-left: 1px solid var(--hair); }
+  .who { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+  .who.ai { color: var(--blue); }
+  .flow strong { font-family: 'NohemiV', sans-serif; font-weight: 520; font-size: clamp(15px, 1.25vw, 19px); line-height: 1.2; letter-spacing: -.01em; }
+  .flow .gate strong { color: var(--cad-red); }
+  .flow .out strong { background: var(--brand); justify-self: start; padding: 0 .2em; }
+
+  .soft { font-size: 15px; color: var(--ink); padding-left: 16px; border-left: 3px solid var(--brand); }
+  .soft a { color: var(--ink); text-underline-offset: 5px; text-decoration-color: var(--blue); text-decoration-thickness: 2px; }
+  .honest .uwagi { position: relative; padding: 18px 20px 20px; border: 1px solid var(--ink); background: #fff; }
+  .honest .uwagi::before { content: 'Uwagi prod:'; display: block; margin-bottom: 8px; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--cad-red); }
+
+  .quote-todo { margin: 96px var(--gutter) 0; padding: 20px; border: 1px dashed var(--spray); color: var(--spray); font-size: 14px; }
+  .quote { margin: clamp(96px, 14vh, 160px) var(--gutter) 0 !important; padding-left: calc(25% + 16px); }
+  .quote blockquote p { font-family: 'NohemiV', sans-serif; font-weight: 480; font-size: clamp(28px, 3.2vw, 48px); line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
+  .quote figcaption { margin-top: 20px; font-size: 14px; color: var(--dim); }
+  .quote figcaption strong { color: var(--ink); margin-right: 8px; }
+
+  /* Zakończenie */
+  .end { margin-top: clamp(112px, 16vh, 184px); padding: clamp(72px, 12vh, 136px) var(--gutter); background: var(--ink); color: var(--ivory); }
+  .end h2 { font-family: 'NohemiV', sans-serif; font-weight: 520; font-size: clamp(34px, 5vw, 80px); line-height: 1.04; letter-spacing: -.03em; max-width: 18ch; }
+  /* na czerni akcent jak na głównej („ten ostatni”): żółty tekst, bez markera */
+  .end em { font-style: normal; color: var(--brand); }
+  .end p { margin-top: 28px !important; max-width: 48ch; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.6; color: color-mix(in srgb, var(--ivory) 72%, transparent); }
+  .end-a { margin-top: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; }
+  .btn { display: inline-block; padding: 16px 34px; border-radius: 999px; background: var(--brand); color: var(--ink); text-decoration: none; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; font-weight: 560; transition: scale .18s ease-out, background .3s; }
+  .btn:hover { background: var(--ivory); }
+  .btn:active { scale: .96; }
+  .end :focus-visible { outline-color: var(--brand); }
+  .more { color: var(--ivory); font-size: 15px; text-underline-offset: 6px; }
+
+  @media (max-width: 900px) {
+    .tblock { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tblock > div:nth-child(3) { border-left: 0; }
+    .tblock > div:nth-child(n+3) { border-top: 1px solid var(--ink); }
+    .pair { grid-template-columns: minmax(0, 1fr); }
+    .ch { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .kick { justify-self: start; padding-right: 2em; }
+    .figs, .flow { grid-column: 1; }
+    .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 20px; }
+    .flow li + li { border-left: 0; padding-left: 0; }
+    .flow li:nth-child(even) { padding-left: 14px; border-left: 1px solid var(--hair); }
+    .quote { padding-left: 0; }
+  }
+  @media (max-width: 560px) {
+    .note { font-size: 11px; }
+    .n1 { left: 2%; top: 5%; }
+    .n2 { left: 46%; top: 41%; }
+    .n3 { left: 3%; top: 76%; }
+    .figs { grid-template-columns: minmax(0, 1fr); }
+    /* rysunek ma 2600 jednostek szerokości: na telefonie zostają wymiary i nazwy, opisy obróbki znikają */
+    .dwg text { font-size: 84px; }
+    .dwg .t-body { font-size: 68px; }
+    .dwg .t-note, .dwg .t-sm, .ln-note { display: none; }
+  }
+</style>
