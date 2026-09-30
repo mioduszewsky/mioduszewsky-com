@@ -1,0 +1,256 @@
+---
+// Realizacje: strona zbiorcza case studies (30.09.2026).
+// Pomysł Kacpra: wachlarz kart w 3D (komponent PortfolioGallery z 21st.dev). Wzięta jest sama
+// mechanika: karty obrócone i nałożone, środkowa najwyżej, najechana wyjeżdża. Wygląd jest z „Arkusza”
+// GlassStone: kartki wystają z teczki w panelu z siatką kreślarską, podpisy mono jak „Rys.”.
+// Bez Reacta i framer-motion: sam CSS (:has zamiast stanu hover w JS). Na telefonie przewijanie
+// palcem z przyciąganiem do karty zamiast karuzeli, która jedzie sama.
+// Wachlarz jest ozdobą (aria-hidden), nawigacją jest rejestr pod nim.
+import { Image } from 'astro:assets';
+import VariantLayout from '../../../layouts/VariantLayout.astro';
+import SiteMenu from '../../../components/SiteMenu.astro';
+import BrandFooter from '../../../components/BrandFooter.astro';
+import gsSzkic from '../../../assets/realizacje/glassstone-szkic.webp';
+import gsArkusz from '../../../assets/realizacje/glassstone-arkusz.webp';
+import gsEkran from '../../../assets/realizacje/glassstone-ekran.webp';
+import igorEkran from '../../../assets/realizacje/igor-ekran.webp';
+import eskEkran from '../../../assets/realizacje/eskapizm-ekran.webp';
+import eskApp from '../../../assets/realizacje/eskapizm-app-ekran.webp';
+
+const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;');
+
+type Case = { id: string; name: string; title: string; scope: string; href?: string };
+const cases: Case[] = [
+  { id: 'glassstone', name: 'GlassStone', title: 'Szkic z pomiaru zamienia się w rysunek na produkcję.', scope: 'narzędzie pomiarowe, panel, strona', href: '/pl/realizacje/glassstone/' },
+  { id: 'igor', name: 'Igor Grabowski', title: 'Strona kolekcji sztuki: prace, artyści i historia pozyskania dzieł.', scope: 'strona, dwie wersje językowe, newsletter' },
+  { id: 'eskapizm', name: 'eskapizm', title: 'Spółka, którą współprowadzę. Strona, sprzedaż, płatności i aplikacja klienta jako jeden system.', scope: 'strona, sprzedaż, aplikacja klienta, CMS' },
+];
+const byId = Object.fromEntries(cases.map((c) => [c.id, c]));
+
+// Kolejność kart: najwyżej w środku stoi rysunek GlassStone, jedyny gotowy case.
+const cards = [
+  { img: eskApp, alt: 'Aplikacja klienta eskapizm: przegląd podróży do Tajlandii', tag: 'aplikacja klienta', caseId: 'eskapizm' },
+  { img: igorEkran, alt: 'Strona kolekcji Igora Grabowskiego: praca z kolekcji', tag: 'strona kolekcji', caseId: 'igor' },
+  { img: gsSzkic, alt: 'Odręczny szkic blatu z pomiaru GlassStone', tag: 'szkic z pomiaru', caseId: 'glassstone' },
+  { img: gsArkusz, alt: 'Rysunek produkcyjny blatu z generatora GlassStone', tag: 'rysunek z generatora', caseId: 'glassstone' },
+  { img: gsEkran, alt: 'Strona główna GlassStone', tag: 'strona', caseId: 'glassstone' },
+  { img: eskEkran, alt: 'Strona eskapizm', tag: 'strona', caseId: 'eskapizm' },
+];
+const mid = Math.floor(cards.length / 2);
+const lift = (i: number) => 140 - Math.abs(i - mid) * 24;
+
+const contact = '/pl/kontakt/#ctForm';
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'CollectionPage', name: 'Realizacje', inLanguage: 'pl', url: 'https://mioduszewsky.com/pl/realizacje/',
+      hasPart: cases.filter((c) => c.href).map((c) => ({ '@type': 'Article', headline: c.title, url: `https://mioduszewsky.com${c.href}` })) },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'mioduszewsky', item: 'https://mioduszewsky.com/pl/' },
+      { '@type': 'ListItem', position: 2, name: 'Realizacje', item: 'https://mioduszewsky.com/pl/realizacje/' } ] },
+  ],
+};
+---
+<VariantLayout
+  title="Realizacje: od problemu firmy do działającego narzędzia · mioduszewsky"
+  description="Opisy realizacji od problemu firmy, przez decyzje po drodze, do tego, co działa dziś. Z tym, czego jeszcze nie ma."
+  bg="#f8f9f2" fg="#000000" switcher={false} robots="index, follow, max-image-preview:large" locale="pl" alternatePath="/">
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <div class="work">
+    <a class="skip" href="#main">Przejdź do treści</a>
+    <header class="nav">
+      <a class="mark" href="/pl/" aria-label="mioduszewsky. Strona główna.">
+        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+      </a>
+      <SiteMenu locale="pl" alternatePath="/" />
+    </header>
+
+    <main id="main">
+      <header class="wrap hero">
+        <p class="kicker">Realizacje</p>
+        <h1>Co było do rozwiązania i&nbsp;jak to rozwiązałem.</h1>
+        <p class="lead" set:html={P('Każdy opis zaczyna się od problemu firmy i kończy na tym, co działa dziś. Piszę też, czego jeszcze nie ma.')} />
+      </header>
+
+      <figure class="wrap fig">
+        <div class="panel fan" aria-hidden="true">
+          {cards.map((c, i) => {
+            const cs = byId[c.caseId];
+            const Tag = cs.href ? 'a' : 'div';
+            return (
+              <Tag class:list={['card', { soon: !cs.href }]} href={cs.href} tabindex={cs.href ? -1 : undefined}
+                style={`--i:${i}; --lift:${lift(i)}px; z-index:${cards.length - i}`}>
+                <span class="sheet">
+                  <Image src={c.img} alt="" widths={[480, 800, 1280]} sizes="(min-width: 768px) 440px, 78vw" loading={i === mid ? 'eager' : 'lazy'} />
+                  <span class="tag"><b>{cs.name}</b> {c.tag}{!cs.href && ', wkrótce'}</span>
+                </span>
+              </Tag>
+            );
+          })}
+        </div>
+        <figcaption><span>Rys. 1</span> Materiał z trzech realizacji: szkic, rysunek, strony i aplikacja.</figcaption>
+      </figure>
+
+      <section class="wrap reg" aria-labelledby="reg-h">
+        <h2 id="reg-h" class="sr">Lista realizacji</h2>
+        <ol>
+          {cases.map((c, i) => (
+            <li class:list={{ soon: !c.href }}>
+              <span class="no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{c.href ? <a href={c.href}>{c.name}</a> : c.name}</h3>
+              <div class="desc">
+                <p set:html={P(c.title)} />
+                <p class="scope">{c.scope}</p>
+              </div>
+              <p class="state">
+                {c.href
+                  ? <span class="go" aria-hidden="true">Czytaj<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg></span>
+                  : 'W przygotowaniu'}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="end" aria-labelledby="end-h">
+        <div class="wrap end-in">
+          <h2 id="end-h">Opowiedz, co dziś nie działa.</h2>
+          <div>
+            <p set:html={P('W piętnaście minut powiem, czy da się to naprawić i od czego zacząć.')} />
+            <a class="btn" href={contact}>Umów 15 minut</a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <BrandFooter locale="pl" inset />
+  </div>
+</VariantLayout>
+
+<style>
+  .work {
+    --ivory: #f8f9f2; --paper: #f0f1e8; --ink: #111; --dim: #5f5b4e; --rule: rgb(17 17 17 / .16);
+    --blue: #0522ff; --brand: #ffcc33; --cad-red: #c70404;
+    --gutter: clamp(20px, 5vw, 96px); --focus: var(--blue);
+    font-family: 'GeneralSansV', sans-serif; background: var(--ivory); color: var(--ink); overflow-x: clip;
+  }
+  @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  @font-face { font-family: 'JBMono'; src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+  .work :is(h1,h2,h3,p,figure,ol) { margin: 0; }
+  .work ol { padding: 0; list-style: none; }
+  .work :is(h1,h2) { text-wrap: balance; }
+  .work p { text-wrap: pretty; }
+  .work :is(a,button):focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+  .work ::selection { background: var(--brand); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
+  .skip:focus { transform: none; }
+  .nav { height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
+  .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
+  .wrap { max-width: 1320px; margin-inline: auto; padding-inline: var(--gutter); }
+
+  /* Ta sama skala pisma co w case GlassStone: tytuł, śródtytuł, tekst, podpis. */
+  .hero { padding-top: clamp(32px, 9vh, 104px); }
+  .kicker { font-size: 16px; color: var(--dim); }
+  h1 { margin-top: 20px !important; max-width: 13em; font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(36px, 6.6vw, 100px); line-height: 1.02; letter-spacing: -.035em; }
+  .lead { margin-top: clamp(28px, 4vw, 48px) !important; max-width: 36em; font-size: 21px; line-height: 1.6; }
+
+  .fig { margin-top: clamp(48px, 7vw, 96px) !important; }
+  .fig figcaption { margin-top: 14px; font-size: 16px; line-height: 1.5; color: var(--dim); }
+  .fig figcaption span { font-family: 'JBMono', monospace; font-size: 14px; color: var(--ink); margin-right: 10px; }
+  .panel {
+    background-color: var(--paper);
+    background-image: linear-gradient(rgb(17 17 17 / .045) 1px, transparent 1px), linear-gradient(90deg, rgb(17 17 17 / .045) 1px, transparent 1px);
+    background-size: 24px 24px; background-position: -1px -1px;
+    border: 1px solid var(--rule);
+  }
+
+  /* Wachlarz: kartki wystają z teczki. Dół panelu je ucina, środkowa stoi najwyżej,
+     najechana wyjeżdża, a reszta chowa się do linii bazowej. */
+  .fan {
+    --w: clamp(280px, 30vw, 440px);
+    height: clamp(380px, 32vw, 460px); overflow: hidden;
+    display: flex; justify-content: center; align-items: flex-end;
+  }
+  .card {
+    --y: calc(var(--lift) * -1);
+    flex: none; width: var(--w); display: block; color: inherit; text-decoration: none;
+    margin-left: calc(var(--w) * -.66); margin-bottom: calc(var(--w) * -.12);
+    transform: perspective(5000px) rotateY(-45deg) translateY(var(--y));
+    transition: transform .35s cubic-bezier(.25, .1, .25, 1);
+    animation: rise .7s cubic-bezier(.19, 1, .22, 1) both; animation-delay: calc(var(--i) * 60ms);
+  }
+  .card:first-child { margin-left: 0; }
+  .card.soon { cursor: default; }
+  .fan:has(.card:hover) .card { --y: 0px; }
+  .fan:has(.card:hover) .card:hover { --y: -190px; }
+  @keyframes rise { from { translate: 0 220px; opacity: 0; } }
+  .sheet {
+    display: block; background: #fff; border: 1px solid var(--rule); padding: 8px 8px 0;
+    box-shadow: 1px 0 1px rgb(0 0 0 / .02), 6px 0 6px rgb(0 0 0 / .06), 20px 0 24px rgb(0 0 0 / .16);
+  }
+  .sheet img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+  .tag { display: block; padding: 10px 2px 12px; font-family: 'JBMono', monospace; font-size: 13px; line-height: 1.3; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tag b { font-weight: 400; color: var(--cad-red); margin-right: 6px; }
+
+  /* Rejestr: numer, nazwa, opis, stan. Tu są prawdziwe linki. */
+  .reg { margin-top: clamp(64px, 9vw, 128px); }
+  .reg li {
+    display: grid; grid-template-columns: 48px minmax(0, 4fr) minmax(0, 6fr) 160px; gap: clamp(16px, 3vw, 48px);
+    align-items: baseline; padding: 28px 0 32px; border-top: 1.5px solid var(--ink); position: relative;
+  }
+  .reg li:last-child { border-bottom: 1.5px solid var(--ink); }
+  .no { font-family: 'JBMono', monospace; font-size: 14px; color: var(--dim); }
+  .reg h3 { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(28px, 2.9vw, 42px); line-height: 1.1; letter-spacing: -.022em; }
+  .reg h3 a { color: inherit; text-decoration: none; }
+  /* Cały wiersz klikalny, link zostaje jeden (nazwa case'u). */
+  .reg h3 a::after { content: ''; position: absolute; inset: 0; }
+  .desc p { font-size: 19px; line-height: 1.55; max-width: 32em; }
+  .desc .scope { margin-top: 8px !important; font-size: 16px; color: var(--dim); }
+  .state { font-size: 16px; color: var(--dim); justify-self: end; }
+  .go { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 560; }
+  .go svg { width: 20px; height: 20px; color: var(--blue); transition: transform .25s ease; }
+  .reg li:not(.soon):hover { background: var(--paper); }
+  .reg li:not(.soon):hover .go svg { transform: translateX(4px); }
+  .reg li.soon :is(h3, .desc p:first-child) { color: var(--dim); }
+
+  .end { margin-top: clamp(96px, 12vw, 160px); padding: clamp(72px, 9vw, 128px) 0; background: var(--ink); color: var(--ivory); }
+  .end-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 96px); align-items: start; }
+  .end h2 { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(32px, 4vw, 56px); line-height: 1.05; letter-spacing: -.03em; }
+  .end p { font-size: 19px; line-height: 1.6; color: rgb(248 249 242 / .78); max-width: 30em; }
+  .btn { display: inline-block; margin-top: 32px; padding: 16px 32px; border-radius: 999px; background: var(--brand); color: var(--ink); text-decoration: none; font-size: 16px; font-weight: 600; }
+  .btn:hover { background: var(--ivory); }
+  .end :focus-visible { outline-color: var(--brand); }
+
+  /* Telefon i tablet: zamiast wachlarza pas kart przewijany palcem, każda karta płasko. */
+  @media (max-width: 767px) {
+    .fig { padding-inline: 0; }
+    .fig figcaption { padding-inline: var(--gutter); }
+    .fan {
+      --w: 78vw; height: auto; overflow-x: auto; overflow-y: hidden; justify-content: flex-start; align-items: stretch;
+      gap: 12px; padding: 20px var(--gutter); scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+      border-inline: 0; scrollbar-width: none; overscroll-behavior-x: contain;
+    }
+    .fan::-webkit-scrollbar { display: none; }
+    .card { margin: 0 !important; transform: none; transition: none; scroll-snap-align: start; animation: none; }
+    .sheet { box-shadow: 0 10px 24px rgb(0 0 0 / .1); }
+    .tag { white-space: normal; }
+    .reg li { grid-template-columns: 32px minmax(0, 1fr); gap: 8px 12px; padding: 24px 0; }
+    .reg li > :is(.desc, .state) { grid-column: 2; }
+    .state { justify-self: start; margin-top: 8px; }
+    .desc p { font-size: 18px; }
+    .end-in { grid-template-columns: 1fr; gap: 20px; }
+  }
+  @media (min-width: 768px) and (max-width: 1100px) {
+    .reg li { grid-template-columns: 40px minmax(0, 1fr) 140px; }
+    .reg li > .desc { grid-column: 2; grid-row: 2; }
+    .reg li > .state { grid-column: 3; grid-row: 1; }
+  }
+  @media (max-width: 600px) { .lead { font-size: 18px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .card { animation: none; transition: none; }
+  }
+</style>
