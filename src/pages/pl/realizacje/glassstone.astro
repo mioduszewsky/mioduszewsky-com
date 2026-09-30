@@ -189,7 +189,7 @@ const steps = [
             <div><dt>Klient</dt><dd>GlassStone, kamień, szkło, wnętrza</dd></div>
             <div><dt>Zakres</dt><dd>strona, panel, narzędzie pomiarowe</dd></div>
             <div><dt>Kto używa</dt><dd>pomiarowiec i biuro</dd></div>
-            <div><dt>Stan</dt><dd>testy beta od września 2026</dd></div>
+            <div><dt>Wdrożenie</dt><dd>wrzesień 2026</dd></div>
           </dl>
         </header>
 
@@ -217,7 +217,7 @@ const steps = [
           <div class="txt">
             <p set:html={P('Filip jeździ na pomiary. Mierzy kuchnię i rysuje blat na kartce przypiętej do deski, na miejscu albo w samochodzie. Potem ktoś w biurze przerysowuje ten szkic w AutoCADzie. Według zespołu zajmuje to od 20 do 40 minut na jedno zlecenie. Gotowy rysunek jedzie do zakładu, który tnie płytę.')} />
             <p class="strong" set:html={P('Najdroższe jest to, czego nie widać na kartce. Jeden zły wymiar i płyta idzie do kosza.')} />
-            <p set:html={P('Do tego licencja. Roczna subskrypcja AutoCADa kosztuje 9&nbsp;834&nbsp;zł na jedno stanowisko. Wersja LT, tylko do rysunków 2D, kosztuje 2&nbsp;510&nbsp;zł. Kiedy narzędzie przejmie wszystkie kształty blatów, przerysowywanie szkiców przestanie wymagać stanowiska z AutoCADem. Dziś jeszcze tego nie robi, piszę o tym niżej.')} />
+            <p set:html={P('Do tego licencja. Roczna subskrypcja AutoCADa kosztuje 9&nbsp;834&nbsp;zł na jedno stanowisko. Wersja LT, tylko do rysunków 2D, kosztuje 2&nbsp;510&nbsp;zł.')} />
           </div>
         </section>
 
@@ -326,19 +326,20 @@ const steps = [
         </section>
 
         <section class="wrap sec">
-          <h2>Uczciwie o&nbsp;tym, gdzie jesteśmy.</h2>
+          <h2>Blaty w&nbsp;kształcie L, U i&nbsp;ze skosem.</h2>
           <div class="txt">
-            <p set:html={P('Narzędzie jest w testach u Filipa i Marcina. Nie zastępuje jeszcze AutoCADa w każdym zleceniu. Blaty w kształcie L i U, skosy i nieregularne obrysy narzędzie dziś zatrzymuje, żeby nie narysowało ich źle. Pierwszą wersję edytora wyrzuciłem, bo miała trzy kolumny i za dużo naraz. Druga prowadzi krok po kroku: zdjęcie, rysunek, eksport. Na telefonie ma osobny układ.')} />
+            <p set:html={P('Narzędzie rysuje blaty o prostych bokach w dowolnym kształcie: L, U, z wcięciem od frontu, z podciętym narożnikiem, z uskokiem, a także trapezy i skosy. Naroża mogą być zaokrąglone, a łuki trafiają do pliku DXF. Na trzech kolejnych zleceniach kontur z generatora zgodził się z ich rysunkiem produkcyjnym na 9 z 9 płyt, z odchyłką najwyżej 0,08 mm.')} />
+            <p set:html={P('Obrys wpisuje się w edytorze, który prowadzi krok po kroku: zdjęcie, rysunek, eksport. Na telefonie ma osobny układ.')} />
           </div>
         </section>
 
         <figure class="wrap fig">
           <ul class="panel shapes">
-            <li><svg class="dwg" viewBox="-20 -20 440 340" aria-hidden="true"><path class="ln-stop" d="M0 0 H400 V120 H140 V300 H0 Z"/></svg><p>Kształt L</p></li>
-            <li><svg class="dwg" viewBox="-20 -20 440 340" aria-hidden="true"><path class="ln-stop" d="M0 0 H400 V300 H280 V120 H120 V300 H0 Z"/></svg><p>Kształt U</p></li>
-            <li><svg class="dwg" viewBox="-20 -20 440 340" aria-hidden="true"><path class="ln-stop" d="M0 0 H400 L300 300 H0 Z"/></svg><p>Skos</p></li>
+            <li><svg class="dwg" viewBox="-20 -20 440 340" aria-hidden="true"><path class="ln-shape" d="M0 0 H400 V120 H140 V300 H0 Z"/></svg><p>Kształt L</p></li>
+            <li><svg class="dwg" viewBox="-20 -20 440 340" aria-hidden="true"><path class="ln-shape" d="M0 0 H400 V300 H280 V120 H120 V300 H0 Z"/></svg><p>Kształt U</p></li>
+            <li><svg class="dwg" viewBox="-20 -20 440 340" aria-hidden="true"><path class="ln-shape" d="M0 0 H400 L300 300 H0 Z"/></svg><p>Skos</p></li>
           </ul>
-          <figcaption><span>Rys. 6</span> Tych blatów narzędzie dziś nie rysuje. Zatrzymuje je bramka.</figcaption>
+          <figcaption><span>Rys. 6</span> Kształty, które rysuje edytor obrysu.</figcaption>
         </figure>
 
         {quote ? (
@@ -455,7 +456,7 @@ const steps = [
   .case :global(.dwg .ln-note > *) { stroke: var(--ink); stroke-width: 1; }
   .case :global(.dwg .ln-axis > *) { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 14 5 3 5; }
   .case :global(.dwg .ln-sup > *) { stroke: var(--cad-red); stroke-width: 1.6; stroke-dasharray: 12 8; }
-  .case :global(.dwg .ln-stop) { stroke: var(--ink); stroke-width: 1.4; stroke-dasharray: 10 7; }
+  .case :global(.dwg .ln-shape) { stroke: var(--ink); stroke-width: 1.4; }
   .case :global(.dwg text) { font-family: 'JBMono', monospace; font-size: 44px; }
   .case :global(.dwg-full text) { font-size: 60px; }
   .case :global(.dwg .t-dim) { fill: var(--cad-dim); }
