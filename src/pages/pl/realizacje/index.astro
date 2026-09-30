@@ -219,8 +219,8 @@ const ld = {
 
   /* Jeden ekran: nagłówek na górze, wachlarz wypełnia resztę i schodzi pod dolną krawędź. */
   .stage { min-height: calc(100svh - 104px); display: flex; flex-direction: column; overflow: clip; }
-  /* Nagłówek stoi pośrodku przestrzeni nad wachlarzem. */
-  .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(8px, 3vh, 40px) var(--gutter) clamp(16px, 4vh, 48px); text-align: center; position: relative; z-index: 60; pointer-events: none; }
+  /* Nagłówek siedzi tuż nad wachlarzem w stałym odstępie, zapas wysokości idzie nad niego. */
+  .hero { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(8px, 3vh, 40px) var(--gutter) clamp(72px, 9vh, 100px); text-align: center; position: relative; z-index: 60; pointer-events: none; }
   .hero :is(h1, p) { pointer-events: auto; }
   h1 { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(48px, 8vw, 128px); line-height: .95; letter-spacing: -.045em; }
   .lead { margin: clamp(16px, 2.4vw, 28px) auto 0 !important; max-width: 30em; font-size: 19px; line-height: 1.55; color: var(--dim); }
@@ -231,10 +231,10 @@ const ld = {
      Warianty ze skosem (B, C z v3) odrzucone. Po wyborze powiększone. */
   .fan {
     --wv: min(46vw, max(37vw, 42svh)); --k: .6; --arc: .06; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
-    --w: clamp(300px, min(var(--wv), 66svh), 700px);
+    --w: clamp(300px, min(var(--wv), 66svh), 820px);
     --step: calc(var(--w) * var(--k));
-    /* Wysokość pasa = widoczna część kart plus miejsce na wyjazd aktywnej. */
-    position: relative; flex: none; height: calc(var(--w) * .64);
+    /* Wysokość pasa = widoczna część najwyższej karty w spoczynku; aktywna wyjeżdża w odstęp nad nim. */
+    position: relative; flex: none; height: calc(var(--w) * .46);
     perspective: 2400px; perspective-origin: 50% 0%;
   }
   .card {
@@ -244,7 +244,7 @@ const ld = {
     --rz: calc(var(--o) * var(--rzk));
     --ry: var(--ry0);
     --s: 1;
-    /* Każda karta zawsze wchodzi pod dolną krawędź ekranu: w spoczynku o 15% szerokości, aktywna o 5%.
+    /* Każda karta zawsze wchodzi pod dolną krawędź ekranu: w spoczynku o 15% szerokości, aktywna o 9%.
        Nigdy nie widać jej dolnego brzegu ani pustego pasa pod nią. */
     position: absolute; left: 50%; bottom: calc(var(--w) * -.15);
     width: var(--w);
@@ -255,7 +255,7 @@ const ld = {
   }
   .fan.has-active .card { --y: calc(var(--o) * var(--o) * var(--w) * var(--arc) + var(--w) * .05); }
   .fan.has-active .card.is-active {
-    --x: clamp(calc(var(--w) / 2 + 16px - 50vw), calc(var(--o) * var(--step) * .8), calc(50vw - var(--w) / 2 - 16px)); --y: calc(var(--w) * -.1); --rz: 0deg; --ry: var(--ry1); --s: 1.04;
+    --x: clamp(calc(var(--w) / 2 + 16px - 50vw), calc(var(--o) * var(--step) * .8), calc(50vw - var(--w) / 2 - 16px)); --y: calc(var(--w) * -.05); --rz: 0deg; --ry: var(--ry1); --s: 1.025;
     transition-duration: .65s;
   }
   .fan .card.is-active.is-press { --s: 1.01; transition-duration: .18s; }
@@ -306,9 +306,7 @@ const ld = {
   }
   .pill.is-on { opacity: 1; scale: 1; }
   .pill-go { width: 16px; height: 16px; color: var(--brand); display: none; }
-  .pill-soon { color: rgb(248 249 242 / .6); font-weight: 400; }
   .pill.is-link .pill-go { display: block; }
-  .pill.is-link .pill-soon { display: none; }
 
   /* Telefon i tablet dotykowy: pas pełnych kart przewijany palcem, bez łuku. */
   @media (max-width: 767px) {
