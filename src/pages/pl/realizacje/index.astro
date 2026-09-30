@@ -219,7 +219,8 @@ const ld = {
 
   /* Jeden ekran: nagłówek na górze, wachlarz wypełnia resztę i schodzi pod dolną krawędź. */
   .stage { min-height: calc(100svh - 104px); display: flex; flex-direction: column; overflow: clip; }
-  .hero { padding: clamp(8px, 4vh, 56px) var(--gutter) 0; text-align: center; position: relative; z-index: 60; pointer-events: none; }
+  /* Nagłówek stoi pośrodku przestrzeni nad wachlarzem. */
+  .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(8px, 3vh, 40px) var(--gutter) clamp(16px, 4vh, 48px); text-align: center; position: relative; z-index: 60; pointer-events: none; }
   .hero :is(h1, p) { pointer-events: auto; }
   h1 { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(48px, 8vw, 128px); line-height: .95; letter-spacing: -.045em; }
   .lead { margin: clamp(16px, 2.4vw, 28px) auto 0 !important; max-width: 30em; font-size: 19px; line-height: 1.55; color: var(--dim); }
@@ -229,32 +230,32 @@ const ld = {
      ZATWIERDZONY 30.09.2026 (Kacper, wariant A): karty płasko, bez skosu w głąb, środek na wierzchu.
      Warianty ze skosem (B, C z v3) odrzucone. Po wyborze powiększone. */
   .fan {
-    --wv: 37vw; --k: .6; --arc: .06; --lift: .4; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
+    --wv: min(46vw, max(37vw, 42svh)); --k: .6; --arc: .06; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
     --w: clamp(300px, min(var(--wv), 66svh), 700px);
     --step: calc(var(--w) * var(--k));
-    position: relative; flex: 1; min-height: clamp(360px, 34vw, 520px);
+    /* Wysokość pasa = widoczna część kart plus miejsce na wyjazd aktywnej. */
+    position: relative; flex: none; height: calc(var(--w) * .64);
     perspective: 2400px; perspective-origin: 50% 0%;
   }
-  /* Niski ekran laptopa: wachlarz stoi niżej, żeby wyjeżdżająca karta nie weszła na tekst. */
-  @media (max-height: 880px) { .fan { --lift: .35; } }
-  @media (max-height: 780px) { .fan { --lift: .33; } }
   .card {
     --part: 0;
     --x: calc(var(--o) * var(--step) + var(--part) * var(--w) * .09);
-    --y: calc(var(--o) * var(--o) * var(--w) * var(--arc) - var(--w) * var(--lift));
+    --y: calc(var(--o) * var(--o) * var(--w) * var(--arc));
     --rz: calc(var(--o) * var(--rzk));
     --ry: var(--ry0);
     --s: 1;
-    position: absolute; left: 50%; bottom: calc(var(--w) * -.3);
+    /* Każda karta zawsze wchodzi pod dolną krawędź ekranu: w spoczynku o 15% szerokości, aktywna o 5%.
+       Nigdy nie widać jej dolnego brzegu ani pustego pasa pod nią. */
+    position: absolute; left: 50%; bottom: calc(var(--w) * -.15);
     width: var(--w);
     transform: translate3d(calc(-50% + var(--x)), var(--y), 0) rotateZ(var(--rz)) rotateY(var(--ry)) scale(var(--s));
     transform-origin: 50% 100%;
     transition: transform .8s var(--ease-spring), opacity .6s var(--ease-out);
     will-change: transform;
   }
-  .fan.has-active .card { --y: calc(var(--o) * var(--o) * var(--w) * var(--arc) - var(--w) * (var(--lift) - .06)); }
+  .fan.has-active .card { --y: calc(var(--o) * var(--o) * var(--w) * var(--arc) + var(--w) * .05); }
   .fan.has-active .card.is-active {
-    --x: calc(var(--o) * var(--step) * .8); --y: calc(var(--w) * (var(--lift) + .16) * -1); --rz: 0deg; --ry: var(--ry1); --s: 1.04;
+    --x: clamp(calc(var(--w) / 2 + 16px - 50vw), calc(var(--o) * var(--step) * .8), calc(50vw - var(--w) / 2 - 16px)); --y: calc(var(--w) * -.1); --rz: 0deg; --ry: var(--ry1); --s: 1.04;
     transition-duration: .65s;
   }
   .fan .card.is-active.is-press { --s: 1.01; transition-duration: .18s; }
