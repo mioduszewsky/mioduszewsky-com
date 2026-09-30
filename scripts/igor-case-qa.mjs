@@ -13,7 +13,7 @@ const measure = () => {
   const clipped = txt.filter((el) => el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).overflow !== 'visible').length;
   const centered = txt.filter((el) => getComputedStyle(el).textAlign === 'center').map((el) => el.textContent.slice(0, 30));
   const h1 = getComputedStyle(document.querySelector('h1')).fontSize;
-  const heights = [...document.querySelectorAll('.trip .mat')].map((m) => Math.round(m.getBoundingClientRect().height));
+  const heights = [...document.querySelectorAll('.case .screen, .case .phone')].map((m) => Math.round(m.getBoundingClientRect().height));
   return { W, scrollW: document.documentElement.scrollWidth, off, clipped, centered, h1, heights };
 };
 const b = await chromium.launch();
@@ -37,7 +37,7 @@ await p.evaluate(kill);
 await p.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 500) { scrollTo(0, y); await new Promise((r) => setTimeout(r, 80)); } scrollTo(0, 0); });
 await p.waitForTimeout(800);
 console.log('webkit-iphone13', JSON.stringify(await p.evaluate(measure)));
-const vid = await p.evaluate(async () => { const v = document.querySelector('.hang-1 video'); v.scrollIntoView(); await new Promise((r) => setTimeout(r, 2500)); return { paused: v.paused, t: v.currentTime, src: v.currentSrc.split('/').pop() }; });
+const vid = await p.evaluate(async () => { const v = document.querySelector('.stage video.vid'); v.scrollIntoView(); await new Promise((r) => setTimeout(r, 2500)); return { paused: v.paused, t: v.currentTime, src: v.currentSrc.split('/').pop() }; });
 console.log('webkit-video', JSON.stringify(vid));
 await p.screenshot({ path: `${out}/iphone13-cala.jpg`, fullPage: true, quality: 70, type: 'jpeg' });
 await wb.close();
