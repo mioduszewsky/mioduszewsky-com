@@ -69,7 +69,7 @@ const ld = {
         <p class="lead" set:html={P('Każdy opis zaczyna się od problemu firmy i kończy na tym, co działa dziś. Piszę też, czego jeszcze nie ma.')} />
       </header>
 
-      <ul class="fan" data-v="a" aria-label="Case studies">
+      <ul class="fan" aria-label="Case studies">
         {cases.map((c, i) => {
           const Tag = c.href ? 'a' : 'div';
           const o = i - center;
@@ -104,11 +104,7 @@ const ld = {
     let leaveTimer = 0;
     const zTimers: number[] = [];
 
-    // ROBOCZE (30.09): porównanie wariantów ?v=a|b|c. A płasko (domyślny), B lekki skos, C skos z v3.
-    // Po wyborze Kacpra zostaje jeden wariant, a przełącznik znika.
-    const v = new URLSearchParams(location.search).get('v');
-    if (v && /^[abc]$/.test(v)) fan.dataset.v = v;
-    const zBase = (i: number) => fan.dataset.v === 'c' ? cards.length - i : Number(cards[i].dataset.z);
+    const zBase = (i: number) => Number(cards[i].dataset.z);
     cards.forEach((c, i) => { c.style.zIndex = String(zBase(i)); });
 
     // Wejście: karty rozkładają się od środka, gdy obrazy są gotowe (najdłużej 600 ms).
@@ -230,16 +226,18 @@ const ld = {
 
   /* Wachlarz po łuku: środek najwyżej, brzegi niżej i lekko przechylone na zewnątrz, jak karty w dłoni.
      Położenie każdej karty wynika z --o (odległość od środka), stan dokłada skrypt.
-     Parametry wariantu: szerokość karty, krok, łuk, przechył i skos (obrót w głąb). */
+     ZATWIERDZONY 30.09.2026 (Kacper, wariant A): karty płasko, bez skosu w głąb, środek na wierzchu.
+     Warianty ze skosem (B, C z v3) odrzucone. Po wyborze powiększone. */
   .fan {
-    --wv: 32vw; --k: .6; --arc: .06; --lift: .4; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
-    --w: clamp(300px, min(var(--wv), 60svh), 600px);
+    --wv: 37vw; --k: .6; --arc: .06; --lift: .4; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
+    --w: clamp(300px, min(var(--wv), 66svh), 700px);
     --step: calc(var(--w) * var(--k));
     position: relative; flex: 1; min-height: clamp(360px, 34vw, 520px);
     perspective: 2400px; perspective-origin: 50% 0%;
   }
-  .fan[data-v="b"] { --wv: 37vw; --k: .52; --arc: .06; --lift: .38; --rzk: 3deg; --ry0: -14deg; --ry1: -4deg; }
-  .fan[data-v="c"] { --wv: 40vw; --k: .44; --arc: .07; --lift: .34; --rzk: 3.5deg; --ry0: -34deg; --ry1: -10deg; }
+  /* Niski ekran laptopa: wachlarz stoi niżej, żeby wyjeżdżająca karta nie weszła na tekst. */
+  @media (max-height: 880px) { .fan { --lift: .35; } }
+  @media (max-height: 780px) { .fan { --lift: .33; } }
   .card {
     --part: 0;
     --x: calc(var(--o) * var(--step) + var(--part) * var(--w) * .09);
