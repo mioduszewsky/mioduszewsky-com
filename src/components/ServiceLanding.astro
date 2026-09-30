@@ -72,7 +72,8 @@ const emphasize = (text: string) => {
   for (const phrase of emphasis) {
     if (text.includes(phrase)) html = html.replace(escape(phrase), `<strong>${escape(phrase)}</strong>`);
   }
-  return html;
+  // Polish orphans: a one-letter word (w, z, i, o, a, u) never ends a line, it moves down with the next word.
+  return isPl ? html.replace(/(^|[\s>(])([wziouaWZIOUA]) /g, '$1$2 ') : html;
 };
 const sentences = (text: string) => text.split(/(?<=[.?])\s+/);
 const paragraphs = (text: string) => {
