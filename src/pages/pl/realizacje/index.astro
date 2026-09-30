@@ -22,10 +22,10 @@ const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;
 const pages = import.meta.glob('./*.astro');
 const hasCase = (slug: string) => `./${slug}.astro` in pages;
 
-// Zrzuty pierwszego ekranu żywych stron, 1440×900, 30.09.2026.
+// Zrzuty pierwszego ekranu żywych stron, 1440×900, 30.09.2026. Kolejność: gotowy case (GlassStone) na środku, na wierzchu.
 const cases = [
-  { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' },
   { slug: 'eskapizm', name: 'eskapizm', img: heroEskapizm, alt: 'Hero strony eskapizm: Co by było, gdyby ktoś ułożył Twój wyjazd za Ciebie?' },
+  { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' },
   { slug: 'igor-grabowski', name: 'Igor Grabowski', img: heroIgor, alt: 'Pierwszy ekran strony kolekcji Igora Grabowskiego: prace, o kolekcji, artyści, newsletter, kontakt.' },
   { slug: 'cannversity', name: 'Cannversity', img: heroCannversity, alt: 'Hero strony Cannversity: Od pomysłu do produktu. W branży konopnej.' },
 ].map((c) => ({ ...c, href: hasCase(c.slug) ? `/pl/realizacje/${c.slug}/` : undefined }));
@@ -33,7 +33,7 @@ const cases = [
 const n = cases.length;
 const center = (n - 1) / 2;
 // Warstwy: środek na wierzchu, brzegi pod spodem, żeby żadna karta nie chowała się za sąsiadami.
-const zOf = (i: number) => 20 - Math.round(Math.abs(i - center) * 4) + (i > center ? 1 : 0);
+const zOf = (i: number) => 20 - Math.round(Math.abs(i - center) * 4) + (i < center ? 1 : 0);
 
 const ld = {
   '@context': 'https://schema.org',
@@ -65,7 +65,7 @@ const ld = {
 
     <main id="main" class="stage">
       <header class="hero">
-        <h1>Realizacje</h1>
+        <h1>Co zbudowałem i&nbsp;po&nbsp;co.</h1>
         <p class="lead" set:html={P('Każdy opis zaczyna się od problemu firmy i kończy na tym, co działa dziś.')} />
       </header>
 
@@ -106,6 +106,9 @@ const ld = {
 
     const zBase = (i: number) => Number(cards[i].dataset.z);
     cards.forEach((c, i) => { c.style.zIndex = String(zBase(i)); });
+
+    // Wysokość pasa dla CSS: z niej liczy się rozmiar kart.
+    new ResizeObserver(([e]) => fan.style.setProperty('--fh', `${Math.round(e.contentRect.height)}px`)).observe(fan);
 
     // Wejście: karty rozkładają się od środka, gdy obrazy są gotowe (najdłużej 600 ms).
     const imgs = [...fan.querySelectorAll('img')];
@@ -219,25 +222,28 @@ const ld = {
 
   /* Jeden ekran: nagłówek na górze, wachlarz wypełnia resztę i schodzi pod dolną krawędź. */
   .stage { min-height: calc(100svh - 104px); display: flex; flex-direction: column; overflow: clip; }
-  /* Nagłówek siedzi tuż nad wachlarzem w stałym odstępie, zapas wysokości idzie nad niego. */
-  .hero { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(8px, 3vh, 40px) var(--gutter) clamp(72px, 9vh, 100px); text-align: center; position: relative; z-index: 60; pointer-events: none; }
+  /* Nagłówek u góry, karty wypełniają całą resztę ekranu, więc nigdzie nie zostaje pusty pas. */
+  .hero { flex: none; padding: clamp(16px, 4vh, 48px) var(--gutter) 0; text-align: center; position: relative; z-index: 60; pointer-events: none; }
   .hero :is(h1, p) { pointer-events: auto; }
-  h1 { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(48px, 8vw, 128px); line-height: .95; letter-spacing: -.045em; }
-  .lead { margin: clamp(16px, 2.4vw, 28px) auto 0 !important; max-width: 30em; font-size: 19px; line-height: 1.55; color: var(--dim); }
+  h1 { margin-inline: auto !important; max-width: 8.5em; font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(42px, min(11vw, 17svh), 210px); line-height: .92; letter-spacing: -.045em; text-wrap: balance; }
+  .lead { margin: clamp(16px, 2.4vw, 28px) auto 0 !important; max-width: 40em; font-size: 19px; line-height: 1.55; color: var(--dim); }
 
   /* Wachlarz po łuku: środek najwyżej, brzegi niżej i lekko przechylone na zewnątrz, jak karty w dłoni.
      Położenie każdej karty wynika z --o (odległość od środka), stan dokłada skrypt.
      ZATWIERDZONY 30.09.2026 (Kacper, wariant A): karty płasko, bez skosu w głąb, środek na wierzchu.
      Warianty ze skosem (B, C z v3) odrzucone. Po wyborze powiększone. */
   .fan {
-    --wv: min(46vw, max(37vw, 42svh)); --k: .6; --arc: .06; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
-    --w: clamp(300px, min(var(--wv), 66svh), 820px);
-    --step: calc(var(--w) * var(--k));
-    /* Wysokość pasa = widoczna część najwyższej karty w spoczynku; aktywna wyjeżdża w odstęp nad nim. */
-    position: relative; flex: none; height: calc(var(--w) * .46);
+    --k: .5; --arc: .06; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
+    /* Pas kart zajmuje całą wysokość pod nagłówkiem; rozmiar kart liczy się z tej wysokości.
+       --fh podaje skrypt (ResizeObserver), bo jednostki cqh dawały tu 0; bez skryptu 360 px. */
+    --fh: 360px;
+    position: relative; flex: 1; min-height: 240px; margin-top: clamp(24px, 4vh, 48px);
     perspective: 2400px; perspective-origin: 50% 0%;
   }
   .card {
+    /* Karta rośnie, aż wypełni pas (z zapasem na przechył i wyjazd aktywnej); ograniczenie z szerokości ekranu. */
+    --w: clamp(300px, min(46vw, calc(var(--fh) / .56)), 1100px);
+    --step: calc(var(--w) * var(--k));
     --part: 0;
     --x: calc(var(--o) * var(--step) + var(--part) * var(--w) * .09);
     --y: calc(var(--o) * var(--o) * var(--w) * var(--arc));
@@ -255,7 +261,7 @@ const ld = {
   }
   .fan.has-active .card { --y: calc(var(--o) * var(--o) * var(--w) * var(--arc) + var(--w) * .05); }
   .fan.has-active .card.is-active {
-    --x: clamp(calc(var(--w) / 2 + 16px - 50vw), calc(var(--o) * var(--step) * .8), calc(50vw - var(--w) / 2 - 16px)); --y: calc(var(--w) * -.05); --rz: 0deg; --ry: var(--ry1); --s: 1.025;
+    --x: clamp(calc(var(--w) / 2 + 16px - 50vw), calc(var(--o) * var(--step) * .8), calc(50vw - var(--w) / 2 - 16px)); --y: calc(var(--w) * -.035); --rz: 0deg; --ry: var(--ry1); --s: 1.02;
     transition-duration: .65s;
   }
   .fan .card.is-active.is-press { --s: 1.01; transition-duration: .18s; }
@@ -313,13 +319,15 @@ const ld = {
     .stage { min-height: 0; }
     .lead { font-size: 17px; }
     .work .fan {
-      --w: 84vw; flex: none; min-height: 0; perspective: none;
+      flex: none; min-height: 0; margin-top: 0; perspective: none;
       display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden;
       padding: 28px var(--gutter) 40px; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
       scrollbar-width: none; overscroll-behavior-x: contain;
     }
     .fan::-webkit-scrollbar { display: none; }
-    .card { position: relative; left: auto; bottom: auto; flex: none; transform: none; scroll-snap-align: start; z-index: auto !important; }
+    .card { --w: 84vw; position: relative; left: auto; bottom: auto; flex: none; transform: none; scroll-snap-align: start; z-index: auto !important; }
+    /* Na telefonie gotowy case idzie pierwszy. */
+    .card[data-link] { order: -1; }
     .card:active .sheet { scale: .98; }
     .sheet { transition: scale .25s var(--ease-out); }
     .sheet::before { box-shadow: 0 12px 28px rgb(0 0 0 / .14); }
