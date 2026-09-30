@@ -241,9 +241,9 @@ const steps = [
         </figure>
 
         <section class="wrap sec">
-          <div aria-hidden="true"></div>
+          <h2>Czego nie umiałem odczytać, o&nbsp;to pytałem.</h2>
           <div class="txt">
-            <p set:html={P('Czego nie umiałem odczytać, o to pytałem. „60” na szkicu to odległość od tylnej krawędzi zlewu do środka otworu na baterię. „165” to odległość od krawędzi baneru ściennego do gniazdka. Wyjaśnił mi to Filip i obie liczby stały się regułami w kodzie.')} />
+            <p set:html={P('„60” na szkicu to odległość od tylnej krawędzi zlewu do środka otworu na baterię. „165” to odległość od krawędzi baneru ściennego do gniazdka. Wyjaśnił mi to Filip i obie liczby stały się regułami w kodzie.')} />
             <p set:html={P('Jedną rzecz wymyśliłem sam i musiałem ją wyrzucić: nazywałem elementy po swojemu, a pomiarowiec nazywa je inaczej. Dziś podpisy są takie, jak na jego kartce.')} />
             <p class="soft">U Ciebie też ktoś przepisuje papier do systemu? <a href={contact}>Zacznijmy od takiej samej rozmowy.</a></p>
           </div>
@@ -468,12 +468,10 @@ const steps = [
   /* Sekcja: śródtytuł po lewej, tekst po prawej. */
   .sec { margin-top: clamp(64px, 9vw, 128px) !important; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 96px); align-items: start; }
   .fig + .sec { margin-top: clamp(56px, 7vw, 96px) !important; }
-  .sec + .sec:has(> [aria-hidden]) { margin-top: 40px !important; }
   .sec h2, .side { position: sticky; top: 32px; }
   .side h2 { position: static; }
   h2 { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(28px, 2.9vw, 42px); line-height: 1.1; letter-spacing: -.022em; }
   .txt { max-width: 36em; font-size: 19px; line-height: 1.65; border-top: 1.5px solid var(--ink); padding-top: 20px; }
-  .sec:has(> [aria-hidden]) .txt { border-top: 0; padding-top: 0; }
   .txt p + p { margin-top: 20px !important; }
   .txt .strong { font-weight: 560; }
   .txt a { color: var(--ink); text-decoration-color: var(--blue); text-decoration-thickness: 2px; text-underline-offset: 4px; }
@@ -553,7 +551,6 @@ const steps = [
     .fig-hero figcaption { margin-top: 14px; }
     .sec, .end-in { grid-template-columns: 1fr; gap: 20px; }
     .sec h2, .side { position: static; }
-    .sec:has(> [aria-hidden]) > [aria-hidden] { display: none; }
     .block { grid-template-columns: 1fr 1fr; }
     .block div:nth-child(3) { border-left: 0; }
     .block div:nth-child(n+3) { border-top: 1px solid var(--ink); }
