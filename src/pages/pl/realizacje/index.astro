@@ -1,0 +1,350 @@
+---
+// Realizacje: strona zbiorcza case studies (30.09.2026).
+// Pomysł Kacpra: wachlarz kart w 3D (komponent PortfolioGallery z 21st.dev), wzięta sama mechanika.
+// v2: jeden ekran, wyśrodkowany nagłówek, bez kratki i bez dołu. Karty są nawigacją: klik = case.
+// v3 (Kacper, 30.09): jedna karta = jedna realizacja = pełny zrzut jej hero sekcji, bez podpisów.
+// Kart jest tyle, ile realizacji z żywą stroną. Karty idą po łuku jak wachlarz w dłoni.
+// Ruch: pozycje liczy CSS ze zmiennych, skrypt tylko przełącza stan (aktywna karta, rozsunięcie
+// sąsiadów, pochylenie za kursorem, etykieta przy kursorze). Animowany jest wyłącznie transform
+// i opacity, więc wszystko idzie na kompozytorze. Telefon: pas kart przewijany palcem.
+import { Image } from 'astro:assets';
+import VariantLayout from '../../../layouts/VariantLayout.astro';
+import SiteMenu from '../../../components/SiteMenu.astro';
+import BrandFooter from '../../../components/BrandFooter.astro';
+import heroGlassstone from '../../../assets/realizacje/hero-glassstone.webp';
+import heroEskapizm from '../../../assets/realizacje/hero-eskapizm.webp';
+import heroIgor from '../../../assets/realizacje/hero-igor.webp';
+import heroCannversity from '../../../assets/realizacje/hero-cannversity.webp';
+
+const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;');
+
+// Link pojawia się sam, gdy w tym folderze powstanie strona case'u o danym slugu.
+const pages = import.meta.glob('./*.astro');
+const hasCase = (slug: string) => `./${slug}.astro` in pages;
+
+// Zrzuty pierwszego ekranu żywych stron, 1440×1080 (4:3), 30.09.2026. Kolejność: gotowy case (GlassStone) na środku, na wierzchu.
+const cases = [
+  { slug: 'eskapizm', name: 'eskapizm', img: heroEskapizm, alt: 'Hero strony eskapizm: Co by było, gdyby ktoś ułożył Twój wyjazd za Ciebie?' },
+  { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' },
+  { slug: 'igor-grabowski', name: 'Igor Grabowski', img: heroIgor, alt: 'Pierwszy ekran strony kolekcji Igora Grabowskiego: prace, o kolekcji, artyści, newsletter, kontakt.' },
+  { slug: 'cannversity', name: 'Cannversity', img: heroCannversity, alt: 'Hero strony Cannversity: Od pomysłu do produktu. W branży konopnej.' },
+].map((c) => ({ ...c, href: hasCase(c.slug) ? `/pl/realizacje/${c.slug}/` : undefined }));
+
+const n = cases.length;
+const center = (n - 1) / 2;
+// Warstwy: środek na wierzchu, brzegi pod spodem, żeby żadna karta nie chowała się za sąsiadami.
+const zOf = (i: number) => 20 - Math.round(Math.abs(i - center) * 4) + (i < center ? 1 : 0);
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'CollectionPage', name: 'Realizacje', inLanguage: 'pl', url: 'https://mioduszewsky.com/pl/realizacje/',
+      hasPart: cases.filter((c) => c.href).map((c) => ({ '@type': 'Article', name: c.name, url: `https://mioduszewsky.com${c.href}` })) },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'mioduszewsky', item: 'https://mioduszewsky.com/pl/' },
+      { '@type': 'ListItem', position: 2, name: 'Realizacje', item: 'https://mioduszewsky.com/pl/realizacje/' } ] },
+  ],
+};
+---
+<VariantLayout
+  title="Realizacje · mioduszewsky"
+  description="Opisy realizacji od problemu firmy, przez decyzje po drodze, do tego, co działa dziś."
+  bg="#f8f9f2" fg="#000000" switcher={false} robots="index, follow, max-image-preview:large" locale="pl" alternatePath="/">
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <div class="work">
+    <a class="skip" href="#main">Przejdź do treści</a>
+    <header class="nav">
+      <a class="mark" href="/pl/" aria-label="mioduszewsky. Strona główna.">
+        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+      </a>
+      <SiteMenu locale="pl" alternatePath="/" />
+    </header>
+
+    <main id="main" class="stage">
+      <header class="hero">
+        <h1>Co zbudowałem i&nbsp;po&nbsp;co.</h1>
+        <p class="lead" set:html={P('Każdy opis zaczyna się od problemu firmy i kończy na tym, co działa dziś.')} />
+      </header>
+
+      <ul class="fan" aria-label="Case studies">
+        {cases.map((c, i) => {
+          const Tag = c.href ? 'a' : 'div';
+          const o = i - center;
+          return (
+            <li class="card" data-name={c.name} data-link={c.href ? '1' : undefined}
+              style={`--o:${o}; --enter:${Math.round(Math.abs(o) * 90)}ms; z-index:${zOf(i)}`} data-z={zOf(i)}>
+              <Tag class="sheet" href={c.href} aria-label={c.href ? `Case study: ${c.name}` : undefined}>
+                <span class="frame">
+                  <Image src={c.img} alt={c.alt} widths={[640, 1000, 1600]} sizes="(min-width: 768px) 40vw, 84vw" loading="eager" decoding="async" />
+                </span>
+              </Tag>
+            </li>
+          );
+        })}
+      </ul>
+      <div class="pill" aria-hidden="true"><span class="pill-name"></span><svg class="pill-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></div>
+    </main>
+    <BrandFooter locale="pl" inset />
+  </div>
+</VariantLayout>
+
+<script>
+  const fan = document.querySelector<HTMLElement>('.fan');
+  const pill = document.querySelector<HTMLElement>('.pill');
+  const desk = matchMedia('(min-width: 768px) and (hover: hover) and (pointer: fine)');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (fan && pill) {
+    const cards = [...fan.querySelectorAll<HTMLElement>('.card')];
+    const pillName = pill.querySelector<HTMLElement>('.pill-name')!;
+    let active = -1;
+    let leaveTimer = 0;
+    const zTimers: number[] = [];
+
+    const zBase = (i: number) => Number(cards[i].dataset.z);
+
+    // ROBOCZE (30.09): porównanie wariantów ?v=a|b|c. A wachlarz w marginesach, karty 4:3,
+    // B w marginesach, karty 16:10, C poprzednia v8 (karty ucięte z boków). Po wyborze Kacpra przełącznik znika.
+    const v = new URLSearchParams(location.search).get('v');
+    if (v && /^[abc]$/.test(v)) document.querySelector<HTMLElement>('.stage')!.dataset.v = v;
+    cards.forEach((c, i) => { c.style.zIndex = String(zBase(i)); });
+
+    // Wysokość pasa dla CSS: z niej liczy się rozmiar kart.
+    new ResizeObserver(([e]) => fan.style.setProperty('--fh', `${Math.round(e.contentRect.height)}px`)).observe(fan);
+
+    // Wejście: karty rozkładają się od środka, gdy obrazy są gotowe (najdłużej 600 ms).
+    const imgs = [...fan.querySelectorAll('img')];
+    const ready = () => requestAnimationFrame(() => {
+      fan.classList.add('is-ready');
+      setTimeout(() => fan.classList.add('is-settled'), 1400);
+    });
+    Promise.race([
+      Promise.all(imgs.map((im) => im.decode().catch(() => {}))),
+      new Promise((r) => setTimeout(r, 600)),
+    ]).then(ready);
+
+    const resetTilt = (card: HTMLElement) => {
+      const sheet = card.querySelector<HTMLElement>('.sheet')!;
+      sheet.style.setProperty('--tx', '0deg'); sheet.style.setProperty('--ty', '0deg');
+    };
+
+    const setActive = (idx: number) => {
+      if (idx === active) return;
+      const prev = active;
+      active = idx;
+      fan.classList.toggle('has-active', idx >= 0);
+      cards.forEach((card, i) => {
+        const on = i === idx;
+        card.classList.toggle('is-active', on);
+        // Sąsiedzi rozsuwają się od aktywnej karty, bliżsi mocniej.
+        const d = idx < 0 || on ? 0 : Math.sign(i - idx) / Math.sqrt(Math.abs(i - idx));
+        card.style.setProperty('--part', d.toFixed(3));
+        clearTimeout(zTimers[i]);
+        if (on) card.style.zIndex = '50';
+        // Poprzednia karta wraca na swoją warstwę dopiero, gdy opadnie, żeby nie przeskoczyła za sąsiada.
+        else if (i === prev) zTimers[i] = window.setTimeout(() => { card.style.zIndex = String(zBase(i)); }, 380);
+        else card.style.zIndex = String(zBase(i));
+        if (!on) resetTilt(card);
+      });
+      if (idx >= 0) {
+        pillName.textContent = cards[idx].dataset.name || '';
+        pill.classList.toggle('is-link', !!cards[idx].dataset.link);
+      }
+      pill.classList.toggle('is-on', idx >= 0 && desk.matches);
+    };
+
+    // Pochylenie za kursorem, odblask i etykieta liczone w jednej pętli z wygładzaniem.
+    let mx = 0, my = 0, tx = 0, ty = 0, px = 0, py = 0, lx = 0, ly = 0, raf = 0;
+    const loop = () => {
+      tx += (mx - tx) * 0.14; ty += (my - ty) * 0.14;
+      px += (lx - px) * 0.22; py += (ly - py) * 0.22;
+      pill.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0)`;
+      const card = cards[active];
+      if (card) {
+        const sheet = card.querySelector<HTMLElement>('.sheet')!;
+        sheet.style.setProperty('--tx', `${(-ty * 5).toFixed(2)}deg`);
+        sheet.style.setProperty('--ty', `${(tx * 6).toFixed(2)}deg`);
+        sheet.style.setProperty('--gx', tx.toFixed(3));
+        sheet.style.setProperty('--gy', ty.toFixed(3));
+      }
+      const settled = Math.abs(mx - tx) < 0.001 && Math.abs(my - ty) < 0.001 && Math.abs(lx - px) < 0.3 && Math.abs(ly - py) < 0.3;
+      raf = settled ? 0 : requestAnimationFrame(loop);
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+
+    fan.addEventListener('pointermove', (e) => {
+      if (!desk.matches || e.pointerType !== 'mouse') return;
+      const card = (e.target as Element).closest<HTMLElement>('.card');
+      clearTimeout(leaveTimer);
+      if (card) {
+        setActive(cards.indexOf(card));
+        if (!calm.matches) {
+          const r = card.querySelector('.frame')!.getBoundingClientRect();
+          mx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width) * 2 - 1));
+          my = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height) * 2 - 1));
+        }
+      }
+      lx = e.clientX + 18; ly = e.clientY + 18;
+      if (!pill.classList.contains('was-shown')) { px = lx; py = ly; pill.classList.add('was-shown'); }
+      kick();
+    });
+    // Krótka zwłoka przy wyjściu: przejście kursora przez szczelinę między kartami nie zrzuca całego wachlarza.
+    fan.addEventListener('pointerleave', () => {
+      clearTimeout(leaveTimer);
+      leaveTimer = window.setTimeout(() => { setActive(-1); mx = my = 0; kick(); pill.classList.remove('was-shown'); }, 90);
+    });
+    fan.addEventListener('pointerdown', (e) => { (e.target as Element).closest('.card')?.classList.add('is-press'); });
+    addEventListener('pointerup', () => cards.forEach((c) => c.classList.remove('is-press')));
+    // Klawiatura: fokus działa jak najechanie, bez etykiety przy kursorze.
+    fan.addEventListener('focusin', (e) => { const c = (e.target as Element).closest<HTMLElement>('.card'); if (c) setActive(cards.indexOf(c)); pill.classList.remove('is-on'); });
+    fan.addEventListener('focusout', () => setActive(-1));
+  }
+</script>
+
+<style>
+  .work {
+    --ivory: #f8f9f2; --ink: #111; --dim: #5f5b4e;
+    --blue: #0522ff; --brand: #ffcc33;
+    --gutter: clamp(20px, 5vw, 96px); --focus: var(--blue);
+    --ease-out: cubic-bezier(.22, 1, .36, 1);
+    --ease-spring: cubic-bezier(.2, 1.18, .32, 1);
+    font-family: 'GeneralSansV', sans-serif; background: var(--ivory); color: var(--ink); overflow-x: clip;
+  }
+  @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  .work :is(h1,p,ul) { margin: 0; }
+  .work ul { padding: 0; list-style: none; }
+  .work p { text-wrap: pretty; }
+  .work :is(a,button):focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+  .work ::selection { background: var(--brand); }
+  .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
+  .skip:focus { transform: none; }
+  .nav { height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
+  .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
+
+  /* Jeden ekran: nagłówek na górze, wachlarz wypełnia resztę i schodzi pod dolną krawędź. */
+  .stage { min-height: calc(100svh - 104px); display: flex; flex-direction: column; overflow: clip; }
+  /* Nagłówek u góry, karty wypełniają całą resztę ekranu, więc nigdzie nie zostaje pusty pas. */
+  .hero { flex: none; padding: clamp(16px, 4vh, 48px) var(--gutter) 0; text-align: center; position: relative; z-index: 60; pointer-events: none; }
+  .hero :is(h1, p) { pointer-events: auto; }
+  h1 { margin-inline: auto !important; max-width: 8.5em; font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(42px, min(11vw, 17svh), 210px); line-height: .92; letter-spacing: -.045em; text-wrap: balance; }
+  .lead { margin: clamp(16px, 2.4vw, 28px) auto 0 !important; max-width: 40em; font-size: 19px; line-height: 1.55; color: var(--dim); }
+
+  /* Wachlarz po łuku: środek najwyżej, brzegi niżej i lekko przechylone na zewnątrz, jak karty w dłoni.
+     Położenie każdej karty wynika z --o (odległość od środka), stan dokłada skrypt.
+     ZATWIERDZONY 30.09.2026 (Kacper, wariant A): karty płasko, bez skosu w głąb, środek na wierzchu.
+     Warianty ze skosem (B, C z v3) odrzucone. Po wyborze powiększone. */
+  .fan {
+    --k: .4; --ar: 4 / 3; --vis: .69; --arc: .06; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
+    /* Pas kart zajmuje całą wysokość pod nagłówkiem; rozmiar kart liczy się z tej wysokości.
+       --fh podaje skrypt (ResizeObserver), bo jednostki cqh dawały tu 0; bez skryptu 360 px. */
+    --fh: 360px;
+    position: relative; flex: 1; min-height: 240px; margin-top: clamp(24px, 4vh, 48px);
+    perspective: 2400px; perspective-origin: 50% 0%;
+  }
+  .card {
+    /* Karta rośnie, aż wypełni pas (z zapasem na przechył i wyjazd aktywnej); ograniczenie z szerokości ekranu. */
+    /* Cały wachlarz (z przechyłem) mieści się między marginesami strony; ucina go tylko dół ekranu. */
+    --w: clamp(260px, min(calc((100vw - 2 * var(--gutter)) / (1 + 3 * var(--k)) * .9), calc(var(--fh) / var(--vis))), 1100px);
+    --step: calc(var(--w) * var(--k));
+    --part: 0;
+    --x: calc(var(--o) * var(--step) + var(--part) * var(--w) * var(--spread, .04));
+    --y: calc(var(--o) * var(--o) * var(--w) * var(--arc));
+    --rz: calc(var(--o) * var(--rzk));
+    --ry: var(--ry0);
+    --s: 1;
+    /* Każda karta zawsze wchodzi pod dolną krawędź ekranu: w spoczynku o 15% szerokości, aktywna o 9%.
+       Nigdy nie widać jej dolnego brzegu ani pustego pasa pod nią. */
+    position: absolute; left: 50%; bottom: calc(var(--w) * -.15);
+    width: var(--w);
+    transform: translate3d(calc(-50% + var(--x)), var(--y), 0) rotateZ(var(--rz)) rotateY(var(--ry)) scale(var(--s));
+    transform-origin: 50% 100%;
+    transition: transform .8s var(--ease-spring), opacity .6s var(--ease-out);
+    will-change: transform;
+  }
+  .fan.has-active .card { --y: calc(var(--o) * var(--o) * var(--w) * var(--arc) + var(--w) * .05); }
+  .fan.has-active .card.is-active {
+    --x: clamp(calc(var(--w) / 2 + 16px - 50vw), calc(var(--o) * var(--step) * .8), calc(50vw - var(--w) / 2 - 16px)); --y: calc(var(--w) * -.035); --rz: 0deg; --ry: var(--ry1); --s: 1.02;
+    transition-duration: .65s;
+  }
+  .fan .card.is-active.is-press { --s: 1.01; transition-duration: .18s; }
+
+  .stage[data-v="b"] .fan { --k: .5; --ar: 16 / 10; --vis: .56; }
+  .stage[data-v="c"] .fan { --k: .5; --ar: 16 / 10; }
+  .stage[data-v="c"] .card { --w: clamp(300px, min(46vw, calc(var(--fh) / .56)), 1100px); --spread: .09; }
+
+  /* Wejście: karty wjeżdżają spod krawędzi, od środka na zewnątrz. Bez skryptu stoją od razu. */
+  @media (scripting: enabled) {
+    .fan:not(.is-ready) .card { --y: calc(var(--w) * .5); --rz: 0deg; opacity: 0; transition: none; }
+    .fan.is-ready:not(.is-settled) .card { transition-delay: var(--enter); transition-duration: 1.1s, .5s; }
+  }
+
+  .sheet {
+    --tx: 0deg; --ty: 0deg; --gx: 0; --gy: -1;
+    display: block; position: relative; border-radius: 12px; color: inherit; text-decoration: none;
+    transform: rotateX(var(--tx)) rotateY(var(--ty));
+  }
+  .card:not([data-link]) .sheet { cursor: default; }
+  /* Cień w dwóch warstwach: stały i głęboki dla aktywnej karty, animowana jest tylko przezroczystość. */
+  .sheet::before, .sheet::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+  .sheet::before {
+    box-shadow: 1px 0 1px rgb(0 0 0 / .01), 2.4px 0 2.4px rgb(0 0 0 / .03), 6.4px 0 6.4px rgb(0 0 0 / .08), 20px 0 20px rgb(0 0 0 / .22);
+  }
+  .sheet::after {
+    box-shadow: 0 40px 80px -20px rgb(17 17 17 / .45), 0 18px 36px -18px rgb(17 17 17 / .35);
+    opacity: 0; transition: opacity .5s var(--ease-out);
+  }
+  .is-active .sheet::after { opacity: 1; }
+  .frame { display: block; position: relative; overflow: hidden; border-radius: inherit; background: #e9e9e2; transform: translateZ(0); }
+  .frame img { display: block; width: 100%; height: auto; aspect-ratio: var(--ar); object-fit: cover; object-position: top; }
+  /* Odblask podąża za kursorem na aktywnej karcie. Gradient stoi, przesuwa się cała warstwa
+     (transform), więc ruch nie wymusza przemalowania w każdej klatce. */
+  .frame::after {
+    content: ''; position: absolute; inset: -50%; pointer-events: none;
+    background: radial-gradient(30% 35% at 50% 50%, rgb(255 255 255 / .22), transparent 70%);
+    transform: translate3d(calc(var(--gx) * 25%), calc(var(--gy) * 25%), 0);
+    opacity: 0; transition: opacity .4s var(--ease-out);
+  }
+  .is-active .frame::after { opacity: 1; }
+  .fan .sheet:focus-visible { outline-offset: 6px; }
+
+  /* Etykieta przy kursorze: nazwa realizacji, strzałka tylko przy gotowym case. */
+  .pill {
+    position: fixed; left: 0; top: 0; z-index: 120; pointer-events: none;
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px 10px 16px;
+    border-radius: 999px; background: var(--ink); color: var(--ivory);
+    font-size: 15px; font-weight: 500; line-height: 1; white-space: nowrap;
+    opacity: 0; scale: .6; transform-origin: 0 0;
+    transition: opacity .25s var(--ease-out), scale .35s var(--ease-spring);
+  }
+  .pill.is-on { opacity: 1; scale: 1; }
+  .pill-go { width: 16px; height: 16px; color: var(--brand); display: none; }
+  .pill.is-link .pill-go { display: block; }
+
+  /* Telefon i tablet dotykowy: pas pełnych kart przewijany palcem, bez łuku. */
+  @media (max-width: 767px) {
+    .stage { min-height: 0; }
+    .lead { font-size: 17px; }
+    .work .fan {
+      flex: none; min-height: 0; margin-top: 0; perspective: none;
+      display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden;
+      padding: 28px var(--gutter) 40px; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+      scrollbar-width: none; overscroll-behavior-x: contain;
+    }
+    .fan::-webkit-scrollbar { display: none; }
+    .card { --w: 84vw; position: relative; left: auto; bottom: auto; flex: none; transform: none; scroll-snap-align: start; z-index: auto !important; }
+    /* Na telefonie gotowy case idzie pierwszy. */
+    .card[data-link] { order: -1; }
+    .card:active .sheet { scale: .98; }
+    .sheet { transition: scale .25s var(--ease-out); }
+    .sheet::before { box-shadow: 0 12px 28px rgb(0 0 0 / .14); }
+    .pill { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card, .sheet, .pill { transition-duration: .01s !important; transition-delay: 0s !important; }
+    .fan:not(.is-ready) .card { opacity: 1; }
+  }
+</style>
