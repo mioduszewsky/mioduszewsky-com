@@ -8,6 +8,8 @@
 // sąsiadów, pochylenie za kursorem, etykieta przy kursorze). Animowany jest wyłącznie transform
 // i opacity, więc wszystko idzie na kompozytorze. Telefon: pionowa lista pełnych kart.
 // v10 (Kacper, 01.10): powrót do v5 (45692b7), jedyna zmiana: karty 4:3 sięgają pod dolną krawędź.
+// v11 (Kacper, 01.10): stały odstęp podtytuł-karty (karta rośnie do miejsca pod tekstem), aktywna karta
+// wybierana po strefach spoczynku zamiast po elemencie pod kursorem, ruch bez sprężyny.
 import { Image } from 'astro:assets';
 import VariantLayout from '../../../layouts/VariantLayout.astro';
 import SiteMenu from '../../../components/SiteMenu.astro';
@@ -105,6 +107,9 @@ const ld = {
     let leaveTimer = 0;
     const zTimers: number[] = [];
 
+    // Wysokość miejsca na wachlarz dla CSS: z niej wynika szerokość kart (patrz .card --w).
+    new ResizeObserver(([e]) => fan.style.setProperty('--h', `${e.contentRect.height}px`)).observe(fan);
+
     const zBase = (i: number) => Number(cards[i].dataset.z);
     cards.forEach((c, i) => { c.style.zIndex = String(zBase(i)); });
 
@@ -138,7 +143,8 @@ const ld = {
         clearTimeout(zTimers[i]);
         if (on) card.style.zIndex = '50';
         // Poprzednia karta wraca na swoją warstwę dopiero, gdy opadnie, żeby nie przeskoczyła za sąsiada.
-        else if (i === prev) zTimers[i] = window.setTimeout(() => { card.style.zIndex = String(zBase(i)); }, 380);
+        // W tym czasie stoi pod nową aktywną (40 < 50), inaczej potrafiła ją na chwilę przykryć.
+        else if (i === prev) { card.style.zIndex = '40'; zTimers[i] = window.setTimeout(() => { card.style.zIndex = String(zBase(i)); }, 450); }
         else card.style.zIndex = String(zBase(i));
         if (!on) resetTilt(card);
       });
@@ -168,12 +174,28 @@ const ld = {
     };
     const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
 
+    // Która karta jest aktywna, wynika z położenia kursora względem miejsc kart w spoczynku, a nie
+    // z tego, co akurat leży pod kursorem. Karta po najechaniu przesuwa się i rozpycha sąsiadów;
+    // przy wyborze po elemencie pod kursorem lądowała wtedy inna karta i wachlarz przeskakiwał.
+    // Granica stref ma margines (HYST), więc drganie ręki na styku dwóch kart niczego nie zmienia.
+    const HYST = 0.12;
+    const k = parseFloat(getComputedStyle(fan).getPropertyValue('--k')) || 0.6;
+    const center = (cards.length - 1) / 2;
+    const slotAt = (clientX: number) => {
+      const r = fan.getBoundingClientRect();
+      const step = cards[0].offsetWidth * k;
+      const f = (clientX - (r.left + r.width / 2)) / step + center;
+      if (active >= 0 && Math.abs(f - active) < 0.5 + HYST) return active;
+      return Math.max(0, Math.min(cards.length - 1, Math.round(f)));
+    };
+
     fan.addEventListener('pointermove', (e) => {
       if (!desk.matches || e.pointerType !== 'mouse') return;
-      const card = (e.target as Element).closest<HTMLElement>('.card');
+      const over = (e.target as Element).closest<HTMLElement>('.card');
       clearTimeout(leaveTimer);
-      if (card) {
-        setActive(cards.indexOf(card));
+      if (over) {
+        setActive(slotAt(e.clientX));
+        const card = cards[active];
         if (!calm.matches) {
           const r = card.querySelector('.frame')!.getBoundingClientRect();
           mx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width) * 2 - 1));
@@ -219,7 +241,7 @@ const ld = {
   .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
 
   /* Jeden ekran: nagłówek na górze, wachlarz wypełnia resztę i schodzi pod dolną krawędź. */
-  .stage { min-height: calc(100svh - 104px); display: flex; flex-direction: column; overflow: clip; }
+  .stage { min-height: calc(100svh - 104px); display: flex; flex-direction: column; justify-content: flex-end; overflow: clip; }
   .hero { padding: clamp(8px, 4vh, 56px) var(--gutter) 0; text-align: center; position: relative; z-index: 60; pointer-events: none; }
   .hero :is(h1, p) { pointer-events: auto; }
   h1 { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(48px, 8vw, 128px); line-height: .95; letter-spacing: -.045em; }
@@ -229,37 +251,41 @@ const ld = {
      Położenie każdej karty wynika z --o (odległość od środka), stan dokłada skrypt.
      ZATWIERDZONY 30.09.2026 (Kacper, wariant A): karty płasko, bez skosu w głąb, środek na wierzchu.
      Warianty ze skosem (B, C z v3) odrzucone. Po wyborze powiększone. */
+  /* v11 (01.10): stały odstęp od podtytułu zamiast przerwy zależnej od okna. Karta bierze szerokość
+     z wysokości miejsca pod tekstem (--h, mierzy skrypt), więc górna krawędź stoi --gap pod podtytułem,
+     a dolna zawsze schodzi pod ekran (ok. 7% szerokości karty). Na wysokim, wąskim oknie karta
+     dochodzi do --wmax, wachlarz przestaje rosnąć, a nadmiar miejsca idzie nad nagłówek. */
   .fan {
-    --wv: 37vw; --k: .6; --arc: .06; --lift: .24; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
-    --w: clamp(300px, min(var(--wv), 66svh), 700px);
-    --step: calc(var(--w) * var(--k));
-    position: relative; flex: 1; min-height: clamp(360px, 34vw, 520px);
+    --k: .6; --arc: .06; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
+    --gap: clamp(48px, 7vh, 88px);
+    --wmax: min(58vw, 1400px);
+    position: relative; flex: 1 1 auto; min-height: clamp(360px, 34vw, 520px);
+    max-height: calc(var(--gap) + var(--wmax) * .68);
     perspective: 2400px; perspective-origin: 50% 0%;
   }
-  /* Karty 4:3: górna krawędź jak w v5, a dolna zawsze pod ekranem (spoczynek ok. 7,5% szerokości,
-     aktywna ok. 3,5%), więc pod kartami nie zostaje przerwa. Dlatego aktywna wyjeżdża tylko o 4%.
-     Niski ekran laptopa: wachlarz stoi niżej, żeby wyjeżdżająca karta nie weszła na tekst. */
-  @media (max-height: 880px) { .fan { --lift: .19; } }
-  @media (max-height: 780px) { .fan { --lift: .17; } }
   .card {
+    --w: clamp(300px, min(calc((var(--h, 56svh) - var(--gap)) / .68), var(--wmax)), 1400px);
+    --step: calc(var(--w) * var(--k));
     --part: 0;
     --x: calc(var(--o) * var(--step) + var(--part) * var(--w) * .09);
-    --y: calc(var(--o) * var(--o) * var(--w) * var(--arc) - var(--w) * var(--lift));
+    --y: calc(var(--o) * var(--o) * var(--w) * var(--arc));
     --rz: calc(var(--o) * var(--rzk));
     --ry: var(--ry0);
     --s: 1;
-    position: absolute; left: 50%; bottom: calc(var(--w) * -.3);
+    position: absolute; left: 50%; top: var(--gap);
     width: var(--w);
     transform: translate3d(calc(-50% + var(--x)), var(--y), 0) rotateZ(var(--rz)) rotateY(var(--ry)) scale(var(--s));
     transform-origin: 50% 100%;
     transition: transform .8s var(--ease-spring), opacity .6s var(--ease-out);
     will-change: transform;
   }
-  .fan.has-active .card { --y: calc(var(--o) * var(--o) * var(--w) * var(--arc) - var(--w) * (var(--lift) - .06)); }
+  .fan.has-active .card { --y: calc(var(--o) * var(--o) * var(--w) * var(--arc) + var(--w) * .05); }
   .fan.has-active .card.is-active {
-    --x: calc(var(--o) * var(--step) * .8); --y: calc(var(--w) * (var(--lift) + .04) * -1); --rz: 0deg; --ry: var(--ry1); --s: 1.04;
-    transition-duration: .65s;
+    --x: calc(var(--o) * var(--step) * .8); --y: calc(var(--w) * -.01); --rz: 0deg; --ry: var(--ry1); --s: 1.03;
   }
+  /* Po wejściu ruch bez sprężyny: przy szybkim przejeżdżaniu kursorem odbicie z każdej przerwanej
+     animacji wyglądało jak szarpnięcie. Jedna gładka krzywa, ta sama dla karty i sąsiadów. */
+  .fan.is-settled .card { transition: transform .6s var(--ease-out), opacity .6s var(--ease-out); }
   .fan .card.is-active.is-press { --s: 1.01; transition-duration: .18s; }
 
   /* Wejście: karty wjeżdżają spod krawędzi, od środka na zewnątrz. Bez skryptu stoją od razu. */
@@ -316,11 +342,11 @@ const ld = {
     .lead { font-size: 17px; }
     /* Telefon: pionowa lista pełnych kart, każda na całą szerokość, więc każdą łatwo stuknąć. */
     .work .fan {
-      --w: 100%; flex: none; min-height: 0; perspective: none;
+      flex: none; min-height: 0; max-height: none; perspective: none;
       display: flex; flex-direction: column; gap: 16px;
       padding: 28px var(--gutter) 48px;
     }
-    .card { position: relative; left: auto; bottom: auto; flex: none; transform: none; z-index: auto !important; }
+    .card { --w: 100%; position: relative; left: auto; top: auto; flex: none; transform: none; z-index: auto !important; }
     /* Gotowe case'y idą na górę listy. */
     .card[data-link] { order: -1; }
     .card:active .sheet { scale: .98; }
