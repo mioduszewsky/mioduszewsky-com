@@ -116,6 +116,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       <style>
         .veil { display: none !important; }
         .cur { display: none !important; }
+        .finale-dal { visibility: visible !important; }
       </style>
     </noscript>
 
@@ -490,8 +491,8 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
   <!-- STOPKA-FINAŁ (curtain reveal): treść unosi się i naturalnie odsłania ją u dołu -->
   <footer class="finale" aria-label={isPl ? 'Umów rozmowę' : 'Book a call'}>
     <div class="finale-dal" aria-hidden="true">
-      <!-- Bez autoplay/preload: 11 MB futra dociąga IntersectionObserver dopiero przy stopce (patrz <script> niżej). Poster WebP trzyma miejsce od razu. -->
-      <video class="finale-video" loop muted playsinline preload="none" poster="/logo3d/logo-dalmatian-poster.webp">
+      <!-- Bez autoplay/preload i bez posteru na starcie: poster i futro dociąga skrypt dopiero, gdy user minie realizacje (patrz <script> niżej). -->
+      <video class="finale-video" loop muted playsinline preload="none" data-poster="/logo3d/logo-dalmatian-poster.webp">
         <source data-src="/logo3d/logo-dalmatian.mp4" type="video/mp4;codecs=hvc1" />
         <source data-src="/logo3d/logo-dalmatian.webm" type="video/webm" />
       </video>
@@ -1128,10 +1129,13 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       });
     }
 
-    /* Futro w stopce (11 MB webm/mp4) ładuje się w tle zaraz po tym, jak reszta
-       strony jest gotowa - NIE czeka aż user dojedzie do finału scrollem. Ma stać
-       gotowe na czas, zamiast ładować się na jego oczach w trakcie dojazdu. */
+    /* Stopka (fixed pod treścią) i futro (11 MB webm/mp4) startują dopiero, gdy user
+       minie realizacje (sekcja .manif wjeżdża w kadr). Do tego czasu dalmatyńczyk jest
+       visibility:hidden: przeglądarka go nie maluje, więc PageSpeed nie bierze
+       ukrytego pod treścią posteru za LCP, a kto nie doscrolluje, nie płaci za futro.
+       Od .manif do finału zostaje kilka ekranów, futro zdąży się dociągnąć. */
     {
+      const dal = document.querySelector<HTMLElement>('.finale-dal');
       const fv = document.querySelector('.finale-video') as HTMLVideoElement | null;
       /* Save-Data i wolne lacza: 6-12 MB futra zostaje na posterze, nie dociagamy.
          Warunek obejmuje 2G, 3G i slow-4g - przy ruchu z reklam czesc ludzi wchodzi
@@ -1140,17 +1144,31 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       const conn = (navigator as any).connection;
       const slowLink = /(^|\b)(slow-2g|2g|3g)$/.test(conn?.effectiveType || '');
       const skipHeavy = !!(conn?.saveData || slowLink);
-      if (fv && !skipHeavy) {
-        const load = () => {
-          fv.querySelectorAll('source[data-src]').forEach((s) => {
-            const el = s as HTMLSourceElement;
-            if (el.dataset.src) { el.src = el.dataset.src; delete el.dataset.src; }
-          });
-          fv.load();
-          fv.play().catch(() => {});
+      const reveal = () => {
+        dal?.classList.add('is-on');
+        if (!fv) return;
+        if (fv.dataset.poster) { fv.poster = fv.dataset.poster; delete fv.dataset.poster; }
+        if (skipHeavy) return;
+        fv.querySelectorAll('source[data-src]').forEach((s) => {
+          const el = s as HTMLSourceElement;
+          if (el.dataset.src) { el.src = el.dataset.src; delete el.dataset.src; }
+        });
+        fv.load();
+        fv.play().catch(() => {});
+      };
+      /* Pozycja, nie przecięcie: skok do #oferta, klawisz End albo przywrócenie
+         scrolla na dole przeskakują sekcje bez przecięcia kadru. Liczy się tylko,
+         czy górna krawędź .manif jest już nad dołem ekranu. */
+      const manif = document.querySelector<HTMLElement>('.manif');
+      if (!manif) reveal();
+      else {
+        const check = () => {
+          if (manif.getBoundingClientRect().top >= innerHeight) return;
+          removeEventListener('scroll', check);
+          reveal();
         };
-        if (document.readyState === 'complete') load();
-        else addEventListener('load', load, { once: true });
+        addEventListener('scroll', check, { passive: true });
+        check();
       }
     }
   </script>
@@ -1941,6 +1959,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     height: 100vh; background: #000000; color: var(--ivory);
     overflow: clip;
   }
+  /* Do minięcia realizacji dalmatyńczyk nie istnieje dla renderu (skrypt dodaje .is-on).
+     CTA i „wróć na początek” zostają widoczne dla czytników ekranu. */
+  .finale-dal:not(.is-on) { visibility: hidden; }
+  :global(html.js-stalled) .finale-dal { visibility: visible; }
   .finale::before {
     content: ""; position: absolute; top: 50%; left: 50%; translate: -50% -50%;
     width: min(1200px, 96vw); aspect-ratio: 2.2 / 1;
