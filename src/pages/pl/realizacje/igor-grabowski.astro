@@ -1,0 +1,353 @@
+---
+// Case study Igora Grabowskiego, wersja 2 (30.09.2026), kierunek C „Jego strona na jego kolorze”.
+// Referencja wybrana przez Kacpra: Locomotive × The Drake Hotel (strona klienta w dużej skali na polu
+// w kolorze marki, dookoła własny materiał klienta). U Igora: nagrania jego strony na jego niebieskim,
+// dookoła jego posty z Instagrama, które wysuwają się zza ekranu tak, jak prace spod słów na jego stronie.
+// Sekcje idą rytmem jego marki: papier, niebieski, atrament. v1 „Karta obiektu” (6b89028) odrzucona.
+// Tablica kierunków: docs/case-studies/igor/runda-2/TABLICA.html. Treść: igor/COPY.md, fakty: FAKTY.md.
+import VariantLayout from '../../../layouts/VariantLayout.astro';
+import SiteMenu from '../../../components/SiteMenu.astro';
+import BrandFooter from '../../../components/BrandFooter.astro';
+
+const contact = '/pl/kontakt/?service=' + encodeURIComponent('Strona internetowa') + '#ctForm';
+// Opinia pojawia się dopiero po akceptacji Igora (docs/case-studies/OPINIE-ROZMOWA.md).
+const quote: { text: string; name: string; role: string } | null = null;
+const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;');
+const url = 'https://mioduszewsky.com/pl/realizacje/igor-grabowski/';
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Article', headline: 'Strona kolekcji, na której prace wysuwają się spod słów', inLanguage: 'pl',
+      about: 'Strona kolekcji sztuki cyfrowej i współczesnej Igora Grabowskiego, igorgrabowski.com',
+      author: { '@type': 'Person', name: 'Kacper Mioduszewski', url: 'https://mioduszewsky.com/pl/' },
+      image: 'https://mioduszewsky.com/case/igor/strona-glowna.webp',
+      mainEntityOfPage: url },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'mioduszewsky', item: 'https://mioduszewsky.com/pl/' },
+      { '@type': 'ListItem', position: 2, name: 'Igor Grabowski', item: url } ] },
+  ],
+};
+
+// Spis prac 1:1 z żywej strony (~/aigor-reveal/src/content.tsx, PL), w kolejności z notatki Igora.
+const works = [
+  { a: 'Refik Anadol', t: 'Unsupervised - Data Universe - MoMA #1522' },
+  { a: 'Ivona Tau', t: 'Neo-Organic Matter III' },
+  { a: 'Ana Maria Caballero · Ivona Tau', t: 'City Life 3' },
+  { a: 'Sasha Stiles', t: 'Words beyond words #228' },
+  { a: 'Leander Herzog', t: 'Infinite Garden 2900 Flowers #12010' },
+  { a: 'Damien Hirst', t: 'The Currency „Now come to finish” #371' },
+  { a: 'William Mapan', t: 'Etudes #207' },
+  { a: 'William Mapan', t: 'Superpositions #230' },
+  { a: 'Tadeusz Dominik', t: 'Pustynia Piaskowa II' },
+  { a: 'ClownVamp', t: 'Puppies #108' },
+  { a: 'Tabor Robak', t: 'Human Resources #6874' },
+  { a: 'Rafał Dominik', t: 'Andrzej' },
+  { a: 'Rafał Dominik · Maria Mencwel', t: 'Kompozycja' },
+];
+const posts = [
+  { src: 'ig-darmowe-targi', alt: 'Post Igora z Instagrama: Darmowe targi sztuki? To jest bardzo uczciwa cena.' },
+  { src: 'ig-nie-rozumiesz', alt: 'Post Igora z Instagrama: sala muzeum i napis Nie rozumiesz sztuki współczesnej? To nie znaczy, że jesteś głupi.' },
+  { src: 'ig-pierwsza-reakcja', alt: 'Post Igora z Instagrama: Pierwsza reakcja nie musi być mądra.' },
+];
+---
+<VariantLayout
+  title="Strona kolekcji sztuki dla Igora Grabowskiego: prace wysuwają się spod słów · mioduszewsky"
+  description="Igor Grabowski kolekcjonuje sztukę cyfrową i współczesną. Zrobiłem mu stronę kolekcji: pięć słów, pod nimi prace, 13 prac, 12 nazwisk, dwa języki, jego domena."
+  bg="#f8f9f2" fg="#000000" switcher={false} robots="index, follow, max-image-preview:large" locale="pl" alternatePath="/">
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <div class="case">
+    <a class="skip" href="#main">Przejdź do treści</a>
+    <header class="nav">
+      <a class="mark" href="/pl/" aria-label="mioduszewsky. Strona główna.">
+        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+      </a>
+      <SiteMenu locale="pl" alternatePath="/" />
+    </header>
+
+    <main id="main">
+      <article>
+        <header class="stage">
+          <div class="wrap">
+            <p class="kicker">Realizacja dla Igora Grabowskiego</p>
+            <h1>Strona kolekcji, na której prace wysuwają się spod słów.</h1>
+            <p class="lead" set:html={P('Igor Grabowski kolekcjonuje sztukę cyfrową i współczesną, od pierwszego zakupu w galerii w 2020 roku. Zrobiłem mu stronę kolekcji: pięć słów na jednym ekranie, a pod każdym prace, które wysuwają się po najechaniu kursorem. 13 prac, 12 nazwisk, po polsku i po angielsku, na jego domenie.')} />
+          </div>
+
+          <div class="wrap set">
+            <div class="screen">
+              <video class="vid" autoplay loop muted playsinline preload="metadata" width="1280" height="800" poster="/case/igor/strona-glowna.webp" aria-label="Nagranie strony głównej igorgrabowski.com: kursor przesuwa się po słowach Prace i O kolekcji, spod każdego wysuwają się dwie prace z kolekcji.">
+                <source src="/case/igor/strona-glowna.webm" type="video/webm" />
+                <source src="/case/igor/strona-glowna.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="phone">
+              <video class="vid" autoplay loop muted playsinline preload="metadata" width="390" height="660" poster="/case/igor/telefon.webp" aria-label="Nagranie strony głównej na telefonie: prace wysuwają się same przy kolejnych słowach.">
+                <source src="/case/igor/telefon.webm" type="video/webm" />
+                <source src="/case/igor/telefon.mp4" type="video/mp4" />
+              </video>
+            </div>
+            {posts.map((p, i) => (
+              <img class={`post post-${i + 1}`} src={`/case/igor/${p.src}.webp`} width="720" height="900" alt={p.alt} loading="eager" />
+            ))}
+          </div>
+
+          <div class="wrap facts">
+            <p><strong>13</strong><span>prac z&nbsp;kolekcji</span></p>
+            <p><strong>12</strong><span>artystów i&nbsp;artystek</span></p>
+            <p><strong>PL&nbsp;EN</strong><span>dwa języki</span></p>
+            <p><strong>0</strong><span>ciasteczek śledzących</span></p>
+          </div>
+          <div class="wrap live"><a href="https://www.igorgrabowski.com/" target="_blank" rel="noopener">Zobacz stronę na żywo<span aria-hidden="true"> ↗</span></a></div>
+        </header>
+
+        <section class="paper">
+          <div class="wrap duo">
+            <div>
+              <h2>Kolekcjoner pokazuje cudze prace.</h2>
+              <div class="txt">
+                <p set:html={P('Igor nie jest artystą. Na jego stronie wiszą prace Refika Anadola, Damiena Hirsta, Ivony Tau i dziewięciu innych osób. Strona ma pokazać kolekcję i człowieka, który ją zbiera, a nazwiska artystów muszą się zgadzać co do litery.')} />
+                <p set:html={P('Cała strona główna to jeden ruch: najeżdżasz na słowo, spod niego wysuwają się dwie prace. Zrobiłem dwie różne wersje strony. Na domenie stoi ta, w której ten ruch prowadzi całą stronę.')} />
+                <p set:html={P('Igor mówi o sztuce na Instagramie, prosto i bez zadęcia. Spod „O kolekcji” wysuwają się jego posty, więc strona mówi jego głosem.')} />
+              </div>
+            </div>
+            <figure class="voice">
+              <img src="/case/igor/ig-oprowadzanie.webp" width="720" height="900" loading="lazy" alt="Post Igora z Instagrama na niebieskim tle: Jeśli chcesz sobie pomóc, idź na oprowadzanie. Zapytaj edukatora." />
+              <img src="/case/igor/ig-muzea.webp" width="720" height="900" loading="lazy" alt="Post Igora z Instagrama na niebieskim tle: Z mojego doświadczenia, na początku przygody ze sztuką najlepiej chodzić do dużych muzeów na oprowadzania." />
+              <figcaption>Posty Igora z&nbsp;Instagrama</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="paper">
+          <div class="wrap">
+            <h2>Kolejność jest jego.</h2>
+            <div class="txt">
+              <p set:html={P('Igor przysłał listę prac w notatce. Na stronie jest dokładnie w tej kolejności, z tytułami i technikami przepisanymi słowo w słowo. Etykieta NFT stoi tylko tam, gdzie on ją napisał.')} />
+            </div>
+            <ol class="list" aria-label="Spis prac w kolejności z notatki Igora">
+              {works.map((w, i) => (
+                <li><span class="no">{String(i + 1).padStart(2, '0')}</span><span class="who">{w.a}</span><em>{w.t}</em></li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <section class="blue">
+          <div class="wrap">
+            <h2>Każda praca w&nbsp;całości.</h2>
+            <div class="txt">
+              <p set:html={P('Każda praca jest pokazana w całości, bez przycinania do jednego formatu. Równy rytm galerii daje stała wysokość kadru. Przy czterech pracach wideo jest podpis, że to kadr z wideo, tak jak oznaczył je Igor.')} />
+            </div>
+          </div>
+          <div class="wrap set set-gal">
+            <div class="screen">
+              <video class="vid" autoplay loop muted playsinline preload="none" width="1120" height="700" poster="/case/igor/galeria.webp" aria-label="Nagranie galerii igorgrabowski.com: przewijanie przez prace Refika Anadola, Ivony Tau, Any Marii Caballero, Leandera Herzoga i Williama Mapana, każda w całości z podpisem.">
+                <source src="/case/igor/galeria.webm" type="video/webm" />
+                <source src="/case/igor/galeria.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="phone">
+              <img class="vid" src="/case/igor/obrazy-telefon.webp" width="780" height="1320" loading="lazy" alt="Galeria na telefonie: nagłówek Prace z mojej kolekcji, filtr Wszystkie, NFT, Fizyczne i pierwsza praca w całości." />
+            </div>
+          </div>
+          <div class="wrap">
+            <h2 class="h2-2">Z&nbsp;galerii prosto do oryginału.</h2>
+            <div class="txt">
+              <p set:html={P('11 prac cyfrowych ma link do swojej strony na verse.works, OpenSea, objkt.com albo IYK. Dwie są fizyczne: grafika Tadeusza Dominika i print Rafała Dominika i Marii Mencwel. Przy każdym nazwisku jest lista jego prac w kolekcji i Instagram, a klik w nazwisko otwiera galerię tej osoby.')} />
+            </div>
+          </div>
+        </section>
+
+        <section class="ink">
+          <div class="wrap duo duo-rev">
+            <div>
+              <h2>Dwa języki na jedno wydarzenie.</h2>
+              <div class="txt">
+                <p set:html={P('Igor potrzebował strony na wydarzenie z anglojęzyczną publicznością. Strona działa po polsku i po angielsku, a na ten czas angielski był domyślny.')} />
+                <p set:html={P('Jego poprawki przyszły w jednym dokumencie: linki, tytuły, podpisy kadrów. Jedna z nich zmieniła „Artyści” na „Artyści i artystki”, żeby nie pomijać artystek. Hasło nadal mieści się w jednej linii na telefonie.')} />
+              </div>
+              <h2 class="h2-2">Newsletter w&nbsp;jego barwach.</h2>
+              <div class="txt">
+                <p set:html={P('Igor ma newsletter w MailerLite. Gotowy kod wyglądał jak każdy inny formularz MailerLite, więc zrobiłem własny formularz w jego kolorach, który zapisuje do jego konta. Wysuwa się z rogu raz, po przewinięciu ponad jednej trzeciej strony albo po 25 sekundach. Link do zapisu jest w każdej stopce i w menu.')} />
+              </div>
+            </div>
+            <div class="stack">
+              <div class="screen"><img class="vid" src="/case/igor/newsletter.webp" width="1600" height="1000" loading="lazy" alt="Podstrona Newsletter: granatowe tło, nagłówek Newsletter o sztuce, obok biały formularz z polami imię i e-mail." /></div>
+              <div class="screen"><img class="vid" src="/case/igor/okolekcji.webp" width="1600" height="1000" loading="lazy" alt="Podstrona O kolekcji: niebieskie tło, nagłówek Jak to się zaczęło, bio Igora i trzy fakty: inżynier, potem IT, od 2020, NFT." /></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="paper">
+          <div class="wrap">
+            <h2>Bez paska zgody na cookies.</h2>
+            <div class="txt">
+              <p set:html={P('Strona nie śledzi odwiedzających: nie ma analityki ani ciasteczek, a fonty są na jej własnym serwerze. Dlatego nie potrzebuje paska zgody na cookies. Polityka prywatności opisuje dokładnie to, co strona robi.')} />
+            </div>
+          </div>
+        </section>
+
+        {quote ? (
+          <figure class="wrap quote">
+            <blockquote><p>{quote.text}</p></blockquote>
+            <figcaption>{quote.name}, {quote.role}</figcaption>
+          </figure>
+        ) : import.meta.env.DEV && (
+          <aside class="wrap quote-todo" aria-hidden="true">Tu stanie cytat Igora po rozmowie. Na produkcji blok się nie pokaże, dopóki cytat nie jest zaakceptowany.</aside>
+        )}
+      </article>
+
+      <section class="end" aria-labelledby="end-h">
+        <div class="wrap end-in">
+          <h2 id="end-h">Pokazujesz kolekcję albo swoją pracę tylko na Instagramie?</h2>
+          <div>
+            <p>Opisz mi ją w&nbsp;15 minut. Powiem, jak mogłaby wyglądać jej strona i&nbsp;co trzeba przygotować.</p>
+            <a class="btn" href={contact}>Umów 15 minut</a>
+            <p class="more"><a href="/pl/realizacje/glassstone/">Druga realizacja: szkic z&nbsp;pomiaru zamienia się w&nbsp;rysunek na produkcję</a></p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <BrandFooter locale="pl" inset />
+  </div>
+</VariantLayout>
+
+<script>
+  import { gsap } from 'gsap';
+  // Pętle nagrań grają tylko w ekranie i tylko bez prefers-reduced-motion; inaczej zostaje plakat.
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const vids = document.querySelectorAll<HTMLVideoElement>('.case video.vid');
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target as HTMLVideoElement;
+    if (e.isIntersecting && !still.matches) v.play().catch(() => {}); else v.pause();
+  }), { threshold: .2 });
+  vids.forEach((v) => { if (still.matches) { v.removeAttribute('autoplay'); v.pause(); } io.observe(v); });
+  // Jeden ruch: posty Igora wysuwają się zza ekranu jego strony, tak jak prace spod słów na jego stronie.
+  const mm = gsap.matchMedia();
+  mm.add('(min-width: 901px) and (prefers-reduced-motion: no-preference)', () => {
+    gsap.from('.stage .post', { x: (i) => [260, 200, -260][i], y: (i) => [120, -80, 60][i], scale: .7, opacity: 0, duration: 1.1, stagger: .14, delay: .35, ease: 'expo.out' });
+  });
+  window.addEventListener('pagehide', () => mm.revert(), { once: true });
+</script>
+
+<style>
+  .case {
+    --ivory: #f8f9f2; --ink: #111; --dim: #5f5b4e; --rule: rgb(17 17 17 / .16);
+    --igor: #1533f5; --cyan: #38c8f5; --atrament: #0a0d28; --brand: #ffcc33;
+    --gutter: clamp(20px, 5vw, 96px); --focus: var(--igor);
+    font-family: 'GeneralSansV', sans-serif; background: var(--ivory); color: var(--ink); overflow-x: clip;
+  }
+  @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  .case :is(h1,h2,p,figure,ol,blockquote) { margin: 0; }
+  .case ol { padding: 0; list-style: none; }
+  .case :is(h1,h2) { text-wrap: balance; }
+  .case p { text-wrap: pretty; }
+  .case :is(a,button):focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+  .case ::selection { background: var(--brand); color: var(--ink); }
+  .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
+  .skip:focus { transform: none; }
+  .nav { height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
+  .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
+  .wrap { max-width: 1320px; margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
+
+  h2 { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(32px, 4.4vw, 64px); line-height: 1.02; letter-spacing: -.03em; max-width: 14em; }
+  .h2-2 { margin-top: clamp(56px, 7vw, 96px) !important; }
+  .txt { margin-top: 24px; max-width: 34em; font-size: 19px; line-height: 1.65; }
+  .txt p + p { margin-top: 18px !important; }
+
+  /* Scena: pełny niebieski Igora, jego strona w dużej skali, dookoła jego posty. */
+  .stage { background: var(--igor); color: #fff; padding: clamp(48px, 7vw, 96px) 0 clamp(48px, 6vw, 80px); overflow: clip; }
+  .stage ::selection { background: #fff; color: var(--igor); }
+  .stage .kicker { font-size: 16px; color: rgb(255 255 255 / .75); }
+  h1 { margin-top: 20px !important; font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(38px, 7.4vw, 116px); line-height: .98; letter-spacing: -.04em; max-width: 12em; }
+  .lead { margin-top: clamp(24px, 3vw, 40px) !important; max-width: 36em; font-size: 21px; line-height: 1.6; color: rgb(255 255 255 / .88); }
+
+  .set { position: relative; margin-top: clamp(56px, 7vw, 104px); display: grid; grid-template-columns: minmax(0, 1fr); }
+  .screen { position: relative; z-index: 2; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 40px 80px -30px rgb(5 10 60 / .55), 0 0 0 1px rgb(255 255 255 / .25); }
+  .vid { display: block; width: 100%; height: auto; }
+  .stage .screen { width: 78%; margin-inline: auto; }
+  .phone { position: absolute; z-index: 3; right: 5%; bottom: -6%; width: 17%; border-radius: 22px; overflow: hidden; background: #fff; box-shadow: 0 30px 60px -20px rgb(5 10 60 / .6), 0 0 0 6px #fff; }
+  .post { position: absolute; z-index: 1; width: 17%; height: auto; box-shadow: 0 24px 50px -18px rgb(5 10 60 / .55); border-radius: 4px; }
+  /* Posty wychodzą zza ekranu (z-index niżej), nie zasłaniają jego strony. */
+  .post-1 { left: calc(var(--gutter) * .5); top: -4%; rotate: -7deg; }
+  .post-2 { left: calc(var(--gutter) * .7); bottom: -10%; rotate: 5deg; }
+  .post-3 { right: calc(var(--gutter) * .5); top: 4%; rotate: 8deg; }
+
+  .facts { margin-top: clamp(72px, 9vw, 128px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; border-top: 1.5px solid rgb(255 255 255 / .5); padding-top: 24px; }
+  .facts strong { display: block; font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(44px, 6vw, 92px); line-height: 1; letter-spacing: -.04em; }
+  .facts span { display: block; margin-top: 8px; font-size: 16px; color: rgb(255 255 255 / .8); }
+  .live { margin-top: 40px; }
+  .live a { color: #fff; font-size: 18px; text-decoration-color: var(--cyan); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  .stage :focus-visible { outline-color: #fff; }
+
+  /* Rytm marki Igora: papier, niebieski, atrament. */
+  .paper { padding: clamp(80px, 10vw, 144px) 0 0; }
+  .paper + .blue, .paper + .ink { margin-top: clamp(80px, 10vw, 144px); }
+  .blue { background: var(--igor); color: #fff; padding: clamp(80px, 10vw, 144px) 0; }
+  .ink { background: var(--atrament); color: #fff; padding: clamp(80px, 10vw, 144px) 0; }
+  .blue .txt, .ink .txt { color: rgb(255 255 255 / .86); }
+  .blue :focus-visible, .ink :focus-visible { outline-color: #fff; }
+
+  .duo { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(40px, 6vw, 112px); align-items: center; }
+  .voice { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .voice img { width: 100%; height: auto; display: block; box-shadow: 0 24px 50px -24px rgb(17 17 17 / .45); border-radius: 4px; }
+  .voice img:first-child { rotate: -3deg; }
+  .voice img:nth-child(2) { rotate: 4deg; margin-top: 48px; }
+  .voice figcaption { grid-column: 1 / -1; margin-top: 12px; font-size: 15px; color: var(--dim); }
+
+  .list { margin-top: clamp(40px, 5vw, 64px); columns: 2; column-gap: clamp(32px, 5vw, 80px); border-top: 1.5px solid var(--ink); }
+  .list li { break-inside: avoid; display: grid; grid-template-columns: 2.4em minmax(0, 1fr); column-gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--rule); font-size: 17px; line-height: 1.35; }
+  .no { grid-row: span 2; font-family: 'NohemiV', sans-serif; font-weight: 600; color: var(--igor); font-variant-numeric: tabular-nums; }
+  .who { font-weight: 600; }
+  .list em { color: var(--dim); }
+
+  .set-gal { margin-top: clamp(48px, 6vw, 80px); }
+  .set-gal .screen { width: 84%; }
+  .set-gal .phone { right: 0; bottom: -8%; width: 20%; }
+
+  .stack { display: grid; gap: 24px; }
+  .ink .screen { box-shadow: 0 30px 70px -30px rgb(0 0 0 / .8), 0 0 0 1px rgb(255 255 255 / .18); }
+  .stack .screen:nth-child(2) { width: 82%; justify-self: end; margin-top: -12%; }
+
+  .quote { margin-top: 96px !important; }
+  .quote p { font-size: 28px; line-height: 1.4; max-width: 30em; }
+  .quote figcaption { margin-top: 12px; font-size: 16px; }
+  .quote-todo { margin-top: 64px; padding: 16px var(--gutter); color: #c70404; font-size: 16px; }
+
+  .end { margin-top: clamp(96px, 12vw, 160px); padding: clamp(72px, 9vw, 128px) 0; background: var(--ink); color: var(--ivory); }
+  .end-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 96px); align-items: start; }
+  .end h2 { font-size: clamp(32px, 4vw, 56px); line-height: 1.05; letter-spacing: -.03em; }
+  .end p { font-size: 19px; line-height: 1.6; color: rgb(248 249 242 / .78); max-width: 30em; }
+  .btn { display: inline-block; margin-top: 32px; padding: 16px 32px; border-radius: 999px; background: var(--brand); color: var(--ink); text-decoration: none; font-size: 16px; font-weight: 600; }
+  .btn:hover { background: var(--ivory); }
+  .end :focus-visible { outline-color: var(--brand); }
+  .end .more { margin-top: 24px !important; }
+  .end .more a { color: var(--ivory); text-underline-offset: 4px; font-size: 16px; }
+
+  @media (max-width: 900px) {
+    /* Telefon: ekran strony od krawędzi do krawędzi, pod nim telefon i posty w jednym rzędzie, wszystko w całości. */
+    .set { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: start; }
+    .set .screen, .stage .screen, .set-gal .screen { grid-column: 1 / -1; width: auto; margin-inline: calc(var(--gutter) * -1 + 12px); border-radius: 8px; }
+    .phone, .post, .set-gal .phone { position: static; width: 100%; rotate: none; border-radius: 12px; box-shadow: 0 16px 30px -14px rgb(5 10 60 / .6); }
+    .post { border-radius: 4px; }
+    .post-1 { display: none; }
+    .stage .phone { grid-column: 1; grid-row: 2; }
+    .post-2 { grid-column: 2; grid-row: 2; }
+    .post-3 { grid-column: 3; grid-row: 2; }
+    .set-gal .phone { grid-column: 1 / span 2; justify-self: start; width: 70%; margin-top: 12px; }
+    .stage .phone { box-shadow: 0 16px 30px -14px rgb(5 10 60 / .6), 0 0 0 3px #fff; }
+    .facts { grid-template-columns: 1fr 1fr; row-gap: 32px; }
+    .duo, .end-in { grid-template-columns: 1fr; }
+    .list { columns: 1; }
+    .stack .screen:nth-child(2) { width: auto; justify-self: stretch; margin-top: 0; }
+    .ink .stack { margin-inline: calc(var(--gutter) * -1 + 12px); }
+  }
+  @media (max-width: 600px) {
+    .lead, .txt { font-size: 18px; }
+    .facts span { font-size: 15px; }
+  }
+</style>
