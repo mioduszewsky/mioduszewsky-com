@@ -6,7 +6,7 @@
 // Kart jest tyle, ile realizacji z żywą stroną. Karty idą po łuku jak wachlarz w dłoni.
 // Ruch: pozycje liczy CSS ze zmiennych, skrypt tylko przełącza stan (aktywna karta, rozsunięcie
 // sąsiadów, pochylenie za kursorem, etykieta przy kursorze). Animowany jest wyłącznie transform
-// i opacity, więc wszystko idzie na kompozytorze. Telefon: pas kart przewijany palcem.
+// i opacity, więc wszystko idzie na kompozytorze. Telefon: pionowa lista pełnych kart.
 import { Image } from 'astro:assets';
 import VariantLayout from '../../../layouts/VariantLayout.astro';
 import SiteMenu from '../../../components/SiteMenu.astro';
@@ -320,15 +320,15 @@ const ld = {
   @media (max-width: 767px) {
     .stage { min-height: 0; }
     .lead { font-size: 17px; }
+    /* Telefon: pionowa lista pełnych kart, każda na całą szerokość, więc każdą łatwo stuknąć.
+       Przesuwany pas chował drugą kartę do paska kilku pikseli przy krawędzi. */
     .work .fan {
       flex: none; min-height: 0; margin-top: 0; perspective: none;
-      display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden;
-      padding: 28px var(--gutter) 40px; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
-      scrollbar-width: none; overscroll-behavior-x: contain;
+      display: flex; flex-direction: column; gap: 16px;
+      padding: 28px var(--gutter) 48px;
     }
-    .fan::-webkit-scrollbar { display: none; }
-    .card { --w: 84vw; position: relative; left: auto; bottom: auto; flex: none; transform: none; scroll-snap-align: start; z-index: auto !important; }
-    /* Na telefonie gotowy case idzie pierwszy. */
+    .card { --w: 100%; position: relative; left: auto; bottom: auto; flex: none; transform: none; z-index: auto !important; }
+    /* Gotowe case'y idą na górę listy. */
     .card[data-link] { order: -1; }
     .card:active .sheet { scale: .98; }
     .sheet { transition: scale .25s var(--ease-out); }
