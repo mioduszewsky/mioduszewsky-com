@@ -30,22 +30,6 @@ const ld = {
   ],
 };
 
-// Spis prac 1:1 z żywej strony (~/aigor-reveal/src/content.tsx, PL), w kolejności z notatki Igora.
-const works = [
-  { a: 'Refik Anadol', t: 'Unsupervised - Data Universe - MoMA #1522' },
-  { a: 'Ivona Tau', t: 'Neo-Organic Matter III' },
-  { a: 'Ana Maria Caballero · Ivona Tau', t: 'City Life 3' },
-  { a: 'Sasha Stiles', t: 'Words beyond words #228' },
-  { a: 'Leander Herzog', t: 'Infinite Garden 2900 Flowers #12010' },
-  { a: 'Damien Hirst', t: 'The Currency „Now come to finish” #371' },
-  { a: 'William Mapan', t: 'Etudes #207' },
-  { a: 'William Mapan', t: 'Superpositions #230' },
-  { a: 'Tadeusz Dominik', t: 'Pustynia Piaskowa II' },
-  { a: 'ClownVamp', t: 'Puppies #108' },
-  { a: 'Tabor Robak', t: 'Human Resources #6874' },
-  { a: 'Rafał Dominik', t: 'Andrzej' },
-  { a: 'Rafał Dominik · Maria Mencwel', t: 'Kompozycja' },
-];
 const posts = [
   { src: 'ig-darmowe-targi', alt: 'Post Igora z Instagrama: Darmowe targi sztuki? To jest bardzo uczciwa cena.' },
   { src: 'ig-nie-rozumiesz', alt: 'Post Igora z Instagrama: sala muzeum i napis Nie rozumiesz sztuki współczesnej? To nie znaczy, że jesteś głupi.' },
@@ -145,11 +129,6 @@ const posts = [
                 </div>
               </div>
             </div>
-            <ol class="list" aria-label="Spis prac w kolejności z notatki Igora">
-              {works.map((w, i) => (
-                <li><span class="no">{String(i + 1).padStart(2, '0')}</span><span class="who">{w.a}</span><em>{w.t}</em></li>
-              ))}
-            </ol>
           </div>
         </section>
 
@@ -321,11 +300,6 @@ const posts = [
   .voice img:nth-child(2) { rotate: 4deg; margin-top: 48px; }
   .voice figcaption { grid-column: 1 / -1; margin-top: 12px; font-size: 15px; color: var(--dim); }
 
-  .list { margin-top: clamp(40px, 5vw, 64px); columns: 2; column-gap: clamp(32px, 5vw, 80px); border-top: 1.5px solid var(--ink); }
-  .list li { break-inside: avoid; display: grid; grid-template-columns: 2.4em minmax(0, 1fr); column-gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--rule); font-size: 17px; line-height: 1.35; }
-  .no { grid-row: span 2; font-family: 'NohemiV', sans-serif; font-weight: 600; color: var(--igor); font-variant-numeric: tabular-nums; }
-  .who { font-weight: 600; }
-  .list em { color: var(--dim); }
 
   .set-gal { margin-top: clamp(48px, 6vw, 80px); }
   .set-gal .screen { width: 84%; }
@@ -392,7 +366,6 @@ const posts = [
     .big span { margin-top: 12px; }
     .nl .screen { width: 78%; margin-inline: auto; }
     .duo, .end-in { grid-template-columns: 1fr; }
-    .list { columns: 1; }
     .stack .screen:nth-child(2) { width: auto; justify-self: stretch; margin-top: 0; }
     .ink .stack { margin-inline: calc(var(--gutter) * -1 + 12px); }
   }
