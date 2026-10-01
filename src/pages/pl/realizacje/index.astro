@@ -106,10 +106,6 @@ const ld = {
 
     const zBase = (i: number) => Number(cards[i].dataset.z);
 
-    // ROBOCZE (30.09): porównanie wariantów ?v=a|b|c. A wachlarz w marginesach, karty 4:3,
-    // B w marginesach, karty 16:10, C poprzednia v8 (karty ucięte z boków). Po wyborze Kacpra przełącznik znika.
-    const v = new URLSearchParams(location.search).get('v');
-    if (v && /^[abc]$/.test(v)) document.querySelector<HTMLElement>('.stage')!.dataset.v = v;
     cards.forEach((c, i) => { c.style.zIndex = String(zBase(i)); });
 
     // Wysokość pasa dla CSS: z niej liczy się rozmiar kart.
@@ -271,10 +267,6 @@ const ld = {
     transition-duration: .65s;
   }
   .fan .card.is-active.is-press { --s: 1.01; transition-duration: .18s; }
-
-  .stage[data-v="b"] .fan { --k: .5; --ar: 16 / 10; --vis: .56; }
-  .stage[data-v="c"] .fan { --k: .5; --ar: 16 / 10; }
-  .stage[data-v="c"] .card { --w: clamp(300px, min(46vw, calc(var(--fh) / .56)), 1100px); --spread: .09; }
 
   /* Wejście: karty wjeżdżają spod krawędzi, od środka na zewnątrz. Bez skryptu stoją od razu. */
   @media (scripting: enabled) {
