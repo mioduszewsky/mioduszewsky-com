@@ -116,7 +116,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       <style>
         .veil { display: none !important; }
         .cur { display: none !important; }
-        .finale { visibility: visible !important; }
+        .finale-dal { visibility: visible !important; }
       </style>
     </noscript>
 
@@ -1130,12 +1130,12 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     }
 
     /* Stopka (fixed pod treścią) i futro (11 MB webm/mp4) startują dopiero, gdy user
-       minie realizacje (sekcja .manif wjeżdża w kadr). Do tego czasu stopka jest
-       visibility:hidden: przeglądarka jej nie maluje, więc PageSpeed nie bierze
+       minie realizacje (sekcja .manif wjeżdża w kadr). Do tego czasu dalmatyńczyk jest
+       visibility:hidden: przeglądarka go nie maluje, więc PageSpeed nie bierze
        ukrytego pod treścią posteru za LCP, a kto nie doscrolluje, nie płaci za futro.
        Od .manif do finału zostaje kilka ekranów, futro zdąży się dociągnąć. */
     {
-      const finale = document.querySelector<HTMLElement>('.finale');
+      const dal = document.querySelector<HTMLElement>('.finale-dal');
       const fv = document.querySelector('.finale-video') as HTMLVideoElement | null;
       /* Save-Data i wolne lacza: 6-12 MB futra zostaje na posterze, nie dociagamy.
          Warunek obejmuje 2G, 3G i slow-4g - przy ruchu z reklam czesc ludzi wchodzi
@@ -1145,7 +1145,7 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
       const slowLink = /(^|\b)(slow-2g|2g|3g)$/.test(conn?.effectiveType || '');
       const skipHeavy = !!(conn?.saveData || slowLink);
       const reveal = () => {
-        finale?.classList.add('is-on');
+        dal?.classList.add('is-on');
         if (!fv) return;
         if (fv.dataset.poster) { fv.poster = fv.dataset.poster; delete fv.dataset.poster; }
         if (skipHeavy) return;
@@ -1156,18 +1156,19 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
         fv.load();
         fv.play().catch(() => {});
       };
-      /* Bramką jest .manif i każda sekcja pod nią: skok z menu do #oferta albo
-         odświeżenie w połowie strony przeskakuje .manif bez przecięcia kadru,
-         ale ląduje na którejś z dalszych sekcji. */
+      /* Pozycja, nie przecięcie: skok do #oferta, klawisz End albo przywrócenie
+         scrolla na dole przeskakują sekcje bez przecięcia kadru. Liczy się tylko,
+         czy górna krawędź .manif jest już nad dołem ekranu. */
       const manif = document.querySelector<HTMLElement>('.manif');
-      const gates: Element[] = [];
-      for (let el: Element | null = manif; el; el = el.nextElementSibling) gates.push(el);
-      if (!gates.length || !('IntersectionObserver' in window)) reveal();
+      if (!manif) reveal();
       else {
-        const io = new IntersectionObserver((entries) => {
-          if (entries.some((e) => e.isIntersecting)) { io.disconnect(); reveal(); }
-        });
-        gates.forEach((g) => io.observe(g));
+        const check = () => {
+          if (manif.getBoundingClientRect().top >= innerHeight) return;
+          removeEventListener('scroll', check);
+          reveal();
+        };
+        addEventListener('scroll', check, { passive: true });
+        check();
       }
     }
   </script>
@@ -1958,9 +1959,10 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
     height: 100vh; background: #000000; color: var(--ivory);
     overflow: clip;
   }
-  /* Do minięcia realizacji stopka nie istnieje dla renderu (skrypt dodaje .is-on) */
-  .finale:not(.is-on) { visibility: hidden; }
-  :global(html.js-stalled) .finale { visibility: visible; }
+  /* Do minięcia realizacji dalmatyńczyk nie istnieje dla renderu (skrypt dodaje .is-on).
+     CTA i „wróć na początek” zostają widoczne dla czytników ekranu. */
+  .finale-dal:not(.is-on) { visibility: hidden; }
+  :global(html.js-stalled) .finale-dal { visibility: visible; }
   .finale::before {
     content: ""; position: absolute; top: 50%; left: 50%; translate: -50% -50%;
     width: min(1200px, 96vw); aspect-ratio: 2.2 / 1;
