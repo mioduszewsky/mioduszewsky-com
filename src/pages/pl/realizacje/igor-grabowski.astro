@@ -106,7 +106,7 @@ const posts = [
               <div class="txt">
                 <p set:html={P('Igor nie jest artystą. Na stronie wiszą prace Refika Anadola, Damiena Hirsta, Ivony Tau i dziewięciu innych osób. Strona ma pokazać kolekcję i człowieka, który ją zbiera, a nazwiska artystów muszą się zgadzać co do litery.')} />
                 <p set:html={P('Cała strona główna to jeden ruch: najeżdżasz na słowo, spod niego wysuwają się dwie prace. Zrobiłem dwie różne wersje strony. Na domenie stoi ta, w której ten ruch prowadzi całą stronę.')} />
-                <p set:html={P('Igor mówi o sztuce na Instagramie, prosto i bez zadęcia. Spod „O kolekcji” wysuwają się posty z tego Instagrama, więc strona mówi głosem Igora.')} />
+                <p set:html={P('Igor mówi o sztuce na Instagramie prostym językiem. Spod „O kolekcji” wysuwają się posty z tego Instagrama, więc strona mówi głosem Igora.')} />
               </div>
             </div>
             <figure class="voice">
@@ -119,12 +119,29 @@ const posts = [
 
         <section class="paper">
           <div class="wrap">
-            <div class="numhead">
-              <p class="big"><strong>13</strong><span>prac w&nbsp;kolekcji</span></p>
+            <div class="numhead notehead">
+              <figure class="note">
+                <div class="note-screen" role="img" aria-label="Odtworzona notatka Igora w aplikacji Notatki na iPhonie: tytuł Refik Anadol, pod nim praca Unsupervised (NFT) ze zdjęciem, Neo Organic Ivony Tau z linkiem do objkt.com i City Life 3.">
+                  <div class="note-bar" aria-hidden="true"><span class="note-back">‹ Notatki</span><span class="note-shared">Udostępniona</span></div>
+                  <div class="note-body" aria-hidden="true">
+                    <p class="note-h">Refik Anadol</p>
+                    <p class="note-i">Unsupervised - Data Universe - MoMA #1522</p>
+                    <p>(NFT)</p>
+                    <img src="/case/igor/notatka-refik-anadol.webp" width="480" height="481" loading="lazy" alt="" />
+                    <p>Neo Organic (NFT) by Ivona Tau</p>
+                    <p class="note-a">https://objkt.com/tokens/KT1TGYitS9YhQWMSuthQpUXAUazz3itWiyaN/6</p>
+                    <img src="/case/igor/notatka-neo-organic.webp" width="480" height="479" loading="lazy" alt="" />
+                    <p>City Life 3 by Ana Maria Caballero + Ivona Tau (NFT)</p>
+                    <img src="/case/igor/notatka-city-life-3.webp" width="480" height="480" loading="lazy" alt="" />
+                  </div>
+                </div>
+                <figcaption>Notatka Igora, pierwsze pozycje z&nbsp;13</figcaption>
+              </figure>
               <div>
-                <h2>Kolejność z&nbsp;notatki Igora.</h2>
+                <h2>Lista prac przyszła w&nbsp;Notatkach z&nbsp;iPhone’a.</h2>
                 <div class="txt">
-                  <p set:html={P('Lista prac przyszła w notatce. Na stronie jest dokładnie w tej kolejności, z tytułami i technikami przepisanymi słowo w słowo. Etykieta NFT stoi tylko tam, gdzie Igor ją wpisał.')} />
+                  <p set:html={P('Igor wpisał kolekcję do Notatek na iPhonie: tytuły, nazwiska, linki i zdjęcia prac. Potem udostępnił mi notatkę. Do przygotowania treści wystarczyła aplikacja, której Igor używa na co dzień.')} />
+                  <p set:html={P('Z notatki zrobiłem galerię w tej samej kolejności, z tytułami i technikami przepisanymi słowo w słowo. Etykieta NFT stoi tylko tam, gdzie Igor ją wpisał. Poprawki przyszły równie prosto, w jednym dokumencie.')} />
                 </div>
               </div>
             </div>
@@ -184,11 +201,11 @@ const posts = [
 
         <section class="paper">
           <div class="wrap numhead">
-            <p class="big"><strong>0</strong><span>ciasteczek śledzących</span></p>
+            <p class="big"><strong>4</strong><span>dni od notatki do strony na igorgrabowski.com</span></p>
             <div>
-              <h2>Bez paska zgody na cookies.</h2>
+              <h2>Notatka w&nbsp;piątek, kolekcja na domenie we&nbsp;wtorek.</h2>
               <div class="txt">
-                <p set:html={P('Strona nie śledzi odwiedzających: nie ma analityki ani ciasteczek, a fonty są na jej własnym serwerze. Dlatego nie potrzebuje paska zgody na cookies. Polityka prywatności opisuje dokładnie to, co strona robi.')} />
+                <p set:html={P('Igor udostępnił notatkę w piątek wieczorem. We wtorek kolekcja stała już na domenie igorgrabowski.com, z HTTPS i z pocztą działającą na tej samej domenie. Dzień później weszła runda poprawek Igora.')} />
               </div>
             </div>
           </div>
@@ -320,6 +337,20 @@ const posts = [
   .big span { display: block; margin-top: 20px; max-width: 14em; font-size: 16px; line-height: 1.45; color: var(--dim); }
   .blue .big strong { color: #fff; }
   .blue .big span { color: rgb(255 255 255 / .8); }
+  /* Notatka Igora odtworzona w stylu Notatek na iPhonie, z prawdziwą treścią pierwszych pozycji. */
+  .notehead { align-items: center; }
+  .note { max-width: 380px; }
+  .note-screen { position: relative; height: 560px; overflow: hidden; background: #fff; border-radius: 28px; box-shadow: 0 30px 70px -30px rgb(17 17 17 / .45), 0 0 0 1px rgb(17 17 17 / .08); font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif; color: #1c1c1e; rotate: -2deg; }
+  .note-screen::after { content: ''; position: absolute; inset: auto 0 0; height: 120px; background: linear-gradient(transparent, #fff); }
+  .note-bar { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px 8px; font-size: 16px; color: #e0a100; }
+  .note-shared { font-size: 13px; color: #8e8e93; }
+  .note-body { padding: 8px 22px; }
+  .note-body p { font-size: 14px; line-height: 1.4; margin-top: 6px !important; overflow-wrap: anywhere; }
+  .note-body .note-h { font-size: 26px; font-weight: 700; line-height: 1.15; margin-top: 4px !important; }
+  .note-body .note-i { font-style: italic; font-size: 19px; font-weight: 600; line-height: 1.25; }
+  .note-body .note-a { color: #e0a100; text-decoration: underline; font-size: 13px; }
+  .note-body img { display: block; width: 62%; height: auto; margin: 12px 0 14px; border-radius: 6px; }
+  .note figcaption { margin-top: 18px; font-size: 15px; color: var(--dim); }
   .numhead-gal { margin-top: clamp(96px, 11vw, 160px); }
   .nl { margin-top: clamp(48px, 6vw, 80px); }
   .nl .screen { width: 100%; }
@@ -355,6 +386,8 @@ const posts = [
     .set-gal .phone { grid-column: 1 / span 2; justify-self: start; width: 70%; margin-top: 12px; }
     .stage .phone { box-shadow: 0 16px 30px -14px rgb(5 10 60 / .6), 0 0 0 3px #fff; }
     .numhead { grid-template-columns: 1fr; gap: 24px; }
+    .note { max-width: 320px; margin-inline: auto; }
+    .note-screen { height: 480px; }
     .big strong { font-size: clamp(96px, 30vw, 160px); }
     .big span { margin-top: 12px; }
     .nl .screen { width: 78%; margin-inline: auto; }
