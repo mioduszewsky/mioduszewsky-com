@@ -286,8 +286,9 @@ const posts = [
   .stage :focus-visible { outline-color: #fff; }
 
   /* Rytm marki Igora: papier, niebieski, atrament. */
-  .paper { padding: clamp(80px, 10vw, 144px) 0 0; }
-  .paper + .blue, .paper + .ink { margin-top: clamp(80px, 10vw, 144px); }
+  /* Każda sekcja ma ten sam rytm: równy odstęp u góry i u dołu, bez marginesów między pasami koloru. */
+  .paper { padding: clamp(80px, 10vw, 144px) 0; }
+  .paper + .paper { padding-top: 0; }
   .blue { background: var(--igor); color: #fff; padding: clamp(80px, 10vw, 144px) 0; }
   .ink { background: var(--atrament); color: #fff; padding: clamp(80px, 10vw, 144px) 0; }
   .blue .txt, .ink .txt { color: rgb(255 255 255 / .86); }
@@ -337,15 +338,16 @@ const posts = [
   .quote figcaption { margin-top: 12px; font-size: 16px; }
   .quote-todo { margin-top: 64px; padding: 16px var(--gutter); color: #c70404; font-size: 16px; }
 
-  .end { margin-top: clamp(96px, 12vw, 160px); padding: clamp(72px, 9vw, 128px) 0; background: var(--ink); color: var(--ivory); }
+  /* Zakończenie w niebieskim Igora: strona zaczyna się i kończy tym samym kolorem. */
+  .end { padding: clamp(80px, 10vw, 144px) 0; background: var(--igor); color: #fff; }
   .end-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 96px); align-items: start; }
   .end h2 { font-size: clamp(32px, 4vw, 56px); line-height: 1.05; letter-spacing: -.03em; }
-  .end p { font-size: 19px; line-height: 1.6; color: rgb(248 249 242 / .78); max-width: 30em; }
+  .end p { font-size: 19px; line-height: 1.6; color: rgb(255 255 255 / .86); max-width: 30em; }
   .btn { display: inline-block; margin-top: 32px; padding: 16px 32px; border-radius: 999px; background: var(--brand); color: var(--ink); text-decoration: none; font-size: 16px; font-weight: 600; }
-  .btn:hover { background: var(--ivory); }
-  .end :focus-visible { outline-color: var(--brand); }
+  .btn:hover { background: #fff; }
+  .end :focus-visible { outline-color: #fff; }
   .end .more { margin-top: 24px !important; }
-  .end .more a { color: var(--ivory); text-underline-offset: 4px; font-size: 16px; }
+  .end .more a { color: #fff; text-decoration-color: var(--cyan); text-underline-offset: 4px; font-size: 16px; }
 
   @media (max-width: 900px) {
     /* Telefon: ekran strony od krawędzi do krawędzi, pod nim telefon i posty w jednym rzędzie, wszystko w całości. */
