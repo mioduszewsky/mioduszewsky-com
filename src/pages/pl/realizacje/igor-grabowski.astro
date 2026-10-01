@@ -4,6 +4,8 @@
 // w kolorze marki, dookoła własny materiał klienta). U Igora: nagrania jego strony na jego niebieskim,
 // dookoła jego posty z Instagrama, które wysuwają się zza ekranu tak, jak prace spod słów na jego stronie.
 // Sekcje idą rytmem jego marki: papier, niebieski, atrament. v1 „Karta obiektu” (6b89028) odrzucona.
+// v3 (01.10.2026, uwagi Kacpra): nav w kolorze sceny, bez sekcji o językach, liczby 13/11/0 przy swoich sekcjach,
+// w tekście imię Igora zamiast „jego”, newsletter pokazany jako okienko na żywej stronie.
 // Tablica kierunków: docs/case-studies/igor/runda-2/TABLICA.html. Treść: igor/COPY.md, fakty: FAKTY.md.
 import VariantLayout from '../../../layouts/VariantLayout.astro';
 import SiteMenu from '../../../components/SiteMenu.astro';
@@ -52,8 +54,8 @@ const posts = [
 ---
 <VariantLayout
   title="Strona kolekcji sztuki dla Igora Grabowskiego: prace wysuwają się spod słów · mioduszewsky"
-  description="Igor Grabowski kolekcjonuje sztukę cyfrową i współczesną. Zrobiłem mu stronę kolekcji: pięć słów, pod nimi prace, 13 prac, 12 nazwisk, dwa języki, jego domena."
-  bg="#f8f9f2" fg="#000000" switcher={false} robots="index, follow, max-image-preview:large" locale="pl" alternatePath="/">
+  description="Igor Grabowski kolekcjonuje sztukę cyfrową i współczesną. Zrobiłem stronę tej kolekcji: pięć słów, pod nimi prace, 13 prac, 12 nazwisk, polski i angielski, domena igorgrabowski.com."
+  bg="#1533f5" fg="#000000" switcher={false} robots="index, follow, max-image-preview:large" locale="pl" alternatePath="/">
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
     <a class="skip" href="#main">Przejdź do treści</a>
@@ -73,7 +75,7 @@ const posts = [
           <div class="wrap">
             <p class="kicker">Realizacja dla Igora Grabowskiego</p>
             <h1>Strona kolekcji, na której prace wysuwają się spod słów.</h1>
-            <p class="lead" set:html={P('Igor Grabowski kolekcjonuje sztukę cyfrową i współczesną, od pierwszego zakupu w galerii w 2020 roku. Zrobiłem mu stronę kolekcji: pięć słów na jednym ekranie, a pod każdym prace, które wysuwają się po najechaniu kursorem. 13 prac, 12 nazwisk, po polsku i po angielsku, na jego domenie.')} />
+            <p class="lead" set:html={P('Igor Grabowski kolekcjonuje sztukę cyfrową i współczesną, od pierwszego zakupu w galerii w 2020 roku. Zrobiłem stronę tej kolekcji: pięć słów na jednym ekranie, a pod każdym prace, które wysuwają się po najechaniu kursorem. Strona działa po polsku i po angielsku, na domenie igorgrabowski.com.')} />
           </div>
 
           <div class="wrap set">
@@ -94,23 +96,17 @@ const posts = [
             ))}
           </div>
 
-          <div class="wrap facts">
-            <p><strong>13</strong><span>prac z&nbsp;kolekcji</span></p>
-            <p><strong>12</strong><span>artystów i&nbsp;artystek</span></p>
-            <p><strong>PL&nbsp;EN</strong><span>dwa języki</span></p>
-            <p><strong>0</strong><span>ciasteczek śledzących</span></p>
-          </div>
           <div class="wrap live"><a href="https://www.igorgrabowski.com/" target="_blank" rel="noopener">Zobacz stronę na żywo<span aria-hidden="true"> ↗</span></a></div>
         </header>
 
         <section class="paper">
           <div class="wrap duo">
             <div>
-              <h2>Kolekcjoner pokazuje cudze prace.</h2>
+              <h2>Kolekcja Igora, prace dwunastu artystów i&nbsp;artystek.</h2>
               <div class="txt">
-                <p set:html={P('Igor nie jest artystą. Na jego stronie wiszą prace Refika Anadola, Damiena Hirsta, Ivony Tau i dziewięciu innych osób. Strona ma pokazać kolekcję i człowieka, który ją zbiera, a nazwiska artystów muszą się zgadzać co do litery.')} />
+                <p set:html={P('Igor nie jest artystą. Na stronie wiszą prace Refika Anadola, Damiena Hirsta, Ivony Tau i dziewięciu innych osób. Strona ma pokazać kolekcję i człowieka, który ją zbiera, a nazwiska artystów muszą się zgadzać co do litery.')} />
                 <p set:html={P('Cała strona główna to jeden ruch: najeżdżasz na słowo, spod niego wysuwają się dwie prace. Zrobiłem dwie różne wersje strony. Na domenie stoi ta, w której ten ruch prowadzi całą stronę.')} />
-                <p set:html={P('Igor mówi o sztuce na Instagramie, prosto i bez zadęcia. Spod „O kolekcji” wysuwają się jego posty, więc strona mówi jego głosem.')} />
+                <p set:html={P('Igor mówi o sztuce na Instagramie, prosto i bez zadęcia. Spod „O kolekcji” wysuwają się posty z tego Instagrama, więc strona mówi głosem Igora.')} />
               </div>
             </div>
             <figure class="voice">
@@ -123,9 +119,14 @@ const posts = [
 
         <section class="paper">
           <div class="wrap">
-            <h2>Kolejność jest jego.</h2>
-            <div class="txt">
-              <p set:html={P('Igor przysłał listę prac w notatce. Na stronie jest dokładnie w tej kolejności, z tytułami i technikami przepisanymi słowo w słowo. Etykieta NFT stoi tylko tam, gdzie on ją napisał.')} />
+            <div class="numhead">
+              <p class="big"><strong>13</strong><span>prac w&nbsp;kolekcji</span></p>
+              <div>
+                <h2>Kolejność z&nbsp;notatki Igora.</h2>
+                <div class="txt">
+                  <p set:html={P('Lista prac przyszła w notatce. Na stronie jest dokładnie w tej kolejności, z tytułami i technikami przepisanymi słowo w słowo. Etykieta NFT stoi tylko tam, gdzie Igor ją wpisał.')} />
+                </div>
+              </div>
             </div>
             <ol class="list" aria-label="Spis prac w kolejności z notatki Igora">
               {works.map((w, i) => (
@@ -153,39 +154,42 @@ const posts = [
               <img class="vid" src="/case/igor/obrazy-telefon.webp" width="780" height="1320" loading="lazy" alt="Galeria na telefonie: nagłówek Prace z mojej kolekcji, filtr Wszystkie, NFT, Fizyczne i pierwsza praca w całości." />
             </div>
           </div>
-          <div class="wrap">
-            <h2 class="h2-2">Z&nbsp;galerii prosto do oryginału.</h2>
-            <div class="txt">
-              <p set:html={P('11 prac cyfrowych ma link do swojej strony na verse.works, OpenSea, objkt.com albo IYK. Dwie są fizyczne: grafika Tadeusza Dominika i print Rafała Dominika i Marii Mencwel. Przy każdym nazwisku jest lista jego prac w kolekcji i Instagram, a klik w nazwisko otwiera galerię tej osoby.')} />
+          <div class="wrap numhead numhead-gal">
+            <p class="big"><strong>11</strong><span>prac cyfrowych z&nbsp;linkiem do oryginału</span></p>
+            <div>
+              <h2>Z&nbsp;galerii prosto do oryginału.</h2>
+              <div class="txt">
+                <p set:html={P('Każda z 11 prac cyfrowych ma link do swojej strony na verse.works, OpenSea, objkt.com albo IYK. Dwie są fizyczne: grafika Tadeusza Dominika i print Rafała Dominika i Marii Mencwel. Przy każdym nazwisku są prace tej osoby z kolekcji i link do Instagrama, a klik w nazwisko otwiera jej galerię.')} />
+              </div>
             </div>
           </div>
         </section>
 
         <section class="ink">
-          <div class="wrap duo duo-rev">
-            <div>
-              <h2>Dwa języki na jedno wydarzenie.</h2>
-              <div class="txt">
-                <p set:html={P('Igor potrzebował strony na wydarzenie z anglojęzyczną publicznością. Strona działa po polsku i po angielsku, a na ten czas angielski był domyślny.')} />
-                <p set:html={P('Jego poprawki przyszły w jednym dokumencie: linki, tytuły, podpisy kadrów. Jedna z nich zmieniła „Artyści” na „Artyści i artystki”, żeby nie pomijać artystek. Hasło nadal mieści się w jednej linii na telefonie.')} />
-              </div>
-              <h2 class="h2-2">Newsletter w&nbsp;jego barwach.</h2>
-              <div class="txt">
-                <p set:html={P('Igor ma newsletter w MailerLite. Gotowy kod wyglądał jak każdy inny formularz MailerLite, więc zrobiłem własny formularz w jego kolorach, który zapisuje do jego konta. Wysuwa się z rogu raz, po przewinięciu ponad jednej trzeciej strony albo po 25 sekundach. Link do zapisu jest w każdej stopce i w menu.')} />
-              </div>
+          <div class="wrap">
+            <h2>Newsletter w&nbsp;barwach Igora.</h2>
+            <div class="txt">
+              <p set:html={P('Igor ma newsletter w MailerLite. Gotowy kod wyglądał jak każdy inny formularz MailerLite, więc zrobiłem własny, w kolorach marki Igora, który zapisuje prosto na konto w MailerLite. Wysuwa się z rogu raz, po przewinięciu ponad jednej trzeciej strony albo po 25 sekundach. Link do zapisu jest w każdej stopce i w menu.')} />
             </div>
-            <div class="stack">
-              <div class="screen"><img class="vid" src="/case/igor/newsletter.webp" width="1600" height="1000" loading="lazy" alt="Podstrona Newsletter: granatowe tło, nagłówek Newsletter o sztuce, obok biały formularz z polami imię i e-mail." /></div>
-              <div class="screen"><img class="vid" src="/case/igor/okolekcji.webp" width="1600" height="1000" loading="lazy" alt="Podstrona O kolekcji: niebieskie tło, nagłówek Jak to się zaczęło, bio Igora i trzy fakty: inżynier, potem IT, od 2020, NFT." /></div>
+          </div>
+          <div class="wrap nl">
+            <div class="screen">
+              <picture>
+                <source media="(max-width: 700px)" srcset="/case/igor/newsletter-okno-telefon.webp" width="640" height="1090" />
+                <img class="vid" src="/case/igor/newsletter-okno.webp" width="1600" height="1000" loading="lazy" alt="Galeria igorgrabowski.com z wysuniętym w prawym dolnym rogu okienkiem newslettera: niebieska karta, nagłówek Newsletter o sztuce, pola imię i e-mail, przycisk Zapisz mnie." />
+              </picture>
             </div>
           </div>
         </section>
 
         <section class="paper">
-          <div class="wrap">
-            <h2>Bez paska zgody na cookies.</h2>
-            <div class="txt">
-              <p set:html={P('Strona nie śledzi odwiedzających: nie ma analityki ani ciasteczek, a fonty są na jej własnym serwerze. Dlatego nie potrzebuje paska zgody na cookies. Polityka prywatności opisuje dokładnie to, co strona robi.')} />
+          <div class="wrap numhead">
+            <p class="big"><strong>0</strong><span>ciasteczek śledzących</span></p>
+            <div>
+              <h2>Bez paska zgody na cookies.</h2>
+              <div class="txt">
+                <p set:html={P('Strona nie śledzi odwiedzających: nie ma analityki ani ciasteczek, a fonty są na jej własnym serwerze. Dlatego nie potrzebuje paska zgody na cookies. Polityka prywatności opisuje dokładnie to, co strona robi.')} />
+              </div>
             </div>
           </div>
         </section>
@@ -250,7 +254,11 @@ const posts = [
   .case ::selection { background: var(--brand); color: var(--ink); }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
   .skip:focus { transform: none; }
-  .nav { height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
+  .nav { background: var(--igor); height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
+  /* Nav na tej stronie w kolorze sceny: biała pigułka menu i biały przełącznik języka. */
+  .case .nav :global(.menu-toggle) { background: #fff; border-color: #fff; }
+  .case .nav :global(.language-switch) { color: #fff; }
+  .case .nav :global(.language-switch:focus-visible), .case .nav :global(.menu-toggle:focus-visible) { outline-color: #fff; }
   .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
   .wrap { max-width: 1320px; margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
 
@@ -260,7 +268,7 @@ const posts = [
   .txt p + p { margin-top: 18px !important; }
 
   /* Scena: pełny niebieski Igora, jego strona w dużej skali, dookoła jego posty. */
-  .stage { background: var(--igor); color: #fff; padding: clamp(48px, 7vw, 96px) 0 clamp(48px, 6vw, 80px); overflow: clip; }
+  .stage { background: var(--igor); color: #fff; padding: clamp(32px, 6vw, 80px) 0 clamp(48px, 6vw, 80px); overflow: clip; }
   .stage ::selection { background: #fff; color: var(--igor); }
   .stage .kicker { font-size: 16px; color: rgb(255 255 255 / .75); }
   h1 { margin-top: 20px !important; font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(38px, 7.4vw, 116px); line-height: .98; letter-spacing: -.04em; max-width: 12em; }
@@ -277,10 +285,7 @@ const posts = [
   .post-2 { left: calc(var(--gutter) * .7); bottom: -10%; rotate: 5deg; }
   .post-3 { right: calc(var(--gutter) * .5); top: 4%; rotate: 8deg; }
 
-  .facts { margin-top: clamp(72px, 9vw, 128px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; border-top: 1.5px solid rgb(255 255 255 / .5); padding-top: 24px; }
-  .facts strong { display: block; font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(44px, 6vw, 92px); line-height: 1; letter-spacing: -.04em; }
-  .facts span { display: block; margin-top: 8px; font-size: 16px; color: rgb(255 255 255 / .8); }
-  .live { margin-top: 40px; }
+  .live { margin-top: clamp(64px, 8vw, 104px); }
   .live a { color: #fff; font-size: 18px; text-decoration-color: var(--cyan); text-decoration-thickness: 2px; text-underline-offset: 6px; }
   .stage :focus-visible { outline-color: #fff; }
 
@@ -309,6 +314,15 @@ const posts = [
   .set-gal .screen { width: 84%; }
   .set-gal .phone { right: 0; bottom: -8%; width: 20%; }
 
+  /* Duże liczby stoją przy sekcjach, które je wyjaśniają. */
+  .numhead { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 112px); align-items: start; }
+  .big strong { display: block; font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(120px, 19vw, 300px); line-height: .8; letter-spacing: -.06em; color: var(--igor); }
+  .big span { display: block; margin-top: 20px; max-width: 14em; font-size: 16px; line-height: 1.45; color: var(--dim); }
+  .blue .big strong { color: #fff; }
+  .blue .big span { color: rgb(255 255 255 / .8); }
+  .numhead-gal { margin-top: clamp(96px, 11vw, 160px); }
+  .nl { margin-top: clamp(48px, 6vw, 80px); }
+  .nl .screen { width: 100%; }
   .stack { display: grid; gap: 24px; }
   .ink .screen { box-shadow: 0 30px 70px -30px rgb(0 0 0 / .8), 0 0 0 1px rgb(255 255 255 / .18); }
   .stack .screen:nth-child(2) { width: 82%; justify-self: end; margin-top: -12%; }
@@ -340,7 +354,10 @@ const posts = [
     .post-3 { grid-column: 3; grid-row: 2; }
     .set-gal .phone { grid-column: 1 / span 2; justify-self: start; width: 70%; margin-top: 12px; }
     .stage .phone { box-shadow: 0 16px 30px -14px rgb(5 10 60 / .6), 0 0 0 3px #fff; }
-    .facts { grid-template-columns: 1fr 1fr; row-gap: 32px; }
+    .numhead { grid-template-columns: 1fr; gap: 24px; }
+    .big strong { font-size: clamp(96px, 30vw, 160px); }
+    .big span { margin-top: 12px; }
+    .nl .screen { width: 78%; margin-inline: auto; }
     .duo, .end-in { grid-template-columns: 1fr; }
     .list { columns: 1; }
     .stack .screen:nth-child(2) { width: auto; justify-self: stretch; margin-top: 0; }
@@ -348,6 +365,5 @@ const posts = [
   }
   @media (max-width: 600px) {
     .lead, .txt { font-size: 18px; }
-    .facts span { font-size: 15px; }
   }
 </style>
