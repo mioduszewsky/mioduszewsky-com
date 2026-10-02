@@ -10,6 +10,8 @@
 // v10 (Kacper, 01.10): powrót do v5 (45692b7), jedyna zmiana: karty 4:3 sięgają pod dolną krawędź.
 // v11 (Kacper, 01.10): stały odstęp podtytuł-karty (karta rośnie do miejsca pod tekstem), aktywna karta
 // wybierana po strefach spoczynku zamiast po elemencie pod kursorem, ruch bez sprężyny.
+// v12 (02.10): szerokość kart wraca do skali v10 (37vw), cały wachlarz mieści się w ekranie. Wolne miejsce
+// dzieli się po równo nad nagłówkiem i pod podtytułem, karty zawsze schodzą pod dolną krawędź.
 import { Image } from 'astro:assets';
 import VariantLayout from '../layouts/VariantLayout.astro';
 import SiteMenu from './SiteMenu.astro';
@@ -116,7 +118,8 @@ const ld = {
 <script>
   const fan = document.querySelector<HTMLElement>('.fan');
   const pill = document.querySelector<HTMLElement>('.pill');
-  const desk = matchMedia('(min-width: 768px) and (hover: hover) and (pointer: fine)');
+  // Wachlarz z kursorem: te same progi co w CSS (tablet w pionie ma listę).
+  const desk = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1101px), (hover: hover) and (pointer: fine) and (min-width: 768px) and (orientation: landscape)');
   const calm = matchMedia('(prefers-reduced-motion: reduce)');
 
   if (fan && pill) {
@@ -126,8 +129,15 @@ const ld = {
     let leaveTimer = 0;
     const zTimers: number[] = [];
 
-    // Wysokość miejsca na wachlarz dla CSS: z niej wynika szerokość kart (patrz .card --w).
-    new ResizeObserver(([e]) => fan.style.setProperty('--h', `${e.contentRect.height}px`)).observe(fan);
+    // Naturalna wysokość nagłówka dla CSS: z niej wynika, ile miejsca pod spodem mają karty (patrz .work --w).
+    const hero = document.querySelector<HTMLElement>('.hero')!;
+    const stage = document.querySelector<HTMLElement>('.stage')!;
+    const heroH = () => {
+      const h1 = hero.querySelector('h1')!.getBoundingClientRect();
+      const lead = hero.querySelector('.lead')!.getBoundingClientRect();
+      stage.style.setProperty('--hh', `${Math.ceil(lead.bottom - h1.top + parseFloat(getComputedStyle(hero).paddingTop))}px`);
+    };
+    new ResizeObserver(heroH).observe(hero);
 
     const zBase = (i: number) => Number(cards[i].dataset.z);
     cards.forEach((c, i) => { c.style.zIndex = String(zBase(i)); });
@@ -259,9 +269,19 @@ const ld = {
   .nav { height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
   .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
 
-  /* Jeden ekran: nagłówek na górze, wachlarz wypełnia resztę i schodzi pod dolną krawędź. */
-  .stage { min-height: calc(100svh - 104px); display: flex; flex-direction: column; justify-content: flex-end; overflow: clip; }
-  .hero { padding: clamp(8px, 4vh, 56px) var(--gutter) 0; text-align: center; position: relative; z-index: 60; pointer-events: none; }
+  /* Jeden ekran: wachlarz stoi na dole i schodzi pod krawędź, nagłówek zajmuje resztę. Wolne miejsce
+     (wysokie okna) dzieli się po równo nad nagłówkiem i pod podtytułem, zamiast zbierać się w jednym pasie.
+     Szerokość karty: 37vw jak w zatwierdzonej v10 (cały wachlarz w ekranie, brzegi ucięte o kilka procent),
+     mniejsza tylko wtedy, gdy pod nagłówkiem brakuje wysokości. --hh to naturalna wysokość nagłówka (skrypt). */
+  .stage {
+    --gap: clamp(48px, 7vh, 88px);
+    --w: clamp(300px, min(37vw, calc((100svh - 104px - var(--hh, 260px) - var(--gap)) / .7)), 1000px);
+    min-height: calc(100svh - 104px); display: flex; flex-direction: column; overflow: clip;
+  }
+  .hero {
+    flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center;
+    padding: clamp(8px, 4vh, 56px) var(--gutter) 0; text-align: center; position: relative; z-index: 60; pointer-events: none;
+  }
   .hero :is(h1, p) { pointer-events: auto; }
   h1 { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(48px, 8vw, 128px); line-height: .95; letter-spacing: -.045em; }
   .lead { margin: clamp(16px, 2.4vw, 28px) auto 0 !important; max-width: 30em; font-size: 19px; line-height: 1.55; color: var(--dim); }
@@ -270,20 +290,14 @@ const ld = {
      Położenie każdej karty wynika z --o (odległość od środka), stan dokłada skrypt.
      ZATWIERDZONY 30.09.2026 (Kacper, wariant A): karty płasko, bez skosu w głąb, środek na wierzchu.
      Warianty ze skosem (B, C z v3) odrzucone. Po wyborze powiększone. */
-  /* v11 (01.10): stały odstęp od podtytułu zamiast przerwy zależnej od okna. Karta bierze szerokość
-     z wysokości miejsca pod tekstem (--h, mierzy skrypt), więc górna krawędź stoi --gap pod podtytułem,
-     a dolna zawsze schodzi pod ekran (ok. 7% szerokości karty). Na wysokim, wąskim oknie karta
-     dochodzi do --wmax, wachlarz przestaje rosnąć, a nadmiar miejsca idzie nad nagłówek. */
+  /* Wachlarz ma wysokość odstępu i widocznej części karty (70% szerokości z 75%), reszta karty
+     schodzi pod ekran. Odstęp od podtytułu nigdy nie jest mniejszy niż --gap. */
   .fan {
     --k: .6; --arc: .06; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
-    --gap: clamp(48px, 7vh, 88px);
-    --wmax: min(58vw, 1400px);
-    position: relative; flex: 1 1 auto; min-height: clamp(360px, 34vw, 520px);
-    max-height: calc(var(--gap) + var(--wmax) * .68);
+    position: relative; flex: none; height: calc(var(--gap) + var(--w) * .7);
     perspective: 2400px; perspective-origin: 50% 0%;
   }
   .card {
-    --w: clamp(300px, min(calc((var(--h, 56svh) - var(--gap)) / .68), var(--wmax)), 1400px);
     --step: calc(var(--w) * var(--k));
     --part: 0;
     --x: calc(var(--o) * var(--step) + var(--part) * var(--w) * .09);
@@ -356,13 +370,16 @@ const ld = {
   .pill.is-link .pill-go { display: block; }
 
   /* Telefon i tablet dotykowy: pas pełnych kart przewijany palcem, bez łuku. */
-  @media (max-width: 767px) {
+  /* Tablet w pionie też dostaje listę: wachlarz na wąskim, wysokim ekranie zostawiał karty małe
+     i pół ekranu pustego. Od 600 px dwie kolumny. */
+  @media (max-width: 767px), (max-width: 1100px) and (orientation: portrait) {
     .stage { min-height: 0; }
+    .hero { flex: none; }
     .lead { font-size: 17px; }
     /* Telefon: pionowa lista pełnych kart, każda na całą szerokość, więc każdą łatwo stuknąć. */
     .work .fan {
-      flex: none; min-height: 0; max-height: none; perspective: none;
-      display: flex; flex-direction: column; gap: 16px;
+      flex: none; height: auto; perspective: none;
+      display: grid; grid-template-columns: 1fr; gap: 16px;
       padding: 28px var(--gutter) 48px;
     }
     .card { --w: 100%; position: relative; left: auto; top: auto; flex: none; transform: none; z-index: auto !important; }
@@ -372,6 +389,9 @@ const ld = {
     .sheet { transition: scale .25s var(--ease-out); }
     .sheet::before { box-shadow: 0 12px 28px rgb(0 0 0 / .14); }
     .pill { display: none; }
+  }
+  @media (min-width: 600px) and (max-width: 1100px) and (orientation: portrait) {
+    .work .fan { grid-template-columns: 1fr 1fr; gap: 20px; padding-top: 40px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .card, .sheet, .pill { transition-duration: .01s !important; transition-delay: 0s !important; }
