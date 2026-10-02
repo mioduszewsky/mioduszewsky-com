@@ -46,7 +46,8 @@ const hasCase = (slug: string) => `../pages/${pl ? 'pl/realizacje' : 'work'}/${s
 
 // Zrzuty żywych stron w oknie 1280×720 (16:9, skala 2x), 02.10.2026. Okno 1024×768 łapało układ tabletowy
 // (Kacper: eskapizm „prostokątny”, nie jak oryginał), 1440×1080 oddalało stronę. 16:9 to desktopowy układ
-// w normalnej skali. Igor: strona główna z kursorem na „Prace”, więc widać pracę z kolekcji (sam spis wyglądał biednie).
+// w normalnej skali. Igor: strona główna z kursorem na „Prace”, więc widać pracę z kolekcji (sam spis wyglądał biednie),
+// z okna 1024×576, bo z 1280×720 strona wyglądała na oddaloną.
 const cases = [
   { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: pl ? 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' : "GlassStone homepage hero, in Polish: we don't sell stone, we create interiors you want to live in." },
   { slug: 'eskapizm', name: T.nameEskapizm, img: heroEskapizm, alt: pl ? 'Hero strony eskapizm: Co by było, gdyby ktoś ułożył Twój wyjazd za Ciebie?' : 'eskapizm homepage hero, in Polish: what if someone planned your trip for you?' },
