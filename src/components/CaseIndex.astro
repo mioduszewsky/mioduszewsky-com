@@ -42,7 +42,8 @@ const pagesPl = import.meta.glob('../pages/pl/realizacje/*.astro');
 const pagesEn = import.meta.glob('../pages/work/*.astro');
 const hasCase = (slug: string) => `../pages/${pl ? 'pl/realizacje' : 'work'}/${slug}.astro` in (pl ? pagesPl : pagesEn);
 
-// Zrzuty pierwszego ekranu żywych stron, 1440×1080 (4:3), 30.09.2026.
+// Zrzuty żywych stron w oknie laptopa 1440×900, wycięte od góry do 1440×1080 (4:3), 02.10.2026.
+// Okno 4:3 rozciągało hero zrobione na wysokość ekranu (Kacper: „podłużne, wyciągnięte”).
 const cases = [
   { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: pl ? 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' : "GlassStone homepage hero, in Polish: we don't sell stone, we create interiors you want to live in." },
   { slug: 'eskapizm', name: T.nameEskapizm, img: heroEskapizm, alt: pl ? 'Hero strony eskapizm: Co by było, gdyby ktoś ułożył Twój wyjazd za Ciebie?' : 'eskapizm homepage hero, in Polish: what if someone planned your trip for you?' },
