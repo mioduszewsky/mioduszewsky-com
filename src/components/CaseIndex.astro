@@ -44,13 +44,13 @@ const pagesPl = import.meta.glob('../pages/pl/realizacje/*.astro');
 const pagesEn = import.meta.glob('../pages/work/*.astro');
 const hasCase = (slug: string) => `../pages/${pl ? 'pl/realizacje' : 'work'}/${slug}.astro` in (pl ? pagesPl : pagesEn);
 
-// Zrzuty pierwszego ekranu żywych stron w oknie 1024×768 (4:3, skala 2x), 02.10.2026. Wcześniej okno
-// 1440×1080: strona oddalona, drobna, hero rozciągnięte (Kacper: „podłużne, z oddaleniem”). Mniejsze okno
-// pokazuje stronę z bliska, w normalnej skali, a 4:3 karty zostaje z zaakceptowanego układu.
+// Zrzuty żywych stron w oknie 1280×720 (16:9, skala 2x), 02.10.2026. Okno 1024×768 łapało układ tabletowy
+// (Kacper: eskapizm „prostokątny”, nie jak oryginał), 1440×1080 oddalało stronę. 16:9 to desktopowy układ
+// w normalnej skali. Igor: strona główna z kursorem na „Prace”, więc widać pracę z kolekcji (sam spis wyglądał biednie).
 const cases = [
   { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: pl ? 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' : "GlassStone homepage hero, in Polish: we don't sell stone, we create interiors you want to live in." },
   { slug: 'eskapizm', name: T.nameEskapizm, img: heroEskapizm, alt: pl ? 'Hero strony eskapizm: Co by było, gdyby ktoś ułożył Twój wyjazd za Ciebie?' : 'eskapizm homepage hero, in Polish: what if someone planned your trip for you?' },
-  { slug: 'igor-grabowski', name: 'Igor Grabowski', img: heroIgor, alt: pl ? 'Pierwszy ekran strony kolekcji Igora Grabowskiego: prace, o kolekcji, artyści, newsletter, kontakt.' : "First screen of Igor Grabowski's collection site: works, about the collection, artists, newsletter, contact." },
+  { slug: 'igor-grabowski', name: 'Igor Grabowski', img: heroIgor, alt: pl ? 'Pierwszy ekran strony kolekcji Igora Grabowskiego: po najechaniu na Prace pojawia się praca z kolekcji.' : "First screen of Igor Grabowski's collection site: hovering Works brings up a piece from the collection." },
   { slug: 'cannversity', name: 'Cannversity', img: heroCannversity, alt: pl ? 'Hero strony Cannversity: Od pomysłu do produktu. W branży konopnej.' : 'Cannversity homepage hero, in Polish: from idea to product, in the cannabis industry.' },
 ].map((c) => ({ ...c, href: hasCase(c.slug) ? `${T.base}${c.slug}/` : undefined }));
 
@@ -208,7 +208,7 @@ const ld = {
     // przy wyborze po elemencie pod kursorem lądowała wtedy inna karta i wachlarz przeskakiwał.
     // Granica stref ma margines (HYST), więc drganie ręki na styku dwóch kart niczego nie zmienia.
     const HYST = 0.12;
-    const k = parseFloat(getComputedStyle(fan).getPropertyValue('--k')) || 0.6;
+    const k = parseFloat(getComputedStyle(fan).getPropertyValue('--k')) || 0.5;
     const center = (cards.length - 1) / 2;
     const slotAt = (clientX: number) => {
       const r = fan.getBoundingClientRect();
@@ -271,11 +271,11 @@ const ld = {
 
   /* Jeden ekran: wachlarz stoi na dole i schodzi pod krawędź, nagłówek zajmuje resztę. Wolne miejsce
      (wysokie okna) dzieli się po równo nad nagłówkiem i pod podtytułem, zamiast zbierać się w jednym pasie.
-     Szerokość karty: 37vw jak w zatwierdzonej v10 (cały wachlarz w ekranie, brzegi ucięte o kilka procent),
+     Szerokość karty: 42vw przy kroku 0,5 (karty 16:9, cały wachlarz w ekranie, brzegi ucięte o kilka procent),
      mniejsza tylko wtedy, gdy pod nagłówkiem brakuje wysokości. --hh to naturalna wysokość nagłówka (skrypt). */
   .stage {
     --gap: clamp(48px, 7vh, 88px);
-    --w: clamp(300px, min(37vw, calc((100svh - 104px - var(--hh, 260px) - var(--gap)) / .7)), 1000px);
+    --w: clamp(300px, min(42vw, calc((100svh - 104px - var(--hh, 260px) - var(--gap)) / .52)), 1000px);
     min-height: calc(100svh - 104px); display: flex; flex-direction: column; overflow: clip;
   }
   .hero {
@@ -290,11 +290,11 @@ const ld = {
      Położenie każdej karty wynika z --o (odległość od środka), stan dokłada skrypt.
      ZATWIERDZONY 30.09.2026 (Kacper, wariant A): karty płasko, bez skosu w głąb, środek na wierzchu.
      Warianty ze skosem (B, C z v3) odrzucone. Po wyborze powiększone. */
-  /* Wachlarz ma wysokość odstępu i widocznej części karty (70% szerokości z 75%), reszta karty
+  /* Wachlarz ma wysokość odstępu i widocznej części karty (52% szerokości z 56%), reszta karty
      schodzi pod ekran. Odstęp od podtytułu nigdy nie jest mniejszy niż --gap. */
   .fan {
-    --k: .6; --arc: .06; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
-    position: relative; flex: none; height: calc(var(--gap) + var(--w) * .7);
+    --k: .5; --arc: .06; --rzk: 4deg; --ry0: 0deg; --ry1: 0deg;
+    position: relative; flex: none; height: calc(var(--gap) + var(--w) * .52);
     perspective: 2400px; perspective-origin: 50% 0%;
   }
   .card {
@@ -344,7 +344,7 @@ const ld = {
   }
   .is-active .sheet::after { opacity: 1; }
   .frame { display: block; position: relative; overflow: hidden; border-radius: inherit; background: #e9e9e2; transform: translateZ(0); }
-  .frame img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: top; }
+  .frame img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: top; }
   /* Odblask podąża za kursorem na aktywnej karcie. Gradient stoi, przesuwa się cała warstwa
      (transform), więc ruch nie wymusza przemalowania w każdej klatce. */
   .frame::after {
