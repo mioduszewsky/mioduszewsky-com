@@ -1,78 +1,72 @@
 ---
-// Case study Igora Grabowskiego, wersja 2 (30.09.2026), kierunek C „Jego strona na jego kolorze”.
-// Referencja wybrana przez Kacpra: Locomotive × The Drake Hotel (strona klienta w dużej skali na polu
-// w kolorze marki, dookoła własny materiał klienta). U Igora: nagrania jego strony na jego niebieskim,
-// dookoła jego posty z Instagrama, które wysuwają się zza ekranu tak, jak prace spod słów na jego stronie.
-// Sekcje idą rytmem jego marki: papier, niebieski, atrament. v1 „Karta obiektu” (6b89028) odrzucona.
-// v3 (01.10.2026, uwagi Kacpra): nav w kolorze sceny, bez sekcji o językach, liczby 13/11/0 przy swoich sekcjach,
-// w tekście imię Igora zamiast „jego”, newsletter pokazany jako okienko na żywej stronie.
-// Tablica kierunków: docs/case-studies/igor/runda-2/TABLICA.html. Treść: igor/COPY.md, fakty: FAKTY.md.
-import VariantLayout from '../../../layouts/VariantLayout.astro';
-import SiteMenu from '../../../components/SiteMenu.astro';
-import BrandFooter from '../../../components/BrandFooter.astro';
+// Case study Igora Grabowskiego, wersja angielska (02.10.2026). Układ 1:1 z /pl/realizacje/igor-grabowski/,
+// tekst napisany po angielsku (nie tłumaczony), nagrania i zrzuty z angielskiej wersji igorgrabowski.com.
+// Treść: docs/case-studies/igor/COPY-EN.md, fakty: FAKTY.md.
+import VariantLayout from '../../layouts/VariantLayout.astro';
+import SiteMenu from '../../components/SiteMenu.astro';
+import BrandFooter from '../../components/BrandFooter.astro';
 
-const contact = '/pl/kontakt/?service=' + encodeURIComponent('Strona internetowa') + '#ctForm';
+const contact = '/contact/?service=' + encodeURIComponent('Website') + '#ctForm';
 // Opinia pojawia się dopiero po akceptacji Igora (docs/case-studies/OPINIE-ROZMOWA.md).
 const quote: { text: string; name: string; role: string } | null = null;
-const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;');
-const url = 'https://mioduszewsky.com/pl/realizacje/igor-grabowski/';
+const url = 'https://mioduszewsky.com/work/igor-grabowski/';
 const ld = {
   '@context': 'https://schema.org',
   '@graph': [
-    { '@type': 'Article', headline: 'Strona kolekcji, na której prace wysuwają się spod słów', inLanguage: 'pl',
-      about: 'Strona kolekcji sztuki cyfrowej i współczesnej Igora Grabowskiego, igorgrabowski.com',
-      author: { '@type': 'Person', name: 'Kacper Mioduszewski', url: 'https://mioduszewsky.com/pl/' },
-      image: 'https://mioduszewsky.com/case/igor/strona-glowna.webp',
+    { '@type': 'Article', headline: 'A collection site where the artworks slide out from under the words', inLanguage: 'en',
+      about: 'Website for Igor Grabowski’s collection of digital and contemporary art, igorgrabowski.com',
+      author: { '@type': 'Person', name: 'Kacper Mioduszewski', url: 'https://mioduszewsky.com/' },
+      image: 'https://mioduszewsky.com/case/igor/en/strona-glowna.webp',
       mainEntityOfPage: url },
     { '@type': 'BreadcrumbList', itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'mioduszewsky', item: 'https://mioduszewsky.com/pl/' },
+      { '@type': 'ListItem', position: 1, name: 'mioduszewsky', item: 'https://mioduszewsky.com/' },
       { '@type': 'ListItem', position: 2, name: 'Igor Grabowski', item: url } ] },
   ],
 };
 
 const posts = [
-  { src: 'ig-darmowe-targi', alt: 'Post Igora z Instagrama: Darmowe targi sztuki? To jest bardzo uczciwa cena.' },
-  { src: 'ig-nie-rozumiesz', alt: 'Post Igora z Instagrama: sala muzeum i napis Nie rozumiesz sztuki współczesnej? To nie znaczy, że jesteś głupi.' },
-  { src: 'ig-pierwsza-reakcja', alt: 'Post Igora z Instagrama: Pierwsza reakcja nie musi być mądra.' },
+  { src: 'ig-darmowe-targi', alt: 'Igor’s Instagram post in Polish: Free art fairs? That’s a very fair price.' },
+  { src: 'ig-nie-rozumiesz', alt: 'Igor’s Instagram post in Polish: a museum room with the line: You don’t get contemporary art? That doesn’t make you stupid.' },
+  { src: 'ig-pierwsza-reakcja', alt: 'Igor’s Instagram post in Polish: Your first reaction doesn’t have to be clever.' },
 ];
 ---
 <VariantLayout
-  title="Strona kolekcji sztuki dla Igora Grabowskiego: prace wysuwają się spod słów · mioduszewsky"
-  description="Igor Grabowski kolekcjonuje sztukę cyfrową i współczesną. Zrobiłem stronę tej kolekcji: pięć słów, pod nimi prace, 13 prac, 12 nazwisk, polski i angielski, domena igorgrabowski.com."
-  bg="#1533f5" fg="#000000" switcher={false} robots="index, follow, max-image-preview:large" locale="pl" alternatePath="/work/igor-grabowski/">
+  title="A collection website for Igor Grabowski: the artworks slide out from under the words · mioduszewsky"
+  description="Igor Grabowski collects digital and contemporary art. I built the website for his collection: five words, artworks underneath, 13 pieces, 12 artists, Polish and English, at igorgrabowski.com."
+  bg="#1533f5" fg="#000000" switcher={false} robots="index, follow, max-image-preview:large" locale="en" alternatePath="/pl/realizacje/igor-grabowski/">
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
-    <a class="skip" href="#main">Przejdź do treści</a>
+    <a class="skip" href="#main">Skip to content</a>
     <header class="nav">
-      <a class="mark" href="/pl/" aria-label="mioduszewsky. Strona główna.">
+      <a class="mark" href="/" aria-label="mioduszewsky. Home.">
         <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
           <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-      <SiteMenu locale="pl" alternatePath="/work/igor-grabowski/" />
+      <SiteMenu locale="en" alternatePath="/pl/realizacje/igor-grabowski/" />
     </header>
 
     <main id="main">
       <article>
         <header class="stage">
           <div class="wrap">
-            <p class="kicker">Realizacja dla Igora Grabowskiego</p>
-            <h1>Strona kolekcji, na której prace wysuwają się spod słów.</h1>
-            <p class="lead" set:html={P('Igor Grabowski kolekcjonuje sztukę cyfrową i współczesną, od pierwszego zakupu w galerii w 2020 roku. Zrobiłem stronę tej kolekcji: pięć słów na jednym ekranie, a pod każdym prace, które wysuwają się po najechaniu kursorem. Strona działa po polsku i po angielsku, na domenie igorgrabowski.com.')} />
+            <p class="kicker">Built for Igor Grabowski</p>
+            <h1>A collection site where the artworks slide out from under the words.</h1>
+            <p class="lead">Igor Grabowski collects digital and contemporary art. He bought his first piece at a gallery in 2020. I built the website for his collection: five words on a single screen, each one hiding artworks that slide out when your cursor touches it. The site runs in Polish and English at igorgrabowski.com.</p>
           </div>
 
           <div class="wrap set">
             <div class="screen">
-              <video class="vid" autoplay loop muted playsinline preload="metadata" width="1280" height="800" poster="/case/igor/strona-glowna.webp" aria-label="Nagranie strony głównej igorgrabowski.com: kursor przesuwa się po słowach Prace i O kolekcji, spod każdego wysuwają się dwie prace z kolekcji.">
-                <source src="/case/igor/strona-glowna.webm" type="video/webm" />
-                <source src="/case/igor/strona-glowna.mp4" type="video/mp4" />
+              <video class="vid" autoplay loop muted playsinline preload="metadata" width="1280" height="800" poster="/case/igor/en/strona-glowna.webp" aria-label="Recording of the igorgrabowski.com homepage: the cursor moves over the words Artworks and Collection, and two pieces from the collection slide out from under each.">
+                <source src="/case/igor/en/strona-glowna.webm" type="video/webm" />
+                <source src="/case/igor/en/strona-glowna.mp4" type="video/mp4" />
               </video>
             </div>
             <div class="phone">
-              <video class="vid" autoplay loop muted playsinline preload="metadata" width="390" height="660" poster="/case/igor/telefon.webp" aria-label="Nagranie strony głównej na telefonie: prace wysuwają się same przy kolejnych słowach.">
-                <source src="/case/igor/telefon.webm" type="video/webm" />
-                <source src="/case/igor/telefon.mp4" type="video/mp4" />
+              <video class="vid" autoplay loop muted playsinline preload="metadata" width="390" height="660" poster="/case/igor/en/telefon.webp" aria-label="The homepage on a phone: artworks slide out on their own, word after word.">
+                <source src="/case/igor/en/telefon.webm" type="video/webm" />
+                <source src="/case/igor/en/telefon.mp4" type="video/mp4" />
               </video>
             </div>
             {posts.map((p, i) => (
@@ -80,23 +74,23 @@ const posts = [
             ))}
           </div>
 
-          <div class="wrap live"><a href="https://www.igorgrabowski.com/" target="_blank" rel="noopener">Zobacz stronę na żywo<span aria-hidden="true"> ↗</span></a></div>
+          <div class="wrap live"><a href="https://www.igorgrabowski.com/" target="_blank" rel="noopener">See the live site<span aria-hidden="true"> ↗</span></a></div>
         </header>
 
         <section class="paper">
           <div class="wrap duo">
             <div>
-              <h2>Kolekcja Igora, prace dwunastu artystów i&nbsp;artystek.</h2>
+              <h2>Igor’s collection: work by twelve artists.</h2>
               <div class="txt">
-                <p set:html={P('Igor nie jest artystą. Na stronie wiszą prace Refika Anadola, Damiena Hirsta, Ivony Tau i dziewięciu innych osób. Strona ma pokazać kolekcję i człowieka, który ją zbiera, a nazwiska artystów muszą się zgadzać co do litery.')} />
-                <p set:html={P('Cała strona główna to jeden ruch: najeżdżasz na słowo, spod niego wysuwają się dwie prace. Zrobiłem dwie różne wersje strony. Na domenie stoi ta, w której ten ruch prowadzi całą stronę.')} />
-                <p set:html={P('Igor mówi o sztuce na Instagramie prostym językiem. Spod „O kolekcji” wysuwają się posty z tego Instagrama, więc strona mówi głosem Igora.')} />
+                <p>Igor isn’t an artist. The site shows work by Refik Anadol, Damien Hirst, Ivona Tau and nine others. Its job is to show the collection and the person behind it, and every artist’s name has to be spelled exactly right.</p>
+                <p>The whole homepage is one move: point at a word and two artworks slide out from under it. I built two completely different versions of the site. The one that went live is built around that move.</p>
+                <p>Igor talks about art on Instagram in plain language. Those Instagram posts slide out from under “Collection”, so the site speaks in Igor’s voice.</p>
               </div>
             </div>
             <figure class="voice">
-              <img src="/case/igor/ig-oprowadzanie.webp" width="720" height="900" loading="lazy" alt="Post Igora z Instagrama na niebieskim tle: Jeśli chcesz sobie pomóc, idź na oprowadzanie. Zapytaj edukatora." />
-              <img src="/case/igor/ig-muzea.webp" width="720" height="900" loading="lazy" alt="Post Igora z Instagrama na niebieskim tle: Z mojego doświadczenia, na początku przygody ze sztuką najlepiej chodzić do dużych muzeów na oprowadzania." />
-              <figcaption>Posty Igora z&nbsp;Instagrama</figcaption>
+              <img src="/case/igor/ig-oprowadzanie.webp" width="720" height="900" loading="lazy" alt="Igor’s Instagram post in Polish on a blue background: Want to make it easier? Join a guided tour. Ask the educator." />
+              <img src="/case/igor/ig-muzea.webp" width="720" height="900" loading="lazy" alt="Igor’s Instagram post in Polish on a blue background: In my experience, when you’re starting out with art, guided tours at big museums work best." />
+              <figcaption>Igor’s Instagram posts, in Polish</figcaption>
             </figure>
           </div>
         </section>
@@ -105,8 +99,8 @@ const posts = [
           <div class="wrap">
             <div class="numhead notehead">
               <figure class="note">
-                <div class="note-screen" role="img" aria-label="Odtworzona notatka Igora w aplikacji Notatki na iPhonie: tytuł Refik Anadol, pod nim praca Unsupervised (NFT) ze zdjęciem, Neo Organic Ivony Tau z linkiem do objkt.com i City Life 3.">
-                  <div class="note-bar" aria-hidden="true"><span class="note-back">‹ Notatki</span><span class="note-shared">Udostępniona</span></div>
+                <div class="note-screen" role="img" aria-label="A recreation of Igor’s note in the iPhone Notes app: the title Refik Anadol, then Unsupervised (NFT) with a photo, Neo Organic by Ivona Tau with an objkt.com link, and City Life 3.">
+                  <div class="note-bar" aria-hidden="true"><span class="note-back">‹ Notes</span><span class="note-shared">Shared</span></div>
                   <div class="note-body" aria-hidden="true">
                     <p class="note-h">Refik Anadol</p>
                     <p class="note-i">Unsupervised - Data Universe - MoMA #1522</p>
@@ -119,13 +113,13 @@ const posts = [
                     <img src="/case/igor/notatka-city-life-3.webp" width="480" height="480" loading="lazy" alt="" />
                   </div>
                 </div>
-                <figcaption>Notatka Igora, pierwsze pozycje z&nbsp;13</figcaption>
+                <figcaption>Igor’s note, the first entries out of 13</figcaption>
               </figure>
               <div>
-                <h2>Lista prac przyszła w&nbsp;Notatkach z&nbsp;iPhone’a.</h2>
+                <h2>The artwork list came from the Notes app on Igor’s iPhone.</h2>
                 <div class="txt">
-                  <p set:html={P('Igor wpisał kolekcję do Notatek na iPhonie: tytuły, nazwiska, linki i zdjęcia prac. Potem udostępnił mi notatkę. Do przygotowania treści wystarczyła aplikacja, której Igor używa na co dzień.')} />
-                  <p set:html={P('Z notatki zrobiłem galerię w tej samej kolejności, z tytułami i technikami przepisanymi słowo w słowo. Etykieta NFT stoi tylko tam, gdzie Igor ją wpisał. Poprawki przyszły równie prosto, w jednym dokumencie.')} />
+                  <p>Igor typed the collection into Notes on his iPhone: titles, artists, links and a photo of each piece. Then he shared the note with me. All it took on his side was an app he already uses every day.</p>
+                  <p>I turned the note into the gallery, in the same order, with titles and mediums copied word for word. The NFT label shows up only where Igor put it. His edits came in just as easily, in a single document.</p>
                 </div>
               </div>
             </div>
@@ -134,28 +128,28 @@ const posts = [
 
         <section class="blue">
           <div class="wrap">
-            <h2>Każda praca w&nbsp;całości.</h2>
+            <h2>Every piece, uncropped.</h2>
             <div class="txt">
-              <p set:html={P('Każda praca jest pokazana w całości, bez przycinania do jednego formatu. Równy rytm galerii daje stała wysokość kadru. Przy czterech pracach wideo jest podpis, że to kadr z wideo, tak jak oznaczył je Igor.')} />
+              <p>Each artwork is shown whole, never cropped to fit a format. The gallery keeps its rhythm with a fixed frame height instead. The four video pieces carry a note that the image is a still from the video, exactly as Igor marked them.</p>
             </div>
           </div>
           <div class="wrap set set-gal">
             <div class="screen">
-              <video class="vid" autoplay loop muted playsinline preload="none" width="1120" height="700" poster="/case/igor/galeria.webp" aria-label="Nagranie galerii igorgrabowski.com: przewijanie przez prace Refika Anadola, Ivony Tau, Any Marii Caballero, Leandera Herzoga i Williama Mapana, każda w całości z podpisem.">
-                <source src="/case/igor/galeria.webm" type="video/webm" />
-                <source src="/case/igor/galeria.mp4" type="video/mp4" />
+              <video class="vid" autoplay loop muted playsinline preload="none" width="1120" height="700" poster="/case/igor/en/galeria.webp" aria-label="Recording of the igorgrabowski.com gallery: scrolling through pieces by Refik Anadol, Ivona Tau, Ana Maria Caballero, Leander Herzog and William Mapan, each shown whole with its caption.">
+                <source src="/case/igor/en/galeria.webm" type="video/webm" />
+                <source src="/case/igor/en/galeria.mp4" type="video/mp4" />
               </video>
             </div>
             <div class="phone">
-              <img class="vid" src="/case/igor/obrazy-telefon.webp" width="780" height="1320" loading="lazy" alt="Galeria na telefonie: nagłówek Prace z mojej kolekcji, filtr Wszystkie, NFT, Fizyczne i pierwsza praca w całości." />
+              <img class="vid" src="/case/igor/en/obrazy-telefon.webp" width="780" height="1320" loading="lazy" alt="The gallery on a phone: the heading Artworks from my collection, the All, NFT and Physical filter, and the first piece shown whole." />
             </div>
           </div>
           <div class="wrap numhead numhead-gal">
-            <p class="big"><strong>11</strong><span>prac cyfrowych z&nbsp;linkiem do oryginału</span></p>
+            <p class="big"><strong>11</strong><span>digital pieces linked to the original</span></p>
             <div>
-              <h2>Z&nbsp;galerii prosto do oryginału.</h2>
+              <h2>From the gallery straight to the original.</h2>
               <div class="txt">
-                <p set:html={P('Każda z 11 prac cyfrowych ma link do swojej strony na verse.works, OpenSea, objkt.com albo IYK. Dwie są fizyczne: grafika Tadeusza Dominika i print Rafała Dominika i Marii Mencwel. Przy każdym nazwisku są prace tej osoby z kolekcji i link do Instagrama, a klik w nazwisko otwiera jej galerię.')} />
+                <p>Each of the 11 digital pieces links to its page on verse.works, OpenSea, objkt.com or IYK. Two are physical: a computer graphic by Tadeusz Dominik and a Fine Art print by Rafał Dominik and Maria Mencwel. Every artist’s name lists their pieces in the collection and links to their Instagram, and clicking a name opens that artist’s gallery.</p>
               </div>
             </div>
           </div>
@@ -163,16 +157,16 @@ const posts = [
 
         <section class="ink">
           <div class="wrap">
-            <h2>Newsletter w&nbsp;barwach Igora.</h2>
+            <h2>A newsletter in Igor’s colors.</h2>
             <div class="txt">
-              <p set:html={P('Igor ma newsletter w MailerLite. Gotowy kod wyglądał jak każdy inny formularz MailerLite, więc zrobiłem własny, w kolorach marki Igora, który zapisuje prosto na konto w MailerLite. Wysuwa się z rogu raz, po przewinięciu ponad jednej trzeciej strony albo po 25 sekundach. Link do zapisu jest w każdej stopce i w menu.')} />
+              <p>Igor runs his newsletter on MailerLite. The ready-made embed looked like every other MailerLite form, so I built a custom one in Igor’s brand colors that sends signups straight to his MailerLite account. It slides in from the corner once, after you’ve scrolled past a third of the page or after 25 seconds. There’s also a signup link in every footer and in the menu.</p>
             </div>
           </div>
           <div class="wrap nl">
             <div class="screen">
               <picture>
-                <source media="(max-width: 700px)" srcset="/case/igor/newsletter-okno-telefon.webp" width="640" height="1090" />
-                <img class="vid" src="/case/igor/newsletter-okno.webp" width="1600" height="1000" loading="lazy" alt="Galeria igorgrabowski.com z wysuniętym w prawym dolnym rogu okienkiem newslettera: niebieska karta, nagłówek Newsletter o sztuce, pola imię i e-mail, przycisk Zapisz mnie." />
+                <source media="(max-width: 700px)" srcset="/case/igor/en/newsletter-okno-telefon.webp" width="640" height="1090" />
+                <img class="vid" src="/case/igor/en/newsletter-okno.webp" width="1600" height="1000" loading="lazy" alt="The igorgrabowski.com gallery with the newsletter panel slid in at the bottom right: a blue card with the heading Newsletter about art, name and email fields, and a Sign me up button." />
               </picture>
             </div>
           </div>
@@ -180,11 +174,11 @@ const posts = [
 
         <section class="paper">
           <div class="wrap numhead">
-            <p class="big"><strong>4</strong><span>dni od notatki do strony na igorgrabowski.com</span></p>
+            <p class="big"><strong>4</strong><span>days from the note to the live site at igorgrabowski.com</span></p>
             <div>
-              <h2>Wizytówka na Art&nbsp;Basel w&nbsp;cztery dni.</h2>
+              <h2>A calling card for Art&nbsp;Basel in four days.</h2>
               <div class="txt">
-                <p set:html={P('Igor jechał na targi Art&nbsp;Basel i potrzebował strony kolekcji jako swojej wizytówki, także po angielsku. Notatkę z listą prac udostępnił w piątek wieczorem. We wtorek kolekcja stała już na domenie igorgrabowski.com, a dzień później weszła runda poprawek Igora.')} />
+                <p>Igor was heading to Art&nbsp;Basel and needed his collection online as a calling card, in English too. He shared the note with the artwork list on a Friday evening. By Tuesday the collection was live at igorgrabowski.com, and Igor’s round of edits went in the next day.</p>
               </div>
             </div>
           </div>
@@ -196,22 +190,22 @@ const posts = [
             <figcaption>{quote.name}, {quote.role}</figcaption>
           </figure>
         ) : import.meta.env.DEV && (
-          <aside class="wrap quote-todo" aria-hidden="true">Tu stanie cytat Igora po rozmowie. Na produkcji blok się nie pokaże, dopóki cytat nie jest zaakceptowany.</aside>
+          <aside class="wrap quote-todo" aria-hidden="true">Igor’s quote goes here after the interview. This block stays hidden in production until the quote is approved.</aside>
         )}
       </article>
 
       <section class="end" aria-labelledby="end-h">
         <div class="wrap end-in">
-          <h2 id="end-h">Pokazujesz kolekcję albo swoją pracę tylko na Instagramie?</h2>
+          <h2 id="end-h">Showing your collection or your work only on Instagram?</h2>
           <div>
-            <p>Opisz mi ją w&nbsp;15 minut. Powiem, jak mogłaby wyglądać jej strona i&nbsp;co trzeba przygotować.</p>
-            <a class="btn" href={contact}>Umów 15 minut</a>
-            <p class="more"><a href="/pl/realizacje/glassstone/">Druga realizacja: szkic z&nbsp;pomiaru zamienia się w&nbsp;rysunek na produkcję</a></p>
+            <p>Tell me about it in a 15-minute call. I’ll tell you what its website could look like and what you’d need to prepare.</p>
+            <a class="btn" href={contact}>Book a 15-minute call</a>
+            <p class="more"><a href="/services/">See how I work</a></p>
           </div>
         </div>
       </section>
     </main>
-    <BrandFooter locale="pl" inset />
+    <BrandFooter locale="en" inset />
   </div>
 </VariantLayout>
 
