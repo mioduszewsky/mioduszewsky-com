@@ -142,6 +142,7 @@ const current = Astro.url.pathname.replace(/\/$/, '');
     <meta name="twitter:image" content={ogImage} />
 
     {indexable && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <slot name="head" />
     <Analytics />
     <style define:vars={{ bg, fg }}>
       * { margin: 0; padding: 0; box-sizing: border-box; }
