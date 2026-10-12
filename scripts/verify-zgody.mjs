@@ -21,10 +21,8 @@ export const MANIFEST = 'scripts/realizacje-pokazane.json';
 export const DEFAULT_ENGINE = join(homedir(), 'workspace', 'projekty', 'mioduszewsky (AUTOFIRMA)', 'systemy',
   'consent-suppression-engine');
 
-// Realizacje istniejące przed bramką (gałąź feat/realizacje-publikacja, PR #1, stan 12.10.2026).
-// Bez TAK z rejestru są raportowane do decyzji Kacpra, ale nie blokują. Lista zamknięta: nowa pozycja
-// tutaj = obejście bramki, więc test pilnuje, żeby się nie zmieniła bez zmiany testu.
-export const ZASTANE = new Set(['pl/realizacje/glassstone', 'pl/realizacje/igor-grabowski', 'work/igor-grabowski']);
+// Realizacje istniejące przed bramką: brak. Na produkcji (origin/main, 12.10.2026) nie ma żadnej realizacji, więc każda wymaga zgody w rejestrze (decyzja @autofirma 12.10).
+export const ZASTANE = new Set([]);
 
 export function listCases(root = REPO) {
   const cases = [];

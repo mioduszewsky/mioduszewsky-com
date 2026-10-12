@@ -34,7 +34,7 @@ print(json.dumps({"wyniki": [{"ref": r["ref"], "odpowiedz": a.get(r["ref"], "NIE
 const shown = { pokazane: [{ osoba: 'klient:nowy', elementy: ['NAZWA_FIRMY'] }] };
 
 test('lista zastanych jest zamknięta', () => {
-  assert.deepEqual([...ZASTANE].sort(), ['pl/realizacje/glassstone', 'pl/realizacje/igor-grabowski', 'work/igor-grabowski']);
+  assert.deepEqual([...ZASTANE], []);
 });
 
 test('brak realizacji przechodzi bez rejestru', () => {
@@ -64,11 +64,11 @@ test('nowa realizacja z NIE albo DO_CZLOWIEKA blokuje', () => {
   }
 });
 
-test('zastana bez zgody jest raportowana, nie blokuje i nie jest usuwana', () => {
+test('realizacja z PR #1 bez zgody blokuje scalenie, ale nie jest usuwana', () => {
   const root = site(['pl/realizacje/glassstone'], { 'pl/realizacje/glassstone': shown });
   const result = verify(root, fakeEngine({ 'pl/realizacje/glassstone': 'DO_CZLOWIEKA' }));
-  assert.equal(result.code, 0);
-  assert.equal(result.report.rows[0].stan, 'ZASTANA_BRAK_ZGODY');
+  assert.equal(result.code, 1);
+  assert.equal(result.report.rows[0].stan, 'BLOKADA');
   assert.ok(existsSync(join(root, 'src/pages/pl/realizacje/glassstone.astro')));
 });
 
@@ -97,7 +97,7 @@ test('trasa dynamiczna realizacji zatrzymuje', () => {
   assert.equal(verify(site(['pl/realizacje/[slug]']), fakeEngine({})).code, 2);
 });
 
-test('prawdziwy rejestr: pusty rejestr nie daje TAK, nowa blokuje, zastana tylko raport', { skip: !existsSync(join(DEFAULT_ENGINE, 'src', 'www_gate.py')) }, () => {
+test('prawdziwy rejestr: pusty rejestr nie daje TAK, każda realizacja bez zgody blokuje', { skip: !existsSync(join(DEFAULT_ENGINE, 'src', 'www_gate.py')) }, () => {
   const tmp = mkdtempSync(join(tmpdir(), 'rejestr-'));
   const options = { extraArgs: ['--registry', join(tmp, 'brak.sqlite3'), '--journal', join(tmp, 'zapisy.sqlite3')] };
   const root = site(['pl/realizacje/glassstone', 'pl/realizacje/nowa'], {
@@ -107,5 +107,5 @@ test('prawdziwy rejestr: pusty rejestr nie daje TAK, nowa blokuje, zastana tylko
   const result = verify(root, options);
   assert.equal(result.code, 1);
   const states = Object.fromEntries(result.report.rows.map((r) => [r.ref, r.stan]));
-  assert.deepEqual(states, { 'pl/realizacje/glassstone': 'ZASTANA_BRAK_ZGODY', 'pl/realizacje/nowa': 'BLOKADA' });
+  assert.deepEqual(states, { 'pl/realizacje/glassstone': 'BLOKADA', 'pl/realizacje/nowa': 'BLOKADA' });
 });
