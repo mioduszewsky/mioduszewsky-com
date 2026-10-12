@@ -1,0 +1,42 @@
+{
+  "_opis": "Kto i co jest pokazane w każdej realizacji. To NIE jest lista zgód: zgody żyją wyłącznie w rejestrze zgód (consent-suppression-engine). 'osoba' to odnośnik klienta w rejestrze (bez adresu e-mail). Elementy z zamkniętej listy: TRESC_OPINII, IMIE, NAZWISKO, ZDJECIE, NAZWA_FIRMY, WYNIK_LICZBOWY. Realizacja bez osoby: 'pokazane': [] i 'wyjatek' z 'powod' i 'decyzja'. Sprawdzenie: npm run verify:zgody.",
+  "miejsce": "STRONA",
+  "realizacje": {
+    "pl/realizacje/glassstone": {
+      "pokazane": [
+        {
+          "osoba": "klient:glassstone",
+          "elementy": [
+            "NAZWA_FIRMY",
+            "IMIE",
+            "WYNIK_LICZBOWY"
+          ]
+        }
+      ]
+    },
+    "pl/realizacje/igor-grabowski": {
+      "pokazane": [
+        {
+          "osoba": "klient:igor-grabowski",
+          "elementy": [
+            "IMIE",
+            "NAZWISKO",
+            "ZDJECIE"
+          ]
+        }
+      ]
+    },
+    "work/igor-grabowski": {
+      "pokazane": [
+        {
+          "osoba": "klient:igor-grabowski",
+          "elementy": [
+            "IMIE",
+            "NAZWISKO",
+            "ZDJECIE"
+          ]
+        }
+      ]
+    }
+  }
+}

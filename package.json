@@ -11,7 +11,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "qa:public-urls": "node --test scripts/public-url-guard.test.mjs && node scripts/public-url-guard.mjs"
+    "qa:public-urls": "node --test scripts/public-url-guard.test.mjs && node scripts/public-url-guard.mjs",
+    "verify:zgody": "node --test scripts/verify-zgody.test.mjs && node scripts/verify-zgody.mjs"
   },
   "dependencies": {
     "@fontsource-variable/anybody": "^5.2.7",
