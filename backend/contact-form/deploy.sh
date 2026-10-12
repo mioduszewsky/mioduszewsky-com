@@ -23,7 +23,7 @@ API_LOG_GROUP="/aws/apigateway/mioduszewsky-contact"
 echo "==> Pakowanie kodu"
 cd "$DIR"
 rm -f function.zip
-zip -q function.zip index.mjs
+zip -q function.zip index.mjs lead-source.mjs
 
 echo "==> IAM role (least privilege)"
 if ! aws iam get-role --role-name "$ROLE" >/dev/null 2>&1; then

@@ -11,6 +11,7 @@
 //   ALLOWED_ORIGINS = "https://mioduszewsky.com,https://www.mioduszewsky.com,https://mioduszewsky-com.vercel.app,http://localhost:4321"
 
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
+import { splitLeadSource } from './lead-source.mjs';
 
 const ses = new SESv2Client({ region: process.env.AWS_REGION || 'eu-central-1' });
 
@@ -56,7 +57,7 @@ export const handler = async (event) => {
 
   const name = clip(data.name, 120).trim();
   const email = clip(data.email, 200).trim();
-  const message = clip(data.message, 4000).trim();
+  const { message, sourceLine } = splitLeadSource(clip(data.message, 4000).trim());
   const consent = data.consent === true || data.consent === 'true' || data.consent === 'on';
 
   if (!name || !email || !message) return reply(400, { error: 'missing_fields' }, origin);
@@ -64,13 +65,16 @@ export const handler = async (event) => {
   if (!consent) return reply(400, { error: 'no_consent' }, origin);
 
   const subject = `Nowy kontakt ze strony - ${name}`;
+  // Linia Źródło idzie pierwsza: Mail Processor czyta źródło z początku treści.
   const text =
+    (sourceLine ? `${sourceLine}\n` : '') +
     `Imię:  ${name}\n` +
     `Mail:  ${email}\n` +
     `Zgoda RODO: tak\n\n` +
     `Wiadomość:\n${message}\n`;
   const html =
     `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:#111">` +
+    (sourceLine ? `<p>${esc(sourceLine)}</p>` : '') +
     `<p><strong>Imię:</strong> ${esc(name)}<br>` +
     `<strong>Mail:</strong> <a href="mailto:${esc(email)}">${esc(email)}</a><br>` +
     `<strong>Zgoda RODO:</strong> tak</p>` +
