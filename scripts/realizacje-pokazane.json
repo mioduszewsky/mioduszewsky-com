@@ -3,13 +3,40 @@
   "miejsce": "STRONA",
   "realizacje": {
     "pl/realizacje/glassstone": {
-      "pokazane": [{ "osoba": "klient:glassstone", "elementy": ["NAZWA_FIRMY", "IMIE", "WYNIK_LICZBOWY", "TRESC_OPINII"] }]
+      "pokazane": [
+        {
+          "osoba": "klient:glassstone",
+          "elementy": [
+            "NAZWA_FIRMY",
+            "IMIE",
+            "WYNIK_LICZBOWY"
+          ]
+        }
+      ]
     },
     "pl/realizacje/igor-grabowski": {
-      "pokazane": [{ "osoba": "klient:igor-grabowski", "elementy": ["IMIE", "NAZWISKO", "ZDJECIE"] }]
+      "pokazane": [
+        {
+          "osoba": "klient:igor-grabowski",
+          "elementy": [
+            "IMIE",
+            "NAZWISKO",
+            "ZDJECIE"
+          ]
+        }
+      ]
     },
     "work/igor-grabowski": {
-      "pokazane": [{ "osoba": "klient:igor-grabowski", "elementy": ["IMIE", "NAZWISKO", "ZDJECIE"] }]
+      "pokazane": [
+        {
+          "osoba": "klient:igor-grabowski",
+          "elementy": [
+            "IMIE",
+            "NAZWISKO",
+            "ZDJECIE"
+          ]
+        }
+      ]
     }
   }
 }
