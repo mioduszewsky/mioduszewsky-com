@@ -3,18 +3,13 @@
 // (sekcja 3, układ 3.0-3.11; sekcja 4, lista ujęć). Treść: eskapizm/COPY.md i COPY-EN.md, bez notatek [..],
 // bez zdań z [DO POTWIERDZENIA] i bez cytatu Justyny (blok czeka na jej akceptację, jak u Igora).
 // Jeden komponent dla PL i EN, żeby podmiana ujęcia była jedną linią dla obu wersji.
-// Rama mioduszewsky (nav, Nohemi, General Sans, BrandFooter), w środku Crimson Text i Inter, papier #FAFAF9, zieleń #1E3B25.
+// Rama mioduszewsky (nav, Nohemi, General Sans, BrandFooter), w środku Crimson Text i Inter, papier #FCFFF5 jak na żywej stronie od 18.10, zieleń #1E3B25.
 import { Image, getImage } from 'astro:assets';
 import VariantLayout from '../../layouts/VariantLayout.astro';
 import SiteMenu from '../SiteMenu.astro';
 import BrandFooter from '../BrandFooter.astro';
 import kaskada1440 from '../../assets/realizacje/eskapizm/kaskada-1440.webp';
 import kaskada390 from '../../assets/realizacje/eskapizm/kaskada-390.webp';
-import kalkulator390 from '../../assets/realizacje/eskapizm/kalkulator-390.webp';
-import zamowienie1440 from '../../assets/realizacje/eskapizm/zamowienie-1440.webp';
-import zamowienie390 from '../../assets/realizacje/eskapizm/zamowienie-390.webp';
-import narrator1440 from '../../assets/realizacje/eskapizm/narrator-1440.webp';
-import narrator390 from '../../assets/realizacje/eskapizm/narrator-390.webp';
 import tajlandia from '../../assets/realizacje/eskapizm/tajlandia-1280.webp';
 import wietnam from '../../assets/realizacje/eskapizm/wietnam-1280.webp';
 import filipiny from '../../assets/realizacje/eskapizm/filipiny-1280.webp';
@@ -28,21 +23,21 @@ const { locale } = Astro.props;
 const pl = locale === 'pl';
 
 // ── UJĘCIA ─────────────────────────────────────────────────────────────────────────────────────────────
-// Wszystko poniżej to materiał roboczy z 17.10.2026 (material-roboczy/ i runda-1/img/, gałąź hero-film na :4340,
-// bez banera cookies). Docelowe ujęcia nagrywamy według KIERUNEK.md sekcja 4 do material-final/.
+// Ujęcia ostateczne z material-final (18.10.2026), bez banera cookies, kolory #FCFFF5. Wideo to pętle w public/, obrazy w src/assets/.
 // Podmiana: zamień import albo ścieżkę w jednej linii; obraz idzie do src/assets/realizacje/eskapizm/, wideo do public/realizacje/eskapizm/.
 const V = '/realizacje/eskapizm/';
+const vid = (n: string, w: number, h: number) => ({ webm: V + n + '.webm', mp4: V + n + '.mp4', poster: V + n + '-poster.webp', w, h });
 const SHOTS = {
-  film1440: { webm: V + 'film-1440.webm', mp4: V + 'film-1440.mp4', poster: V + 'film-1440-poster.webp', w: 1280, h: 800 }, // TYMCZASOWE: film-1440.mp4 (+ .webm) i film-1440-poster.webp (wycięte z home-1440-wolno.mp4, 0-10,7 s)
-  film390: { webm: V + 'film-390.webm', mp4: V + 'film-390.mp4', poster: V + 'film-390-poster.webp', w: 390, h: 844 }, // TYMCZASOWE: film-390.mp4 (+ .webm) i film-390-poster.webp (z home-390-wolno.mp4 sprzed poprawek mobile, 0-8,6 s; plakat = klatka 4,8 s „Zostaw nam planowanie”)
-  kaskada1440, // TYMCZASOWE: kaskada-1440.webp (klatka 4,3 s z home-1440-wolno.mp4, licznik 33)
-  kaskada390, // TYMCZASOWE: kaskada-390.webp (klatka 3,0 s z home-390-wolno.mp4, licznik 33)
-  kalkulator: kalkulator390, // TYMCZASOWE: kalkulator-przebieg-390.mp4 i kalkulator-wynik-390.webp (teraz ekran startu z kalkulator-390.png, przycięty nad stopką)
-  zamowienie1440, // TYMCZASOWE: zamowienie-przebieg-1440.mp4 i zamowienie-1440.webp (teraz zamowienie-1440.png, pierwszy ekran)
-  zamowienie390, // TYMCZASOWE: zamowienie-przebieg-390.mp4 (teraz zamowienie-390.png)
-  narrator1440, // TYMCZASOWE: narrator-1440.mp4 (teraz material-plan-na-telefonie-papier.webp)
-  narrator390, // TYMCZASOWE: narrator-390.mp4 (teraz klatka 13 s z home-390-wolno.mp4, karta „Twoja trasa”)
-  strip: [tajlandia, wietnam, filipiny, indonezja, blog, poslubne, quiz], // TYMCZASOWE: tajlandia-1280, wietnam-1280, filipiny-1280, indonezja-1280, blog-1280, poslubne-1280, quiz-1280 (.webp; teraz pierwsze ekrany przycięte z długich zrzutów 1440)
+  film1440: vid('film-1440', 1440, 900), // ostateczne, material-final 18.10.2026 (przycięty do 10,6 s)
+  film390: vid('film-390', 390, 844), // ostateczne, material-final 18.10.2026 (780x1688, przycięty do 10,6 s)
+  kaskada1440, // ostateczne, material-final 18.10.2026 (2880x1800)
+  kaskada390, // ostateczne, material-final 18.10.2026 (1170x2532)
+  kalkulator: vid('kalkulator-przebieg-390', 390, 844), // ostateczne, material-final 18.10.2026 (pętla 8,3 s)
+  zamowienie1440: vid('zamowienie-przebieg-1440-kadr', 912, 900), // ostateczne, material-final 18.10.2026 (kadr 912x900)
+  zamowienie390: vid('zamowienie-przebieg-390', 390, 844), // ostateczne, material-final 18.10.2026
+  narrator1440: vid('narrator-1440', 1440, 900), // ostateczne, material-final 18.10.2026 (przycięty do 16,8 s)
+  narrator390: vid('narrator-390', 390, 844), // ostateczne, material-final 18.10.2026 (przycięty do 17 s)
+  strip: [tajlandia, wietnam, filipiny, indonezja, blog, poslubne, quiz], // ostateczne, material-final 18.10.2026 (2560x1440)
 };
 // Ujęcia z konta Kacpra (KIERUNEK.md sekcja 4, „Ujęcia z konta Kacpra”). null = spokojna ramka-zastępnik z podpisem.
 // Podmiana: zaimportuj obraz i wpisz go zamiast null.
@@ -56,8 +51,7 @@ const PANEL: Record<'builder' | 'builderChat' | 'mojPlan' | 'tasks' | 'issues', 
 // ───────────────────────────────────────────────────────────────────────────────────────────────────────
 
 const pick = async (src: ImageMetadata, widths: number[]) => (await getImage({ src, widths, format: 'webp' })).srcSet.attribute;
-const kaskadaM = await pick(SHOTS.kaskada390, [390]);
-const zamowienieM = await pick(SHOTS.zamowienie390, [390, 780]);
+const kaskadaM = await pick(SHOTS.kaskada390, [390, 780, 1170]);
 
 const P = pl ? (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;') : (t: string) => t;
 
@@ -309,7 +303,7 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
 const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
 ---
 <!-- Przed publikacją: robots „index, follow, max-image-preview:large” (jak u Igora), dopiero po zgodzie w rejestrze (npm run verify:zgody) i deployu hero-film. -->
-<VariantLayout title={T.title} description={T.description} bg="#FAFAF9" fg="#1c1917" switcher={false} robots="noindex, nofollow" locale={locale} alternatePath={T.alt}>
+<VariantLayout title={T.title} description={T.description} bg="#FCFFF5" fg="#1c1917" switcher={false} robots="noindex, nofollow" locale={locale} alternatePath={T.alt}>
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
     <a class="skip" href="#main">{T.skip}</a>
@@ -364,7 +358,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
           <figure class="wrap shot-wide">
             <picture>
               <source media="(max-width: 900px)" srcset={kaskadaM} width="390" height="844" />
-              <Image src={SHOTS.kaskada1440} widths={[720, 1080, 1440]} sizes="(max-width: 1320px) 100vw, 1320px" alt={T.kaskadaAlt} loading="lazy" />
+              <Image src={SHOTS.kaskada1440} widths={[720, 1440, 2160, 2880]} sizes="(max-width: 1320px) 100vw, 1320px" alt={T.kaskadaAlt} loading="lazy" />
             </picture>
             <figcaption set:html={P(T.kaskadaCap)} />
           </figure>
@@ -393,7 +387,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
           <section class="station paper s1" id="stacja-01" data-station="0" aria-labelledby="s1-h">
             <div class="wrap st-grid">
               <figure class="phone-shot">
-                <div class="phone"><Image src={SHOTS.kalkulator} widths={[390, 780]} sizes="(max-width: 900px) 100vw, 360px" alt={T.s1.alt} loading="lazy" /></div>
+                <div class="phone"><video class="vid" loop muted playsinline preload="metadata" width={SHOTS.kalkulator.w} height={SHOTS.kalkulator.h} poster={SHOTS.kalkulator.poster} aria-label={T.s1.alt}><source src={SHOTS.kalkulator.webm} type="video/webm" /><source src={SHOTS.kalkulator.mp4} type="video/mp4" /></video></div>
                 <figcaption set:html={P(T.s1.cap)} />
               </figure>
               <div class="st-text">
@@ -415,11 +409,8 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
               <ul class="reg">{T.s2.reg.map((r) => <li>{r}</li>)}</ul>
             </div>
             <figure class="wrap set">
-              <div class="screen d-only"><Image src={SHOTS.zamowienie1440} widths={[960, 1440, 1920]} sizes="(max-width: 1320px) 84vw, 1100px" alt={T.s2.alt} loading="lazy" /></div>
-              <picture class="set-phone">
-                <source media="(max-width: 900px)" srcset={zamowienieM} sizes="100vw" width="780" height="1688" />
-                <Image src={SHOTS.zamowienie390} widths={[390, 780]} sizes="240px" alt={T.s2.altM} loading="lazy" />
-              </picture>
+              <div class="screen d-only"><video class="vid" loop muted playsinline preload="metadata" width={SHOTS.zamowienie1440.w} height={SHOTS.zamowienie1440.h} poster={SHOTS.zamowienie1440.poster} aria-label={T.s2.alt}><source src={SHOTS.zamowienie1440.webm} type="video/webm" /><source src={SHOTS.zamowienie1440.mp4} type="video/mp4" /></video></div>
+              <div class="set-phone"><video class="vid" loop muted playsinline preload="metadata" width={SHOTS.zamowienie390.w} height={SHOTS.zamowienie390.h} poster={SHOTS.zamowienie390.poster} aria-label={T.s2.altM}><source src={SHOTS.zamowienie390.webm} type="video/webm" /><source src={SHOTS.zamowienie390.mp4} type="video/mp4" /></video></div>
               <figcaption set:html={P(T.s2.cap)} />
             </figure>
           </section>
@@ -469,8 +460,8 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
               </figure>
               <figure class="narrator">
                 <p class="link-line" set:html={P(T.s4.link)} />
-                <div class="screen d-only"><Image src={SHOTS.narrator1440} widths={[800, 1200]} sizes="(max-width: 1320px) 60vw, 760px" alt={T.s4.alt} loading="lazy" /></div>
-                <div class="screen m-only"><Image src={SHOTS.narrator390} widths={[390]} sizes="100vw" alt={T.s4.altM} loading="lazy" /></div>
+                <div class="screen d-only"><video class="vid" loop muted playsinline preload="metadata" width={SHOTS.narrator1440.w} height={SHOTS.narrator1440.h} poster={SHOTS.narrator1440.poster} aria-label={T.s4.alt}><source src={SHOTS.narrator1440.webm} type="video/webm" /><source src={SHOTS.narrator1440.mp4} type="video/mp4" /></video></div>
+                <div class="screen m-only"><video class="vid" loop muted playsinline preload="metadata" width={SHOTS.narrator390.w} height={SHOTS.narrator390.h} poster={SHOTS.narrator390.poster} aria-label={T.s4.altM}><source src={SHOTS.narrator390.webm} type="video/webm" /><source src={SHOTS.narrator390.mp4} type="video/mp4" /></video></div>
               </figure>
             </div>
           </section>
@@ -516,7 +507,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
               {SHOTS.strip.map((src, i) => (
                 <li>
                   <figure>
-                    <Image src={src} widths={[640, 960, 1280]} sizes="(max-width: 900px) 84vw, 576px" alt={T.strip[i][1]} loading="lazy" />
+                    <Image src={src} widths={[640, 960, 1280, 1920]} sizes="(max-width: 900px) 84vw, 576px" alt={T.strip[i][1]} loading="lazy" />
                     <figcaption>{T.strip[i][0]}</figcaption>
                   </figure>
                 </li>
@@ -629,7 +620,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
   @font-face { font-family: 'EskMono'; src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 
   .case {
-    --paper: #fafaf9; --ink: #1c1917; --dim: #57534e; --rule: rgb(28 25 23 / .14);
+    --paper: #fcfff5; --ink: #1c1917; --dim: #57534e; --rule: rgb(28 25 23 / .14);
     --green: #1e3b25; --sage: #fcfff5; --brown: #2e2620; --brand: #ffcc33;
     --gutter: clamp(20px, 5vw, 96px); --bar-h: 0px;
     font-family: 'GeneralSansV', sans-serif; background: var(--paper); color: var(--ink); overflow-x: clip;
@@ -694,7 +685,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
 
   /* Pasek trasy: tekst mono i kreska, przyklejony w trakcie stacji. */
   .route { position: relative; }
-  .route-bar { position: sticky; top: 0; z-index: 60; background: rgb(250 250 249 / .94); backdrop-filter: blur(8px); border-block: 1px solid var(--rule); }
+  .route-bar { position: sticky; top: 0; z-index: 60; background: rgb(252 255 245 / .94); backdrop-filter: blur(8px); border-block: 1px solid var(--rule); }
   .bar-in { padding-block: 12px 0; }
   .bar-label { font-family: 'EskMono', ui-monospace, monospace; font-size: 12px; letter-spacing: .02em; color: var(--dim); }
   .bar-stops { margin-top: 8px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
@@ -830,7 +821,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
     .panel .browser:first-child, .panel .browser.small { position: static; width: auto; }
     .repo { margin-top: 24px; }
     .narrator .screen { margin-inline: calc(var(--gutter) * -1); border-radius: 0; box-shadow: none; }
-    .narrator .screen img { width: 100%; }
+    .narrator .screen img, .narrator .screen video { width: 100%; }
     .strip { --edge: var(--gutter); }
     .strip ul { gap: 12px; }
     .strip li { width: 84vw; }
