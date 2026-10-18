@@ -805,12 +805,13 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
     .st-grid, .duo, .pair, .end-in, .live-now .duo { grid-template-columns: 1fr; }
     .st-grid .phone-shot { order: 0; }
     .phone-shot { max-width: none; margin-inline: calc(var(--gutter) * -1); }
-    .phone { margin: 0; border-radius: 0; box-shadow: none; }
+    /* Ujęcia od krawędzi do krawędzi mają ten sam krem co strona: linia u góry i u dołu oddziela stronę klienta od case'u. */
+    .phone { margin: 0; border-radius: 0; box-shadow: 0 -1px 0 var(--rule), 0 1px 0 var(--rule); }
     .phone-shot figcaption { padding-inline: var(--gutter); }
     .s1 .phone-shot figcaption, .s4 .phone-shot figcaption { margin-top: 14px; }
     .reg { margin-top: 8px; }
     .set { padding: 0; }
-    .set-phone { position: static; width: auto; max-width: none; border-radius: 0; box-shadow: none; margin-inline: calc(var(--gutter) * -1); display: block; }
+    .set-phone { position: static; width: auto; max-width: none; border-radius: 0; box-shadow: 0 -1px 0 var(--rule), 0 1px 0 var(--rule); margin-inline: calc(var(--gutter) * -1); display: block; }
     .set { padding-inline: var(--gutter); }
     .set figcaption, .panel figcaption { max-width: none; }
     .browser-shot, .panel { padding-inline: 0; }
@@ -820,7 +821,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
     .panel { padding-bottom: 0; gap: 16px; }
     .panel .browser:first-child, .panel .browser.small { position: static; width: auto; }
     .repo { margin-top: 24px; }
-    .narrator .screen { margin-inline: calc(var(--gutter) * -1); border-radius: 0; box-shadow: none; }
+    .narrator .screen { margin-inline: calc(var(--gutter) * -1); border-radius: 0; box-shadow: 0 -1px 0 var(--rule), 0 1px 0 var(--rule); }
     .narrator .screen img, .narrator .screen video { width: 100%; }
     .strip { --edge: var(--gutter); }
     .strip ul { gap: 12px; }
