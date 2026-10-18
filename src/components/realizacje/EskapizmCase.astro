@@ -58,7 +58,6 @@ const PANEL: Record<'builder' | 'builderChat' | 'mojPlan' | 'tasks' | 'issues', 
 const pick = async (src: ImageMetadata, widths: number[]) => (await getImage({ src, widths, format: 'webp' })).srcSet.attribute;
 const kaskadaM = await pick(SHOTS.kaskada390, [390]);
 const zamowienieM = await pick(SHOTS.zamowienie390, [390, 780]);
-const narratorM = await pick(SHOTS.narrator390, [390]);
 
 const P = pl ? (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;') : (t: string) => t;
 
@@ -470,10 +469,8 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
               </figure>
               <figure class="narrator">
                 <p class="link-line" set:html={P(T.s4.link)} />
-                <picture class="screen">
-                  <source media="(max-width: 900px)" srcset={narratorM} width="390" height="440" />
-                  <Image src={SHOTS.narrator1440} widths={[800, 1200]} sizes="(max-width: 1320px) 60vw, 760px" alt={T.s4.alt} loading="lazy" />
-                </picture>
+                <div class="screen d-only"><Image src={SHOTS.narrator1440} widths={[800, 1200]} sizes="(max-width: 1320px) 60vw, 760px" alt={T.s4.alt} loading="lazy" /></div>
+                <div class="screen m-only"><Image src={SHOTS.narrator390} widths={[390]} sizes="100vw" alt={T.s4.altM} loading="lazy" /></div>
               </figure>
             </div>
           </section>
@@ -570,7 +567,10 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
     const v = e.target as HTMLVideoElement;
     if (e.isIntersecting && !still.matches) v.play().catch(() => {}); else v.pause();
   }), { threshold: .2 });
-  document.querySelectorAll<HTMLVideoElement>('.case video.vid').forEach((v) => io.observe(v));
+  const vids = [...document.querySelectorAll<HTMLVideoElement>('.case video.vid')];
+  vids.forEach((v) => io.observe(v));
+  // Zmiana ustawienia w trakcie: pauza od razu, a po wyłączeniu wznowienie przez ponowne obserwowanie.
+  still.addEventListener('change', () => vids.forEach((v) => { v.pause(); io.unobserve(v); io.observe(v); }));
 
   // Pasek trasy: bieżąca stacja = ostatnia, której górna krawędź minęła 45% wysokości okna.
   const route = document.querySelector<HTMLElement>('[data-route]');
@@ -587,7 +587,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
     let idx = -1;
     stations.forEach((s, i) => { if (s.getBoundingClientRect().top <= line) idx = i; });
     const r = route.getBoundingClientRect();
-    pill.classList.toggle('on', idx >= 0 && r.bottom > innerHeight * .6);
+    pill.classList.toggle('on', idx >= 0 && r.bottom > line);
     if (idx === current) return;
     current = idx;
     const shown = Math.max(idx, 0);
@@ -606,7 +606,9 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
   strip?.addEventListener('wheel', (e) => {
     if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
     const max = strip.scrollWidth - strip.clientWidth;
-    const next = strip.scrollLeft + e.deltaY;
+    // deltaMode: 0 piksele, 1 linie, 2 strony.
+    const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? strip.clientWidth : 1);
+    const next = strip.scrollLeft + dy;
     if ((e.deltaY < 0 && strip.scrollLeft <= 0) || (e.deltaY > 0 && strip.scrollLeft >= max - 1)) return;
     e.preventDefault();
     strip.scrollLeft = Math.max(0, Math.min(max, next));
@@ -719,7 +721,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
   .reg { font-family: 'EskMono', ui-monospace, monospace; font-size: 13px; line-height: 1.5; border-top: 1px solid var(--rule); }
   .reg li { padding: 12px 0; border-bottom: 1px solid var(--rule); }
   .set { position: relative; margin-top: clamp(48px, 6vw, 80px); padding-bottom: 6%; }
-  .screen { display: block; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 30px 60px -30px rgb(28 25 23 / .45), 0 0 0 1px var(--rule); }
+  .screen { border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 30px 60px -30px rgb(28 25 23 / .45), 0 0 0 1px var(--rule); }
   .set .screen { width: 84%; }
   .set-phone { position: absolute; right: var(--gutter); bottom: 0; width: 18%; max-width: 240px; border-radius: 22px; overflow: hidden; box-shadow: 0 0 0 6px var(--ink), 0 30px 60px -20px rgb(28 25 23 / .55); }
   .set figcaption { max-width: 60%; }
