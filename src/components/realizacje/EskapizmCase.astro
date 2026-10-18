@@ -713,8 +713,8 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
   .reg li { padding: 12px 0; border-bottom: 1px solid var(--rule); }
   .set { position: relative; margin-top: clamp(48px, 6vw, 80px); padding-bottom: 6%; }
   .screen { border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 30px 60px -30px rgb(28 25 23 / .45), 0 0 0 1px var(--rule); }
-  .set .screen { width: 84%; }
-  .set-phone { position: absolute; right: var(--gutter); bottom: 0; width: 18%; max-width: 240px; border-radius: 22px; overflow: hidden; box-shadow: 0 0 0 6px var(--ink), 0 30px 60px -20px rgb(28 25 23 / .55); }
+  .set .screen { width: 64%; } /* kadr zamówienia 912x900: przy 84% ekran był wyższy niż szeroki, a telefon zasłaniał róg */
+  .set-phone { position: absolute; right: calc(var(--gutter) + 4%); bottom: 0; width: 22%; max-width: 280px; border-radius: 22px; overflow: hidden; box-shadow: 0 0 0 6px var(--ink), 0 30px 60px -20px rgb(28 25 23 / .55); }
   .set figcaption { max-width: 60%; }
 
   .s3 h2, .s5 h2 { max-width: 18em; }
