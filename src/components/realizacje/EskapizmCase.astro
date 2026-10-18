@@ -1,0 +1,842 @@
+---
+// Case study eskapizmu, kierunek „Trasa planu” (18.10.2026). Projekt: docs/case-studies/eskapizm/runda-1/KIERUNEK.md
+// (sekcja 3, układ 3.0-3.11; sekcja 4, lista ujęć). Treść: eskapizm/COPY.md i COPY-EN.md, bez notatek [..],
+// bez zdań z [DO POTWIERDZENIA] i bez cytatu Justyny (blok czeka na jej akceptację, jak u Igora).
+// Jeden komponent dla PL i EN, żeby podmiana ujęcia była jedną linią dla obu wersji.
+// Rama mioduszewsky (nav, Nohemi, General Sans, BrandFooter), w środku Crimson Text i Inter, papier #FAFAF9, zieleń #1E3B25.
+import { Image, getImage } from 'astro:assets';
+import VariantLayout from '../../layouts/VariantLayout.astro';
+import SiteMenu from '../SiteMenu.astro';
+import BrandFooter from '../BrandFooter.astro';
+import kaskada1440 from '../../assets/realizacje/eskapizm/kaskada-1440.webp';
+import kaskada390 from '../../assets/realizacje/eskapizm/kaskada-390.webp';
+import kalkulator390 from '../../assets/realizacje/eskapizm/kalkulator-390.webp';
+import zamowienie1440 from '../../assets/realizacje/eskapizm/zamowienie-1440.webp';
+import zamowienie390 from '../../assets/realizacje/eskapizm/zamowienie-390.webp';
+import narrator1440 from '../../assets/realizacje/eskapizm/narrator-1440.webp';
+import narrator390 from '../../assets/realizacje/eskapizm/narrator-390.webp';
+import tajlandia from '../../assets/realizacje/eskapizm/tajlandia-1280.webp';
+import wietnam from '../../assets/realizacje/eskapizm/wietnam-1280.webp';
+import filipiny from '../../assets/realizacje/eskapizm/filipiny-1280.webp';
+import indonezja from '../../assets/realizacje/eskapizm/indonezja-1280.webp';
+import blog from '../../assets/realizacje/eskapizm/blog-1280.webp';
+import poslubne from '../../assets/realizacje/eskapizm/poslubne-1280.webp';
+import quiz from '../../assets/realizacje/eskapizm/quiz-1280.webp';
+
+interface Props { locale: 'pl' | 'en' }
+const { locale } = Astro.props;
+const pl = locale === 'pl';
+
+// ── UJĘCIA ─────────────────────────────────────────────────────────────────────────────────────────────
+// Wszystko poniżej to materiał roboczy z 17.10.2026 (material-roboczy/ i runda-1/img/, gałąź hero-film na :4340,
+// bez banera cookies). Docelowe ujęcia nagrywamy według KIERUNEK.md sekcja 4 do material-final/.
+// Podmiana: zamień import albo ścieżkę w jednej linii; obraz idzie do src/assets/realizacje/eskapizm/, wideo do public/realizacje/eskapizm/.
+const V = '/realizacje/eskapizm/';
+const SHOTS = {
+  film1440: { webm: V + 'film-1440.webm', mp4: V + 'film-1440.mp4', poster: V + 'film-1440-poster.webp', w: 1280, h: 800 }, // TYMCZASOWE: film-1440.mp4 (+ .webm) i film-1440-poster.webp (wycięte z home-1440-wolno.mp4, 0-10,7 s)
+  film390: { webm: V + 'film-390.webm', mp4: V + 'film-390.mp4', poster: V + 'film-390-poster.webp', w: 390, h: 844 }, // TYMCZASOWE: film-390.mp4 (+ .webm) i film-390-poster.webp (z home-390-wolno.mp4 sprzed poprawek mobile, 0-8,6 s; plakat = klatka 4,8 s „Zostaw nam planowanie”)
+  kaskada1440, // TYMCZASOWE: kaskada-1440.webp (klatka 4,3 s z home-1440-wolno.mp4, licznik 33)
+  kaskada390, // TYMCZASOWE: kaskada-390.webp (klatka 3,0 s z home-390-wolno.mp4, licznik 33)
+  kalkulator: kalkulator390, // TYMCZASOWE: kalkulator-przebieg-390.mp4 i kalkulator-wynik-390.webp (teraz ekran startu z kalkulator-390.png, przycięty nad stopką)
+  zamowienie1440, // TYMCZASOWE: zamowienie-przebieg-1440.mp4 i zamowienie-1440.webp (teraz zamowienie-1440.png, pierwszy ekran)
+  zamowienie390, // TYMCZASOWE: zamowienie-przebieg-390.mp4 (teraz zamowienie-390.png)
+  narrator1440, // TYMCZASOWE: narrator-1440.mp4 (teraz material-plan-na-telefonie-papier.webp)
+  narrator390, // TYMCZASOWE: narrator-390.mp4 (teraz klatka 13 s z home-390-wolno.mp4, karta „Twoja trasa”)
+  strip: [tajlandia, wietnam, filipiny, indonezja, blog, poslubne, quiz], // TYMCZASOWE: tajlandia-1280, wietnam-1280, filipiny-1280, indonezja-1280, blog-1280, poslubne-1280, quiz-1280 (.webp; teraz pierwsze ekrany przycięte z długich zrzutów 1440)
+};
+// Ujęcia z konta Kacpra (KIERUNEK.md sekcja 4, „Ujęcia z konta Kacpra”). null = spokojna ramka-zastępnik z podpisem.
+// Podmiana: zaimportuj obraz i wpisz go zamiast null.
+const PANEL: Record<'builder' | 'builderChat' | 'mojPlan' | 'tasks' | 'issues', ImageMetadata | null> = {
+  builder: null, // TYMCZASOWE: /admin/ai-plan-builder, zrzut po publikacji (poster) i nagranie sesji 1440x900
+  builderChat: null, // TYMCZASOWE: /admin/ai-plan-builder, sama kolumna czatu (pionowy zrzut, na telefon)
+  mojPlan: null, // TYMCZASOWE: /moj-plan, ekran „Zaczynamy” (poster) i nagranie 390x844
+  tasks: null, // TYMCZASOWE: /admin/tasks, widok Zespół, 1440x900
+  issues: null, // TYMCZASOWE: /admin/issues, lista zgłoszeń z pływającym przyciskiem, 1440x900
+};
+// ───────────────────────────────────────────────────────────────────────────────────────────────────────
+
+const pick = async (src: ImageMetadata, widths: number[]) => (await getImage({ src, widths, format: 'webp' })).srcSet.attribute;
+const kaskadaM = await pick(SHOTS.kaskada390, [390]);
+const zamowienieM = await pick(SHOTS.zamowienie390, [390, 780]);
+const narratorM = await pick(SHOTS.narrator390, [390]);
+
+const P = pl ? (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;') : (t: string) => t;
+
+const T = pl ? {
+  title: 'Platforma eskapizmu: strona, sprzedaż, plany i panel w jednym systemie · mioduszewsky',
+  description: 'Eskapizm to spółka moja i Justyny. Zbudowałem system pod spodem: strona z filmem, kalkulator, zamówienie z fakturą, narzędzie, w którym Justyna składa plan z agentem AI, aplikacja klienta i jeden panel.',
+  skip: 'Przejdź do treści', home: 'mioduszewsky. Strona główna.', homeHref: '/pl/',
+  alt: '/work/eskapizm/',
+  kicker: 'Realizacja: eskapizm, spółka moja i Justyny',
+  h1: 'Godzinna rozmowa zamienia się w plan podróży w telefonie klienta.',
+  lead: 'Eskapizm to spółka, którą prowadzę z Justyną. Robimy plany podróży do Azji Południowo-Wschodniej na zamówienie: Tajlandia, Filipiny, Indonezja, Wietnam, każdy pod daty, budżet i styl konkretnej osoby. Pod spodem działa jeden system, który budujemy we dwoje. Klient trafia na stronę główną z filmem, który gra przy przewijaniu, czyta o czterech krajach i na blogu, robi quiz albo kalkulator, potem zamawia i płaci. Justyna składa jego plan w rozmowie z agentem AI, a klient otwiera go w telefonie. Faktura wystawia się sama, a zadania i zgłoszenia obojga są w jednym panelu. Justyna odpowiada za komunikację, wygląd i doświadczenie klienta i składa plany, ja za produkt, technologię i operacje.',
+  meta: [
+    ['Klient', 'Eskapizm sp. z o.o., Wrocław, plany podróży do Azji'],
+    ['Moja rola', 'wspólnik, produkt i technologia'],
+    ['Czas', 'od września 2025, w toku'],
+    ['Stos', 'React, TypeScript, Supabase, Cloudflare Pages, Paynow, Fakturownia, MailerLite'],
+  ],
+  filmAlt: 'Nagranie filmu ze strony głównej eskapizm.com: wieczór przy laptopie, okna z lotami, noclegami i promami, w Notatkach 33 sprawy, potem hasło Zostaw nam planowanie, telefon z powiadomieniem o gotowym planie i zatoka na Phi Phi.',
+  filmLines: ['7 wieczorów przy laptopie', '33 sprawy, 0 odhaczonych', '„Zostaw nam planowanie.”', '„Wasz plan jest gotowy”'],
+  filmNote: '',
+  beforeH: 'Planowanie wyjazdu to wieczory po pracy i jedna osoba, która musi to ogarnąć.',
+  before: [
+    'Według danych Expedia Group z 2023 roku planowanie jednej podróży to średnio 141 odwiedzonych stron z treściami turystycznymi, a Think with Google liczy ponad 500 punktów styku z treścią. Na stronie eskapizmu klient dostaje ten sam rachunek w swoich jednostkach: „To około X wieczorów po pracy. I jedna osoba, która będzie musiała to ogarnąć.” Obietnica na stronie brzmi: „Co by było, gdyby ktoś ułożył Twój wyjazd za Ciebie?”',
+    'Po stronie firmy ten wyjazd układa Justyna. Jesteśmy we dwoje, bez programistów na etacie i bez inwestora, więc żeby tę obietnicę dotrzymać, potrzebowaliśmy systemu, a nie strony z formularzem. Aplikacja klienta „Mój plan” działa od października 2025, zamówienie z płatnością od listopada 2025, a narzędzie, w którym Justyna składa plan, od stycznia 2026.',
+  ],
+  kaskadaAlt: 'Kadr z filmu: pulpit zasypany oknami, loty, noclegi, prom z Krabi na Koh Lantę, wiadomość od mamy i Notatki z listą Tajlandia: do ogarnięcia, 33 sprawy, 0 odhaczonych.',
+  kaskadaCap: 'Siedem wieczorów na jednym pulpicie: loty, noclegi, promy, SMS od mamy, a w Notatkach 33 sprawy i żadna odhaczona.',
+  routeKicker: 'Wzdłuż drogi klienta: policz, zamów, dostań plan.',
+  // Po nagraniach na planie przykładowym (KIERUNEK sekcja 4) zdanie zmienia się na wersję z COPY.md „Idziemy za jednym przykładowym planem (...)”.
+  routeIntro: 'Idziemy drogą, którą przechodzi każdy plan, od pierwszego kliknięcia klienta po tablicę, na której pracujemy we dwoje.',
+  routeLabel: 'Trasa planu · Tajlandia, 25 stycznia - 9 lutego 2027',
+  routeNav: 'Trasa planu',
+  stops: [
+    ['Klient liczy', 'kalkulator wieczorów'],
+    ['Klient zamawia', 'zamówienie, płatność, faktura'],
+    ['Justyna składa', 'AI Plan Builder'],
+    ['Klient dostaje', '„Mój plan” w telefonie'],
+    ['Wspólnicy prowadzą', 'jeden panel'],
+  ],
+  s1: {
+    h: 'Klient najpierw liczy własne wieczory, dopiero potem widzi cenę.',
+    p: ['Kalkulator „Ile wieczorów oddasz na planowanie?” zadaje 4 pytania o trasę i szczegółowość planu i po 20 sekundach oddaje wynik w wieczorach po pracy. Liczby pod spodem są z badań Expedia Group i Think with Google. Kalkulator ma osobną stronę i sekcję na głównej od lutego 2026.'],
+    forWho: 'Dla klienta', forTxt: 'zanim zobaczy cennik, ma w głowie liczbę swoich wieczorów.',
+    cap: 'Kalkulator na telefonie: cztery pytania i wynik w wieczorach po pracy.',
+    alt: 'Kalkulator eskapizmu na telefonie: plakietka 20 sekund, 4 pytania, nagłówek Ile wieczorów oddasz na planowanie? i przycisk Sprawdź.',
+  },
+  s2: {
+    h: 'Od wyboru pakietu do faktury w KSeF bez naszej ręki.',
+    p: ['Trzy pakiety: Basic, Full i Concierge. Cena zależy od długości wyjazdu (do 7 albo 14 dni) i liczby osób (1-4 albo 5-8) i jest liczona po stronie serwera; kwoty z przeglądarki system nie bierze pod uwagę. Klient płaci przez Paynow: BLIK, karta albo przelew. Po opłaceniu faktura wystawia się w Fakturowni z nazwą wariantu, np. „Plan Full (do 14 dni, 1-4 os.)”, dane firmy wchodzą po NIP, a status faktury w KSeF (Krajowym Systemie e-Faktur, państwowym rejestrze faktur) synchronizuje się sam. Zamówienie i płatność działają od listopada 2025, KSeF od czerwca 2026.'],
+    forWho: 'Dla nas', forTxt: 'faktura i KSeF nie czekają, aż ktoś z nas usiądzie do Fakturowni.',
+    reg: ['Paynow: BLIK, karta albo przelew', 'Fakturownia: faktura po opłaceniu, dane firmy po NIP', 'KSeF: status faktury synchronizuje się sam'],
+    cap: 'Zamówienie na telefonie: pakiet, długość wyjazdu, liczba osób, płatność.',
+    alt: 'Formularz zamówienia eskapizmu na komputerze: karta Plan Full za 1290 PLN, przełączniki planu, długości i liczby osób, pole kodu.',
+    altM: 'Zamówienie na telefonie: karta Plan Full za 1290 PLN, przełączniki Basic i Full, 7 i 14 dni, 1-4 i 5-8 osób, na dole pasek 1290 PLN i przycisk Zapłać.',
+  },
+  s3: {
+    h: 'Justyna rozmawia z agentem, agent składa plan.',
+    p: [
+      'AI Plan Builder to wewnętrzne narzędzie w panelu admina, w którym Justyna składa plan dla konkretnego klienta; klient go nie widzi. Rozmawia z agentem po polsku i potocznie, bo tak je zaprojektowaliśmy: dla osoby, która planuje podróże, a nie programuje. Agent ma 70 narzędzi: dodaje lot jako jedną kartę z wylotem i powrotem, przenosi grupy atrakcji między lokalizacjami, układa budżet w stałym układzie z podsumowaniem i podziałem wiersz po wierszu. Zrzut ekranu wklejony do czatu działa jak polecenie „zrób tak jak tu”, a dokument PDF albo DOCX wchodzi do planu 1:1.',
+      'Twarda zasada tego narzędzia: AI nigdy nie usuwa ani nie ukrywa treści planu bez wyraźnego potwierdzenia. Funkcja po stronie serwera wykrywa ukryte zakładki, usunięte dni i utratę ponad 40% treści dnia, wstrzymuje zapis i pyta; każdy zapis ma automatyczną kopię. „Kontrola planu” pokazuje tylko to, co klient zobaczyłby jako zepsute: pustą zakładkę, tekst-zaślepkę, pustą kategorię. Justyna może też ręcznie dopisać notatkę do każdej sekcji albo ukryć pojedyncze pole, np. cenę albo czas.',
+      'Jedna sesja buildera jest przypięta do jednego klienta i jego planu, a publikacja aktualizuje ten sam plan, który klient widzi w telefonie; Justyna wchodzi do niej z profilu klienta przyciskiem „Plan AI”. Gdy coś nie działa, raport problemu z wnętrza narzędzia sam zbiera ostatnią wiadomość w czacie i kroki odtworzenia.',
+    ],
+    forWho: 'Dla Justyny', forTxt: 'plan powstaje w rozmowie, a nic z niego nie znika bez jej zgody.',
+    cap: 'AI Plan Builder: rozmowa z agentem i plan, który z niej powstaje.',
+  },
+  s4: {
+    h: 'Klient dostaje plan w telefonie, bez instalowania czegokolwiek.',
+    p: [
+      'Plan otwiera się w przeglądarce, po zalogowaniu do „Mój plan”. Ma 9 sekcji: Zaczynamy, Plan dnia, Atrakcje, Noclegi, Restauracje, Transfery, Budżet, Lista rzeczy, Pogoda. W środku jest czat AI o tej konkretnej podróży, z limitem zapytań i miesięcznym budżetem AI na klienta, żeby koszt był pod kontrolą. Plan może też stać pod własnym adresem bez logowania, jako prywatny one-pager wysyłany linkiem.',
+      'Na nowej stronie głównej ten sam plan opowiada narrator: telefon przyklejony do ekranu, obok tekst w 8 rozdziałach i 3 aktach (Przed wylotem, W drodze, Budżet), a ekrany to zrzuty prawdziwej aplikacji z przykładowego planu Tajlandii na 25 stycznia - 9 lutego.',
+    ],
+    forWho: 'Dla klienta', forTxt: 'zamiast PDF-a w mailu ma plan, który otwiera z telefonu i o który może zapytać.',
+    cap: 'Plan na telefonie: 9 sekcji, od „Zaczynamy” do „Pogoda”.',
+    link: 'Narrator na stronie głównej pokazuje te same ekrany, które klient po zakupie otwiera w telefonie.',
+    alt: 'Narrator na stronie głównej eskapizmu: telefon z rozdziałem Plan dnia, karta Dzień 4, 28 stycznia, Środa, Phuket do Koh Lanty, obok nagłówek Każdy dzień ma swój plan.',
+    altM: 'Narrator na telefonie: karta Twoja trasa, 16 dni, Phuket Old Town, Koh Lanta, Koh Yao Yoi, Phuket, willa.',
+  },
+  s5: {
+    h: 'Jedna tablica dla dwójki wspólników i przycisk „Zgłoś problem”.',
+    p: [
+      'Zadania firmy żyją w ClickUpie w trzech listach: wspólnej, mojej i Justyny. Panel w naszej aplikacji odbija je w jednej tablicy z przełącznikiem Zespół / Kacper / Justyna / Wszystko, kalendarzem i pasem „Pomysły” poza kolumnami statusów; ClickUp zostaje źródłem prawdy, a przeglądarka nie trzyma do niego tokena. Zadanie skasowane w ClickUpie znika też z tablicy.',
+      'Na każdej stronie panelu jest pływający przycisk „Zgłoś problem lub pomysł”; zgłoszenia lądują w jednej liście z czerwoną kropką w menu. Justyna zgłasza w miejscu, w którym pracuje, a ja dostaję zgłoszenie razem z kontekstem.',
+      'Justyna ma też prawo zapisu do tego samego repozytorium, na własnej gałęzi, i sama wgrała do niego plan pary klientów pod ich własnym adresem. Gdy strona i wpis na blogu mówiły o Wietnamie różnie, Justyna ustaliła „minimum 10 dni” i tak jest wszędzie.',
+    ],
+    forWho: 'Dla nas', forTxt: 'to samo zadanie widać w ClickUpie i w panelu, w którym Justyna składa plany.',
+    cap: 'Panel zadań: przestrzeń Zespół, kalendarz, pas „Pomysły”.',
+    repo: 'Jedno repozytorium kodu dla obojga · Justyna na własnej gałęzi · zmiany na main przez pull request',
+  },
+  ph: 'Ujęcie z panelu: w przygotowaniu',
+  restH: 'Wokół trasy stoją strony czterech krajów, blog, quiz i oferta podróży poślubnych.',
+  restP: 'Strona główna też jest jednym systemem: film, narrator i sekcje pod nimi mają jeden styl nagłówków i przycisków, a strona kończy się tym samym zdjęciem z Phi Phi, na którym kończy się film.',
+  stripLabel: 'Reszta systemu, przewijana w poziomie',
+  strip: [
+    ['Tajlandia: regiony, sezon, przykładowy plan', 'Pierwszy ekran strony Tajlandii: mnisi w pomarańczowych szatach przy świątyni i duży napis Tajlandia.'],
+    ['Wietnam: minimum 10 dni, ustaliła Justyna', 'Pierwszy ekran strony Wietnamu: nocny targ z czerwonymi lampionami i napis Wietnam.'],
+    ['Filipiny: treść podawana też botom wyszukiwarek', 'Pierwszy ekran strony Filipin: łodzie na plaży pod palmami i napis Filipiny.'],
+    ['Indonezja: cztery kraje, jeden układ strony', 'Pierwszy ekran strony Indonezji: wodospad w dżungli i napis Indonezja.'],
+    ['Blog: 23 wpisy pisane w panelu', 'Pierwszy ekran bloga: plaża z palmami i nagłówek Znajdź swój własny eskapizm.'],
+    ['Podróże poślubne: link dla organizatorek ślubów', 'Pierwszy ekran strony podróży poślubnych: para na plaży i napis Lećcie do Azji. Zaplanujemy waszą podróż poślubną.'],
+    ['Quiz: 8 pytań, wynik przed mailem', 'Quiz eskapizmu: pierwsze pytanie od Justyny i Kacpra jako rozmowa i cztery odpowiedzi A-D.'],
+  ],
+  scale: ['4 kraje', '2 języki', '23 wpisy', '9 sekcji planu', '70 narzędzi agenta'],
+  liveH: 'Co działa dziś.',
+  live: [
+    'eskapizm.com działa po polsku i po angielsku, z czterema stronami kierunków i blogiem z 23 wpisami.',
+    'Klient zamawia, płaci i do 7 dni roboczych dostaje plan w telefonie; rozmowa startowa to około 60 minut.',
+    'Faktura i jej status w KSeF idą same po płatności.',
+    'Blog i strony kierunków są renderowane botom na brzegu sieci z danych przy każdym żądaniu, a adres spoza listy tras dostaje 404.',
+    'Produkcja buduje się sama po <code>git push</code>, funkcje serwerowe wdrażają się z GitHub Actions z bramką testów.',
+  ],
+  quoteTodo: 'Tu stanie cytat Justyny po rozmowie. Na produkcji blok się nie pokaże, dopóki cytat nie jest zaakceptowany.',
+  endH: 'Masz w firmie coś, co dziś składa jedna osoba ręcznie?',
+  endP: 'Opisz mi to w 15 minut. Powiem, co zbudowałbym najpierw i co by to zmieniło.',
+  btn: 'Umów 15 minut',
+  contact: '/pl/kontakt/?service=' + encodeURIComponent('Aplikacja lub system') + '#ctForm',
+  more: 'Aplikacja albo system: jak pracuję', moreHref: '/pl/uslugi/aplikacje-i-systemy/',
+} : {
+  title: 'The eskapizm platform: website, sales, plans and dashboard in one system · mioduszewsky',
+  description: 'Eskapizm is the company Justyna and I run. I built the system underneath: a website with a film, a calculator, ordering with invoicing, a tool where Justyna builds plans with an AI agent, a client app and one dashboard.',
+  skip: 'Skip to content', home: 'mioduszewsky. Home page.', homeHref: '/',
+  alt: '/pl/realizacje/eskapizm/',
+  kicker: 'Case study: eskapizm, the company Justyna and I run',
+  h1: 'A one-hour conversation turns into a travel plan on the client’s phone.',
+  lead: 'Eskapizm is a company I run with Justyna. We make travel plans for Southeast Asia to order: Thailand, the Philippines, Indonesia, Vietnam, each one built around one person’s dates, budget and travel style. Underneath it runs one system, and the two of us build it. The client lands on the homepage, which in Polish opens with a film that plays as you scroll, reads up on four countries and the blog, takes the quiz or the calculator, then orders and pays. Justyna builds their plan in a conversation with an AI agent, and the client opens it on their phone. The invoice goes out on its own, and both our tasks and problem reports live in one dashboard. Justyna owns communication, look and feel and the client experience, and she builds the plans. I own product, technology and operations.',
+  meta: [
+    ['Client', 'Eskapizm sp. z o.o. (a Polish limited company), Wrocław, travel plans for Asia'],
+    ['My role', 'cofounder, in charge of product and technology'],
+    ['Timeline', 'since September 2025, ongoing'],
+    ['Stack', 'React, TypeScript, Supabase, Cloudflare Pages, Paynow, Fakturownia, MailerLite'],
+  ],
+  filmAlt: 'Recording of the film on the eskapizm.com homepage: an evening at the laptop, windows with flights, stays and ferries, 33 to-dos in Notes, then the line Leave the planning to us, a phone with a plan-ready notification and the bay on Phi Phi.',
+  filmLines: ['7 evenings at the laptop', '33 to-dos, 0 done', '“Leave the planning to us.”', '“Your plan is ready”'],
+  filmNote: '(the film is in Polish)',
+  beforeH: 'Planning a trip means evenings after work, and one person who has to figure it all out.',
+  before: [
+    'According to Expedia Group data from 2023, planning a single trip means visiting an average of 141 pages of travel content, and Think with Google counts over 500 digital touchpoints along the way. On the eskapizm website the client gets the same math in their own units: “That’s about X evenings after work. And one person who’ll have to figure it all out.” The promise on the site reads: “What if someone planned your trip for you?”',
+    'On the company side, the person who plans that trip is Justyna. There are two of us, with no developers on payroll and no investor, so to keep that promise we needed a system, not a website with a contact form. The client app “My plan” has been running since October 2025, ordering with payment since November 2025, and the tool Justyna builds the plan in since January 2026.',
+  ],
+  kaskadaAlt: 'A frame from the film: a desktop buried in windows, flights, stays, the ferry from Krabi to Koh Lanta, a text from Mom and a Notes list, Thailand: to sort out, 33 to-dos, 0 done.',
+  kaskadaCap: 'Seven evenings on one desktop: flights, stays, ferries, a text from Mom, and a to-do list in Notes that climbs to 33 items without a single one checked off.',
+  routeKicker: 'Along the client’s path: count, order, get the plan.',
+  // After the recordings on the sample plan (KIERUNEK section 4) this becomes the COPY-EN.md line “We follow one sample plan (...)”.
+  routeIntro: 'We follow the path every plan takes, from the client’s first click to the board the two of us work from.',
+  routeLabel: 'Plan route · Thailand, January 25 to February 9, 2027',
+  routeNav: 'Plan route',
+  stops: [
+    ['The client counts', 'evenings calculator'],
+    ['The client orders', 'order, payment, invoice'],
+    ['Justyna builds', 'AI Plan Builder'],
+    ['The client gets it', '“My plan” on the phone'],
+    ['We run it', 'one dashboard'],
+  ],
+  s1: {
+    h: 'The client counts their own evenings first. Only then do they see a price.',
+    p: ['The calculator “How many evenings will you spend planning?” asks 4 questions about the route and how detailed the plan should be, and 20 seconds later it gives the answer in evenings after work. The numbers underneath come from Expedia Group and Think with Google research. The calculator has had its own page and a section on the homepage since February 2026.'],
+    forWho: 'For the client', forTxt: 'before they see the price list, they have a number of their own evenings in their head.',
+    cap: 'The calculator on a phone: four questions and the result in evenings after work.',
+    alt: 'The eskapizm calculator on a phone (in Polish): a 20 seconds, 4 questions badge, the heading How many evenings will you spend planning? and a Check button.',
+  },
+  s2: {
+    h: 'From picking a package to the invoice filed in KSeF, without either of us touching it.',
+    p: ['Three packages: Basic, Full and Concierge. The price depends on the length of the trip (up to 7 or 14 days) and the number of people (1-4 or 5-8), and it’s calculated on the server. Whatever amount the browser sends is ignored. The client pays through Paynow, by BLIK (Poland’s mobile payment system), card or bank transfer. Once the payment is in, an invoice is issued in Fakturownia, our invoicing app, named after the exact variant, for example “Full plan (up to 14 days, 1-4 people)”. Company details come in from the tax ID, and the invoice’s status in KSeF (Poland’s national e-invoicing system, where every invoice has to be filed) syncs on its own. Ordering and payment have been live since November 2025, KSeF since June 2026.'],
+    forWho: 'For us', forTxt: 'the invoice and KSeF don’t wait for one of us to sit down at Fakturownia.',
+    reg: ['Paynow: BLIK, card or bank transfer', 'Fakturownia: invoice on payment, company details from the tax ID', 'KSeF: invoice status syncs on its own'],
+    cap: 'Ordering on a phone: package, trip length, number of people, payment.',
+    alt: 'The eskapizm order form on desktop (in Polish): a Plan Full card at 1290 PLN, switches for plan, length and number of people, a code field.',
+    altM: 'Ordering on a phone (in Polish): a Plan Full card at 1290 PLN, Basic and Full, 7 and 14 days, 1-4 and 5-8 people, and a bottom bar with 1290 PLN and a Pay button.',
+  },
+  s3: {
+    h: 'Justyna talks to the agent, the agent builds the plan.',
+    p: [
+      'AI Plan Builder is an internal tool in the admin dashboard where Justyna puts together the plan for a specific client; clients never see it. She talks to the agent in Polish, in everyday language, because that’s how we designed it: for someone who plans trips, not someone who writes code. The agent has 70 tools: it adds a flight as one card with the outbound and return legs, moves groups of attractions between locations, and lays the budget out in a fixed layout with a summary and a row-by-row breakdown. A screenshot pasted into the chat works as a “make it like this” instruction, and a PDF or DOCX document goes into the plan 1:1.',
+      'The hard rule of this tool: the AI never deletes or hides plan content without an explicit confirmation. A server-side function detects hidden tabs, deleted days and a loss of over 40% of a day’s content, then holds the save and asks. Every save gets an automatic backup. “Plan check” shows only what the client would see as broken: an empty tab, placeholder text, an empty category. Justyna can also add a note to any section by hand or hide a single field, say the price or the time.',
+      'One builder session is pinned to one client and their plan, and publishing updates the same plan the client sees on their phone. Justyna opens it from the client’s profile with the “AI plan” button. When something breaks, a problem report from inside the tool collects the last chat message and the steps to reproduce on its own.',
+    ],
+    forWho: 'For Justyna', forTxt: 'the plan comes out of a conversation, and nothing in it disappears without her say-so.',
+    cap: 'AI Plan Builder: a conversation with the agent and the plan that comes out of it.',
+  },
+  s4: {
+    h: 'The client gets the plan on their phone, with nothing to install.',
+    p: [
+      'The plan opens in the browser after logging in to “My plan”. It has 9 sections, in Polish: Getting started, Day plan, Attractions, Stays, Restaurants, Transfers, Budget, Packing list, Weather. Inside there’s an AI chat about this specific trip, with a query limit and a monthly AI budget per client, so the cost stays under control. A plan can also live at its own address without a login, as a private one-pager sent as a link.',
+      'On the new homepage the same plan is told by a narrator: a phone pinned to the screen, text flowing beside it in 8 chapters and 3 acts (Before departure, On the road, Budget), and the screens are screenshots of the real app from the sample Thailand plan for January 25 to February 9.',
+    ],
+    forWho: 'For the client', forTxt: 'instead of a PDF in an email, they have a plan they open from their phone and can ask questions about.',
+    cap: 'The plan on a phone: 9 sections, from “Getting started” to “Weather”.',
+    link: 'The narrator on the homepage walks through the same screens the client opens on their phone once they’ve paid.',
+    alt: 'The narrator on the eskapizm homepage (in Polish): a phone on the Day plan chapter, a Day 4 card for January 28, Phuket to Koh Lanta, and the heading Every day has its plan.',
+    altM: 'The narrator on a phone (in Polish): a Your route card, 16 days, Phuket Old Town, Koh Lanta, Koh Yao Yoi, Phuket villa.',
+  },
+  s5: {
+    h: 'One board for two partners and a “Report a problem” button.',
+    p: [
+      'The company’s tasks live in ClickUp in three lists: shared, mine and Justyna’s. The dashboard in our app mirrors them on one board with a Team / Kacper / Justyna / All switch, a calendar and an “Ideas” lane outside the status columns. ClickUp stays the source of truth, and the browser never holds a ClickUp token. A task deleted in ClickUp disappears from the board too.',
+      'Every page of the dashboard has a floating “Report a problem or an idea” button, and reports land in one list with a red dot in the menu. Justyna reports from the place she’s working in, and I get the report together with its context.',
+      'Justyna also has write access to the same repository, on her own branch, and she added a couple’s travel plan to it herself, under their own address. When the website and a blog post disagreed about Vietnam, Justyna settled on “a minimum of 10 days” and that’s what it says everywhere now.',
+    ],
+    forWho: 'For us', forTxt: 'the same task shows up in ClickUp and in the dashboard where Justyna builds the plans.',
+    cap: 'The task board: Team space, calendar, “Ideas” lane.',
+    repo: 'One codebase for both of us · Justyna on her own branch · changes reach main through a pull request',
+  },
+  ph: 'Dashboard footage: in preparation',
+  restH: 'Around the route: four country pages, a blog, a quiz and a honeymoon offer.',
+  restP: 'The homepage works as one system too: the film, the narrator and the sections below share one style of headings and buttons, and the page closes on the same Phi Phi photo the film ends on.',
+  stripLabel: 'The rest of the system, scrolls sideways',
+  strip: [
+    ['Thailand: regions, seasons, a sample plan', 'First screen of the Thailand page: monks in orange robes by a temple and a large Thailand heading (in Polish).'],
+    ['Vietnam: 10 days minimum, Justyna’s call', 'First screen of the Vietnam page: a night market with red lanterns and a Vietnam heading (in Polish).'],
+    ['The Philippines: content served to search bots too', 'First screen of the Philippines page: boats on a beach under palm trees and a Philippines heading (in Polish).'],
+    ['Indonesia: four countries, one page layout', 'First screen of the Indonesia page: a jungle waterfall and an Indonesia heading (in Polish).'],
+    ['Blog: 23 posts written in the dashboard', 'First screen of the blog: a beach with palm trees and the heading Find your own escapism (in Polish).'],
+    ['Honeymoons: a link for wedding planners', 'First screen of the honeymoon page: a couple on a beach and the line Fly to Asia. We will plan your honeymoon (in Polish).'],
+    ['Quiz: 8 questions, results before email', 'The eskapizm quiz (in Polish): the first question from Justyna and Kacper as a chat and four answers A-D.'],
+  ],
+  scale: ['4 countries', '2 languages', '23 blog posts', '9 plan sections', '70 agent tools'],
+  liveH: 'What’s live today.',
+  live: [
+    'eskapizm.com runs in Polish and English, with four destination pages and a blog with 23 posts.',
+    'The client orders, pays and gets the plan on their phone within 7 business days. The kickoff conversation is about 60 minutes.',
+    'The invoice and its KSeF status follow the payment on their own.',
+    'The blog and the destination pages are rendered for bots at the edge of the network, from data, on every request, and any address outside the route list gets a 404.',
+    'Production builds itself after <code>git push</code>, and the server functions deploy from GitHub Actions behind a test gate.',
+  ],
+  quoteTodo: 'Justyna’s quote goes here after the conversation. In production the block stays hidden until the quote is approved.',
+  endH: 'Is there something in your company that one person still puts together by hand?',
+  endP: 'Describe it to me in 15 minutes. I’ll tell you what I’d build first and what it would change.',
+  btn: 'Book a 15-minute call',
+  contact: '/contact/?service=' + encodeURIComponent('Application or system') + '#ctForm',
+  more: 'Application or system: how I work', moreHref: '/services/apps-and-systems/',
+};
+
+// Cytat Justyny pojawia się dopiero po jej akceptacji (docs/case-studies/OPINIE-ROZMOWA.md).
+const quote: { text: string; name: string; role: string } | null = null;
+const url = 'https://mioduszewsky.com' + (pl ? '/pl/realizacje/eskapizm/' : '/work/eskapizm/');
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Article', headline: T.h1, inLanguage: locale,
+      about: pl ? 'System eskapizmu: strona, sprzedaż, narzędzie do planów, aplikacja klienta i panel, eskapizm.com' : 'The eskapizm system: website, sales, plan-building tool, client app and dashboard, eskapizm.com',
+      author: { '@type': 'Person', name: 'Kacper Mioduszewski', url: 'https://mioduszewsky.com' + T.homeHref },
+      image: 'https://mioduszewsky.com' + SHOTS.film1440.poster,
+      mainEntityOfPage: url },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'mioduszewsky', item: 'https://mioduszewsky.com' + T.homeHref },
+      { '@type': 'ListItem', position: 2, name: 'eskapizm', item: url } ] },
+  ],
+};
+const num = (i: number) => String(i + 1).padStart(2, '0');
+const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
+---
+<!-- Przed publikacją: robots „index, follow, max-image-preview:large” (jak u Igora), dopiero po zgodzie w rejestrze (npm run verify:zgody) i deployu hero-film. -->
+<VariantLayout title={T.title} description={T.description} bg="#FAFAF9" fg="#1c1917" switcher={false} robots="noindex, nofollow" locale={locale} alternatePath={T.alt}>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <div class="case">
+    <a class="skip" href="#main">{T.skip}</a>
+    <header class="nav">
+      <a class="mark" href={T.homeHref} aria-label={T.home}>
+        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+      </a>
+      <SiteMenu locale={locale} alternatePath={T.alt} />
+    </header>
+
+    <main id="main">
+      <article>
+        <!-- 3.1 Scena: film w kadrze, na ciemnym brązie z klatki „Zostaw nam planowanie”. -->
+        <header class="stage">
+          <div class="wrap">
+            <p class="kicker">{T.kicker}</p>
+            <h1 set:html={P(T.h1)} />
+            <p class="lead" set:html={P(T.lead)} />
+            <dl class="meta">
+              {T.meta.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+            </dl>
+          </div>
+          <figure class="wrap film">
+            <div class="film-frame d-only">
+              <video class="vid" loop muted playsinline preload="metadata" width={SHOTS.film1440.w} height={SHOTS.film1440.h} poster={SHOTS.film1440.poster} aria-label={T.filmAlt}>
+                <source src={SHOTS.film1440.webm} type="video/webm" />
+                <source src={SHOTS.film1440.mp4} type="video/mp4" />
+              </video>
+            </div>
+            <div class="film-frame m-only">
+              <video class="vid" loop muted playsinline preload="metadata" width={SHOTS.film390.w} height={SHOTS.film390.h} poster={SHOTS.film390.poster} aria-label={T.filmAlt}>
+                <source src={SHOTS.film390.webm} type="video/webm" />
+                <source src={SHOTS.film390.mp4} type="video/mp4" />
+              </video>
+            </div>
+            <figcaption>
+              <ol class="lines">{T.filmLines.map((l) => <li>{l}</li>)}</ol>
+              {T.filmNote && <span class="note">{T.filmNote}</span>}
+            </figcaption>
+          </figure>
+        </header>
+
+        <!-- 3.2 Przed -->
+        <section class="paper before">
+          <div class="wrap">
+            <h2 set:html={P(T.beforeH)} />
+            <div class="txt cols">{T.before.map((p) => <p set:html={P(p)} />)}</div>
+          </div>
+          <figure class="wrap shot-wide">
+            <picture>
+              <source media="(max-width: 900px)" srcset={kaskadaM} width="390" height="844" />
+              <Image src={SHOTS.kaskada1440} widths={[720, 1080, 1440]} sizes="(max-width: 1320px) 100vw, 1320px" alt={T.kaskadaAlt} loading="lazy" />
+            </picture>
+            <figcaption set:html={P(T.kaskadaCap)} />
+          </figure>
+        </section>
+
+        <!-- 3.3-3.8 Trasa planu: pasek przyklejony pod navem (desktop), pigułka na dole (telefon), pięć stacji. -->
+        <section class="paper intro" aria-labelledby="route-k">
+          <div class="wrap">
+            <p class="sec-kicker" id="route-k">{T.routeKicker}</p>
+            <p class="intro-p" set:html={P(T.routeIntro)} />
+          </div>
+        </section>
+        <div class="route" data-route>
+          <nav class="route-bar" aria-label={T.routeNav}>
+            <div class="wrap bar-in">
+              <p class="bar-label">{T.routeLabel}</p>
+              <ol class="bar-stops">
+                {T.stops.map(([name, sys], i) => (
+                  <li><a href={`#stacja-${num(i)}`} data-stop={i}><span class="bn">{num(i)}</span> <span class="bname">{name}</span><span class="bsys">{sys}</span></a></li>
+                ))}
+              </ol>
+            </div>
+          </nav>
+
+          {/* Stacja 01: kalkulator wieczorów (papier) */}
+          <section class="station paper s1" id="stacja-01" data-station="0" aria-labelledby="s1-h">
+            <div class="wrap st-grid">
+              <figure class="phone-shot">
+                <div class="phone"><Image src={SHOTS.kalkulator} widths={[390, 780]} sizes="(max-width: 900px) 100vw, 360px" alt={T.s1.alt} loading="lazy" /></div>
+                <figcaption set:html={P(T.s1.cap)} />
+              </figure>
+              <div class="st-text">
+                <p class="st-label"><span>{num(0)}</span> {T.stops[0][0]}</p>
+                <h2 id="s1-h" set:html={P(T.s1.h)} />
+                <div class="txt">{T.s1.p.map((p) => <p set:html={P(p)} />)}<p class="for"><strong>{T.s1.forWho}:</strong> <span set:html={P(T.s1.forTxt)} /></p></div>
+              </div>
+            </div>
+          </section>
+
+          {/* Stacja 02: zamówienie, płatność, faktura (papier) */}
+          <section class="station paper s2" id="stacja-02" data-station="1" aria-labelledby="s2-h">
+            <div class="wrap duo">
+              <div class="st-text">
+                <p class="st-label"><span>{num(1)}</span> {T.stops[1][0]}</p>
+                <h2 id="s2-h" set:html={P(T.s2.h)} />
+                <div class="txt">{T.s2.p.map((p) => <p set:html={P(p)} />)}<p class="for"><strong>{T.s2.forWho}:</strong> <span set:html={P(T.s2.forTxt)} /></p></div>
+              </div>
+              <ul class="reg">{T.s2.reg.map((r) => <li>{r}</li>)}</ul>
+            </div>
+            <figure class="wrap set">
+              <div class="screen d-only"><Image src={SHOTS.zamowienie1440} widths={[960, 1440, 1920]} sizes="(max-width: 1320px) 84vw, 1100px" alt={T.s2.alt} loading="lazy" /></div>
+              <picture class="set-phone">
+                <source media="(max-width: 900px)" srcset={zamowienieM} sizes="100vw" width="780" height="1688" />
+                <Image src={SHOTS.zamowienie390} widths={[390, 780]} sizes="240px" alt={T.s2.altM} loading="lazy" />
+              </picture>
+              <figcaption set:html={P(T.s2.cap)} />
+            </figure>
+          </section>
+
+          {/* Stacja 03: AI Plan Builder (zieleń, pełna szerokość, tor Justyny) */}
+          <section class="station green s3" id="stacja-03" data-station="2" aria-labelledby="s3-h">
+            <div class="wrap">
+              <p class="st-label"><span>{num(2)}</span> {T.stops[2][0]}</p>
+              <h2 id="s3-h" set:html={P(T.s3.h)} />
+            </div>
+            <figure class="wrap browser-shot">
+              <div class="browser">
+                <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                {PANEL.builder
+                  ? <Image src={PANEL.builder} widths={[960, 1440]} sizes="(max-width: 1320px) 100vw, 1320px" alt={T.s3.cap} loading="lazy" />
+                  : <div class="ph ph-wide"><p>{T.ph}</p></div>}
+              </div>
+              <div class="m-only chat-shot">
+                {PANEL.builderChat
+                  ? <Image src={PANEL.builderChat} widths={[390, 780]} sizes="100vw" alt={T.s3.cap} loading="lazy" />
+                  : <div class="ph ph-tall"><p>{T.ph}</p></div>}
+              </div>
+              <figcaption set:html={P(T.s3.cap)} />
+            </figure>
+            <div class="wrap txt cols2">
+              {T.s3.p.map((p) => <p set:html={P(p)} />)}
+              <p class="for"><strong>{T.s3.forWho}:</strong> <span set:html={P(T.s3.forTxt)} /></p>
+            </div>
+          </section>
+
+          {/* Stacja 04: plan w telefonie (papier) */}
+          <section class="station paper s4" id="stacja-04" data-station="3" aria-labelledby="s4-h">
+            <div class="wrap">
+              <p class="st-label"><span>{num(3)}</span> {T.stops[3][0]}</p>
+              <h2 id="s4-h" set:html={P(T.s4.h)} />
+              <div class="txt cols">{T.s4.p.map((p) => <p set:html={P(p)} />)}</div>
+              <p class="txt for"><strong>{T.s4.forWho}:</strong> <span set:html={P(T.s4.forTxt)} /></p>
+            </div>
+            <div class="wrap pair">
+              <figure class="phone-shot">
+                <div class="phone">
+                  {PANEL.mojPlan
+                    ? <Image src={PANEL.mojPlan} widths={[390, 780]} sizes="(max-width: 900px) 100vw, 360px" alt={T.s4.cap} loading="lazy" />
+                    : <div class="ph ph-phone"><p>{T.ph}</p></div>}
+                </div>
+                <figcaption set:html={P(T.s4.cap)} />
+              </figure>
+              <figure class="narrator">
+                <p class="link-line" set:html={P(T.s4.link)} />
+                <picture class="screen">
+                  <source media="(max-width: 900px)" srcset={narratorM} width="390" height="440" />
+                  <Image src={SHOTS.narrator1440} widths={[800, 1200]} sizes="(max-width: 1320px) 60vw, 760px" alt={T.s4.alt} loading="lazy" />
+                </picture>
+              </figure>
+            </div>
+          </section>
+
+          {/* Stacja 05: jeden panel wspólników (zieleń) */}
+          <section class="station green s5" id="stacja-05" data-station="4" aria-labelledby="s5-h">
+            <div class="wrap">
+              <p class="st-label"><span>{num(4)}</span> {T.stops[4][0]}</p>
+              <h2 id="s5-h" set:html={P(T.s5.h)} />
+              <div class="txt cols2">
+                {T.s5.p.map((p) => <p set:html={P(p)} />)}
+                <p class="for"><strong>{T.s5.forWho}:</strong> <span set:html={P(T.s5.forTxt)} /></p>
+              </div>
+            </div>
+            <figure class="wrap panel">
+              <div class="browser">
+                <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                {PANEL.tasks
+                  ? <Image src={PANEL.tasks} widths={[960, 1440]} sizes="(max-width: 1320px) 100vw, 1100px" alt={T.s5.cap} loading="lazy" />
+                  : <div class="ph ph-wide"><p>{T.ph}</p></div>}
+              </div>
+              <div class="browser small">
+                <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                {PANEL.issues
+                  ? <Image src={PANEL.issues} widths={[720, 1440]} sizes="(max-width: 900px) 100vw, 520px" alt="" loading="lazy" />
+                  : <div class="ph ph-wide"><p>{T.ph}</p></div>}
+              </div>
+              <figcaption set:html={P(T.s5.cap)} />
+            </figure>
+            <p class="wrap repo">{T.s5.repo}</p>
+          </section>
+        </div>
+        <div class="route-pill" data-pill aria-hidden="true"><span class="pn">01</span> <span class="pt">{T.stops[0][0]}</span></div>
+
+        <!-- 3.9 Reszta systemu w jednym pasie, przewijanym w poziomie -->
+        <section class="paper rest" aria-labelledby="rest-h">
+          <div class="wrap">
+            <h2 id="rest-h" set:html={P(T.restH)} />
+            <p class="txt" set:html={P(T.restP)} />
+          </div>
+          <div class="strip" tabindex="0" role="region" aria-label={T.stripLabel} data-strip>
+            <ul>
+              {SHOTS.strip.map((src, i) => (
+                <li>
+                  <figure>
+                    <Image src={src} widths={[640, 960, 1280]} sizes="(max-width: 900px) 84vw, 576px" alt={T.strip[i][1]} loading="lazy" />
+                    <figcaption>{T.strip[i][0]}</figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <p class="wrap scale">{T.scale.map((s, i) => <>{i === 3 && <i class="br" aria-hidden="true"></i>}<span>{s}</span></>)}</p>
+        </section>
+
+        <!-- 3.10 Co działa dziś, cytat Justyny -->
+        <section class="paper live-now" aria-labelledby="live-h">
+          <div class="wrap duo">
+            <h2 id="live-h">{T.liveH}</h2>
+            <ul class="live-list">{T.live.map((l) => <li><span set:html={P(l)} /></li>)}</ul>
+          </div>
+        </section>
+
+        {quote ? (
+          <figure class="wrap quote">
+            <blockquote><p>{quote.text}</p></blockquote>
+            <figcaption>{quote.name}, {quote.role}</figcaption>
+          </figure>
+        ) : import.meta.env.DEV && (
+          <aside class="wrap quote-todo" aria-hidden="true">{T.quoteTodo}</aside>
+        )}
+      </article>
+
+      <section class="end" aria-labelledby="end-h">
+        <div class="wrap end-in">
+          <h2 id="end-h" set:html={P(T.endH)} />
+          <div>
+            <p set:html={P(T.endP)} />
+            <a class="btn" href={T.contact}>{T.btn}</a>
+            <p class="more"><a href={T.moreHref}>{T.more}</a></p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <BrandFooter locale={locale} inset />
+  </div>
+</VariantLayout>
+
+<script>
+  // Pętle filmu grają tylko w ekranie i bez prefers-reduced-motion; inaczej zostaje plakat.
+  // Ukryta wersja (desktop albo telefon) nigdy nie przecina ekranu, więc się nie odtwarza.
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target as HTMLVideoElement;
+    if (e.isIntersecting && !still.matches) v.play().catch(() => {}); else v.pause();
+  }), { threshold: .2 });
+  document.querySelectorAll<HTMLVideoElement>('.case video.vid').forEach((v) => io.observe(v));
+
+  // Pasek trasy: bieżąca stacja = ostatnia, której górna krawędź minęła 45% wysokości okna.
+  const route = document.querySelector<HTMLElement>('[data-route]');
+  const stations = [...document.querySelectorAll<HTMLElement>('[data-station]')];
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-stop]')];
+  const pill = document.querySelector<HTMLElement>('[data-pill]');
+  const names = links.map((a) => a.querySelector('.bname')?.textContent || '');
+  let current = -2;
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    if (!route || !pill) return;
+    const line = innerHeight * .45;
+    let idx = -1;
+    stations.forEach((s, i) => { if (s.getBoundingClientRect().top <= line) idx = i; });
+    const r = route.getBoundingClientRect();
+    pill.classList.toggle('on', idx >= 0 && r.bottom > innerHeight * .6);
+    if (idx === current) return;
+    current = idx;
+    const shown = Math.max(idx, 0);
+    links.forEach((a, i) => { if (i === shown && idx >= 0) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current'); });
+    route.dataset.current = idx >= 0 ? String(shown) : '';
+    pill.querySelector('.pn')!.textContent = String(shown + 1).padStart(2, '0');
+    pill.querySelector('.pt')!.textContent = names[shown];
+  };
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  update();
+
+  // Pas „reszta systemu”: kółko myszy przewija pas w poziomie, dopóki ma dokąd; na końcach przewija się strona.
+  const strip = document.querySelector<HTMLElement>('[data-strip]');
+  strip?.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+    const max = strip.scrollWidth - strip.clientWidth;
+    const next = strip.scrollLeft + e.deltaY;
+    if ((e.deltaY < 0 && strip.scrollLeft <= 0) || (e.deltaY > 0 && strip.scrollLeft >= max - 1)) return;
+    e.preventDefault();
+    strip.scrollLeft = Math.max(0, Math.min(max, next));
+  }, { passive: false });
+</script>
+
+<style>
+  @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
+  @font-face { font-family: 'EskCrimson'; src: url('/fonts/eskapizm/crimson-text-600-latin-ext.woff2') format('woff2'); font-weight: 600; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'EskCrimson'; src: url('/fonts/eskapizm/crimson-text-600-latin.woff2') format('woff2'); font-weight: 600; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'EskInter'; src: url('/fonts/eskapizm/inter-latin-ext.woff2') format('woff2'); font-weight: 400 600; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'EskInter'; src: url('/fonts/eskapizm/inter-latin.woff2') format('woff2'); font-weight: 400 600; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'EskMono'; src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+
+  .case {
+    --paper: #fafaf9; --ink: #1c1917; --dim: #57534e; --rule: rgb(28 25 23 / .14);
+    --green: #1e3b25; --sage: #fcfff5; --brown: #2e2620; --brand: #ffcc33;
+    --gutter: clamp(20px, 5vw, 96px); --bar-h: 0px;
+    font-family: 'GeneralSansV', sans-serif; background: var(--paper); color: var(--ink); overflow-x: clip;
+  }
+  /* Reset na samych elementach (zakres tego komponentu), żeby marginesy klas (.film, .set, .panel) wygrywały bez !important. */
+  h1, h2, p, figure, ol, ul, dl, dd, blockquote { margin: 0; }
+  ol, ul { padding: 0; list-style: none; }
+  .case :is(h1,h2) { text-wrap: balance; }
+  .case p { text-wrap: pretty; }
+  .case :is(a,button):focus-visible, .case .strip:focus-visible { outline: 3px solid var(--green); outline-offset: 4px; }
+  .case ::selection { background: var(--brand); color: var(--ink); }
+  .case img, .case video { display: block; width: 100%; height: auto; }
+  .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
+  .skip:focus { transform: none; }
+  /* Nav na papierze: scena filmu jest ciemna i ciepła, nie jednolita, więc nav jej nie przejmuje. */
+  .nav { background: var(--paper); height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
+  .mark video { width: clamp(155px, 18vw, 220px); filter: drop-shadow(0 5px 10px rgb(0 0 0 / .18)); }
+  .wrap { max-width: 1320px; margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
+  .m-only { display: none; }
+
+  h2 { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(30px, 4vw, 56px); line-height: 1.04; letter-spacing: -.03em; max-width: 16em; }
+  .txt { margin-top: 24px; max-width: 36em; font-size: 18px; line-height: 1.65; }
+  .txt p + p { margin-top: 16px; }
+  .txt.cols { max-width: none; display: grid; grid-template-columns: 1fr 1fr; gap: 16px clamp(24px, 4vw, 64px); }
+  .txt.cols p + p, .txt.cols2 p + p { margin-top: 0; }
+  .txt.cols2 { max-width: none; display: grid; grid-template-columns: 1fr 1fr; gap: 16px clamp(24px, 4vw, 64px); }
+  .for { margin-top: 16px; }
+  .for strong { font-weight: 600; }
+  figcaption { font-family: 'EskInter', sans-serif; font-size: 14px; line-height: 1.5; color: var(--dim); margin-top: 14px; }
+
+  /* 3.1 Scena: ciemny brąz odczytany z klatki „Zostaw nam planowanie” (#2e2620). */
+  .stage { background: var(--brown); color: #fff; padding: clamp(40px, 6vw, 88px) 0 clamp(56px, 7vw, 104px); }
+  .stage ::selection { background: #fff; color: var(--brown); }
+  .stage .kicker { font-size: 16px; color: rgb(255 255 255 / .72); }
+  h1 { margin-top: 20px !important; font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(38px, 6.4vw, 100px); line-height: .98; letter-spacing: -.04em; max-width: 13em; text-wrap: balance; }
+  .lead { margin-top: clamp(24px, 3vw, 40px) !important; max-width: 40em; font-size: 19px; line-height: 1.62; color: rgb(255 255 255 / .86); }
+  .meta { margin-top: clamp(32px, 4vw, 56px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px 32px; border-top: 1px solid rgb(255 255 255 / .2); padding-top: 20px; font-family: 'EskMono', ui-monospace, monospace; font-size: 13px; line-height: 1.5; }
+  .meta dt { color: rgb(255 255 255 / .6); text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+  .meta dd { margin-top: 6px; color: #fff; }
+  .film { margin-top: clamp(48px, 6vw, 88px); }
+  .film-frame { width: 78%; margin-inline: auto; border-radius: 12px; overflow: hidden; background: #000; box-shadow: 0 40px 80px -30px rgb(0 0 0 / .7), 0 0 0 1px rgb(255 255 255 / .12); }
+  .film figcaption { width: 78%; margin-inline: auto; margin-top: 20px; color: rgb(255 255 255 / .72); text-align: center; }
+  .lines { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 0; font-family: 'EskMono', ui-monospace, monospace; font-size: 13px; }
+  .lines li + li::before { content: '·'; margin-inline: 12px; color: rgb(255 255 255 / .45); }
+  .film .note { display: block; margin-top: 8px; font-size: 13px; color: rgb(255 255 255 / .55); }
+
+  /* Rytm: papier (klient) i zieleń eskapizmu (Justyna i panel). */
+  .paper { padding: clamp(80px, 10vw, 144px) 0; }
+  .green { background: var(--green); color: #fff; padding: clamp(80px, 10vw, 144px) 0; }
+  .green .txt { color: rgb(255 255 255 / .86); }
+  .green figcaption { color: rgb(255 255 255 / .7); }
+  .green :focus-visible { outline-color: #fff; }
+  .green ::selection { background: #fff; color: var(--green); }
+
+  .before .txt { margin-top: 32px; }
+  .shot-wide { margin-top: clamp(48px, 6vw, 80px); }
+  .shot-wide img { border-radius: 10px; box-shadow: 0 30px 60px -30px rgb(28 25 23 / .45); }
+
+  .intro { padding-bottom: clamp(40px, 5vw, 64px); padding-top: 0; }
+  .sec-kicker { font-family: 'EskCrimson', serif; font-weight: 600; font-size: clamp(26px, 3vw, 40px); line-height: 1.15; max-width: 22em; }
+  .intro-p { margin-top: 16px; max-width: 36em; font-size: 18px; line-height: 1.6; color: var(--dim); }
+
+  /* Pasek trasy: tekst mono i kreska, przyklejony w trakcie stacji. */
+  .route { position: relative; }
+  .route-bar { position: sticky; top: 0; z-index: 60; background: rgb(250 250 249 / .94); backdrop-filter: blur(8px); border-block: 1px solid var(--rule); }
+  .bar-in { padding-block: 12px 0; }
+  .bar-label { font-family: 'EskMono', ui-monospace, monospace; font-size: 12px; letter-spacing: .02em; color: var(--dim); }
+  .bar-stops { margin-top: 8px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .bar-stops a { display: block; padding: 8px 12px 12px 0; border-top: 2px solid transparent; color: var(--dim); text-decoration: none; transition: color .2s, border-color .2s; }
+  .bar-stops a:hover { color: var(--ink); }
+  .bar-stops a[aria-current] { color: var(--ink); border-top-color: var(--green); }
+  .bn { font-family: 'EskMono', ui-monospace, monospace; font-size: 12px; }
+  .bname { font-family: 'EskCrimson', serif; font-weight: 600; font-size: 17px; }
+  .bsys { display: block; margin-top: 2px; font-family: 'EskInter', sans-serif; font-size: 12px; opacity: .8; }
+  .station { scroll-margin-top: 120px; }
+  .route .paper + .paper { padding-top: 0; }
+  .route-pill { display: none; }
+
+  .st-label { font-family: 'EskCrimson', serif; font-weight: 600; font-size: 20px; margin-bottom: 16px !important; }
+  .st-label span { font-family: 'EskMono', ui-monospace, monospace; font-weight: 400; font-size: 13px; margin-right: 6px; vertical-align: 2px; }
+  .green .st-label { color: rgb(255 255 255 / .85); }
+
+  .st-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(40px, 6vw, 112px); align-items: center; }
+  .phone-shot { max-width: 340px; }
+  .phone { border-radius: 36px; overflow: hidden; background: #fff; box-shadow: 0 0 0 9px var(--ink), 0 40px 70px -30px rgb(28 25 23 / .55); margin: 9px; }
+  .s1 .phone-shot figcaption, .s4 .phone-shot figcaption { margin-top: 26px; }
+
+  .duo { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(32px, 6vw, 96px); align-items: end; }
+  .reg { font-family: 'EskMono', ui-monospace, monospace; font-size: 13px; line-height: 1.5; border-top: 1px solid var(--rule); }
+  .reg li { padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  .set { position: relative; margin-top: clamp(48px, 6vw, 80px); padding-bottom: 6%; }
+  .screen { display: block; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 30px 60px -30px rgb(28 25 23 / .45), 0 0 0 1px var(--rule); }
+  .set .screen { width: 84%; }
+  .set-phone { position: absolute; right: var(--gutter); bottom: 0; width: 18%; max-width: 240px; border-radius: 22px; overflow: hidden; box-shadow: 0 0 0 6px var(--ink), 0 30px 60px -20px rgb(28 25 23 / .55); }
+  .set figcaption { max-width: 60%; }
+
+  .s3 h2, .s5 h2 { max-width: 18em; }
+  .browser-shot, .panel { margin-top: clamp(40px, 5vw, 64px); }
+  .browser { position: relative; border-radius: 12px; overflow: hidden; background: #f4f4f2; padding-top: 30px; box-shadow: 0 40px 80px -30px rgb(0 0 0 / .55), 0 0 0 1px rgb(255 255 255 / .14); }
+  .dots { position: absolute; top: 10px; left: 14px; display: flex; gap: 7px; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; background: rgb(28 25 23 / .18); }
+  /* Ramka-zastępnik dla ujęć z konta Kacpra: spokojna, bez udawania ekranu. */
+  .ph { display: grid; place-items: center; background: repeating-linear-gradient(135deg, #f1f1ee 0 14px, #ecece8 14px 28px); color: var(--dim); font-family: 'EskInter', sans-serif; font-size: 14px; text-align: center; padding: 24px; box-sizing: border-box; }
+  .ph p { background: var(--paper); padding: 8px 14px; border-radius: 999px; box-shadow: 0 0 0 1px var(--rule); }
+  .ph-wide { aspect-ratio: 16 / 10; }
+  .ph-tall { aspect-ratio: 4 / 5; border-radius: 12px; }
+  .ph-phone { aspect-ratio: 390 / 844; }
+  .s3 .cols2 { margin-top: clamp(40px, 5vw, 64px); }
+
+  .s4 .txt.cols { margin-top: 24px; }
+  .s4 .for { max-width: 40em; }
+  .pair { margin-top: clamp(48px, 6vw, 80px); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(40px, 6vw, 112px); align-items: center; }
+  .link-line { font-family: 'EskCrimson', serif; font-weight: 600; font-size: clamp(20px, 2vw, 26px); line-height: 1.3; max-width: 22em; margin-bottom: 24px !important; }
+
+  .s5 .txt.cols2 { margin-top: 28px; }
+  .panel { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); padding-bottom: 8%; }
+  .panel .browser:first-child { width: 80%; }
+  .panel .browser.small { position: absolute; right: var(--gutter); bottom: 0; width: 38%; }
+  .panel figcaption { max-width: 50%; }
+  .repo { margin-top: 32px; font-family: 'EskMono', ui-monospace, monospace; font-size: 13px; color: rgb(255 255 255 / .7); }
+
+  /* 3.9 Pas przewijany w poziomie: kadry stałej wysokości, przyciąganie do kadru. */
+  .rest .txt { color: var(--dim); }
+  .strip { --edge: max(var(--gutter), calc((100% - 1320px) / 2 + var(--gutter))); margin-top: clamp(40px, 5vw, 64px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--edge); scrollbar-width: thin; overscroll-behavior-x: contain; }
+  .strip ul { display: flex; gap: 20px; width: max-content; padding: 4px var(--edge) 20px; }
+  .strip li { flex: 0 0 auto; width: 576px; scroll-snap-align: start; }
+  .strip img { aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; box-shadow: 0 0 0 1px var(--rule); }
+  .scale { margin-top: 28px; font-family: 'EskMono', ui-monospace, monospace; font-size: 14px; display: flex; flex-wrap: wrap; gap: 6px 0; }
+  .scale span + span::before, .scale .br + span::before { content: '·'; margin-inline: 12px; color: var(--dim); }
+  .scale .br { display: none; }
+
+  .live-now { padding-top: 0; }
+  .live-now .duo { align-items: start; }
+  .live-list { counter-reset: n; border-top: 1px solid var(--rule); }
+  .live-list li { counter-increment: n; display: grid; grid-template-columns: 40px 1fr; padding: 16px 0; border-bottom: 1px solid var(--rule); font-size: 17px; line-height: 1.55; }
+  .live-list li::before { content: counter(n, decimal-leading-zero); font-family: 'EskMono', ui-monospace, monospace; font-size: 12px; color: var(--dim); padding-top: 4px; }
+  .live-list :global(code) { font-family: 'EskMono', ui-monospace, monospace; font-size: .88em; background: rgb(28 25 23 / .06); padding: 1px 5px; border-radius: 4px; }
+  .live-now h2 { grid-row: 1; }
+  .live-now .duo { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); }
+
+  .quote { margin-top: 64px !important; }
+  .quote p { font-size: 28px; line-height: 1.4; max-width: 30em; }
+  .quote-todo { margin-bottom: 64px; padding-block: 16px; color: #c70404; font-size: 16px; }
+
+  /* Koniec na zieleni eskapizmu: strona zaczyna się ciemnym kadrem filmu i kończy kolorem klienta. */
+  .end { padding: clamp(80px, 10vw, 144px) 0; background: var(--green); color: #fff; }
+  .end-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 96px); align-items: start; }
+  .end h2 { font-size: clamp(30px, 4vw, 54px); line-height: 1.05; }
+  .end p { font-size: 19px; line-height: 1.6; color: rgb(255 255 255 / .86); max-width: 30em; }
+  .btn { display: inline-block; margin-top: 32px; padding: 16px 32px; border-radius: 999px; background: var(--brand); color: var(--ink); text-decoration: none; font-size: 16px; font-weight: 600; }
+  .btn:hover { background: #fff; }
+  .end :focus-visible { outline-color: #fff; }
+  .end .more { margin-top: 24px; }
+  .end .more a { color: #fff; text-decoration-color: var(--brand); text-underline-offset: 4px; font-size: 16px; }
+
+  @media (max-width: 1100px) {
+    .bname { font-size: 15px; }
+    .bsys { display: none; }
+  }
+  @media (max-width: 900px) {
+    .d-only { display: none; }
+    .m-only { display: block; }
+    .meta { grid-template-columns: 1fr; gap: 14px; }
+    /* Telefon: eksponaty od krawędzi do krawędzi, tekst nad albo pod, jedna oś do lewej. */
+    .film-frame, .film figcaption { width: auto; }
+    .film { padding-inline: 0; }
+    .film-frame { border-radius: 0; box-shadow: none; }
+    .film figcaption { padding-inline: var(--gutter); text-align: left; }
+    .lines { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; justify-content: start; }
+    .lines li + li::before { content: none; }
+    .txt.cols, .txt.cols2 { grid-template-columns: 1fr; }
+    .shot-wide { padding-inline: 0; }
+    .shot-wide img { border-radius: 0; box-shadow: none; }
+    .shot-wide figcaption { padding-inline: var(--gutter); }
+    /* Pasek: na telefonie zostaje sama etykieta, bieżącą stację pokazuje pigułka na dole. */
+    .route-bar { position: static; background: none; backdrop-filter: none; border: 0; }
+    .bar-in { padding-block: 0 24px; }
+    .bar-stops { display: none; }
+    .route-pill { display: block; position: fixed; left: 50%; bottom: 16px; z-index: 70; transform: translate(-50%, 140%); opacity: 0; padding: 10px 18px; border-radius: 999px; background: var(--ink); color: #fff; font-family: 'EskCrimson', serif; font-weight: 600; font-size: 16px; white-space: nowrap; box-shadow: 0 10px 30px -8px rgb(0 0 0 / .45); transition: transform .3s, opacity .3s; pointer-events: none; }
+    .route-pill.on { transform: translate(-50%, 0); opacity: 1; }
+    .route-pill .pn { font-family: 'EskMono', ui-monospace, monospace; font-weight: 400; font-size: 12px; margin-right: 4px; opacity: .75; }
+    .st-grid, .duo, .pair, .end-in, .live-now .duo { grid-template-columns: 1fr; }
+    .st-grid .phone-shot { order: 0; }
+    .phone-shot { max-width: none; margin-inline: calc(var(--gutter) * -1); }
+    .phone { margin: 0; border-radius: 0; box-shadow: none; }
+    .phone-shot figcaption { padding-inline: var(--gutter); }
+    .s1 .phone-shot figcaption, .s4 .phone-shot figcaption { margin-top: 14px; }
+    .reg { margin-top: 8px; }
+    .set { padding: 0; }
+    .set-phone { position: static; width: auto; max-width: none; border-radius: 0; box-shadow: none; margin-inline: calc(var(--gutter) * -1); display: block; }
+    .set { padding-inline: var(--gutter); }
+    .set figcaption, .panel figcaption { max-width: none; }
+    .browser-shot, .panel { padding-inline: 0; }
+    .browser { border-radius: 0; }
+    .browser-shot figcaption, .panel figcaption { padding-inline: var(--gutter); }
+    .chat-shot { margin-top: 16px; padding-inline: var(--gutter); }
+    .panel { padding-bottom: 0; gap: 16px; }
+    .panel .browser:first-child, .panel .browser.small { position: static; width: auto; }
+    .repo { margin-top: 24px; }
+    .narrator .screen { margin-inline: calc(var(--gutter) * -1); border-radius: 0; box-shadow: none; }
+    .narrator .screen img { width: 100%; }
+    .strip { --edge: var(--gutter); }
+    .strip ul { gap: 12px; }
+    .strip li { width: 84vw; }
+    .scale .br { display: block; flex-basis: 100%; height: 0; }
+    .scale .br + span::before { content: none; }
+  }
+  @media (max-width: 600px) {
+    .lead, .txt { font-size: 17px; }
+    .scale { font-size: 13px; }
+  }
+</style>

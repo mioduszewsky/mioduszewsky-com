@@ -37,6 +37,34 @@
           ]
         }
       ]
+    },
+    "pl/realizacje/eskapizm": {
+      "_status": "brak zgody, nie publikować (18.10.2026: case w budowie, zgoda Justyny i spółki nie jest w rejestrze; bramka ma blokować)",
+      "pokazane": [
+        {
+          "osoba": "klient:eskapizm",
+          "elementy": [
+            "NAZWA_FIRMY",
+            "IMIE",
+            "ZDJECIE",
+            "WYNIK_LICZBOWY"
+          ]
+        }
+      ]
+    },
+    "work/eskapizm": {
+      "_status": "brak zgody, nie publikować (18.10.2026: case w budowie, zgoda Justyny i spółki nie jest w rejestrze; bramka ma blokować)",
+      "pokazane": [
+        {
+          "osoba": "klient:eskapizm",
+          "elementy": [
+            "NAZWA_FIRMY",
+            "IMIE",
+            "ZDJECIE",
+            "WYNIK_LICZBOWY"
+          ]
+        }
+      ]
     }
   }
 }
