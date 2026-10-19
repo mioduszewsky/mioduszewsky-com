@@ -17,8 +17,9 @@ const m = mobile ? { mp4: V + mobile + '.mp4', webm: V + mobile + '.webm', poste
   {eager ? (
     /* pierwszy ekran: autoplay w HTML (WebKit odrzuca play() ze skryptu dla dużego wideo w pierwszym ekranie), plik telefonu przez media */
     <video autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1" data-autoplay>
-      {m && <source src={m.mp4} type="video/mp4" media="(max-width: 767px)" />}
-      <source src={d.mp4} type="video/mp4" />
+      {/* przy prefers-reduced-motion żadne źródło nie pasuje: nic się nie pobiera, zostaje plakat (recenzja Codexa 19.10) */}
+      {m && <source src={m.mp4} type="video/mp4" media="(prefers-reduced-motion: no-preference) and (max-width: 767px)" />}
+      <source src={d.mp4} type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
     </video>
   ) : (
     <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
