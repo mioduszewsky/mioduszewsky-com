@@ -508,7 +508,8 @@ const ld = {
   .open :global(.open-film) { position: absolute; inset: 0; }
   /* film pod nazwą bywa jasny i gęsty (kaskada okien), więc dół kadru zawsze ciemny */
   .open-scrim { position: absolute; inset: 0; background: linear-gradient(0deg, rgb(12 8 4 / .86) 0%, rgb(12 8 4 / .62) 30%, rgb(12 8 4 / .2) 52%, transparent 66%), linear-gradient(90deg, rgb(12 8 4 / .4), transparent 62%); pointer-events: none; }
-  .open-txt { position: absolute; left: var(--gutter); right: var(--gutter); bottom: clamp(24px, 4vw, 56px); }
+  /* nazwa nad paskiem cookies serwisu (pierwsza wizyta) i nad paskami przeglądarki */
+  .open-txt { position: absolute; left: var(--gutter); right: var(--gutter); bottom: clamp(56px, 5vw, 80px); }
   .open h1 { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: var(--t-name); line-height: .86; letter-spacing: -.05em; margin-top: 18px; }
   .open .lbl { opacity: .9; }
 
@@ -644,7 +645,9 @@ const ld = {
     .lead { font-size: 18px; }
     .open { height: calc(100svh - 80px); min-height: 520px; max-height: 920px; }
     .open h1 { font-size: 22vw; }
-    .open-scrim { background: linear-gradient(0deg, rgb(12 8 4 / .85) 0%, rgb(12 8 4 / .55) 30%, transparent 55%); }
+    /* telefon: pasek cookies ma ok. 137 px, więc nazwa stoi 160 px nad dołem pierwszego ekranu (pomiar 19.10: wcześniej zasłonięta w całości) */
+    .open-txt { bottom: calc(160px + env(safe-area-inset-bottom, 0px)); }
+    .open-scrim { background: linear-gradient(0deg, rgb(12 8 4 / .88) 0%, rgb(12 8 4 / .72) 38%, rgb(12 8 4 / .25) 62%, transparent 75%); }
     .meta { grid-template-columns: 1fr 1fr; }
     .nums, .nums.four { grid-template-columns: 1fr; gap: 36px; }
     .nums.four { grid-template-columns: 1fr 1fr; }
