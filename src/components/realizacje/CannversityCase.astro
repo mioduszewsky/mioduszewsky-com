@@ -119,11 +119,12 @@ const ld = {
   <div class="case">
     <a class="skip" href="#main">{T.skip}</a>
     <header class="nav">
-      <!-- Logo w wersji dalmatyńczyk: żółte logo mioduszewsky znika na żółci Cannversity. -->
+      <!-- Logo w wersji dalmatyńczyk: żółte logo mioduszewsky znika na żółci Cannversity. Wersja pod nawigację
+           (600 px, 0,2 MB webm / 0,66 MB mp4 z przezroczystością), nie pełnoekranowa z finału strony głównej (12 MB). -->
       <a class="mark" href={pl ? '/pl/' : '/'} aria-label={T.home}>
-        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-dalmatian-poster.webp">
-          <source src="/logo3d/logo-dalmatian.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-dalmatian.webm" type="video/webm" />
+        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" width="600" height="148" poster="/logo3d/logo-dalmatian-nav-poster.webp">
+          <source src="/logo3d/logo-dalmatian-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-dalmatian-nav.webm" type="video/webm" />
         </video>
       </a>
       <SiteMenu locale={locale} alternatePath={alt} />
@@ -196,7 +197,7 @@ const ld = {
                     </div>
                     <picture class="shot">
                       <source media="(max-width: 700px)" srcset={`${dir}/${f}-390.webp`} width="780" height="1386" />
-                      <img src={`${dir}/${f}-1440.webp`} width="1600" height={f === 'filary' ? 1000 : f === 'rozmowa' ? 871 : 840} loading="lazy" decoding="async" alt={b.alt} />
+                      <img src={`${dir}/${f}-1440.webp`} width="1600" height={f === 'filary' ? 1000 : f === 'rozmowa' ? 872 : 840} loading="lazy" decoding="async" alt={b.alt} />
                     </picture>
                   </li>
                 );
@@ -272,6 +273,8 @@ const ld = {
     if (e.isIntersecting && !still.matches) v.play().catch(() => {}); else v.pause();
   }), { threshold: .2 });
   vids.forEach((v) => io.observe(v));
+  // Włączenie „ogranicz ruch” w trakcie odtwarzania zatrzymuje pętle od razu (recenzja Codexa 19.10).
+  still.addEventListener('change', () => { if (still.matches) vids.forEach((v) => v.pause()); });
 </script>
 
 <style>
