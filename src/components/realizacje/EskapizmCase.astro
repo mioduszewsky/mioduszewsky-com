@@ -53,7 +53,6 @@ const T = pl ? {
   kaskadaAlt: 'Pulpit laptopa z filmu eskapizmu zasłonięty oknami: ceny lotów, wiadomość od mamy, rozkład promów, szczepienia i formularz wjazdowy, wyniki wyszukiwania noclegów. Z prawej Notatki „Tajlandia: do ogarnięcia” z licznikiem „33 sprawy · 0 odhaczonych”.',
   mapH: 'Pięć systemów od kalkulatora do panelu',
   mapPlan: 'Przykładowy plan: Tajlandia, 25 stycznia - 9 lutego 2027',
-  mapNav: 'Stacje case\'u',
   stops: [['Klient liczy', 'kalkulator wieczorów'], ['Klient zamawia', 'zamówienie, płatność, faktura'], ['Justyna składa', 'AI Plan Builder'], ['Klient dostaje', '„Mój plan” w telefonie'], ['Wspólnicy prowadzą', 'panel zadań i zgłoszeń']],
   s1: { t: 'Klient liczy', s: 'Cztery pytania, 20 sekund i wynik w wieczorach po pracy.',
     d: 'Kalkulator „Ile wieczorów oddasz na planowanie?” pyta m.in. o trasę i szczegółowość planu. Wynik liczy z danych Expedia Group i Think with Google i podaje w wieczorach po pracy. Ma własną stronę od lutego 2026 i sekcję na głównej, a uruchamia go też przycisk na końcu filmu. Z wyniku klient przechodzi do pakietów albo przykładowego planu.',
@@ -76,7 +75,7 @@ const T = pl ? {
     narr: 'Na stronie głównej eskapizmu te same ekrany opowiada narrator, w 8 rozdziałach i 3 aktach.',
     narrAlt: 'Narrator na stronie głównej eskapizmu: telefon z przykładowym planem Tajlandia 2027, obok rozdziały Przed wylotem, W drodze i Budżet.',
     altPlan: 'Przykładowy plan Tajlandia 2027 na telefonie: przegląd, potem plan dnia z kolejnymi dniami wyjazdu.',
-    alts: ['Telefon z ekranem „Plan dnia” przykładowego planu Tajlandia 2027: kolejne dni wyjazdu z programem.', 'Telefon z ekranem „Noclegi” przykładowego planu Tajlandia 2027: nocleg na pierwszym etapie trasy z ceną za noc.', 'Telefon z ekranem „Budżet” przykładowego planu Tajlandia 2027: całkowity budżet na osobę i koszty w kategoriach.'],
+    alts: ['Telefon z ekranem „Plan dnia” przykładowego planu Tajlandia 2027: kolejne dni wyjazdu z programem.', 'Telefon z ekranem „Budżet” przykładowego planu Tajlandia 2027: całkowity budżet na osobę i koszty w kategoriach.'],
     sceneAlt: 'Zatoka na Phi Phi z finału filmu eskapizmu: zielone skały nad turkusową wodą.' },
   s5: { t: 'Wspólnicy prowadzą', s: 'Każda strona panelu ma przycisk „Zgłoś problem lub pomysł”.',
     d: 'Zadania firmy żyją w ClickUpie (aplikacji do zadań), w trzech listach: wspólnej, mojej i Justyny. Panel w aplikacji eskapizmu pokazuje je na jednej tablicy z przełącznikiem Zespół / Kacper / Justyna / Wszystko i kalendarzem. Zgłoszenia z panelu i z AI Plan Buildera trafiają do jednej listy z licznikiem w menu.',
@@ -122,7 +121,6 @@ const T = pl ? {
   kaskadaAlt: 'A laptop desktop from the eskapizm film, buried under windows: flight prices, a message from Mom, a ferry timetable, vaccinations, an entry form, hotel results. On the right, the Polish Notes list "Tajlandia: do ogarnięcia" (Thailand: to sort out) shows 33 to-dos, 0 done.',
   mapH: 'Five systems, calculator to dashboard',
   mapPlan: 'Sample plan: Thailand, January 25 - February 9, 2027',
-  mapNav: 'Case study stops',
   stops: [['The client counts', 'evenings calculator'], ['The client orders', 'order, payment, invoice'], ['Justyna builds', 'AI Plan Builder'], ['The client gets it', '"My plan" on the phone'], ['The partners run it', 'tasks and reports dashboard']],
   s1: { t: 'The client counts', s: 'Four questions, 20 seconds, and the answer comes back in evenings after work.',
     d: 'The calculator, "How many evenings will you spend planning?", asks four questions, route and level of detail among them. It turns Expedia Group and Think with Google data into evenings after work. It\'s had its own page since February 2026, and the button at the end of the film opens it. The result links to packages and a sample plan.',
@@ -145,7 +143,7 @@ const T = pl ? {
     narr: 'On the eskapizm homepage, a narrator walks through these same screens in 8 chapters and 3 acts.',
     narrAlt: 'The narrator on the eskapizm homepage (in Polish): a phone with the sample Thailand 2027 plan, chapters Before you fly, On the road and Budget beside it.',
     altPlan: 'The sample Thailand 2027 plan on a phone (in Polish): the overview, then the day plan, day by day.',
-    alts: ['A phone showing the "Plan dnia" (day plan) screen of the sample Thailand 2027 plan: the trip day by day.', 'A phone showing the "Noclegi" (stays) screen of the sample Thailand 2027 plan: the first stay on the route with its nightly price.', 'A phone showing the "Budżet" (budget) screen of the sample Thailand 2027 plan: the total budget per person and costs by category.'],
+    alts: ['A phone showing the "Plan dnia" (day plan) screen of the sample Thailand 2027 plan: the trip day by day.', 'A phone showing the "Budżet" (budget) screen of the sample Thailand 2027 plan: the total budget per person and costs by category.'],
     sceneAlt: 'The bay on Phi Phi from the end of the eskapizm film: green cliffs over turquoise water.' },
   s5: { t: 'The partners run it', s: 'Every page of the dashboard has a "Report a problem or an idea" button.',
     d: 'The company\'s tasks live in ClickUp, a task app, in three lists: shared, mine and Justyna\'s. The dashboard in the eskapizm app mirrors them on one board with a Team / Kacper / Justyna / All switch and a calendar. Reports from the dashboard and from AI Plan Builder land in one list with a counter in the menu.',
@@ -325,7 +323,7 @@ const ld = {
             <div class="trio">
               <EskapizmPhone class="ph t-side d-only" tilt={-5} dark><Image src={trio[0]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[0]} loading="lazy" /></EskapizmPhone>
               <EskapizmPhone class="ph t-mid" dark><Loop name="moj-plan" w={600} h={1298} alt={T.s4.altPlan} /></EskapizmPhone>
-              <EskapizmPhone class="ph t-side d-only" tilt={5} dark><Image src={trio[1]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[2]} loading="lazy" /></EskapizmPhone>
+              <EskapizmPhone class="ph t-side d-only" tilt={5} dark><Image src={trio[1]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[1]} loading="lazy" /></EskapizmPhone>
             </div>
           </div>
           <div class="detail wrap">
@@ -410,10 +408,11 @@ const ld = {
   const loops = [...document.querySelectorAll<HTMLElement>('.case [data-loop]')];
   // WebKit odrzuca play() tuż po wczytaniu strony (NotAllowedError, pomiar 19.10: 261 ms) mimo muted i playsinline: ponów kilka razy, póki pętla jest w widoku
   const play = (el: HTMLElement, v: HTMLVideoElement, n = 0) => v.play().catch(() => { if (n < 4) setTimeout(() => { if (el.dataset.inview && !still.matches && v.paused) play(el, v, n + 1); }, 700); });
-  const load = (el: HTMLElement) => {
-    if (el.dataset.loaded) return;
-    const v = el.querySelector('video'); if (!v) return;
-    if (narrow.matches && el.dataset.desktopOnly !== undefined) return; // na telefonie zostaje plakat
+  // zwraca true, gdy pętla ma już źródło (wtedy obserwacja „blisko” nie jest potrzebna)
+  const load = (el: HTMLElement): boolean => {
+    if (el.dataset.loaded) return true;
+    const v = el.querySelector('video'); if (!v) return true;
+    if (narrow.matches && el.dataset.desktopOnly !== undefined) return false; // na telefonie zostaje plakat
     const m = narrow.matches && el.dataset.mMp4;
     const webm = m ? el.dataset.mWebm : el.dataset.dWebm, mp4 = m ? el.dataset.mMp4 : el.dataset.dMp4;
     v.poster = (m ? el.dataset.mPoster : el.dataset.dPoster) || '';
@@ -421,12 +420,12 @@ const ld = {
     if (mp4) { const s = document.createElement('source'); s.src = mp4; s.type = 'video/mp4'; v.append(s); }
     if (webm) { const s = document.createElement('source'); s.src = webm; s.type = 'video/webm'; v.append(s); }
     v.preload = 'auto'; v.load(); el.dataset.loaded = '1';
-    v.addEventListener('playing', () => el.setAttribute('data-playing', ''), { once: true });
     // obserwatory odpalają się w dowolnej kolejności, a WebKit odrzuca play() w trakcie wczytywania:
     // pętla w widoku rusza, gdy da się ją odtworzyć
     v.addEventListener('canplay', () => { if (el.dataset.inview && !still.matches && v.paused) play(el, v); });
+    return true;
   };
-  const near = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && !still.matches) { load(e.target as HTMLElement); near.unobserve(e.target); } }), { rootMargin: '100% 0px' });
+  const near = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && !still.matches && load(e.target as HTMLElement)) near.unobserve(e.target); }), { rootMargin: '100% 0px' });
   const seen = new IntersectionObserver((es) => es.forEach((e) => {
     const v = (e.target as HTMLElement).querySelector('video');
     if (!v) return;
@@ -443,7 +442,13 @@ const ld = {
     }
     near.observe(el); seen.observe(el);
   });
-  still.addEventListener('change', () => loops.forEach((el) => { const v = el.querySelector('video'); v && v.pause(); seen.unobserve(el); seen.observe(el); }));
+  // zmiana ustawienia w trakcie: pauza od razu; po wyłączeniu ograniczenia ruchu ponowna obserwacja, żeby niewczytane pętle się wczytały
+  still.addEventListener('change', () => loops.forEach((el) => {
+    const v = el.querySelector('video'); v && v.pause();
+    if (v && v.hasAttribute('data-autoplay')) { if (!still.matches) { v.load(); } }
+    else if (!el.dataset.loaded) { near.unobserve(el); near.observe(el); }
+    seen.unobserve(el); seen.observe(el);
+  }));
 
   // Pigułka stacji: numer i nazwa bieżącej stacji, widoczna tylko w trakcie stacji.
   const pill = document.querySelector<HTMLElement>('[data-pill]');
