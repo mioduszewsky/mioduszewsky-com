@@ -1,0 +1,57 @@
+---
+// Telefon z eskapizm.com (Sławek, 19.10.2026): przód bryły 1:1 z `~/eskapizmplany/src/components/Phone3D.tsx`
+// i `.phone` z `hero-film/hero-film.css` (bryła 543x1125, tytanowy rant z tego samego gradientu, ekran 500x1082
+// z promieniem 78,5, wyspa 116x34, pasek home, odblask szkła). Bez JS. Wymiary w jednostkach bryły (--u = 1/543 szerokości),
+// więc telefon skaluje się od rodzica: rodzic ustala wysokość albo szerokość, proporcje trzyma aspect-ratio.
+interface Props { class?: string; style?: string; tilt?: number; dark?: boolean }
+const { class: cls = '', style = '', tilt = 0, dark = false } = Astro.props;
+---
+<div class:list={['esk-phone', cls]} style={`${tilt ? `--tilt:${tilt}deg;` : ''}${style}`} data-dark={dark ? '' : undefined}>
+  <i class="glow" aria-hidden="true"></i>
+  <i class="btn l1" aria-hidden="true"></i><i class="btn l2" aria-hidden="true"></i><i class="btn l3" aria-hidden="true"></i><i class="btn r1" aria-hidden="true"></i>
+  <div class="frame">
+    <i class="bezel" aria-hidden="true"></i>
+    <div class="screen">
+      <slot />
+      <i class="island" aria-hidden="true"></i>
+      <i class="home" aria-hidden="true"></i>
+      <i class="sheen" aria-hidden="true"></i>
+      <i class="edge" aria-hidden="true"></i>
+    </div>
+  </div>
+</div>
+
+<style>
+  .esk-phone {
+    position: relative; aspect-ratio: 543 / 1125; container-type: inline-size;
+    --u: calc(100cqw / 543);
+    transform: rotate(var(--tilt, 0deg));
+  }
+  .esk-phone > *, .frame > *, .screen > i { position: absolute; display: block; }
+  /* cień jak w Phone3D: bliski, ostry pod spodem + długi, miękki */
+  .glow { inset: 6% 7%; border-radius: calc(90 * var(--u)); box-shadow: 0 calc(30 * var(--u)) calc(40 * var(--u)) calc(-24 * var(--u)) rgba(20, 30, 15, .55), 0 calc(70 * var(--u)) calc(130 * var(--u)) calc(-10 * var(--u)) rgba(20, 30, 15, .30); }
+  [data-dark] .glow { box-shadow: 0 calc(30 * var(--u)) calc(44 * var(--u)) calc(-20 * var(--u)) rgba(0, 0, 0, .6), 0 calc(80 * var(--u)) calc(150 * var(--u)) calc(-6 * var(--u)) rgba(0, 0, 0, .45); }
+  .btn { width: calc(3 * var(--u)); border-radius: 2px; background: linear-gradient(90deg, #9c9c99, #d9d9d7 50%, #9c9c99); }
+  .l1 { left: calc(7 * var(--u)); top: calc(196 * var(--u)); height: calc(30 * var(--u)); }
+  .l2 { left: calc(7 * var(--u)); top: calc(262 * var(--u)); height: calc(66 * var(--u)); }
+  .l3 { left: calc(7 * var(--u)); top: calc(342 * var(--u)); height: calc(66 * var(--u)); }
+  .r1 { right: calc(7 * var(--u)); top: calc(290 * var(--u)); height: calc(98 * var(--u)); }
+  .frame {
+    left: calc(10 * var(--u)); top: calc(10 * var(--u)); width: calc(523 * var(--u)); height: calc(1105 * var(--u));
+    border-radius: calc(90 * var(--u));
+    background: linear-gradient(160deg, #ececea 0%, #b4b4b1 28%, #f3f3f1 50%, #a7a7a4 74%, #dededc 100%);
+    box-shadow: inset 0 0 0 .75px rgba(255, 255, 255, .7), inset 0 2px 1.5px rgba(255, 255, 255, .95), inset 0 -2px 1.5px rgba(0, 0, 0, .22), 0 0 0 .75px rgba(0, 0, 0, .3);
+  }
+  .bezel { inset: calc(4.5 * var(--u)); border-radius: calc(85.5 * var(--u)); background: #070707; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), 0 0 0 .5px rgba(0, 0, 0, .6); }
+  .screen {
+    left: calc(11.5 * var(--u)); top: calc(11.5 * var(--u)); width: calc(500 * var(--u)); height: calc(1082 * var(--u));
+    border-radius: calc(78.5 * var(--u)); overflow: hidden; background: #FCFFF5;
+    /* Safari: zaokrąglenie z overflow nad wideo */
+    -webkit-mask-image: -webkit-radial-gradient(white, black); isolation: isolate;
+  }
+  .screen :global(img), .screen :global(video), .screen :global(picture), .screen :global(.loop) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .island { top: calc(11 * var(--u)); left: 50%; width: calc(116 * var(--u)); height: calc(34 * var(--u)); margin-left: calc(-58 * var(--u)); border-radius: calc(18 * var(--u)); background: #000; z-index: 30; }
+  .home { bottom: calc(8 * var(--u)); left: 50%; width: calc(139 * var(--u)); height: calc(5 * var(--u)); margin-left: calc(-69.5 * var(--u)); border-radius: 3px; background: #111; opacity: .8; z-index: 30; }
+  .sheen { inset: 0; pointer-events: none; z-index: 31; background: linear-gradient(118deg, transparent 22%, rgba(255, 255, 255, .11) 34%, rgba(255, 255, 255, .04) 42%, transparent 52%); }
+  .edge { inset: 0; pointer-events: none; z-index: 32; border-radius: calc(78.5 * var(--u)); box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, .35), inset 0 0 14px rgba(0, 0, 0, .08); }
+</style>
