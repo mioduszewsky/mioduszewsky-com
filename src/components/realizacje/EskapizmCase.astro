@@ -284,7 +284,11 @@ const T = pl ? {
 };
 
 // Cytat Justyny pojawia się dopiero po jej akceptacji (docs/case-studies/OPINIE-ROZMOWA.md).
-const quote: { text: string; name: string; role: string } | null = null;
+// Cytat Justyny: dosłownie z jej publicznego wpisu na blogu eskapizmu (19.03.2026), FAKTY.md E110; decyzja Kacpra 19.10.2026:
+// cytujemy prawdziwe, publiczne wypowiedzi ze źródłem. EN to wierne tłumaczenie z polskiego (blog jest tylko po polsku).
+const quote: { text: string; name: string; role: string } | null = pl
+  ? { text: '„(...) planowanie podróży to nie jest jedna decyzja. To jest cały łańcuch mikrodecyzji, z których każda uruchamia kolejną.”', name: 'Justyna', role: 'współzałożycielka eskapizmu, na blogu eskapizm.com' }
+  : { text: '“(...) planning a trip isn’t one decision. It’s a whole chain of micro-decisions, and each one sets off the next.”', name: 'Justyna', role: 'eskapizm co-founder, on the eskapizm blog (translated from Polish)' };
 const url = 'https://mioduszewsky.com' + (pl ? '/pl/realizacje/eskapizm/' : '/work/eskapizm/');
 const ld = {
   '@context': 'https://schema.org',
@@ -761,7 +765,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
   .live-now h2 { grid-row: 1; }
   .live-now .duo { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); }
 
-  .quote { margin-top: 64px !important; }
+  .quote { margin-block: 64px !important; } /* odstęp także od zielonej sekcji końcowej */
   .quote p { font-size: 28px; line-height: 1.4; max-width: 30em; }
   .quote-todo { margin-bottom: 64px; padding-block: 16px; color: #c70404; font-size: 16px; }
 
