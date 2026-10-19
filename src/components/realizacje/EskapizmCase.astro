@@ -37,14 +37,16 @@ const SHOTS = {
   zamowienie390: vid('zamowienie-przebieg-390', 390, 844), // ostateczne, material-final 18.10.2026
   narrator1440: vid('narrator-1440', 1440, 900), // ostateczne, material-final 18.10.2026 (przycięty do 16,8 s)
   narrator390: vid('narrator-390', 390, 844), // ostateczne, material-final 18.10.2026 (przycięty do 17 s)
+  // Zamiast „Mój plan” z konta: konto admina nie ma planu klienta (decyzja 19.10.2026). Ten sam format planu, przykładowy plan
+  // Tajlandia 2027 z public/template_wypelniony-optimized.html, bez danych osobowych w kadrze (kontrola tekstu co 0,4 s).
+  mojPlan: vid('moj-plan-przyklad-390', 390, 844), // ostateczne, material-final 19.10.2026 (18,2 s, 780x1688)
   strip: [tajlandia, wietnam, filipiny, indonezja, blog, poslubne, quiz], // ostateczne, material-final 18.10.2026 (2560x1440)
 };
 // Ujęcia z konta Kacpra (KIERUNEK.md sekcja 4, „Ujęcia z konta Kacpra”). null = spokojna ramka-zastępnik z podpisem.
 // Podmiana: zaimportuj obraz i wpisz go zamiast null.
-const PANEL: Record<'builder' | 'builderChat' | 'mojPlan' | 'tasks' | 'issues', ImageMetadata | null> = {
+const PANEL: Record<'builder' | 'builderChat' | 'tasks' | 'issues', ImageMetadata | null> = {
   builder: null, // TYMCZASOWE: /admin/ai-plan-builder, zrzut po publikacji (poster) i nagranie sesji 1440x900
   builderChat: null, // TYMCZASOWE: /admin/ai-plan-builder, sama kolumna czatu (pionowy zrzut, na telefon)
-  mojPlan: null, // TYMCZASOWE: /moj-plan, ekran „Zaczynamy” (poster) i nagranie 390x844
   tasks: null, // TYMCZASOWE: /admin/tasks, widok Zespół, 1440x900
   issues: null, // TYMCZASOWE: /admin/issues, lista zgłoszeń z pływającym przyciskiem, 1440x900
 };
@@ -124,10 +126,11 @@ const T = pl ? {
       'Na nowej stronie głównej ten sam plan opowiada narrator: telefon przyklejony do ekranu, obok tekst w 8 rozdziałach i 3 aktach (Przed wylotem, W drodze, Budżet), a ekrany to zrzuty prawdziwej aplikacji z przykładowego planu Tajlandii na 25 stycznia - 9 lutego.',
     ],
     forWho: 'Dla klienta', forTxt: 'zamiast PDF-a w mailu ma plan, który otwiera z telefonu i o który może zapytać.',
-    cap: 'Plan na telefonie: 9 sekcji, od „Zaczynamy” do „Pogoda”.',
+    cap: 'Przykładowy plan Tajlandia 2027 na telefonie: menu sekcji, plan dnia, noclegi, budżet.',
+    planAlt: 'Przykładowy plan eskapizmu na telefonie: karta Tajlandia 2027, 25 stycznia - 9 lutego 2027, menu z sekcjami Przegląd, Plan dnia, Atrakcje, Noclegi, Transfery, Budżet, Restauracje, Lista rzeczy, potem plan dnia, nocleg na Koh Lancie i budżet.',
     link: 'Narrator na stronie głównej pokazuje te same ekrany, które klient po zakupie otwiera w telefonie.',
-    alt: 'Narrator na stronie głównej eskapizmu: telefon z rozdziałem Plan dnia, karta Dzień 4, 28 stycznia, Środa, Phuket do Koh Lanty, obok nagłówek Każdy dzień ma swój plan.',
-    altM: 'Narrator na telefonie: karta Twoja trasa, 16 dni, Phuket Old Town, Koh Lanta, Koh Yao Yoi, Phuket, willa.',
+    alt: 'Narrator na stronie głównej eskapizmu: telefon z przykładowym planem Tajlandia 2027 przewija rozdziały Przed wylotem, W drodze i Budżet, obok nagłówki rozdziałów, od Twój plan powstaje pod Ciebie do Wiesz, ile wydasz, zanim wylecisz.',
+    altM: 'Narrator na telefonie: przykładowy plan Tajlandia 2027, karta Twoja trasa z Phuket Old Town, Koh Lantą, Koh Yao Yoi i willą na Phukecie, potem rozdziały W drodze i Budżet.',
   },
   s5: {
     h: 'Jedna tablica dla dwójki wspólników i przycisk „Zgłoś problem”.',
@@ -237,10 +240,11 @@ const T = pl ? {
       'On the new homepage the same plan is told by a narrator: a phone pinned to the screen, text flowing beside it in 8 chapters and 3 acts (Before departure, On the road, Budget), and the screens are screenshots of the real app from the sample Thailand plan for January 25 to February 9.',
     ],
     forWho: 'For the client', forTxt: 'instead of a PDF in an email, they have a plan they open from their phone and can ask questions about.',
-    cap: 'The plan on a phone: 9 sections, from “Getting started” to “Weather”.',
+    cap: 'The sample Thailand 2027 plan on a phone: the section menu, the day plan, stays, the budget.',
+    planAlt: 'The sample eskapizm plan on a phone (in Polish): a Thailand 2027 card for January 25 to February 9, 2027, a menu with Overview, Day plan, Attractions, Stays, Transfers, Budget, Restaurants and Packing list, then the day plan, a stay on Koh Lanta and the budget.',
     link: 'The narrator on the homepage walks through the same screens the client opens on their phone once they’ve paid.',
-    alt: 'The narrator on the eskapizm homepage (in Polish): a phone on the Day plan chapter, a Day 4 card for January 28, Phuket to Koh Lanta, and the heading Every day has its plan.',
-    altM: 'The narrator on a phone (in Polish): a Your route card, 16 days, Phuket Old Town, Koh Lanta, Koh Yao Yoi, Phuket villa.',
+    alt: 'The narrator on the eskapizm homepage (in Polish): a phone with the sample Thailand 2027 plan scrolls through the Before you fly, On the road and Budget chapters, with each chapter heading beside it.',
+    altM: 'The narrator on a phone (in Polish): the sample Thailand 2027 plan, a Your route card with Phuket Old Town, Koh Lanta, Koh Yao Yoi and a villa on Phuket, then the On the road and Budget chapters.',
   },
   s5: {
     h: 'One board for two partners and a “Report a problem” button.',
@@ -456,9 +460,7 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
             <div class="wrap pair">
               <figure class="phone-shot">
                 <div class="phone">
-                  {PANEL.mojPlan
-                    ? <Image src={PANEL.mojPlan} widths={[390, 780]} sizes="(max-width: 900px) 100vw, 360px" alt={T.s4.cap} loading="lazy" />
-                    : <div class="ph ph-phone"><p>{T.ph}</p></div>}
+                  <video class="vid" loop muted playsinline preload="metadata" width={SHOTS.mojPlan.w} height={SHOTS.mojPlan.h} poster={SHOTS.mojPlan.poster} aria-label={T.s4.planAlt}><source src={SHOTS.mojPlan.webm} type="video/webm" /><source src={SHOTS.mojPlan.mp4} type="video/mp4" /></video>
                 </div>
                 <figcaption set:html={P(T.s4.cap)} />
               </figure>
