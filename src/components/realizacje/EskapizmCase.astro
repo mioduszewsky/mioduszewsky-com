@@ -17,6 +17,7 @@ import indonezja from '../../assets/realizacje/eskapizm/indonezja-1280.webp';
 import blog from '../../assets/realizacje/eskapizm/blog-1280.webp';
 import poslubne from '../../assets/realizacje/eskapizm/poslubne-1280.webp';
 import quiz from '../../assets/realizacje/eskapizm/quiz-1280.webp';
+import issues from '../../assets/realizacje/eskapizm/admin-issues-naprawione-1440.webp';
 
 interface Props { locale: 'pl' | 'en' }
 const { locale } = Astro.props;
@@ -44,11 +45,12 @@ const SHOTS = {
 };
 // Ujęcia z konta Kacpra (KIERUNEK.md sekcja 4, „Ujęcia z konta Kacpra”). null = spokojna ramka-zastępnik z podpisem.
 // Podmiana: zaimportuj obraz i wpisz go zamiast null.
-const PANEL: Record<'builder' | 'builderChat' | 'tasks' | 'issues', ImageMetadata | null> = {
+const PANEL: Record<'builder' | 'builderChat' | 'issues', ImageMetadata | null> = {
   builder: null, // TYMCZASOWE: /admin/ai-plan-builder, zrzut po publikacji (poster) i nagranie sesji 1440x900
   builderChat: null, // TYMCZASOWE: /admin/ai-plan-builder, sama kolumna czatu (pionowy zrzut, na telefon)
-  tasks: null, // TYMCZASOWE: /admin/tasks, widok Zespół, 1440x900
-  issues: null, // TYMCZASOWE: /admin/issues, lista zgłoszeń z pływającym przyciskiem, 1440x900
+  // Ujęcie z konta 19.10.2026 (konto Kacpra, bez zapisów): filtr „Naprawione”, treść zgłoszeń rozmyta przed zapisem.
+  // Tablica zadań i dashboard odrzucone przy kontroli (czerwone „po terminie”, pusty wykres), więc stacja ma jeden eksponat.
+  issues,
 };
 // ───────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -140,7 +142,8 @@ const T = pl ? {
       'Justyna ma też prawo zapisu do tego samego repozytorium, na własnej gałęzi, i sama wgrała do niego plan pary klientów pod ich własnym adresem. Gdy strona i wpis na blogu mówiły o Wietnamie różnie, Justyna ustaliła „minimum 10 dni” i tak jest wszędzie.',
     ],
     forWho: 'Dla nas', forTxt: 'to samo zadanie widać w ClickUpie i w panelu, w którym Justyna składa plany.',
-    cap: 'Panel zadań: przestrzeń Zespół, kalendarz, pas „Pomysły”.',
+    cap: 'Zgłoszenia w panelu: 41 naprawionych, każde z sesją, z której przyszło. Treść zgłoszeń zamazana.',
+    alt: 'Panel admina eskapizmu, strona Bugs z filtrem Naprawione: liczniki Nowe 0, W toku 0, Naprawione 41, Odrzucone 0, lista zgłoszeń z AI Plan Buildera z datami i przyciskami Sesja i Szczegóły, treść zamazana, w rogu pływający przycisk zgłoszenia.',
     repo: 'Jedno repozytorium kodu dla obojga · Justyna na własnej gałęzi · zmiany na main przez pull request',
   },
   ph: 'Ujęcie z panelu: w przygotowaniu',
@@ -254,7 +257,8 @@ const T = pl ? {
       'Justyna also has write access to the same repository, on her own branch, and she added a couple’s travel plan to it herself, under their own address. When the website and a blog post disagreed about Vietnam, Justyna settled on “a minimum of 10 days” and that’s what it says everywhere now.',
     ],
     forWho: 'For us', forTxt: 'the same task shows up in ClickUp and in the dashboard where Justyna builds the plans.',
-    cap: 'The task board: Team space, calendar, “Ideas” lane.',
+    cap: 'Reports in the dashboard: 41 fixed, each linked to the session it came from. Report contents blurred.',
+    alt: 'The eskapizm admin dashboard (in Polish), the Bugs page filtered to Fixed: counters New 0, In progress 0, Fixed 41, Rejected 0, a list of reports from the AI Plan Builder with dates and Session and Details buttons, contents blurred, a floating report button in the corner.',
     repo: 'One codebase for both of us · Justyna on her own branch · changes reach main through a pull request',
   },
   ph: 'Dashboard footage: in preparation',
@@ -485,14 +489,8 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
             <figure class="wrap panel">
               <div class="browser">
                 <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                {PANEL.tasks
-                  ? <Image src={PANEL.tasks} widths={[960, 1440]} sizes="(max-width: 1320px) 100vw, 1100px" alt={T.s5.cap} loading="lazy" />
-                  : <div class="ph ph-wide"><p>{T.ph}</p></div>}
-              </div>
-              <div class="browser small">
-                <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
                 {PANEL.issues
-                  ? <Image src={PANEL.issues} widths={[720, 1440]} sizes="(max-width: 900px) 100vw, 520px" alt="" loading="lazy" />
+                  ? <Image src={PANEL.issues} widths={[960, 1440, 2160, 2880]} sizes="(max-width: 1320px) 100vw, 1320px" alt={T.s5.alt} loading="lazy" />
                   : <div class="ph ph-wide"><p>{T.ph}</p></div>}
               </div>
               <figcaption set:html={P(T.s5.cap)} />
@@ -742,8 +740,8 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
   .link-line { font-family: 'EskCrimson', serif; font-weight: 600; font-size: clamp(20px, 2vw, 26px); line-height: 1.3; max-width: 22em; margin-bottom: 24px !important; }
 
   .s5 .txt.cols2 { margin-top: 28px; }
-  .panel { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); padding-bottom: 8%; }
-  .panel .browser:first-child { width: 80%; }
+  .panel { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); }
+  .panel .browser:first-child { width: 100%; } /* jeden eksponat od 19.10.2026 */
   .panel .browser.small { position: absolute; right: var(--gutter); bottom: 0; width: 38%; }
   .panel figcaption { max-width: 50%; }
   .repo { margin-top: 32px; font-family: 'EskMono', ui-monospace, monospace; font-size: 13px; color: rgb(255 255 255 / .7); }
