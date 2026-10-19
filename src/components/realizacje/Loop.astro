@@ -29,5 +29,7 @@ const m = mobile ? { mp4: V + mobile + '.mp4', webm: V + mobile + '.webm', poste
 <style>
   .loop { position: relative; overflow: hidden; }
   .loop picture, .loop img, .loop video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: var(--fit, cover); object-position: top center; display: block; }
+  /* Safari bez autoodtwarzania (np. tryb niskiego zużycia energii) pokazuje własny przycisk odtwarzania: zostaje plakat bez przycisku */
+  .loop video::-webkit-media-controls-start-playback-button, .loop video::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
   /* wideo widoczne od początku (WebKit odmawia play() elementom z opacity 0), do pierwszej klatki pokazuje ten sam plakat */
 </style>
