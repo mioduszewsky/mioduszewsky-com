@@ -20,8 +20,8 @@ const self = pl ? '/pl/realizacje/cannversity/' : '/work/cannversity/';
 const alt = pl ? '/work/cannversity/' : '/pl/realizacje/cannversity/';
 const url = `https://mioduszewsky.com${self}`;
 const live = cannabisHref('realizacje', locale);
-const contact = pl ? '/pl/kontakt/?service=' + encodeURIComponent('Strona internetowa') + '#ctForm'
-  : '/contact/?service=' + encodeURIComponent('Website') + '#ctForm';
+// Bez parametru service: formularz kontaktu nie zna usługi „strona” i i tak by go odrzucił (recenzja Codexa 19.10).
+const contact = pl ? '/pl/kontakt/#ctForm' : '/contact/#ctForm';
 // Ujęcia: PL z cannversity.com, EN z cannversity.com/en. Sekcja o dwóch językach w obu wersjach pokazuje /en.
 const dir = `/case/cannversity/${pl ? 'pl' : 'en'}`;
 
@@ -156,13 +156,13 @@ const ld = {
           </div>
           <div class="wrap set">
             <div class="screen">
-              <video class="vid" autoplay loop muted playsinline preload="metadata" width="1440" height="900" poster={`${dir}/strona-1440.webp`} aria-label={T.vidDesk}>
+              <video class="vid" loop muted playsinline preload="metadata" width="1440" height="900" poster={`${dir}/strona-1440.webp`} aria-label={T.vidDesk}>
                 <source src={`${dir}/strona-1440.webm`} type="video/webm" />
                 <source src={`${dir}/strona-1440.mp4`} type="video/mp4" />
               </video>
             </div>
             <div class="phone">
-              <video class="vid" autoplay loop muted playsinline preload="metadata" width="390" height="664" poster={`${dir}/telefon.webp`} aria-label={T.vidPhone}>
+              <video class="vid" loop muted playsinline preload="metadata" width="390" height="664" poster={`${dir}/telefon.webp`} aria-label={T.vidPhone}>
                 <source src={`${dir}/telefon.webm`} type="video/webm" />
                 <source src={`${dir}/telefon.mp4`} type="video/mp4" />
               </video>
@@ -237,14 +237,15 @@ const ld = {
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   gsap.registerPlugin(ScrollTrigger);
-  // Pętle nagrań grają tylko w ekranie i tylko bez prefers-reduced-motion; inaczej zostaje plakat.
+  // Pętle nagrań bez atrybutu autoplay: startuje je tylko skrypt, w ekranie i bez prefers-reduced-motion.
+  // Bez JS albo przy reduced motion zostaje plakat (recenzja Codexa 19.10).
   const still = matchMedia('(prefers-reduced-motion: reduce)');
   const vids = document.querySelectorAll<HTMLVideoElement>('.case video.vid');
   const io = new IntersectionObserver((es) => es.forEach((e) => {
     const v = e.target as HTMLVideoElement;
     if (e.isIntersecting && !still.matches) v.play().catch(() => {}); else v.pause();
   }), { threshold: .2 });
-  vids.forEach((v) => { if (still.matches) { v.removeAttribute('autoplay'); v.pause(); } io.observe(v); });
+  vids.forEach((v) => io.observe(v));
 
   // Jedno kliknięcie w żółć: koło żółci rośnie z podkreślenia „Branża konopna”, prowadzone scrollem.
   // Bez JS i przy prefers-reduced-motion sekcja jest zwykłym ekranem z menu, a żółta scena idzie zaraz pod nim.
