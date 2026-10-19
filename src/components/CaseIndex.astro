@@ -50,7 +50,7 @@ const hasCase = (slug: string) => `../pages/${pl ? 'pl/realizacje' : 'work'}/${s
 // z okna 1024×576, bo z 1280×720 strona wyglądała na oddaloną.
 const cases = [
   { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: pl ? 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' : "GlassStone homepage hero, in Polish: we don't sell stone, we create interiors you want to live in." },
-  { slug: 'eskapizm', name: T.nameEskapizm, img: heroEskapizm, alt: pl ? 'Hero strony eskapizm: Co by było, gdyby ktoś ułożył Twój wyjazd za Ciebie?' : 'eskapizm homepage hero, in Polish: what if someone planned your trip for you?' },
+  { slug: 'eskapizm', name: T.nameEskapizm, img: heroEskapizm, alt: pl ? 'Hero strony eskapizm: Kolejny wieczór na planowaniu podróży do Azji? Laptop na biurku w złotej godzinie.' : 'eskapizm homepage hero, in Polish: another evening spent planning a trip to Asia? A laptop on a desk at golden hour.' },
   { slug: 'igor-grabowski', name: 'Igor Grabowski', img: heroIgor, alt: pl ? 'Pierwszy ekran strony kolekcji Igora Grabowskiego: po najechaniu na Prace pojawia się praca z kolekcji.' : "First screen of Igor Grabowski's collection site: hovering Works brings up a piece from the collection." },
   { slug: 'cannversity', name: 'Cannversity', img: heroCannversity, alt: pl ? 'Hero strony Cannversity: Od pomysłu do produktu. W branży konopnej.' : 'Cannversity homepage hero, in Polish: from idea to product, in the cannabis industry.' },
 ].map((c) => ({ ...c, href: hasCase(c.slug) ? `${T.base}${c.slug}/` : undefined }));
