@@ -1,11 +1,14 @@
 ---
-// Case study Cannversity (19.10.2026), kierunek A „Żółte pole” z otwarciem z C „Jedno kliknięcie w żółć”,
-// wybrany przez Kacpra 19.10. Tablica: docs/case-studies/cannversity/runda-1/TABLICA.html.
-// Otwarcie: menu mioduszewsky.com na kremie, pozycja „Branża konopna” podkreślona żółcią (ten sam #ffcc33
-// co akcent Cannversity) i przy przewijaniu ta żółć zalewa ekran. Dalej case leży na żółci Cannversity.
-// Decyzje Kacpra 19.10: case prosty i krótki, bez wyników, leadów i klientów; newsletter zdjęty z cannversity.com.
-// Treść: docs/case-studies/cannversity/COPY.md i COPY-EN.md, fakty: FAKTY.md. Nagrania i zrzuty z żywej
-// cannversity.com (PL) i /en (EN), robione po zdjęciu newslettera, bez banera (strona nie ma bramki zgody).
+// Case study Cannversity, runda 2 (19.10.2026): kierunek „Prosto, z luzem”, zaakceptowany przez Kacpra.
+// Kierunek i historia: docs/case-studies/cannversity/runda-2/KIERUNEK.md. Odrzucone: otwarcie z menu mioduszewsky
+// (runda 1) i „Plakat z szablonu” (spray, natrysk, raster). Prosta strona pokazana prosto: żółć #ffcc33 i czerń
+// marki, nazwa krojem z logo Cannversity (Archivo, szerokość 125, waga 800, sprawdzone nakładką na logo),
+// twarde bloki i kreski, bez zaokrągleń i cieni. Jeden akcent z prawdziwego materiału: roślina z hero cannversity.com,
+// wycięta z białego tła (docs/case-studies/cannversity/runda-2/wytnij2.cjs), wyrasta zza bloku z nagraniem.
+// Jedna roślina na ekran, dlatego nagranie w pierwszym ekranie zaczyna się od sekcji „Trzy filary”, nie od hero.
+// Treść: docs/case-studies/cannversity/runda-2/COPY.md i COPY-EN.md (Ghost), fakty: docs/case-studies/cannversity/FAKTY.md.
+// Nagrania: klatka po klatce 60 kl./s z żywej cannversity.com (PL z /, EN z /en), bez banera (strona nie ma bramki
+// zgody, sprawdzone liczbą), poza kadrem sekcja z logo partnerów (R5). Skrypty: docs/case-studies/cannversity/runda-2/.
 import VariantLayout from '../../layouts/VariantLayout.astro';
 import SiteMenu from '../SiteMenu.astro';
 import BrandFooter from '../BrandFooter.astro';
@@ -20,87 +23,82 @@ const self = pl ? '/pl/realizacje/cannversity/' : '/work/cannversity/';
 const alt = pl ? '/work/cannversity/' : '/pl/realizacje/cannversity/';
 const url = `https://mioduszewsky.com${self}`;
 const live = cannabisHref('realizacje', locale);
-// Bez parametru service: formularz kontaktu nie zna usługi „strona” i i tak by go odrzucił (recenzja Codexa 19.10).
+const liveEn = cannabisHref('realizacje', 'en');
+const livePl = cannabisHref('realizacje', 'pl');
 const contact = pl ? '/pl/kontakt/#ctForm' : '/contact/#ctForm';
-// Ujęcia: PL z cannversity.com, EN z cannversity.com/en. Sekcja o dwóch językach w obu wersjach pokazuje /en.
 const dir = `/case/cannversity/${pl ? 'pl' : 'en'}`;
 
+// Następna realizacja: Cannversity stoi na końcu listy (CaseIndex), więc dalej idzie pierwsza istniejąca strona w tym języku.
+const pagesPl = import.meta.glob('../../pages/pl/realizacje/*.astro');
+const pagesEn = import.meta.glob('../../pages/work/*.astro');
+const order: [string, string][] = [['glassstone', 'GlassStone'], ['eskapizm', 'eskapizm'], ['igor-grabowski', 'Igor Grabowski']];
+const nextCase = order.find(([s]) => `../../pages/${pl ? 'pl/realizacje' : 'work'}/${s}.astro` in (pl ? pagesPl : pagesEn));
+const nextHref = nextCase ? `${pl ? '/pl/realizacje/' : '/work/'}${nextCase[0]}/` : undefined;
+
 const T = pl ? {
-  title: 'Cannversity: landing dla branży konopnej, który prowadzi do jednej rozmowy · mioduszewsky',
-  description: 'Cannversity to moja usługa dla founderów i marek z branży konopnej. Zrobiłem do niej prosty landing po polsku i po angielsku, który prowadzi do bezpłatnej, 30-minutowej rozmowy.',
-  skip: 'Przejdź do treści',
-  home: 'mioduszewsky. Strona główna.',
-  note: 'W menu mioduszewsky.com jest pozycja „Branża konopna”. Prowadzi tutaj.',
-  menuTop: 'Rozejrzyj się', menuClose: 'Zamknij',
-  menu: ['Strona główna', 'Usługi', 'Branża konopna', 'Kontakt'],
-  kicker: 'Własny projekt',
-  h1: 'Landing dla branży konopnej, który prowadzi do jednej rozmowy.',
-  lead: 'Cannversity to moja usługa dla founderów i marek z branży konopnej: strategia, MVP i strony, doradztwo. Ta sama robota co pod mioduszewsky, w jednej branży. Zrobiłem do niej prosty landing po polsku i po angielsku. Ma jeden cel: umówić bezpłatną, 30-minutową rozmowę.',
-  live: 'Zobacz cannversity.com',
-  vidDesk: 'Nagranie cannversity.com na komputerze: hasło „Od pomysłu do produktu. W branży konopnej.”, trzy sytuacje na żółtym tle, sekcja „Co dostajesz, zamiast zgadywać” i proces w trzech krokach.',
-  vidPhone: 'Nagranie cannversity.com na telefonie: hasło, przycisk „Umów bezpłatną rozmowę” i trzy sytuacje, od których zaczyna się współpraca.',
-  band: ['Od pomysłu do produktu.', 'W branży konopnej.'],
-  bandCap: 'Hasło z pierwszego ekranu cannversity.com',
-  h2a: 'Najpierw sytuacja, potem oferta, na końcu rozmowa.',
-  blocks: [
-    ['Dla kogo', 'Strona mówi do founderów i marek z branży konopnej. Na start pokazuje trzy sytuacje, od których zwykle zaczyna się współpraca: pomysł, który trzeba sprawdzić, MVP albo strona do zbudowania, projekt, który utknął.'],
-    ['Co pokazuje', 'Niżej są trzy filary oferty: Strategy & Roadmap, MVP & Product Build i Business Advisory, każdy z listą tego, co dostajesz. Sekcja „O Cannversity” mówi wprost, że za projektem stoję ja. Przy imporcie, rejestracji produktu i regulacjach pytam ludzi, którzy robią to od lat.'],
-    ['Do czego prowadzi', 'Przycisk do kalendarza Google stoi w menu i w siedmiu sekcjach strony. Wybierasz w nim termin bezpłatnej rozmowy: 30 minut, online. Kto woli napisać, ma na dole formularz.'],
-  ],
-  capFilary: 'Trzy filary oferty',
-  altFilary: 'Sekcja „Trzy filary. Jeden cel.” na cannversity.com: Strategy & Roadmap, MVP & Product Build i Business Advisory, każdy z listą „Co dostajesz”.',
-  capRozmowa: 'Sekcja „Zaczynamy od rozmowy”: 30 minut, online, bezpłatnie',
-  altRozmowa: 'Sekcja „Zaczynamy od rozmowy” na cannversity.com: trzy kroki rozmowy, przycisk „Wybierz termin w kalendarzu” i karta „0 zł, pierwsza rozmowa jest bezpłatna”.',
-  h2b: 'Po polsku i po angielsku, pod własną domeną.',
-  langTxt: [
-    'Wersja angielska ma własny adres cannversity.com/en. Angielski tytuł i opis są już w kodzie tej strony, więc link wysłany za granicę od razu pokazuje się po angielsku. Regulamin i polityka prywatności też są w obu językach.',
-    'Pierwszą wersję zrobiłem szybko w Lovable. We wrześniu 2026 sam przepisałem treść, dodałem angielskie metadane i przeniosłem stronę na własny hosting, pod domenę cannversity.com.',
-  ],
-  capEn: 'cannversity.com/en',
-  altEn: 'Pierwszy ekran cannversity.com/en: „From idea to product. In cannabis.” i przycisk „Book a free call”.',
-  h2end: 'Twoja oferta też potrzebuje jednej prostej strony?',
-  endTxt: 'Napisz, co sprzedajesz i komu. Odpiszę, jak ułożyłbym taką stronę.',
-  btn: 'Napisz do mnie',
-  headline: 'Landing dla branży konopnej, który prowadzi do jednej rozmowy',
-  about: 'Cannversity, usługa Kacpra Mioduszewskiego dla branży konopnej, cannversity.com',
+  title: 'Cannversity: strona PL i EN dla branży konopnej · mioduszewsky',
+  description: 'Cannversity to moja usługa dla founderów i marek konopnych. Zrobiłem jej stronę po polsku i angielsku. Prowadzi do bezpłatnej, 30-minutowej rozmowy.',
+  headline: 'Cannversity: strona dla branży konopnej po polsku i po angielsku',
+  about: 'Cannversity, moja usługa dla founderów i marek z branży konopnej: strategia, MVP i strony, doradztwo',
+  skip: 'Przejdź do treści', home: 'mioduszewsky. Strona główna.',
+  metka: 'Własny projekt · PL i EN',
+  zdanie: 'Strona dla tych, którzy robią w konopiach.',
+  wiersze: [['Dla kogo', 'Founderzy i marki z branży konopnej'], ['Jak działa', 'Trzy sytuacje i trzy filary oferty'], ['Prowadzi do', 'Bezpłatnej rozmowy, 30\u00a0minut online']],
+  link: 'Zobacz cannversity.com',
+  altBlok: 'Nagranie przewijania cannversity.com na komputerze: sekcja „Trzy filary. Jeden cel.” z kartami Strategy & Roadmap, MVP & Product Build i Business Advisory, a pod nią „Zaczynamy od rozmowy” z kartą „0 zł” i przyciskiem „Wybierz termin w kalendarzu”.',
+  s2: {
+    kicker: 'Na żywo',
+    h2: 'Pierwsze cztery sekcje, bez montażu.',
+    lead: 'Tak cannversity.com wygląda dziś na komputerze i w telefonie.',
+    podpisTelefon: 'Ta sama strona w telefonie, w jednej kolumnie.',
+    altDesktop: 'Nagranie przewijania cannversity.com na komputerze: hasło „Od pomysłu do produktu. W branży konopnej.” z przyciskiem „Umów bezpłatną rozmowę”, trzy sytuacje, od których zwykle zaczyna się współpraca, sekcja „Co dostajesz, zamiast zgadywać” i proces w trzech krokach.',
+    altTelefon: 'Nagranie przewijania cannversity.com w telefonie, w jednej kolumnie: hasło z przyciskiem do kalendarza, trzy sytuacje, sekcja „Co dostajesz, zamiast zgadywać” i proces w trzech krokach.',
+  },
+  s3: { h2: 'Jak ta strona prowadzi do rozmowy.', bloki: [
+    { etykieta: 'Sytuacje', tytul: 'Trzy sytuacje na start', tekst: 'Zaraz pod hasłem są trzy sytuacje, od których zwykle zaczyna się współpraca. Od „Mam pomysł, ale nie wiem, czy ma sens” po „Działam, ale utknąłem i potrzebuję sparingu”.', alt: 'Sekcja „Tu najczęściej zaczyna się współpraca” na cannversity.com: trzy karty z sytuacjami, każda z własnym przyciskiem.' },
+    { etykieta: 'Oferta', tytul: 'Trzy filary, po pięć konkretów', tekst: 'Strategy & Roadmap, MVP & Product Build i Business Advisory. Każdy ma listę tego, co dostajesz, od walidacji pomysłu po sparring dla founderów.', alt: 'Sekcja „Trzy filary. Jeden cel.” na cannversity.com: karty Strategy & Roadmap, MVP & Product Build i Business Advisory, każda z listą pięciu pozycji.' },
+    { etykieta: 'Rozmowa', tytul: 'Wszystkie drogi prowadzą do kalendarza', tekst: 'Przycisk do kalendarza Google jest w menu i w siedmiu sekcjach, razem 12 linków. Rozmowa trwa 30 minut, jest online i nic nie kosztuje. Kto woli pisać, ma formularz.', alt: 'Sekcja „Zaczynamy od rozmowy” na cannversity.com: plakietka „30 minut / online / bezpłatnie”, karta „0 zł” z napisem „Pierwsza rozmowa jest bezpłatna” i przycisk „Wybierz termin w kalendarzu”.' },
+  ] },
+  s4: { haslo: ['Od pomysłu do produktu.', 'W branży konopnej.'], podpis: 'Hasło z pierwszego ekranu, celowo złamane na dwie linijki.' },
+  s5: {
+    h2: 'Dwa języki, aż po regulamin.',
+    tekst: 'Wersja angielska ma własny adres cannversity.com/en, angielski tytuł i opis w kodzie oraz swoją politykę prywatności. Pierwszą wersję złożyłem w Lovable. We wrześniu 2026 przepisałem treść i metadane, przeniosłem stronę na własny hosting i domenę.',
+    altPl: 'Pierwszy ekran cannversity.com po polsku: hasło „Od pomysłu do produktu. W branży konopnej.” i przycisk „Umów bezpłatną rozmowę”.',
+    altEn: 'Pierwszy ekran cannversity.com/en po angielsku: hasło „From idea to product. In cannabis.” i przycisk „Book a free call”.',
+  },
+  s6: { h2: 'Potrzebujesz prostej strony pod swoją ofertę?', tekst: 'Branża nie musi być konopna. Napisz, co sprzedajesz i komu, a odpiszę, jak ułożyłbym taką stronę.', btn: 'Napisz do mnie', nastepny: 'Następna realizacja', link: 'Zobacz cannversity.com' },
 } : {
-  title: 'Cannversity: a cannabis industry landing page built to book one call · mioduszewsky',
-  description: 'Cannversity is my service for cannabis founders and brands. I built it a simple landing page in Polish and English that leads to a free 30-minute call.',
-  skip: 'Skip to content',
-  home: 'mioduszewsky. Home.',
-  note: 'The mioduszewsky.com menu has a “Cannabis industry” link. This is where it goes.',
-  menuTop: 'Take a look', menuClose: 'Close',
-  menu: ['Home', 'Services', 'Cannabis industry', 'Contact'],
-  kicker: 'My own project',
-  h1: 'A cannabis industry landing page built to book one call.',
-  lead: 'Cannversity is my service for cannabis founders and brands: strategy, MVPs and websites, advisory. It’s the same work I do as mioduszewsky, focused on one industry. I built it a simple landing page in Polish and English. It has one job: get you to book a free 30-minute call.',
-  live: 'See cannversity.com',
-  vidDesk: 'Screen recording of cannversity.com/en on a laptop: the headline “From idea to product. In cannabis.”, three situations on yellow, the “What you get instead of guessing” section and the three-step process.',
-  vidPhone: 'Screen recording of cannversity.com/en on a phone: the headline, the “Book a free call” button and the three situations people come in with.',
-  band: ['From idea to product.', 'In cannabis.'],
-  bandCap: 'The headline on the first screen of cannversity.com/en',
-  h2a: 'The situation first, then the offer, then the call.',
-  blocks: [
-    ['Who it’s for', 'The page talks to founders and brands in the cannabis industry. It opens with the three situations people usually come in with: an idea that needs testing, an MVP or a website to build, a project that’s stuck.'],
-    ['What it shows', 'Next come the three pillars of the offer: Strategy & Roadmap, MVP & Product Build and Business Advisory, each with a list of what you get. The “About Cannversity” section says plainly that I’m the one behind it. For import, product registration and regulation, I ask people who’ve been doing it for years.'],
-    ['Where it leads', 'The Google Calendar button sits in the menu and in seven sections of the page. You pick a slot for a free call: 30 minutes, online. If you’d rather write, there’s a form at the bottom.'],
-  ],
-  capFilary: 'The three pillars of the offer',
-  altFilary: 'The “Three pillars. One goal.” section of cannversity.com/en: Strategy & Roadmap, MVP & Product Build and Business Advisory, each with a “What you get” list.',
-  capRozmowa: 'The “We start with a conversation” section: 30 minutes, online, free',
-  altRozmowa: 'The “We start with a conversation” section of cannversity.com/en: three steps of the call, a calendar button and a card saying the first call is free.',
-  h2b: 'Polish and English, on its own domain.',
-  langTxt: [
-    'The English version lives at cannversity.com/en. Its English title and description are baked into the page’s code, so a link you send abroad shows up in English straight away. The terms and the privacy policy come in both languages too.',
-    'I built the first version fast, in Lovable. In September 2026 I rewrote the copy myself, added the English metadata and moved the site to my own hosting, on the cannversity.com domain.',
-  ],
-  capEn: 'cannversity.com/en',
-  altEn: 'The first screen of cannversity.com/en: “From idea to product. In cannabis.” and a “Book a free call” button.',
-  h2end: 'Does your offer need one simple page too?',
-  endTxt: 'Tell me what you sell and who to. I’ll write back with how I’d lay that page out.',
-  btn: 'Write to me',
-  headline: 'A cannabis industry landing page built to book one call',
-  about: 'Cannversity, Kacper Mioduszewski’s service for the cannabis industry, cannversity.com',
+  title: 'Cannversity: a bilingual cannabis industry site · mioduszewsky',
+  description: 'Cannversity is my service for cannabis founders and brands. I built its site in Polish and English, and it leads to a free 30-minute call.',
+  headline: 'Cannversity: a Polish and English website for the cannabis industry',
+  about: 'Cannversity, my service for cannabis founders and brands: strategy, MVPs and websites, advisory',
+  skip: 'Skip to content', home: 'mioduszewsky. Home.',
+  metka: 'My own project · PL & EN',
+  zdanie: 'A website for people knee-deep in cannabis.',
+  wiersze: [['Who it’s for', 'Cannabis founders and brands'], ['How it works', 'Three situations and three pillars'], ['Where it leads', 'A free 30\u2011minute call, online']],
+  link: 'Visit cannversity.com',
+  altBlok: 'Screen recording of cannversity.com/en scrolling on a desktop: the “Three pillars. One goal.” section with the Strategy & Roadmap, MVP & Product Build and Business Advisory cards, then “We start with a conversation” with the free first call card and the calendar button.',
+  s2: {
+    kicker: 'Live',
+    h2: 'The first four sections, no cuts.',
+    lead: 'This is cannversity.com today, on a desktop and on a phone.',
+    podpisTelefon: 'Same site on a phone, in one column.',
+    altDesktop: 'Screen recording of cannversity.com/en scrolling on a desktop: the headline “From idea to product. In cannabis.” with the “Book a free call” button, three situations people usually start from, the “What you get instead of guessing” section and the three-step process.',
+    altTelefon: 'Screen recording of cannversity.com/en scrolling on a phone, in one column: the headline with the calendar button, three situations, “What you get instead of guessing” and the three-step process.',
+  },
+  s3: { h2: 'How the page gets you to a call.', bloki: [
+    { etykieta: 'Situations', tytul: 'Three ways in', tekst: 'Right under the headline sit three situations, from “I have an idea, but I don’t know if it makes sense” to “I’m running but stuck and need a sparring partner.”', alt: 'The “This is where it usually starts” section of cannversity.com/en: three cards with situations, each with its own button.' },
+    { etykieta: 'Offer', tytul: 'Three pillars, five deliverables each', tekst: 'Strategy & Roadmap, MVP & Product Build and Business Advisory. Each has a list of what you get, from idea validation to founder sparring.', alt: 'The “Three pillars. One goal.” section of cannversity.com/en: Strategy & Roadmap, MVP & Product Build and Business Advisory cards, each with a five-item list.' },
+    { etykieta: 'The call', tytul: 'Twelve links, one calendar', tekst: 'The Google Calendar button sits in the menu and in seven sections. The call is 30 minutes, online and free. Rather write? There’s a form for that.', alt: 'The “We start with a conversation” section of cannversity.com/en: a “30 minutes / online / free” badge, a card that says the first call is free and a “Pick a time in the calendar” button.' },
+  ] },
+  s4: { haslo: ['From idea to product.', 'In cannabis.'], podpis: 'The first-screen headline, split over two lines on purpose.' },
+  s5: {
+    h2: 'Two languages, right down to the terms.',
+    tekst: 'cannversity.com/en has its own English title and description in the code, and a privacy policy. I built the first version in Lovable. In September 2026 I rewrote the copy and metadata and moved everything to my own hosting and domain.',
+    altPl: 'First screen of cannversity.com in Polish: the headline “Od pomysłu do produktu. W branży konopnej.” and the “Umów bezpłatną rozmowę” button.',
+    altEn: 'First screen of cannversity.com/en: the headline “From idea to product. In cannabis.” and the “Book a free call” button.',
+  },
+  s6: { h2: 'Need a simple site for your offer?', tekst: 'Cannabis optional. Tell me what you sell and to whom. I’ll write back with how I’d lay out the page.', btn: 'Get in touch', nastepny: 'Next project', link: 'Visit cannversity.com' },
 };
 
 const ld = {
@@ -108,23 +106,24 @@ const ld = {
   '@graph': [
     { '@type': 'Article', headline: T.headline, inLanguage: locale, about: T.about,
       author: { '@type': 'Person', name: 'Kacper Mioduszewski', url: pl ? 'https://mioduszewsky.com/pl/' : 'https://mioduszewsky.com/' },
-      image: `https://mioduszewsky.com${dir}/strona-1440.webp`, mainEntityOfPage: url },
+      image: `https://mioduszewsky.com${dir}/hero-1440.webp`, mainEntityOfPage: url },
     { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'mioduszewsky', item: pl ? 'https://mioduszewsky.com/pl/' : 'https://mioduszewsky.com/' },
       { '@type': 'ListItem', position: 2, name: 'Cannversity', item: url } ] },
   ],
 };
 ---
-<VariantLayout title={T.title} description={T.description} bg="#f8f9f2" fg="#111111" switcher={false}
+<VariantLayout title={T.title} description={T.description} bg="#ffcc33" fg="#141414" switcher={false}
   robots="index, follow, max-image-preview:large" locale={locale} alternatePath={alt}>
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
     <a class="skip" href="#main">{T.skip}</a>
     <header class="nav">
+      <!-- Logo w wersji dalmatyńczyk: żółte logo mioduszewsky znika na żółci Cannversity. -->
       <a class="mark" href={pl ? '/pl/' : '/'} aria-label={T.home}>
-        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
-          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-dalmatian-poster.webp">
+          <source src="/logo3d/logo-dalmatian.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-dalmatian.webm" type="video/webm" />
         </video>
       </a>
       <SiteMenu locale={locale} alternatePath={alt} />
@@ -132,113 +131,140 @@ const ld = {
 
     <main id="main">
       <article>
-        <!-- Otwarcie: menu mioduszewsky.com, żółte podkreślenie „Branża konopna” zalewa ekran przy przewijaniu. -->
-        <section class="jump" aria-label={T.note}>
-          <div class="jump-pin">
-            <div class="jump-in">
-              <p class="jump-note">{T.note}</p>
-              <div class="menu-card" aria-hidden="true">
-                <div class="menu-top"><span>{T.menuTop}</span><span>{T.menuClose} ×</span></div>
-                {T.menu.map((m, i) => i === 2
-                  ? <p class="mi hot"><span class="hl">{m}</span><span class="ext">↗</span></p>
-                  : <p class="mi">{m}</p>)}
+        <!-- 1. Otwarcie: nazwa, zdanie, trzy wiersze, blok z nagraniem i roślina zza bloku. -->
+        <header class="open">
+          <div class="wrap">
+            <p class="metka">{T.metka}</p>
+            <h1 class="name"><span class="name-in" aria-hidden="true">CANNVERSITY</span><span class="sr">Cannversity: {T.zdanie}</span></h1>
+            <div class="rule" aria-hidden="true"></div>
+          </div>
+          <div class="wrap open-grid">
+            <div class="open-txt">
+              <p class="zdanie" aria-hidden="true" set:html={P(T.zdanie)} />
+              <dl class="rows">
+                {T.wiersze.map(([k, v]) => <div><dt>{k}</dt><dd set:html={P(v)} /></div>)}
+              </dl>
+              <a class="live" href={live} target="_blank" rel="noopener">{T.link}<span aria-hidden="true"> ↗</span></a>
+            </div>
+            <div class="open-media">
+              <img class="plant" src="/case/cannversity/roslina.webp" width="860" height="675" alt="" decoding="async" />
+              <div class="blok">
+                <video class="vid" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/blok-poster.webp`} aria-label={T.altBlok}>
+                  <source src={`${dir}/blok.mp4`} type="video/mp4" />
+                </video>
               </div>
             </div>
-            <div class="flood" aria-hidden="true"></div>
           </div>
-        </section>
-
-        <header class="stage">
-          <div class="wrap">
-            <p class="kicker">{T.kicker}</p>
-            <h1>{T.h1}</h1>
-            <p class="lead" set:html={P(T.lead)} />
-          </div>
-          <div class="wrap set">
-            <div class="screen">
-              <video class="vid" loop muted playsinline preload="metadata" width="1440" height="900" poster={`${dir}/strona-1440.webp`} aria-label={T.vidDesk}>
-                <source src={`${dir}/strona-1440.webm`} type="video/webm" />
-                <source src={`${dir}/strona-1440.mp4`} type="video/mp4" />
-              </video>
-            </div>
-            <div class="phone">
-              <video class="vid" loop muted playsinline preload="metadata" width="390" height="664" poster={`${dir}/telefon.webp`} aria-label={T.vidPhone}>
-                <source src={`${dir}/telefon.webm`} type="video/webm" />
-                <source src={`${dir}/telefon.mp4`} type="video/mp4" />
-              </video>
-            </div>
-          </div>
-          <div class="wrap live"><a href={live} target="_blank" rel="noopener">{T.live}<span aria-hidden="true"> ↗</span></a></div>
         </header>
 
-        <figure class="band">
-          <blockquote lang={pl ? 'pl' : 'en'}><p>{T.band[0]}</p><p>{T.band[1]}</p></blockquote>
-          <figcaption class="wrap">{T.bandCap}</figcaption>
-        </figure>
-
-        <section class="paper">
-          <div class="wrap">
-            <h2>{T.h2a}</h2>
-            <div class="trio">
-              {T.blocks.map(([h, t]) => (
-                <div><h3>{h}</h3><p set:html={P(t)} /></div>
-              ))}
-            </div>
+        <!-- 2. Strona w ruchu: duże nagranie z komputera i pionowe z telefonu, bez ramek urządzeń. -->
+        <section class="ink motion" aria-labelledby="s2-h">
+          <div class="wrap head">
+            <p class="kicker">{T.s2.kicker}</p>
+            <h2 id="s2-h" set:html={P(T.s2.h2)} />
+            <p class="lead" set:html={P(T.s2.lead)} />
           </div>
-          <div class="wrap pair">
-            <figure>
-              <!-- Filary na telefonie: ta sama sekcja w układzie z komputera, w całości (wersja z telefonu ma 1800 px wysokości). -->
-              <img src={`${dir}/filary-1440.webp`} loading="lazy" alt={T.altFilary} />
-              <figcaption>{T.capFilary}</figcaption>
+          <div class="wrap duo-vid">
+            <figure class="desk">
+              <video class="vid" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/strona-poster.webp`} aria-label={T.s2.altDesktop}>
+                <source src={`${dir}/strona.mp4`} type="video/mp4" />
+              </video>
             </figure>
-            <figure>
-              <picture>
-                <source media="(max-width: 700px)" srcset={`${dir}/rozmowa-390.webp`} />
-                <img src={`${dir}/rozmowa-1440.webp`} loading="lazy" alt={T.altRozmowa} />
-              </picture>
-              <figcaption>{T.capRozmowa}</figcaption>
+            <figure class="phone">
+              <video class="vid" loop muted playsinline preload="metadata" width="720" height="1280" poster={`${dir}/telefon-poster.webp`} aria-label={T.s2.altTelefon}>
+                <source src={`${dir}/telefon.mp4`} type="video/mp4" />
+              </video>
+              <figcaption set:html={P(T.s2.podpisTelefon)} />
             </figure>
           </div>
         </section>
 
-        <section class="ink">
-          <div class="wrap duo">
-            <div>
-              <h2>{T.h2b}</h2>
-              <div class="txt">{T.langTxt.map((t) => <p set:html={P(t)} />)}</div>
+        <!-- 3. Jak działa strona: trzy twarde bloki w kolejności strony, każdy ze zrzutem swojej sekcji. -->
+        <section class="paper" aria-labelledby="s3-h">
+          <div class="wrap">
+            <h2 id="s3-h" set:html={P(T.s3.h2)} />
+            <ol class="steps">
+              {T.s3.bloki.map((b, i) => {
+                const f = ['sytuacje', 'filary', 'rozmowa'][i];
+                return (
+                  <li>
+                    <div class="step-txt">
+                      <p class="num" aria-hidden="true">0{i + 1}</p>
+                      <p class="label">{b.etykieta}</p>
+                      <h3 set:html={P(b.tytul)} />
+                      <p set:html={P(b.tekst)} />
+                    </div>
+                    <picture class="shot">
+                      <source media="(max-width: 700px)" srcset={`${dir}/${f}-390.webp`} width="780" height="1386" />
+                      <img src={`${dir}/${f}-1440.webp`} width="1600" height={f === 'filary' ? 1000 : f === 'rozmowa' ? 871 : 840} loading="lazy" decoding="async" alt={b.alt} />
+                    </picture>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        </section>
+
+        <!-- 4. Hasło strony krojem Cannversity (Inter, gruba kursywa), w skali plakatu. -->
+        <figure class="band">
+          <blockquote lang={pl ? 'pl' : 'en'}><p>{T.s4.haslo[0]}</p><p>{T.s4.haslo[1]}</p></blockquote>
+          <figcaption class="wrap" set:html={P(T.s4.podpis)} />
+        </figure>
+
+        <!-- 5. Dwa języki: ten sam pierwszy ekran po polsku i po angielsku, obok siebie. -->
+        <section class="ink langs" aria-labelledby="s5-h">
+          <div class="wrap langs-in">
+            <div class="langs-txt">
+              <h2 id="s5-h" set:html={P(T.s5.h2)} />
+              <p set:html={P(T.s5.tekst)} />
             </div>
-            <figure class="en">
-              <picture>
-                <source media="(max-width: 700px)" srcset="/case/cannversity/en/en-390.webp" />
-                <img src="/case/cannversity/en/en-1440.webp" loading="lazy" alt={T.altEn} />
-              </picture>
-              <figcaption>{T.capEn}</figcaption>
-            </figure>
+            <div class="pair">
+              <figure>
+                <picture>
+                  <source media="(max-width: 700px)" srcset="/case/cannversity/pl/hero-390.webp" width="780" height="1386" />
+                  <img src="/case/cannversity/pl/hero-1440.webp" width="1600" height="1000" loading="lazy" decoding="async" alt={T.s5.altPl} />
+                </picture>
+                <figcaption><a href={livePl} target="_blank" rel="noopener">cannversity.com<span aria-hidden="true"> ↗</span></a></figcaption>
+              </figure>
+              <figure>
+                <picture>
+                  <source media="(max-width: 700px)" srcset="/case/cannversity/en/hero-390.webp" width="780" height="1386" />
+                  <img src="/case/cannversity/en/hero-1440.webp" width="1600" height="1000" loading="lazy" decoding="async" alt={T.s5.altEn} />
+                </picture>
+                <figcaption><a href={liveEn} target="_blank" rel="noopener">cannversity.com/en<span aria-hidden="true"> ↗</span></a></figcaption>
+              </figure>
+            </div>
           </div>
         </section>
       </article>
 
+      <!-- 6. Wyjście: kontakt i następna realizacja zamiast martwej stopki. -->
       <section class="end" aria-labelledby="end-h">
         <div class="wrap end-in">
-          <h2 id="end-h">{T.h2end}</h2>
-          <div>
-            <p>{T.endTxt}</p>
-            <a class="btn" href={contact}>{T.btn}</a>
-            <p class="more"><a href={live} target="_blank" rel="noopener">{T.live}<span aria-hidden="true"> ↗</span></a></p>
+          <h2 id="end-h" set:html={P(T.s6.h2)} />
+          <div class="end-txt">
+            <p set:html={P(T.s6.tekst)} />
+            <div class="end-act">
+              <a class="btn" href={contact}>{T.s6.btn}</a>
+              <a class="live" href={live} target="_blank" rel="noopener">{T.s6.link}<span aria-hidden="true"> ↗</span></a>
+            </div>
           </div>
         </div>
+        {nextCase && (
+          <a class="next" href={nextHref}>
+            <span class="wrap next-in"><span class="next-k">{T.s6.nastepny}</span><span class="next-n">{nextCase[1]}<span aria-hidden="true"> →</span></span></span>
+          </a>
+        )}
       </section>
     </main>
-    <BrandFooter locale={locale} inset />
+    <!-- Stopka ma kremowe tło i marginesy (inset); pas w tym samym kremie, żeby marginesy nie świeciły żółcią. -->
+    <div class="foot"><BrandFooter locale={locale} inset /></div>
   </div>
 </VariantLayout>
 
 <script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  gsap.registerPlugin(ScrollTrigger);
   // Pętle nagrań bez atrybutu autoplay: startuje je tylko skrypt, w ekranie i bez prefers-reduced-motion.
-  // Bez JS albo przy reduced motion zostaje plakat (recenzja Codexa 19.10).
+  // Bez JS albo przy reduced motion zostaje plakat (pierwsza klatka).
   const still = matchMedia('(prefers-reduced-motion: reduce)');
   const vids = document.querySelectorAll<HTMLVideoElement>('.case video.vid');
   const io = new IntersectionObserver((es) => es.forEach((e) => {
@@ -246,133 +272,125 @@ const ld = {
     if (e.isIntersecting && !still.matches) v.play().catch(() => {}); else v.pause();
   }), { threshold: .2 });
   vids.forEach((v) => io.observe(v));
-
-  // Jedno kliknięcie w żółć: koło żółci rośnie z podkreślenia „Branża konopna”, prowadzone scrollem.
-  // Bez JS i przy prefers-reduced-motion sekcja jest zwykłym ekranem z menu, a żółta scena idzie zaraz pod nim.
-  const mm = gsap.matchMedia();
-  mm.add('(prefers-reduced-motion: no-preference)', () => {
-    const jump = document.querySelector<HTMLElement>('.jump');
-    const pin = jump?.querySelector<HTMLElement>('.jump-pin');
-    const hl = jump?.querySelector<HTMLElement>('.hl');
-    const flood = jump?.querySelector<HTMLElement>('.flood');
-    if (!jump || !pin || !hl || !flood) return;
-    jump.classList.add('on');
-    const origin = () => {
-      const p = pin.getBoundingClientRect(), h = hl.getBoundingClientRect();
-      const x = h.left - p.left + h.width / 2, y = h.top - p.top + h.height / 2;
-      const r = Math.hypot(Math.max(x, p.width - x), Math.max(y, p.height - y));
-      return { x, y, r };
-    };
-    let o = origin();
-    const st = ScrollTrigger.create({
-      trigger: jump, start: 'top top', end: 'bottom bottom', scrub: true,
-      invalidateOnRefresh: true, onRefresh: () => { o = origin(); },
-      onUpdate: (self) => {
-        // Pierwsza ćwierć: nic, czytelnik widzi menu. Potem żółć rośnie aż do brzegów ekranu.
-        const t = gsap.utils.clamp(0, 1, (self.progress - .22) / .7);
-        const e = gsap.parseEase('power2.in')(t);
-        flood.style.clipPath = `circle(${(o.r * e).toFixed(1)}px at ${o.x.toFixed(1)}px ${o.y.toFixed(1)}px)`;
-      },
-    });
-    return () => { st.kill(); jump.classList.remove('on'); flood.style.clipPath = ''; };
-  });
-  window.addEventListener('pagehide', () => mm.revert(), { once: true });
 </script>
 
 <style>
   .case {
-    --ivory: #f8f9f2; --ink: #111; --dim: #5f5b4e; --rule: rgb(17 17 17 / .16);
-    /* Żółć Cannversity hsl(45 100% 60%) = #ffcc33, ten sam kolor co akcent mioduszewsky. */
-    --cann: #ffcc33; --black: #141414; --blue: #0522ff;
-    --gutter: clamp(20px, 5vw, 96px); --focus: var(--ink);
-    font-family: 'GeneralSansV', sans-serif; background: var(--ivory); color: var(--ink); overflow-x: clip;
+    /* Żółć Cannversity hsl(45 100% 60%) = #ffcc33, czerń marki hsl(0 0% 8%) = #141414. Bez zaokrągleń i cieni. */
+    --cann: #ffcc33; --black: #141414; --white: #fff; --line: 3px;
+    --gutter: clamp(20px, 3.4vw, 56px); --max: 1440px;
+    font-family: 'InterCase', system-ui, sans-serif; background: var(--cann); color: var(--black); overflow-x: clip;
   }
-  @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
-  @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
-  /* Krój Cannversity (Inter, gruba kursywa jak w hero cannversity.com), tylko do hasła strony. */
-  @font-face { font-family: 'InterCann'; font-style: italic; font-weight: 800 900; font-display: swap; src: url('/fonts/cannversity/inter-italic-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
-  @font-face { font-family: 'InterCann'; font-style: italic; font-weight: 800 900; font-display: swap; src: url('/fonts/cannversity/inter-italic-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-  .case :is(h1,h2,h3,p,figure,blockquote) { margin: 0; }
-  .case :is(h1,h2) { text-wrap: balance; }
+  /* Kroje Cannversity, hostowane lokalnie: Inter (tekst i hasło) i Archivo w szerokości 125 (nazwa, jak w logo). */
+  @font-face { font-family: 'InterCase'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('/fonts/cannversity/inter-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'InterCase'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('/fonts/cannversity/inter-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'InterCase'; font-style: italic; font-weight: 800 900; font-display: swap; src: url('/fonts/cannversity/inter-italic-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'InterCase'; font-style: italic; font-weight: 800 900; font-display: swap; src: url('/fonts/cannversity/inter-italic-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'ArchivoCann'; font-stretch: 125%; font-weight: 800; font-display: block; src: url('/fonts/cannversity/archivo-125-800-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  .case :is(h1,h2,h3,p,figure,blockquote,dl,dd,ol) { margin: 0; }
+  .case :is(h1,h2,h3) { text-wrap: balance; }
   .case p { text-wrap: pretty; }
-  .case :is(a,button):focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
-  .case ::selection { background: var(--cann); color: var(--ink); }
-  .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--cann); color: var(--ink); transform: translateY(-200%); }
+  .case :is(a,button):focus-visible { outline: 3px solid var(--black); outline-offset: 4px; }
+  .case .ink :is(a,button):focus-visible { outline-color: var(--cann); }
+  .case ::selection { background: var(--black); color: var(--cann); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--black); color: var(--cann); transform: translateY(-200%); }
   .skip:focus { transform: none; }
-  .nav { height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
-  .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
-  .wrap { max-width: 1320px; margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
+  .nav { height: 96px; box-sizing: border-box; padding: 20px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
+  .mark video { width: clamp(150px, 15vw, 200px); height: auto; display: block; }
+  .wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
 
-  /* Otwarcie. Bez JS: zwykły ekran. Z JS (.on): sekcja dłuższa, ekran przyklejony, żółć rośnie. */
-  .jump { position: relative; }
-  .jump.on { height: 230svh; }
-  .jump-pin { position: relative; min-height: calc(100svh - 104px); display: grid; place-items: center; padding: 24px var(--gutter) 64px; box-sizing: border-box; overflow: hidden; }
-  .jump.on .jump-pin { position: sticky; top: 0; height: 100svh; min-height: 0; }
-  .jump-in { width: min(520px, 100%); }
-  .jump-note { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.5; margin-bottom: 28px !important; max-width: 26em; }
-  .menu-card { box-sizing: border-box; padding: 28px 32px 32px; background: var(--ivory); border: 1px solid #0003; border-radius: 16px; box-shadow: 0 24px 80px #0002; }
-  .menu-top { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 24px; font-size: 13px; }
-  .mi { padding: 12px 0; font-family: 'NohemiV', sans-serif; font-size: clamp(24px, 3vw, 38px); font-weight: 520; letter-spacing: -.035em; line-height: 1.3; }
-  .mi.hot { display: flex; align-items: center; gap: 12px; }
-  /* Podkreślenie żółcią, jak zakreślacz w hero mioduszewsky.com. */
-  .hl { background: linear-gradient(transparent 18%, var(--cann) 18%, var(--cann) 88%, transparent 88%); padding-inline: 4px; margin-inline: -4px; }
-  .ext { font-size: 22px; color: var(--blue); }
-  .flood { position: absolute; inset: 0; background: var(--cann); clip-path: circle(0 at 50% 50%); pointer-events: none; display: none; }
-  .jump.on .flood { display: block; }
+  /* 1. Otwarcie */
+  .open { padding-top: clamp(8px, 1.6vw, 24px); padding-bottom: 0; }
+  .metka { font-size: clamp(11px, .95vw, 14px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  /* Nazwa wypełnia szerokość kolumny: 10,1 em to szerokość „CANNVERSITY” w Archivo 125/800 z rozstawem .05em. */
+  .name { margin-top: clamp(4px, .6vw, 10px) !important; font-family: 'ArchivoCann', 'Arial Black', sans-serif; font-stretch: 125%; font-weight: 800; letter-spacing: .05em; line-height: .92; white-space: nowrap;
+    font-size: calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 10.1); margin-right: -.05em; }
+  .rule { margin-top: clamp(14px, 2vw, 30px); height: clamp(3px, .28vw, 5px); background: var(--black); }
+  .open-grid { display: grid; grid-template-columns: minmax(0, 30fr) minmax(0, 66fr); gap: clamp(24px, 3.6vw, 56px); margin-top: clamp(24px, 2.6vw, 40px); align-items: start; }
+  .open-txt { display: grid; gap: clamp(20px, 2vw, 30px); align-content: start; }
+  .zdanie { font-style: italic; font-weight: 900; font-size: clamp(30px, 2.5vw, 40px); line-height: 1.05; letter-spacing: -.02em; }
+  .rows { border-top: var(--line) solid var(--black); }
+  .rows > div { display: grid; grid-template-columns: minmax(0, 9.5em) minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: var(--line) solid var(--black); }
+  .rows dt { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding-top: 4px; }
+  .rows dd { font-size: clamp(16px, 1.2vw, 18px); font-weight: 800; line-height: 1.3; }
+  .live { justify-self: start; color: inherit; font-weight: 600; font-size: 16px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  .open-media { position: relative; margin-right: calc(var(--gutter) * -1); padding-top: clamp(72px, 7.5vw, 124px); }
+  /* Roślina z hero cannversity.com wyrasta zza bloku; dół rośliny chowa się za blokiem. */
+  .plant { position: absolute; z-index: 0; right: -4%; top: clamp(-70px, -4.2vw, -24px); width: 56%; height: auto; pointer-events: none; }
+  .blok { position: relative; z-index: 1; background: var(--black); padding: clamp(10px, 1.3vw, 20px) 0 0 clamp(10px, 1.3vw, 20px); }
+  .vid { display: block; width: 100%; height: auto; background: var(--black); }
 
-  /* Scena na żółci Cannversity. */
-  .stage { background: var(--cann); padding: clamp(32px, 6vw, 80px) 0 clamp(48px, 6vw, 80px); overflow: clip; }
-  .kicker { font-size: 16px; color: rgb(17 17 17 / .7); }
-  h1 { margin-top: 20px !important; font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(38px, 6.6vw, 104px); line-height: .98; letter-spacing: -.04em; max-width: 13em; }
-  .lead { margin-top: clamp(24px, 3vw, 40px) !important; max-width: 36em; font-size: 21px; line-height: 1.6; color: rgb(17 17 17 / .86); }
-  .set { position: relative; margin-top: clamp(56px, 7vw, 104px); }
-  .screen { position: relative; z-index: 2; width: 82%; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 40px 80px -30px rgb(60 40 0 / .5), 0 0 0 1px rgb(17 17 17 / .12); }
-  .vid { display: block; width: 100%; height: auto; }
-  .phone { position: absolute; z-index: 3; right: var(--gutter); bottom: -8%; width: 19%; border-radius: 26px; overflow: hidden; background: #fff; box-shadow: 0 30px 60px -20px rgb(60 40 0 / .55), 0 0 0 6px var(--black); }
-  .live { margin-top: clamp(64px, 8vw, 104px); }
-  .live a, .more a { color: var(--ink); font-size: 18px; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  /* Wspólne nagłówki sekcji: gruba kursywa Inter, jak nagłówki cannversity.com. */
+  h2 { font-style: italic; font-weight: 900; font-size: clamp(34px, 4.4vw, 68px); line-height: 1.02; letter-spacing: -.025em; max-width: 15em; }
+  .kicker { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--cann); }
 
-  /* Hasło strony krojem Cannversity (Inter, gruba kursywa), w skali plakatu; druga linia wcięta. */
-  .band { background: var(--cann); padding: clamp(40px, 6vw, 96px) 0 clamp(48px, 6vw, 96px); overflow: hidden; border-top: 1px solid rgb(17 17 17 / .12); }
-  .band blockquote { padding-inline: var(--gutter); font-family: 'InterCann', 'Inter', sans-serif; font-style: italic; font-weight: 800; font-size: clamp(42px, 11.5vw, 200px); line-height: .98; letter-spacing: -.045em; }
-  .band blockquote p + p { margin-left: clamp(24px, 9vw, 180px) !important; }
-  .band figcaption { margin-top: 28px; font-size: 15px; color: rgb(17 17 17 / .7); }
+  /* 2. Strona w ruchu */
+  .ink { background: var(--black); color: var(--white); }
+  /* Czarny blok z otwarcia kończy się równo z sekcją i przechodzi w tę czarną sekcję. */
+  .motion { padding: clamp(56px, 7vw, 112px) 0 clamp(72px, 9vw, 140px); }
+  .motion .head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); column-gap: clamp(24px, 4vw, 64px); row-gap: 16px; align-items: end; }
+  .motion .kicker { grid-column: 1 / -1; }
+  .lead { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; color: rgb(255 255 255 / .82); max-width: 30em; }
+  .duo-vid { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: minmax(0, 74fr) minmax(0, 22fr); gap: clamp(16px, 2.6vw, 40px); align-items: start; }
+  .duo-vid figure { border: var(--line) solid var(--cann); }
+  .phone figcaption { padding: 10px 12px; font-size: 14px; background: var(--cann); color: var(--black); font-weight: 600; }
 
-  h2 { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(32px, 4.4vw, 64px); line-height: 1.02; letter-spacing: -.03em; max-width: 14em; }
-  .paper { padding: clamp(80px, 10vw, 144px) 0; }
-  .trio { margin-top: clamp(40px, 5vw, 64px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 64px); }
-  .trio h3 { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: 24px; letter-spacing: -.02em; padding-top: 16px; border-top: 3px solid var(--cann); }
-  .trio p { margin-top: 12px !important; font-size: 18px; line-height: 1.6; }
-  .pair { margin-top: clamp(56px, 7vw, 96px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 32px); align-items: start; }
-  .pair img, .en img { display: block; width: 100%; height: auto; border-radius: 10px; box-shadow: 0 24px 60px -30px rgb(17 17 17 / .45), 0 0 0 1px rgb(17 17 17 / .1); }
-  .pair figcaption, .en figcaption { margin-top: 12px; font-size: 15px; color: var(--dim); }
+  /* 3. Jak działa */
+  .paper { background: var(--white); padding: clamp(72px, 9vw, 140px) 0; }
+  .steps { list-style: none; padding: 0; margin-top: clamp(40px, 5vw, 72px) !important; border-top: var(--line) solid var(--black); }
+  .steps li { display: grid; grid-template-columns: minmax(0, 32fr) minmax(0, 64fr); gap: clamp(24px, 4vw, 64px); padding: clamp(28px, 3.4vw, 52px) 0; border-bottom: var(--line) solid var(--black); align-items: start; }
+  .step-txt { display: grid; gap: 10px; align-content: start; }
+  .num { font-family: 'ArchivoCann', 'Arial Black', sans-serif; font-stretch: 125%; font-weight: 800; font-size: clamp(44px, 5vw, 80px); line-height: 1; letter-spacing: .02em; }
+  .label { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .steps h3 { font-weight: 800; font-size: clamp(22px, 1.9vw, 28px); line-height: 1.15; letter-spacing: -.01em; }
+  .step-txt > p:last-child { font-size: clamp(16px, 1.25vw, 19px); line-height: 1.6; max-width: 28em; }
+  .shot { display: block; border: var(--line) solid var(--black); background: var(--cann); }
+  .shot img { display: block; width: 100%; height: auto; }
 
-  .ink { background: var(--black); color: #fff; padding: clamp(80px, 10vw, 144px) 0; }
-  .ink .txt { margin-top: 24px; max-width: 34em; font-size: 19px; line-height: 1.65; color: rgb(255 255 255 / .86); }
-  .ink .txt p + p { margin-top: 18px !important; }
-  .ink :focus-visible { outline-color: #fff; }
-  .duo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(40px, 6vw, 96px); align-items: center; }
-  .en img { box-shadow: 0 30px 70px -30px rgb(0 0 0 / .8), 0 0 0 1px rgb(255 255 255 / .18); }
-  .en figcaption { color: rgb(255 255 255 / .7); }
+  /* 4. Hasło */
+  .band { background: var(--cann); padding: clamp(56px, 8vw, 128px) 0; overflow: hidden; }
+  .band blockquote { padding-inline: var(--gutter); max-width: var(--max); margin-inline: auto; box-sizing: border-box; font-style: italic; font-weight: 900; font-size: clamp(42px, 10.5vw, 168px); line-height: .98; letter-spacing: -.045em; }
+  .band blockquote p + p { margin-left: clamp(24px, 9vw, 160px) !important; }
+  .band figcaption { margin-top: 28px; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
 
-  .end { padding: clamp(80px, 10vw, 144px) 0; background: var(--cann); }
-  .end-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 96px); align-items: start; }
-  .end h2 { font-size: clamp(32px, 4vw, 56px); line-height: 1.05; }
-  .end p { font-size: 19px; line-height: 1.6; max-width: 30em; }
-  .btn { display: inline-block; margin-top: 32px; padding: 16px 32px; border-radius: 999px; background: var(--ink); color: #fff; text-decoration: none; font-size: 16px; font-weight: 600; }
+  /* 5. Dwa języki */
+  .langs { padding: clamp(72px, 9vw, 140px) 0; }
+  .langs-in { display: grid; grid-template-columns: minmax(0, 30fr) minmax(0, 66fr); gap: clamp(24px, 4vw, 64px); align-items: start; }
+  .langs-txt { display: grid; gap: 20px; }
+  .langs-txt p { font-size: clamp(17px, 1.35vw, 19px); line-height: 1.6; color: rgb(255 255 255 / .84); max-width: 30em; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 24px); }
+  .pair figure { border: var(--line) solid var(--cann); background: var(--cann); }
+  .pair img { display: block; width: 100%; height: auto; }
+  .pair figcaption { padding: 10px 12px; font-size: clamp(12px, 3.2vw, 14px); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .foot { background: #f8f9f2; }
+  .pair figcaption a { color: var(--black); text-decoration: none; }
+  .pair figcaption a:hover { text-decoration: underline; }
+
+  /* 6. Wyjście */
+  .end { background: var(--cann); padding-top: clamp(72px, 9vw, 140px); }
+  .end-in { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(24px, 4vw, 64px); align-items: end; padding-bottom: clamp(56px, 7vw, 104px); }
+  .end h2 { max-width: 12em; }
+  .end-txt { display: grid; gap: 24px; }
+  .end-txt p { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 26em; }
+  .end-act { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+  .btn { display: inline-block; padding: 18px 30px; background: var(--black); color: var(--cann); text-decoration: none; font-size: 16px; font-weight: 800; letter-spacing: .02em; }
   .btn:hover { background: #333; }
-  .more { margin-top: 24px !important; }
+  .next { display: block; background: var(--black); color: var(--cann); text-decoration: none; }
+  .next-in { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: clamp(28px, 4vw, 56px); }
+  .next-k { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--white); }
+  .next-n { font-style: italic; font-weight: 900; font-size: clamp(36px, 6vw, 96px); line-height: 1; letter-spacing: -.03em; }
+  .next:hover .next-n { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 10px; }
 
   @media (max-width: 900px) {
-    /* Telefon: ekran strony od krawędzi do krawędzi, telefon pod nim w całości, nic nie nachodzi. */
-    .screen { width: auto; margin-inline: calc(var(--gutter) * -1 + 12px); border-radius: 8px; }
-    .phone { position: static; width: 58%; margin: 32px auto 0; border-radius: 22px; box-shadow: 0 20px 40px -16px rgb(60 40 0 / .55), 0 0 0 5px var(--black); }
-    .trio, .pair, .duo, .end-in { grid-template-columns: minmax(0, 1fr); }
-    .pair { gap: 40px; padding-inline: 12px; }
-    .pair figcaption { padding-inline: calc(var(--gutter) - 12px); }
+    .open-grid, .motion .head, .duo-vid, .steps li, .langs-in, .end-in { grid-template-columns: minmax(0, 1fr); }
+    .open-media { padding-top: clamp(80px, 22vw, 140px); }
+    .plant { width: 78%; right: -12%; top: 0; }
+    .duo-vid .phone { width: 62%; justify-self: center; }
   }
-  @media (max-width: 600px) {
-    .lead, .ink .txt { font-size: 18px; }
-    .menu-card { padding: 22px 22px 24px; }
+  @media (max-width: 700px) {
+    .zdanie { font-size: clamp(28px, 8.4vw, 36px); }
+    .rows > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
+    .pair img { aspect-ratio: auto; }
   }
 </style>
