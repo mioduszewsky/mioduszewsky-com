@@ -59,10 +59,10 @@ const T = pl ? {
     { etykieta: 'Oferta', tytul: 'Trzy filary, po pięć konkretów', tekst: 'Strategy & Roadmap, MVP & Product Build i Business Advisory. Każdy ma listę tego, co dostajesz, od walidacji pomysłu po sparring dla founderów.', alt: 'Sekcja „Trzy filary. Jeden cel.” na cannversity.com: karty Strategy & Roadmap, MVP & Product Build i Business Advisory, każda z listą pięciu pozycji.' },
     { etykieta: 'Rozmowa', tytul: 'Wszystkie drogi prowadzą do kalendarza', tekst: 'Przycisk do kalendarza Google jest w menu i w siedmiu sekcjach, razem 12 linków. Rozmowa trwa 30 minut, jest online i nic nie kosztuje. Kto woli pisać, ma formularz.', alt: 'Sekcja „Zaczynamy od rozmowy” na cannversity.com: plakietka „30 minut / online / bezpłatnie”, karta „0 zł” z napisem „Pierwsza rozmowa jest bezpłatna” i przycisk „Wybierz termin w kalendarzu”.' },
   ] },
-  s4: { haslo: ['Od pomysłu do produktu.', 'W branży konopnej.'], podpis: 'Hasło z pierwszego ekranu, celowo złamane na dwie linijki.' },
+  s4: { haslo: ['Od pomysłu do produktu.', 'W branży konopnej.'] },
   s5: {
     h2: 'Dwa języki, aż po regulamin.',
-    tekst: 'Wersja angielska ma własny adres cannversity.com/en, angielski tytuł i opis w kodzie oraz swoją politykę prywatności. Pierwszą wersję złożyłem w Lovable. We wrześniu 2026 przepisałem treść i metadane, przeniosłem stronę na własny hosting i domenę.',
+    tekst: 'Wersja angielska ma własny adres cannversity.com/en, angielski tytuł i opis w kodzie oraz swoją politykę prywatności. Całość stoi na własnym hostingu, pod domeną cannversity.com.',
     altPl: 'Pierwszy ekran cannversity.com po polsku: hasło „Od pomysłu do produktu. W branży konopnej.” i przycisk „Umów bezpłatną rozmowę”.',
     altEn: 'Pierwszy ekran cannversity.com/en po angielsku: hasło „From idea to product. In cannabis.” i przycisk „Book a free call”.',
   },
@@ -91,10 +91,10 @@ const T = pl ? {
     { etykieta: 'Offer', tytul: 'Three pillars, five deliverables each', tekst: 'Strategy & Roadmap, MVP & Product Build and Business Advisory. Each has a list of what you get, from idea validation to founder sparring.', alt: 'The “Three pillars. One goal.” section of cannversity.com/en: Strategy & Roadmap, MVP & Product Build and Business Advisory cards, each with a five-item list.' },
     { etykieta: 'The call', tytul: 'Twelve links, one calendar', tekst: 'The Google Calendar button sits in the menu and in seven sections. The call is 30 minutes, online and free. Rather write? There’s a form for that.', alt: 'The “We start with a conversation” section of cannversity.com/en: a “30 minutes / online / free” badge, a card that says the first call is free and a “Pick a time in the calendar” button.' },
   ] },
-  s4: { haslo: ['From idea to product.', 'In cannabis.'], podpis: 'The first-screen headline, split over two lines on purpose.' },
+  s4: { haslo: ['From idea to product.', 'In cannabis.'] },
   s5: {
     h2: 'Two languages, right down to the terms.',
-    tekst: 'cannversity.com/en has its own English title and description in the code, and a privacy policy. I built the first version in Lovable. In September 2026 I rewrote the copy and metadata and moved everything to my own hosting and domain.',
+    tekst: 'cannversity.com/en has its own English title and description in the code, and a privacy policy. It all runs on its own hosting, under the cannversity.com domain.',
     altPl: 'First screen of cannversity.com in Polish: the headline “Od pomysłu do produktu. W branży konopnej.” and the “Umów bezpłatną rozmowę” button.',
     altEn: 'First screen of cannversity.com/en: the headline “From idea to product. In cannabis.” and the “Book a free call” button.',
   },
@@ -119,12 +119,13 @@ const ld = {
   <div class="case">
     <a class="skip" href="#main">{T.skip}</a>
     <header class="nav">
-      <!-- Logo w wersji dalmatyńczyk: żółte logo mioduszewsky znika na żółci Cannversity. Wersja pod nawigację
-           (600 px, 0,2 MB webm / 0,66 MB mp4 z przezroczystością), nie pełnoekranowa z finału strony głównej (12 MB). -->
+      <!-- Logo mioduszewsky w czerni: żółte znika na żółci Cannversity, a dalmatyńczyk w rozmiarze nawigacji czyta się
+           jak szum (Finch 19.10). Ta sama animacja co logo-nav, przemapowana na szarość i przyciemniona do czerni marki
+           (600 px, 0,12 MB webm / 0,39 MB mp4 z przezroczystością). -->
       <a class="mark" href={pl ? '/pl/' : '/'} aria-label={T.home}>
-        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" width="600" height="148" poster="/logo3d/logo-dalmatian-nav-poster.webp">
-          <source src="/logo3d/logo-dalmatian-nav.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-dalmatian-nav.webm" type="video/webm" />
+        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" width="600" height="166" poster="/logo3d/logo-czarne-nav-poster.webp">
+          <source src="/logo3d/logo-czarne-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-czarne-nav.webm" type="video/webm" />
         </video>
       </a>
       <SiteMenu locale={locale} alternatePath={alt} />
@@ -209,7 +210,6 @@ const ld = {
         <!-- 4. Hasło strony krojem Cannversity (Inter, gruba kursywa), w skali plakatu. -->
         <figure class="band">
           <blockquote lang={pl ? 'pl' : 'en'}><p>{T.s4.haslo[0]}</p><p>{T.s4.haslo[1]}</p></blockquote>
-          <figcaption class="wrap" set:html={P(T.s4.podpis)} />
         </figure>
 
         <!-- 5. Dwa języki: ten sam pierwszy ekran po polsku i po angielsku, obok siebie. -->
@@ -251,10 +251,12 @@ const ld = {
             </div>
           </div>
         </div>
+        {/* Następna realizacja jako tekst bez linku, dopóki case GlassStone nie jest gotowy (Finch 19.10).
+            Link wraca przez nextHref, gdy case zostanie zaakceptowany. */}
         {nextCase && (
-          <a class="next" href={nextHref}>
-            <span class="wrap next-in"><span class="next-k">{T.s6.nastepny}</span><span class="next-n">{nextCase[1]}<span aria-hidden="true"> →</span></span></span>
-          </a>
+          <p class="next">
+            <span class="wrap next-in"><span class="next-k">{T.s6.nastepny}</span><span class="next-n">{nextCase[1]}</span></span>
+          </p>
         )}
       </section>
     </main>
@@ -355,7 +357,6 @@ const ld = {
   .band { background: var(--cann); padding: clamp(56px, 8vw, 128px) 0; overflow: hidden; }
   .band blockquote { padding-inline: var(--gutter); max-width: var(--max); margin-inline: auto; box-sizing: border-box; font-style: italic; font-weight: 900; font-size: clamp(42px, 10.5vw, 168px); line-height: .98; letter-spacing: -.045em; }
   .band blockquote p + p { margin-left: clamp(24px, 9vw, 160px) !important; }
-  .band figcaption { margin-top: 28px; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
 
   /* 5. Dwa języki */
   .langs { padding: clamp(72px, 9vw, 140px) 0; }
@@ -383,7 +384,6 @@ const ld = {
   .next-in { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: clamp(28px, 4vw, 56px); }
   .next-k { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--white); }
   .next-n { font-style: italic; font-weight: 900; font-size: clamp(36px, 6vw, 96px); line-height: 1; letter-spacing: -.03em; }
-  .next:hover .next-n { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 10px; }
 
   @media (max-width: 900px) {
     .open-grid, .motion .head, .duo-vid, .steps li, .langs-in, .end-in { grid-template-columns: minmax(0, 1fr); }
