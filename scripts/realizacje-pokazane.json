@@ -37,6 +37,20 @@
           ]
         }
       ]
+    },
+    "pl/realizacje/cannversity": {
+      "pokazane": [],
+      "wyjatek": {
+        "powod": "Własny projekt Kacpra (Cannversity), bez klienta i osób trzecich. Na ujęciach jest tylko strona cannversity.com i zdjęcia Kacpra z tej strony.",
+        "decyzja": "Kacper 19.10.2026: case Cannversity do napisania (robocze/ZLECENIE-2026-10-19-CASE-CANNVERSITY.md), bez wyników, leadów i klientów."
+      }
+    },
+    "work/cannversity": {
+      "pokazane": [],
+      "wyjatek": {
+        "powod": "Własny projekt Kacpra (Cannversity), bez klienta i osób trzecich. Na ujęciach jest tylko strona cannversity.com i zdjęcia Kacpra z tej strony.",
+        "decyzja": "Kacper 19.10.2026: case Cannversity do napisania (robocze/ZLECENIE-2026-10-19-CASE-CANNVERSITY.md), bez wyników, leadów i klientów."
+      }
     }
   }
 }
