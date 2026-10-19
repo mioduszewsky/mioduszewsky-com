@@ -18,6 +18,7 @@ import blog from '../../assets/realizacje/eskapizm/blog-1280.webp';
 import poslubne from '../../assets/realizacje/eskapizm/poslubne-1280.webp';
 import quiz from '../../assets/realizacje/eskapizm/quiz-1280.webp';
 import issues from '../../assets/realizacje/eskapizm/admin-issues-naprawione-1440.webp';
+import builderChat from '../../assets/realizacje/eskapizm/builder-czat-kolumna.webp';
 
 interface Props { locale: 'pl' | 'en' }
 const { locale } = Astro.props;
@@ -34,6 +35,7 @@ const SHOTS = {
   kaskada1440, // ostateczne, material-final 18.10.2026 (2880x1800)
   kaskada390, // ostateczne, material-final 18.10.2026 (1170x2532)
   kalkulator: vid('kalkulator-przebieg-390', 390, 844), // ostateczne, material-final 18.10.2026 (pętla 8,3 s)
+  builder1440: vid('builder-plan-1440', 1440, 900), // 19.10.2026: finalna sesja Justyny (plan wysłany klientom), tylko odczyt, imiona podmienione
   zamowienie1440: vid('zamowienie-przebieg-1440-kadr', 912, 900), // ostateczne, material-final 18.10.2026 (kadr 912x900)
   zamowienie390: vid('zamowienie-przebieg-390', 390, 844), // ostateczne, material-final 18.10.2026
   narrator1440: vid('narrator-1440', 1440, 900), // ostateczne, material-final 18.10.2026 (przycięty do 16,8 s)
@@ -45,9 +47,8 @@ const SHOTS = {
 };
 // Ujęcia z konta Kacpra (KIERUNEK.md sekcja 4, „Ujęcia z konta Kacpra”). null = spokojna ramka-zastępnik z podpisem.
 // Podmiana: zaimportuj obraz i wpisz go zamiast null.
-const PANEL: Record<'builder' | 'builderChat' | 'issues', ImageMetadata | null> = {
-  builder: null, // TYMCZASOWE: /admin/ai-plan-builder, zrzut po publikacji (poster) i nagranie sesji 1440x900
-  builderChat: null, // TYMCZASOWE: /admin/ai-plan-builder, sama kolumna czatu (pionowy zrzut, na telefon)
+const PANEL: Record<'builderChat' | 'issues', ImageMetadata | null> = {
+  builderChat, // 19.10.2026: ta sama sesja, koniec rozmowy (początek sesji ma w bazie stare błędy sprzed naprawy buildera)
   // Ujęcie z konta 19.10.2026 (konto Kacpra, bez zapisów): filtr „Naprawione”, treść zgłoszeń rozmyta przed zapisem.
   // Tablica zadań i dashboard odrzucone przy kontroli (czerwone „po terminie”, pusty wykres), więc stacja ma jeden eksponat.
   issues,
@@ -119,7 +120,9 @@ const T = pl ? {
       'Jedna sesja buildera jest przypięta do jednego klienta i jego planu, a publikacja aktualizuje ten sam plan, który klient widzi w telefonie; Justyna wchodzi do niej z profilu klienta przyciskiem „Plan AI”. Gdy coś nie działa, raport problemu z wnętrza narzędzia sam zbiera ostatnią wiadomość w czacie i kroki odtworzenia.',
     ],
     forWho: 'Dla Justyny', forTxt: 'plan powstaje w rozmowie, a nic z niego nie znika bez jej zgody.',
-    cap: 'AI Plan Builder: rozmowa z agentem i plan, który z niej powstaje.',
+    cap: 'AI Plan Builder: rozmowa Justyny z agentem i plan, który z niej powstał i poszedł do pary klientów. Imiona klientów zmienione.',
+    alt: 'AI Plan Builder: po lewej rozmowa z agentem, po prawej podgląd planu Tajlandia 2026 przewijany od zdjęcia przez trasę do sekcji Przed wyjazdem; nad podglądem zielony pasek „Kontrola planu: Plan wygląda dobrze”.',
+    altChat: 'Kolumna czatu AI Plan Buildera: prośby o dodanie atrakcji w Bangkoku i odpowiedzi agenta „Wykonano” z wpływem na plan.',
   },
   s4: {
     h: 'Klient dostaje plan w telefonie, bez instalowania czegokolwiek.',
@@ -234,7 +237,9 @@ const T = pl ? {
       'One builder session is pinned to one client and their plan, and publishing updates the same plan the client sees on their phone. Justyna opens it from the client’s profile with the “AI plan” button. When something breaks, a problem report from inside the tool collects the last chat message and the steps to reproduce on its own.',
     ],
     forWho: 'For Justyna', forTxt: 'the plan comes out of a conversation, and nothing in it disappears without her say-so.',
-    cap: 'AI Plan Builder: a conversation with the agent and the plan that comes out of it.',
+    cap: 'AI Plan Builder: Justyna’s conversation with the agent and the plan that came out of it and went to a couple of clients. Client names changed.',
+    alt: 'AI Plan Builder: the chat with the agent on the left, the Thailand 2026 plan preview on the right, scrolling from the cover photo through the route to the before-you-go section; above the preview, a green bar reads “Plan check: plan looks good”.',
+    altChat: 'The AI Plan Builder chat column: requests to add attractions in Bangkok and the agent’s “Done” replies with their effect on the plan.',
   },
   s4: {
     h: 'The client gets the plan on their phone, with nothing to install.',
@@ -436,13 +441,11 @@ const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
             <figure class="wrap browser-shot">
               <div class="browser">
                 <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                {PANEL.builder
-                  ? <Image src={PANEL.builder} widths={[960, 1440]} sizes="(max-width: 1320px) 100vw, 1320px" alt={T.s3.cap} loading="lazy" />
-                  : <div class="ph ph-wide"><p>{T.ph}</p></div>}
+                <video class="vid" loop muted playsinline preload="metadata" width={SHOTS.builder1440.w} height={SHOTS.builder1440.h} poster={SHOTS.builder1440.poster} aria-label={T.s3.alt}><source src={SHOTS.builder1440.webm} type="video/webm" /><source src={SHOTS.builder1440.mp4} type="video/mp4" /></video>
               </div>
               <div class="m-only chat-shot">
                 {PANEL.builderChat
-                  ? <Image src={PANEL.builderChat} widths={[390, 780]} sizes="100vw" alt={T.s3.cap} loading="lazy" />
+                  ? <Image src={PANEL.builderChat} widths={[390, 780, 1152]} sizes="100vw" alt={T.s3.altChat} loading="lazy" />
                   : <div class="ph ph-tall"><p>{T.ph}</p></div>}
               </div>
               <figcaption set:html={P(T.s3.cap)} />
