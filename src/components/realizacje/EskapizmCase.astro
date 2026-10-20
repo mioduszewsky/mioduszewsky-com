@@ -202,6 +202,13 @@ const ld = {
 <VariantLayout title={T.title} description={T.description} bg="#FCFFF5" fg="#1c1917" switcher={false} robots="noindex, nofollow" locale={locale} alternatePath={T.alt}>
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
+    <script is:inline>
+      // Przeładowanie zaczyna od otwarcia (wada 2, 20.10): przeglądarka przywracała dawną pozycję w dwóch krokach
+      // (Chromium wcześnie, potem jeszcze raz przy zdarzeniu load; WebKit dopiero przy load), a load czeka na film otwarcia,
+      // więc przez kilka sekund był widoczny inny kadr i skok. Tylko ten wpis historii i tylko przy przeładowaniu;
+      // przy wyjściu ze strony wraca „auto” (powrót wstecz jak dotąd), kotwice (#main, #stacja-..) działają jak zwykle.
+      try { var nv = performance.getEntriesByType('navigation')[0]; if (nv && nv.type === 'reload') { history.scrollRestoration = 'manual'; addEventListener('pagehide', function () { history.scrollRestoration = 'auto'; }); } } catch (e) {}
+    </script>
     <a class="skip" href="#main">{T.skip}</a>
     <CaseLockup locale={locale} client="eskapizm" alternatePath={T.alt} tone="dark" />
 
@@ -233,7 +240,8 @@ const ld = {
           </ul>
           <figure class="kaskada">
             <picture>
-              <source media="(max-width: 767px)" srcset={kaskadaMSet} sizes="100vw" />
+              {/* wymiary pionowej wersji: bez nich do wczytania obowiązywały proporcje desktopu i strona rosła o ok. 600 px nad przewiniętym miejscem */}
+              <source media="(max-width: 767px)" srcset={kaskadaMSet} sizes="100vw" width="780" height="1688" />
               <Image src={kaskadaD} widths={[1280, 1920, 2560, 2880]} sizes="100vw" alt={T.kaskadaAlt} loading="lazy" />
             </picture>
             <figcaption class="wrap cap" set:html={P(T.kaskadaCap)} />
@@ -511,14 +519,24 @@ const ld = {
   /* 1. Otwarcie */
   /* bez belki: film na pełny ekran, lockup (CaseLockup) unosi się nad nim */
   .open { position: relative; height: min(100vh, 62.5vw); min-height: 460px; background: #2a2018; color: #fff; overflow: hidden; }
-  /* Nagrany nagłówek eskapizm.com (logo, pigułka menu, pasek Safari) pod lockupem jest rozmyty w samych plikach filmu
-     i plakatów (runda 3; kadrowanie z rundy 2 cofnięte, bo zasłaniało pytanie filmu): desktop wiersze 0-97 z 1200
-     + wygaszenie do 121, wersja pionowa 0-80 z 1558 + wygaszenie do 104. Skrypt: scratchpad sesji, film-blur.sh. */
+  /* Film nagrany z eskapizm.com z ukrytym nagłówkiem strony (logo, menu, pasek postępu; runda 4, nagraj.cjs z krokiem js),
+     więc pod lockupem nie ma drugiego logo i nic nie trzeba kadrować ani rozmywać. */
   .open :global(.open-film) { position: absolute; inset: 0; }
-  /* film co dwie sekundy przechodzi z ciemnego biurka w jasny ekran laptopa (pasek menu, strona eskapizmu na kremie):
-     miękkie przyciemnienie samej góry kadru trzyma biały lockup czytelnym w każdej klatce (>= 4,5:1 pod lockupem,
-     pomiar co 0,25 s przy 1440, 390 i 320; do dołu lockupu ok. 0,55 (najsłabsze z zapasem: 0,53 dawało 4,5 przy 320), potem miękko do zera w 1/4 wysokości ekranu) */
-  .open-top { --lk-end: 84px; position: absolute; inset: 0 0 auto; height: 25vh; background: linear-gradient(180deg, rgb(12 8 4 / .58) 0, rgb(12 8 4 / .54) var(--lk-end), rgb(12 8 4 / .3) calc(var(--lk-end) + (100% - var(--lk-end)) * .4), rgb(12 8 4 / .1) calc(var(--lk-end) + (100% - var(--lk-end)) * .75), transparent 100%); pointer-events: none; }
+  /* Film co dwie sekundy przechodzi z ciemnego biurka w jasny ekran laptopa: miękka winieta tylko za lockupem i za Menu
+     (dwie elipsy wtopione w obraz, bez krawędzi i bez pasa na całą szerokość), w sile minimalnej dla >= 4,5:1 pod lockupem
+     (pomiar co 0,25 s przy 1440, 390 i 320). Geometria jak w CaseLockup: --lk-w dla eskapizmu (k = 1,905), środek w pionie jak przycisk Menu (44 px) albo lockup, jeśli wyższy. */
+  .open-top {
+    --vw: clamp(60px, calc((100vw - 2 * var(--gutter) - 136px) / 1.905), 190px); --vh: calc(var(--vw) * .2775);
+    --vy: calc(clamp(12px, 2vw, 24px) + max(22px, var(--vh) / 2)); --va: .57;
+    --mx: 73px; --mr: 137px; /* środek i promień elipsy pod Menu z językiem (szerokość 146 px, do 700 px 120 px jak w SiteMenu) */
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(calc(var(--vw) * 1.619 + 20px) calc(max(44px, var(--vh)) + 14px) at calc(var(--gutter) + var(--vw) * .9525) var(--vy),
+        rgb(12 8 4 / var(--va)) 0%, rgb(12 8 4 / var(--va)) 55%, rgb(12 8 4 / calc(var(--va) * .55)) 78%, rgb(12 8 4 / calc(var(--va) * .18)) 92%, rgb(12 8 4 / 0) 100%),
+      radial-gradient(var(--mr) 58px at calc(100% - var(--gutter) - var(--mx)) var(--vy),
+        rgb(12 8 4 / var(--va)) 0%, rgb(12 8 4 / var(--va)) 55%, rgb(12 8 4 / calc(var(--va) * .55)) 78%, rgb(12 8 4 / calc(var(--va) * .18)) 92%, rgb(12 8 4 / 0) 100%);
+  }
+  @media (max-width: 700px) { .open-top { --mx: 60px; --mr: 116px; } }
 
   /* 2. Teza */
   .thesis { padding-block: clamp(80px, 10vw, 160px) clamp(56px, 7vw, 104px); }
@@ -653,7 +671,6 @@ const ld = {
     .d-only, .case :global(.d-only) { display: none !important; }
     .lead { font-size: 18px; }
     .open { height: 100svh; min-height: 440px; max-height: 920px; }
-    .open-top { --lk-end: 60px; height: 25svh; }
     .meta { grid-template-columns: 1fr 1fr; }
     .nums, .nums.four { grid-template-columns: 1fr; gap: 36px; }
     .nums.four { grid-template-columns: 1fr 1fr; }
