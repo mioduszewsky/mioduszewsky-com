@@ -10,8 +10,11 @@
 import VariantLayout from '../../../layouts/VariantLayout.astro';
 import CaseLockup from '../../../components/realizacje/CaseLockup.astro';
 import BrandFooter from '../../../components/BrandFooter.astro';
+import { nextCase } from '../../../content/realizacje-kolejnosc';
 
 const contact = '/pl/kontakt/?service=' + encodeURIComponent('Strona internetowa') + '#ctForm';
+// Następna realizacja z pętli wspólnej dla czterech case'ów (src/content/realizacje-kolejnosc.ts) (tekst linku opisuje GlassStone, więc cel sprawdzaj z tekstem)
+const next = nextCase('igor-grabowski', 'pl');
 // Opinia pojawia się dopiero po akceptacji Igora (docs/case-studies/OPINIE-ROZMOWA.md).
 const quote: { text: string; name: string; role: string } | null = null;
 const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;');
@@ -200,7 +203,7 @@ const posts = [
           <div>
             <p>Opisz mi ją w&nbsp;15 minut. Powiem, jak mogłaby wyglądać jej strona i&nbsp;co trzeba przygotować.</p>
             <a class="btn" href={contact}>Umów 15 minut</a>
-            <p class="more"><a href="/pl/realizacje/glassstone/">Druga realizacja: szkic z&nbsp;pomiaru zamienia się w&nbsp;rysunek na produkcję</a></p>
+            <p class="more"><a href={next.href}>Druga realizacja: szkic z&nbsp;pomiaru zamienia się w&nbsp;rysunek na produkcję</a></p>
           </div>
         </div>
       </section>

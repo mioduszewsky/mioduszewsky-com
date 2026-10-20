@@ -5,8 +5,11 @@
 import VariantLayout from '../../layouts/VariantLayout.astro';
 import CaseLockup from '../../components/realizacje/CaseLockup.astro';
 import BrandFooter from '../../components/BrandFooter.astro';
+import { nextCase } from '../../content/realizacje-kolejnosc';
 
 const contact = '/contact/?service=' + encodeURIComponent('Website') + '#ctForm';
+// Następna realizacja z pętli wspólnej dla czterech case'ów (src/content/realizacje-kolejnosc.ts)
+const next = nextCase('igor-grabowski', 'en');
 // Opinia pojawia się dopiero po akceptacji Igora (docs/case-studies/OPINIE-ROZMOWA.md).
 const quote: { text: string; name: string; role: string } | null = null;
 const url = 'https://mioduszewsky.com/work/igor-grabowski/';
@@ -194,7 +197,7 @@ const posts = [
           <div>
             <p>Tell me about it in a 15-minute call. I’ll tell you what its website could look like and what you’d need to prepare.</p>
             <a class="btn" href={contact}>Book a 15-minute call</a>
-            <p class="more"><a href="/work/eskapizm/">Next project: eskapizm</a></p>
+            <p class="more"><a href={next.href}>Next project: {next.name}</a></p>
           </div>
         </div>
       </section>
