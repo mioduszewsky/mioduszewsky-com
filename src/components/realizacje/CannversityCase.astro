@@ -10,8 +10,8 @@
 // Nagrania: klatka po klatce 60 kl./s z żywej cannversity.com (PL z /, EN z /en), bez banera (strona nie ma bramki
 // zgody, sprawdzone liczbą), poza kadrem sekcja z logo partnerów (R5). Skrypty: docs/case-studies/cannversity/runda-2/.
 import VariantLayout from '../../layouts/VariantLayout.astro';
-import SiteMenu from '../SiteMenu.astro';
 import BrandFooter from '../BrandFooter.astro';
+import CaseLockup from './CaseLockup.astro';
 import { cannabisHref } from '../../content/cannabis';
 import type { Locale } from '../../i18n/site';
 
@@ -40,7 +40,7 @@ const T = pl ? {
   description: 'Cannversity to moja usługa dla founderów i marek konopnych. Zrobiłem jej stronę po polsku i angielsku. Prowadzi do bezpłatnej, 30-minutowej rozmowy.',
   headline: 'Cannversity: strona dla branży konopnej po polsku i po angielsku',
   about: 'Cannversity, moja usługa dla founderów i marek z branży konopnej: strategia, MVP i strony, doradztwo',
-  skip: 'Przejdź do treści', home: 'mioduszewsky. Strona główna.',
+  skip: 'Przejdź do treści',
   metka: 'Własny projekt · PL i EN',
   zdanie: 'Strona dla tych, którzy robią w konopiach.',
   wiersze: [['Dla kogo', 'Founderzy i marki z branży konopnej'], ['Jak działa', 'Trzy sytuacje i trzy filary oferty'], ['Prowadzi do', 'Bezpłatnej rozmowy, 30\u00a0minut online']],
@@ -72,7 +72,7 @@ const T = pl ? {
   description: 'Cannversity is my service for cannabis founders and brands. I built its site in Polish and English, and it leads to a free 30-minute call.',
   headline: 'Cannversity: a Polish and English website for the cannabis industry',
   about: 'Cannversity, my service for cannabis founders and brands: strategy, MVPs and websites, advisory',
-  skip: 'Skip to content', home: 'mioduszewsky. Home.',
+  skip: 'Skip to content',
   metka: 'My own project · PL & EN',
   zdanie: 'A website for people knee-deep in cannabis.',
   wiersze: [['Who it’s for', 'Cannabis founders and brands'], ['How it works', 'Three situations and three pillars'], ['Where it leads', 'A free 30\u2011minute call, online']],
@@ -118,18 +118,9 @@ const ld = {
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
     <a class="skip" href="#main">{T.skip}</a>
-    <header class="nav">
-      <!-- Logo mioduszewsky w czerni: żółte znika na żółci Cannversity, a dalmatyńczyk w rozmiarze nawigacji czyta się
-           jak szum (Finch 19.10). Ta sama animacja co logo-nav, przemapowana na szarość i przyciemniona do czerni marki
-           (600 px, 0,12 MB webm / 0,39 MB mp4 z przezroczystością). -->
-      <a class="mark" href={pl ? '/pl/' : '/'} aria-label={T.home}>
-        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" width="600" height="166" poster="/logo3d/logo-czarne-nav-poster.webp">
-          <source src="/logo3d/logo-czarne-nav.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-czarne-nav.webm" type="video/webm" />
-        </video>
-      </a>
-      <SiteMenu locale={locale} alternatePath={alt} />
-    </header>
+    <!-- Bez belki (Kacper 20.10): nad treścią unosi się wspólne logo „mioduszewsky × Cannversity” z menu.
+         Otwarcie trzyma pod nie dawne 96 px belki, więc kompozycja się nie rusza. -->
+    <CaseLockup locale={locale} client="cannversity" alternatePath={alt} tone="light" fit={{ h: 1, base: 199 / 320 }} />
 
     <main id="main">
       <article>
@@ -151,7 +142,7 @@ const ld = {
             <div class="open-media">
               <img class="plant" src="/case/cannversity/roslina.webp" width="860" height="675" alt="" decoding="async" />
               <div class="blok">
-                <video class="vid" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/blok-poster.webp`} aria-label={T.altBlok}>
+                <video class="vid" data-tone="light" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/blok-poster.webp`} aria-label={T.altBlok}>
                   <source src={`${dir}/blok.mp4`} type="video/mp4" />
                 </video>
               </div>
@@ -168,12 +159,12 @@ const ld = {
           </div>
           <div class="wrap duo-vid">
             <figure class="desk">
-              <video class="vid" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/strona-poster.webp`} aria-label={T.s2.altDesktop}>
+              <video class="vid" data-tone="light" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/strona-poster.webp`} aria-label={T.s2.altDesktop}>
                 <source src={`${dir}/strona.mp4`} type="video/mp4" />
               </video>
             </figure>
             <figure class="phone">
-              <video class="vid" loop muted playsinline preload="metadata" width="720" height="1280" poster={`${dir}/telefon-poster.webp`} aria-label={T.s2.altTelefon}>
+              <video class="vid" data-tone="light" loop muted playsinline preload="metadata" width="720" height="1280" poster={`${dir}/telefon-poster.webp`} aria-label={T.s2.altTelefon}>
                 <source src={`${dir}/telefon.mp4`} type="video/mp4" />
               </video>
               <figcaption set:html={P(T.s2.podpisTelefon)} />
@@ -251,12 +242,11 @@ const ld = {
             </div>
           </div>
         </div>
-        {/* Następna realizacja jako tekst bez linku, dopóki case GlassStone nie jest gotowy (Finch 19.10).
-            Link wraca przez nextHref, gdy case zostanie zaakceptowany. */}
+        {/* Następna realizacja znów jest linkiem (zlecenie Fincha 20.10: ostatni case prowadzi do pierwszego). */}
         {nextCase && (
-          <p class="next">
-            <span class="wrap next-in"><span class="next-k">{T.s6.nastepny}</span><span class="next-n">{nextCase[1]}</span></span>
-          </p>
+          <a class="next" href={nextHref}>
+            <span class="wrap next-in"><span class="next-k">{T.s6.nastepny}</span><span class="next-n">{nextCase[1]}<span aria-hidden="true"> →</span></span></span>
+          </a>
         )}
       </section>
     </main>
@@ -297,16 +287,15 @@ const ld = {
   .case p { text-wrap: pretty; }
   .case :is(a,button):focus-visible { outline: 3px solid var(--black); outline-offset: 4px; }
   .case .ink :is(a,button):focus-visible { outline-color: var(--cann); }
+  .case .next:focus-visible { outline-color: var(--cann); outline-offset: -8px; }
   .case ::selection { background: var(--black); color: var(--cann); }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--black); color: var(--cann); transform: translateY(-200%); }
   .skip:focus { transform: none; }
-  .nav { height: 96px; box-sizing: border-box; padding: 20px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
-  .mark video { width: clamp(150px, 15vw, 200px); height: auto; display: block; }
   .wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
 
   /* 1. Otwarcie */
-  .open { padding-top: clamp(8px, 1.6vw, 24px); padding-bottom: 0; }
+  .open { padding-top: calc(96px + clamp(8px, 1.6vw, 24px)); padding-bottom: 0; }
   .metka { font-size: clamp(11px, .95vw, 14px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
   /* Nazwa wypełnia szerokość kolumny: 10,1 em to szerokość „CANNVERSITY” w Archivo 125/800 z rozstawem .05em. */
   .name { margin-top: clamp(4px, .6vw, 10px) !important; font-family: 'ArchivoCann', 'Arial Black', sans-serif; font-stretch: 125%; font-weight: 800; letter-spacing: .05em; line-height: .92; white-space: nowrap;
@@ -384,6 +373,7 @@ const ld = {
   .next-in { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: clamp(28px, 4vw, 56px); }
   .next-k { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--white); }
   .next-n { font-style: italic; font-weight: 900; font-size: clamp(36px, 6vw, 96px); line-height: 1; letter-spacing: -.03em; }
+  .next:hover .next-n { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 10px; }
 
   @media (max-width: 900px) {
     .open-grid, .motion .head, .duo-vid, .steps li, .langs-in, .end-in { grid-template-columns: minmax(0, 1fr); }
