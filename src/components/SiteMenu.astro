@@ -2,8 +2,10 @@
 import LanguageSwitch from './LanguageSwitch.astro';
 import { routes, type Locale } from '../i18n/site';
 import { cannabisHref, cannabisCopy } from '../content/cannabis';
-interface Props { locale: Locale; alternatePath?: string }
-const { locale, alternatePath } = Astro.props;
+// compact (case'y i strona realizacji, Kacper 20.10, 12:48): poniżej 768 px sam okrągły „+” zamiast „Menu +”,
+// a zmiana języka przenosi się do panelu pod plusem. Od 768 px bez zmian.
+interface Props { locale: Locale; alternatePath?: string; compact?: boolean }
+const { locale, alternatePath, compact = false } = Astro.props;
 const pl = locale === 'pl';
 const r = routes[locale];
 const items = [
@@ -13,8 +15,8 @@ const items = [
   { label: pl ? 'Kontakt' : 'Contact', href: r.contact },
 ];
 ---
-<div class="site-menu">
-  <button class="menu-toggle" type="button" popovertarget="site-navigation">Menu <span aria-hidden="true">+</span></button>
+<div class:list={['site-menu', { 'site-menu--compact': compact }]}>
+  <button class="menu-toggle" type="button" popovertarget="site-navigation"><span class="menu-label">Menu</span> <span aria-hidden="true">+</span></button>
   {alternatePath && <LanguageSwitch locale={locale} href={alternatePath} />}
   <div id="site-navigation" class="menu-panel" popover="auto" data-lenis-prevent>
     <div class="menu-top"><span>{pl ? 'Rozejrzyj się' : 'Take a look'}</span><button type="button" popovertarget="site-navigation" popovertargetaction="hide" class="menu-close">{pl ? 'Zamknij' : 'Close'} <span aria-hidden="true">×</span></button></div>
@@ -26,6 +28,7 @@ const items = [
         {item.external && <span class="menu-external" aria-hidden="true">↗</span>}
       </a>)}
     </nav>
+    {compact && alternatePath && <div class="menu-lang"><span>{pl ? 'Język' : 'Language'}</span><LanguageSwitch locale={locale} href={alternatePath} /></div>}
   </div>
 </div>
 <style>
@@ -34,6 +37,7 @@ const items = [
   /* Kolory przycisku i przełącznika języka ze zmiennych --menu-*: ustawia je ton lockupu case'u (CaseLockup), domyślnie jak dotąd. */
   .menu-toggle { padding: 8px 20px; border: 1px solid var(--menu-line, #000); border-radius: 999px; background: var(--menu-bg, #f8f9f2); color: var(--menu-fg, #000); font-size: 14px; transition: color .2s ease, background-color .2s ease, border-color .2s ease; }
   .menu-toggle span { font-size: 23px; line-height: 1; }
+  .menu-toggle .menu-label { font-size: inherit; line-height: inherit; }
   .site-menu :global(.language-switch) { display: inline-flex; min-height: 44px; align-items: center; color: var(--menu-fg, #000); font-size: 12px; font-weight: 650; text-decoration: none; }
   .menu-panel { box-sizing: border-box; position: fixed; inset: 100px 5vw auto auto; margin: 0; width: min(520px, 90vw); max-height: calc(100dvh - 120px); overflow: auto; padding: 28px 32px 32px; background: #f8f9f2; color: #000; border: 1px solid #0003; border-radius: 16px; box-shadow: 0 24px 80px #0002; font-family: 'GeneralSansV', sans-serif; }
   .menu-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; font-size: 13px; }
@@ -66,6 +70,17 @@ const items = [
     .menu-toggle { padding-inline: 14px; gap: 10px; }
     .menu-panel { inset: 84px 16px auto; width: auto; max-height: calc(100dvh - 100px); padding: 20px; }
     .menu-link { font-size: clamp(23px, 6.5vw, 32px); }
+  }
+  /* Tryb compact: zmiana języka w panelu, wiersz jak .menu-top (etykieta z lewej, akcja z prawej). */
+  .menu-lang { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #0002; font-size: 13px; }
+  .menu-lang :global(.language-switch) { display: inline-flex; min-height: 44px; align-items: center; color: #000; font-size: 13px; font-weight: 650; text-decoration: none; }
+  .menu-lang :global(.language-switch:focus-visible) { outline: 2px solid #0522ff; outline-offset: 5px; }
+  @media (min-width: 768px) { .menu-lang { display: none; } }
+  @media (max-width: 767px) {
+    .site-menu--compact > :global(.language-switch) { display: none; }
+    .site-menu--compact .menu-toggle { width: 44px; height: 44px; min-height: 44px; padding: 0; gap: 0; border-radius: 50%; }
+    /* napis „Menu” zostaje nazwą przycisku dla czytników ekranu */
+    .site-menu--compact .menu-label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
   }
   /* Native links remain available in older browsers without popover support. */
   @supports not selector(:popover-open) {

@@ -84,7 +84,7 @@ const home = routes[locale].home;
       <span class="lk-sr">{pl ? `, realizacja: ${name}` : `, project: ${name}`}</span>
     </span>
   </div>
-  <SiteMenu locale={locale} alternatePath={alternatePath} />
+  <SiteMenu locale={locale} alternatePath={alternatePath} compact />
 </header>
 
 <style>
@@ -137,6 +137,8 @@ const home = routes[locale].home;
   }
   .lk::before { inset: calc(var(--lk-h) * -.12) -14px; }
   .case-lockup > :global(.site-menu)::before { inset: -6px -14px -6px -6px; }
+  /* poniżej 768 px Menu to sam okrągły plus (SiteMenu compact): podkład koło wokół niego */
+  @media (max-width: 767px) { .case-lockup > :global(.site-menu)::before { inset: -6px; } }
   .case-lockup[data-lk-tone='dark'] .lk::before, .case-lockup[data-lk-tone='dark'] > :global(.site-menu)::before { background: rgb(17 17 17 / .6); }
   .case-lockup[data-lk-solid] .lk::before, .case-lockup[data-lk-solid-m] > :global(.site-menu)::before { opacity: 1; }
   @media (prefers-reduced-motion: reduce) {
