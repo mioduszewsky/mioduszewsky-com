@@ -414,4 +414,9 @@ const ld = {
     .rows > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
     .pair img { aspect-ratio: auto; }
   }
+  /* Telefon: metka ma dwa wiersze (równe), więc otwarcie zaczyna się 14 px wyżej, żeby czubki rośliny zostały w pierwszym ekranie 320x568. */
+  @media (max-width: 480px) {
+    .open { padding-top: calc(82px + clamp(8px, 1.6vw, 24px)); }
+    .case .metka { text-wrap: balance; }
+  }
 </style>
