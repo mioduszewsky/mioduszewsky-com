@@ -43,8 +43,7 @@ const T = pl ? {
   skip: 'Przejdź do treści',
   metka: 'Własny projekt · PL i EN',
   zdanie: 'Strona dla tych, którzy robią w konopiach.',
-  // Czym jest i skąd wiedza (Kacper 20.10): źródła w docs/case-studies/cannversity/FAKTY.md, C1 i C13 (C33, C36-C38).
-  wiersze: [['Czym jest', 'To, co robię pod swoim nazwiskiem, tylko w\u00a0konopiach'], ['Skąd wiedza', 'Od 2022: własny produkt, spółka konopna, sieć klinik, podyplomówka z\u00a0biznesu konopnego'], ['Dla kogo', 'Founderzy i marki z branży konopnej'], ['Jak działa', 'Trzy sytuacje i trzy filary oferty'], ['Prowadzi do', 'Bezpłatnej rozmowy, 30\u00a0minut online']],
+  wiersze: [['Dla kogo', 'Founderzy i marki z branży konopnej'], ['Jak działa', 'Trzy sytuacje i trzy filary oferty'], ['Prowadzi do', 'Bezpłatnej rozmowy, 30\u00a0minut online']],
   link: 'Zobacz cannversity.com',
   s2: {
     kicker: 'Na żywo',
@@ -75,7 +74,7 @@ const T = pl ? {
   skip: 'Skip to content',
   metka: 'My own project · PL & EN',
   zdanie: 'A website for people knee-deep in cannabis.',
-  wiersze: [['What it is', 'What I do under my own name, just for cannabis'], ['Background', 'Since 2022: my own product, a cannabis company, a clinic network, a postgrad in cannabis business'], ['Who it’s for', 'Cannabis founders and brands'], ['How it works', 'Three situations and three pillars'], ['Where it leads', 'A free 30\u2011minute call, online']],
+  wiersze: [['Who it’s for', 'Cannabis founders and brands'], ['How it works', 'Three situations and three pillars'], ['Where it leads', 'A free 30\u2011minute call, online']],
   link: 'Visit cannversity.com',
   s2: {
     kicker: 'Live',
@@ -124,7 +123,7 @@ const ld = {
     <main id="main">
       <article>
         <!-- 1. Otwarcie bez nagrania (Kacper 20.10: nagrania są zaraz niżej, w „Na żywo”). Pierwszy ekran to plakat:
-             nazwa na całą szerokość, zdanie i pięć wierszy po lewej, roślina z cannversity.com wyrasta z prawego dolnego
+             nazwa na całą szerokość, zdanie i trzy wiersze po lewej, roślina z cannversity.com wyrasta z prawego dolnego
              rogu, z czarnej sekcji pod spodem, i sięga do kreski pod nazwą. -->
         <header class="open">
           <div class="wrap">
@@ -389,7 +388,7 @@ const ld = {
 
   /* Niskie okno komputera: ciaśniejsze odstępy, żeby otwarcie mieściło się w pierwszym ekranie. */
   @media (min-width: 901px) and (max-height: 760px) {
-    .open-txt { gap: 10px; padding-top: 8px; }
+    .open-txt { gap: 14px; padding-top: 20px; }
     .zdanie { font-size: clamp(28px, 2.9vw, 44px); }
     .rows > div { padding: 8px 0; }
   }
@@ -413,10 +412,5 @@ const ld = {
     .zdanie { font-size: clamp(28px, 8.4vw, 36px); }
     .rows > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
     .pair img { aspect-ratio: auto; }
-  }
-  /* Telefon: pięć wierszy w dwóch kolumnach łamało wartości po jednym słowie (320 px), więc etykieta nad wartością. */
-  @media (max-width: 480px) {
-    .rows > div { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 10px 0; }
-    .rows dt { padding-top: 0; }
   }
 </style>
