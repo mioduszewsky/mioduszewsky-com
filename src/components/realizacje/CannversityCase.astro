@@ -12,6 +12,7 @@
 import VariantLayout from '../../layouts/VariantLayout.astro';
 import BrandFooter from '../BrandFooter.astro';
 import CaseLockup from './CaseLockup.astro';
+import ExtArrow from './ExtArrow.astro';
 import { cannabisHref } from '../../content/cannabis';
 import type { Locale } from '../../i18n/site';
 import { nextCase as loopNext } from '../../content/realizacje-kolejnosc';
@@ -137,7 +138,7 @@ const ld = {
             <dl class="rows">
               {T.wiersze.map(([k, v]) => <div><dt>{k}</dt><dd set:html={P(v)} /></div>)}
             </dl>
-            <a class="live" href={live} target="_blank" rel="noopener">{T.link}<span aria-hidden="true"> ↗</span></a>
+            <a class="live" href={live} target="_blank" rel="noopener">{T.link}<ExtArrow weight={600} /></a>
           </div>
           <img class="plant" src="/case/cannversity/roslina.webp" width="860" height="675" alt="" decoding="async" />
           </div>
@@ -180,7 +181,8 @@ const ld = {
                       <h3 set:html={P(b.tytul)} />
                       <p set:html={P(b.tekst)} />
                     </div>
-                    <picture class="shot">
+                    {/* ton lockupu nad zrzutem (lockup bez tła, Kacper 20.10 ok. 14:10): „rozmowa” to ciemna karta, reszta jasne strony */}
+                    <picture class="shot" data-tone={f === 'rozmowa' ? 'dark' : 'light'}>
                       <source media="(max-width: 700px)" srcset={`${dir}/${f}-390.webp`} width="780" height="1386" />
                       <img src={`${dir}/${f}-1440.webp`} width="1600" height={f === 'filary' ? 1000 : f === 'rozmowa' ? 872 : 840} loading="lazy" decoding="async" alt={b.alt} />
                     </picture>
@@ -211,14 +213,14 @@ const ld = {
                   <source media="(max-width: 700px)" srcset="/case/cannversity/pl/hero-390.webp" width="780" height="1386" />
                   <img src="/case/cannversity/pl/hero-1440.webp" width="1600" height="1000" loading="lazy" decoding="async" alt={T.s5.altPl} />
                 </picture>
-                <figcaption><a href={livePl} target="_blank" rel="noopener">cannversity.com<span aria-hidden="true"> ↗</span></a></figcaption>
+                <figcaption><a href={livePl} target="_blank" rel="noopener">cannversity.com<ExtArrow weight={600} /></a></figcaption>
               </figure>
               <figure>
                 <picture>
                   <source media="(max-width: 700px)" srcset="/case/cannversity/en/hero-390.webp" width="780" height="1386" />
                   <img src="/case/cannversity/en/hero-1440.webp" width="1600" height="1000" loading="lazy" decoding="async" alt={T.s5.altEn} />
                 </picture>
-                <figcaption><a href={liveEn} target="_blank" rel="noopener">cannversity.com/en<span aria-hidden="true"> ↗</span></a></figcaption>
+                <figcaption><a href={liveEn} target="_blank" rel="noopener">cannversity.com/en<ExtArrow weight={600} /></a></figcaption>
               </figure>
             </div>
           </div>
@@ -233,7 +235,7 @@ const ld = {
             <p set:html={P(T.s6.tekst)} />
             <div class="end-act">
               <a class="btn" href={contact}>{T.s6.btn}</a>
-              <a class="live" href={live} target="_blank" rel="noopener">{T.s6.link}<span aria-hidden="true"> ↗</span></a>
+              <a class="live" href={live} target="_blank" rel="noopener">{T.s6.link}<ExtArrow weight={600} /></a>
             </div>
           </div>
         </div>
