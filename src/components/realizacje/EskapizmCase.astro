@@ -339,6 +339,9 @@ const ld = {
           </div>
         </section>
 
+        <!-- pigułka stacji (position: fixed) w kolejności DOM zaraz po torze, żeby Tab trafiał w kropki przy stacjach -->
+        <nav class="pill" data-pill data-names={JSON.stringify(T.stops.map(([n]) => n))} hidden aria-label={pl ? 'Stacje' : 'Stations'}><span class="pill-n" aria-hidden="true"></span><span class="pill-t" aria-hidden="true"></span><span class="pill-dots">{stations.map((_, i) => <button type="button" data-go={i} aria-label={`${num(i)} ${T.stops[i][0]}`}><i></i></button>)}</span></nav>
+
         <!-- Szczegóły stacji: zdanie „dla kogo” i opis każdej stacji, pod przewijaną sekcją (D: slajd = jeden ekran) -->
         <section class="st-details wrap" aria-label={pl ? 'Stacje w szczegółach' : 'The stations in detail'}>
           <ol>
@@ -402,7 +405,6 @@ const ld = {
       </section>
     </main>
 
-    <nav class="pill" data-pill data-names={JSON.stringify(T.stops.map(([n]) => n))} hidden aria-label={pl ? 'Stacje' : 'Stations'}><span class="pill-n" aria-hidden="true"></span><span class="pill-t" aria-hidden="true"></span><span class="pill-dots">{stations.map((_, i) => <button type="button" data-go={i} aria-label={`${num(i)} ${T.stops[i][0]}`}><i></i></button>)}</span></nav>
     <BrandFooter locale={locale} full />
   </div>
 </VariantLayout>
@@ -429,7 +431,7 @@ const ld = {
     v.preload = 'auto'; v.load(); el.dataset.loaded = '1';
     // obserwatory odpalają się w dowolnej kolejności, a WebKit odrzuca play() w trakcie wczytywania:
     // pętla w widoku rusza, gdy da się ją odtworzyć
-    v.addEventListener('canplay', () => { if (el.dataset.inview && !still.matches && v.paused) play(el, v); });
+    v.addEventListener('canplay', () => { if (el.dataset.inview && allowed(el) && !still.matches && v.paused) play(el, v); });
     return true;
   };
   // Stacje w poziomie: slajdy poza ekranem są przycięte przez tor (overflow), więc ani obserwator, ani loading="lazy"
@@ -437,6 +439,13 @@ const ld = {
   // i pętle wszystkich stacji naraz; grają nadal tylko pętle w widoku (seen).
   const trackEl = document.querySelector<HTMLElement>('[data-track]');
   const trackLoops = loops.filter((el) => trackEl?.contains(el));
+  // w torze gra tylko pętla aktywnej stacji (recenzja Codexa: w przejeździe widać dwie stacje naraz); active ustawia skrypt stacji
+  let active = 0;
+  const allowed = (el: HTMLElement) => !trackEl?.contains(el) || Number(el.closest<HTMLElement>('[data-station]')?.dataset.station) === active;
+  const syncTrack = () => trackLoops.forEach((el) => {
+    const v = el.querySelector('video'); if (!v) return;
+    if (el.dataset.inview && el.dataset.loaded && allowed(el) && !still.matches) { if (v.paused) play(el, v); } else v.pause();
+  });
   if (trackEl) new IntersectionObserver((es, o) => { if (es.some((e) => e.isIntersecting)) { trackEl.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((i) => { i.loading = 'eager'; }); o.disconnect(); } }, { rootMargin: '100% 0px' }).observe(trackEl);
   const near = new IntersectionObserver((es) => es.forEach((e) => {
     if (!e.isIntersecting || still.matches) return;
@@ -448,7 +457,7 @@ const ld = {
     const v = (e.target as HTMLElement).querySelector('video');
     if (!v) return;
     (e.target as HTMLElement).dataset.inview = e.isIntersecting ? '1' : '';
-    if (e.isIntersecting && !still.matches && (e.target as HTMLElement).dataset.loaded) play(e.target as HTMLElement, v); else v.pause();
+    if (e.isIntersecting && allowed(e.target as HTMLElement) && !still.matches && (e.target as HTMLElement).dataset.loaded) play(e.target as HTMLElement, v); else v.pause();
   }), { threshold: .15 });
   loops.forEach((el) => {
     if (el.offsetParent === null && getComputedStyle(el).position !== 'fixed') return; // ukryta wersja (d-only na telefonie) nie ładuje się wcale
@@ -514,17 +523,20 @@ const ld = {
   // odczyt pozycji raz na klatkę. Telefon: tor to poziomy pas z przyciąganiem (CSS), indeks z scrollLeft.
   // Pigułka na dole: numer i nazwa bieżącej stacji, kropki przenoszą do stacji. Widoczna tylko w trakcie sekcji.
   const sec = document.querySelector<HTMLElement>('[data-stations]');
-  const track = document.querySelector<HTMLElement>('[data-track]');
+  const pin = sec?.querySelector<HTMLElement>('.st-pin');
+  const track = trackEl;
   const pill = document.querySelector<HTMLElement>('[data-pill]');
   const N = document.querySelectorAll('[data-station]').length;
   const names: string[] = JSON.parse(pill?.dataset.names || '[]');
   const wide = matchMedia('(min-width: 768px)');
   const HOLD = .3;
   let vh = innerHeight, edge = 0, cur = -2, tick = false, x = -1;
-  // geometria raz i przy resize/fontach: wysokość ekranu i odległość góry pigułki od dołu ekranu
+  // geometria raz i przy resize/fontach: wysokość przypiętego ekranu i odległość góry pigułki od dołu ekranu.
+  // vh = wysokość .st-pin (100vh w CSS), nie innerHeight: sekcja ma 5,4 tej samej jednostki, więc przy ruchomych paskach
+  // Safari przejazd i postój liczą się w tej samej wysokości co CSS (recenzja Codexa).
   const measure = () => {
     if (!sec || !pill) return;
-    vh = innerHeight;
+    vh = (wide.matches && pin?.offsetHeight) || innerHeight;
     const was = pill.hidden;
     if (was) { pill.style.visibility = 'hidden'; pill.hidden = false; }
     edge = innerHeight - pill.getBoundingClientRect().top;
@@ -550,8 +562,10 @@ const ld = {
       if (x !== -1) { x = -1; track.style.transform = ''; }
       idx = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
     }
+    const now = Math.min(N - 1, Math.max(0, idx));
+    if (now !== active) { active = now; syncTrack(); }
     const on = r.top <= innerHeight * .5 && r.bottom > innerHeight - edge;
-    const k = on ? Math.min(N - 1, Math.max(0, idx)) : -1;
+    const k = on ? now : -1;
     if (k === cur) return; cur = k;
     pill.hidden = k < 0;
     if (k >= 0) {
@@ -564,21 +578,36 @@ const ld = {
   addEventListener('scroll', req, { passive: true });
   track?.addEventListener('scroll', req, { passive: true });
   const re = () => { measure(); x = -2; cur = -2; req(); };
+  // stacja o numerze i: komputer przewija stronę do środka postoju stacji, telefon przesuwa pas
+  const go = (i: number, behavior: ScrollBehavior) => {
+    if (!sec || !track) return;
+    if (wide.matches) scrollTo({ top: sec.getBoundingClientRect().top + scrollY + i * vh + HOLD * vh / 2, behavior });
+    else track.scrollTo({ left: i * track.clientWidth, behavior });
+  };
   addEventListener('resize', re, { passive: true });
-  wide.addEventListener('change', re);
+  // przejście przez 768 px (obrót tabletu, zmiana okna) w trakcie sekcji: ta sama stacja w nowym trybie (recenzja Codexa)
+  wide.addEventListener('change', () => {
+    const keep = active, r = sec?.getBoundingClientRect();
+    measure();
+    if (r && r.top < innerHeight && r.bottom > 0) go(keep, 'auto');
+    re();
+  });
   document.fonts?.ready.then(re);
   addEventListener('load', re);
-  // kropki: komputer przewija stronę do środka postoju stacji, telefon przesuwa pas
   pill?.addEventListener('click', (e) => {
     const b = (e.target as Element).closest<HTMLElement>('[data-go]');
-    if (!b || !track) return;
-    const i = +b.dataset.go!;
-    const smooth = still.matches ? 'auto' : 'smooth';
-    if (wide.matches) scrollTo({ top: sec!.getBoundingClientRect().top + scrollY + i * vh + HOLD * vh / 2, behavior: smooth });
-    else track.scrollTo({ left: i * track.clientWidth, behavior: smooth });
+    if (b) go(+b.dataset.go!, still.matches ? 'auto' : 'smooth');
   });
+  // kotwica #stacja-0N: przeglądarka przewija do slajdu przesuniętego transformem (czyli do początku sekcji, stacja 01),
+  // więc po jej przewinięciu ustawiamy właściwą stację (recenzja Codexa)
+  const hashGo = () => {
+    const m = location.hash.match(/^#stacja-0([1-5])$/);
+    if (m) requestAnimationFrame(() => { measure(); go(+m[1] - 1, 'auto'); });
+  };
+  addEventListener('hashchange', hashGo);
   measure();
   upd();
+  hashGo();
 </script>
 
 <style>
@@ -781,8 +810,8 @@ const ld = {
     .stations .trio { inset: auto var(--gutter) 96px; height: var(--dev-h); }
     .trio :global(.ph) { --ph-h: min(var(--dev-h), (100vw - 2 * var(--gutter)) * .78); }
     .trio :global(.t-side) { --ph-h: calc(min(var(--dev-h), (100vw - 2 * var(--gutter)) * .78) * .72); }
-    .g-slide { display: flex; flex-direction: column; justify-content: center; gap: 48px; }
-    .g-media { width: 100%; }
+    .g-slide { display: flex; flex-direction: column; gap: 48px; padding-top: clamp(96px, 10vh, 128px); }
+    .g-media { width: 100%; margin-block: auto; }
   }
   @media (max-width: 767px) {
     .case { --t-body: 17px; }
@@ -805,8 +834,8 @@ const ld = {
     .st { font-size: 36px; }
     .ss { font-size: 16px; max-width: 22em; }
     /* Stacje na telefonie (D): poziomy pas z przyciąganiem, slajd na wysokość widocznego ekranu (svh: z paskami Safari),
-       co najmniej 540 px. Pion przewija stronę (bez touch-action), urządzenia liczone od wysokości slajdu, dół 72 px wolny na pigułkę. */
-    .stations { height: auto; --slide-h: max(100svh, 540px); --desk-h: var(--slide-h); --bay-h: var(--slide-h); }
+       co najmniej 460 px (iPhone SE z paskami Safari). Pion przewija stronę (bez touch-action), urządzenia liczone od wysokości slajdu, dół 72 px wolny na pigułkę. */
+    .stations { height: auto; --slide-h: max(100svh, 460px); --desk-h: var(--slide-h); --bay-h: var(--slide-h); }
     .st-pin { position: static; height: auto; overflow: visible; }
     .st-track { width: auto; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .st-track::-webkit-scrollbar { display: none; }
