@@ -1,4 +1,5 @@
 ---
+import ExtArrow from './realizacje/ExtArrow.astro';
 import LanguageSwitch from './LanguageSwitch.astro';
 import { routes, type Locale } from '../i18n/site';
 import { cannabisHref, cannabisCopy } from '../content/cannabis';
@@ -25,7 +26,7 @@ const items = [
         <span class="text-roll" aria-hidden="true">
           {[0, 1].map(layer => <span class:list={['roll-line', { 'roll-copy': layer === 1 }]}>{Array.from(item.label).map((letter, i) => <span class="roll-letter" style={`transition-delay:${Math.abs(i - (item.label.length - 1) / 2) * .025}s`}>{letter === ' ' ? '\u00a0' : letter}</span>)}</span>)}
         </span>
-        {item.external && <span class="menu-external" aria-hidden="true">↗</span>}
+        {item.external && <span class="menu-external"><ExtArrow weight={520} /></span>}
       </a>)}
     </nav>
     {compact && alternatePath && <div class="menu-lang"><span>{pl ? 'Język' : 'Language'}</span><LanguageSwitch locale={locale} href={alternatePath} /></div>}
@@ -49,7 +50,8 @@ const items = [
   .menu-panel a, .menu-panel button, .menu-panel a :global(*), .menu-panel button :global(*) { cursor: pointer !important; }
   .menu-link { display: flex; align-items: center; gap: 12px; padding: 12px 0; min-height: 44px; font-family: 'NohemiV', sans-serif; font-size: clamp(24px, 3vw, 38px); font-weight: 520; letter-spacing: -.035em; color: #000; text-decoration: none; }
   .menu-link[aria-current='page'] { color: #0522ff; }
-  .menu-external { font-size: 22px; color: #0522ff; }
+  /* strzałka linku zewnętrznego jako wektor (ExtArrow): ↗ nie ma w fontach strony i system podstawiał emoji */
+  .menu-external { font-size: 22px; color: #0522ff; line-height: 1; }
   .text-roll { position: relative; display: block; overflow: hidden; line-height: 1.3; white-space: nowrap; }
   .roll-line { display: block; }
   .roll-copy { position: absolute; inset: 0; }
