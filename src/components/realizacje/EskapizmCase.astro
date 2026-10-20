@@ -462,15 +462,15 @@ const ld = {
   // Ton lockupu według czasu filmu otwarcia (decyzja Sławka 20.10, runda 5): film przechodzi z ciemnego biurka w jasny ekran
   // i kremową stronę, więc data-tone na .open zmienia się z czasem filmu, a lockup (CaseLockup) dostaje sygnał do ponownego
   // pomiaru tylko przy zmianie tonu (focusin bez bąbelkowania na samym lockupie: słucha go tylko CaseLockup).
-  // Odcinki policzone offline z plików filmu (scratchpad sesji, ton/odcinki2.py): ton z wyższym kontrastem pod lockupem
-  // (10. percentyl pikseli, biel albo #111), odcinki co najmniej 0,5 s, zmiana na środku przenikania (przejście koloru 200 ms
-  // w CaseLockup). Wersja na telefon (-m) liczona dla 390 i 320, desktop dla 1440.
-  // Świadomy wyjątek: na telefonie 1,43-3,37 s pod lockupem jest pasek menu Safari z filmu (jasny pasek, czarny napis
-  // i czarne wycięcie kamery pod „× eskapizm”). Żaden ton nie daje tam 4,5:1 w najgorszych 10% pikseli; ton jasny ma wyższą
-  // medianę (11,9:1 wobec 1,5:1) i zostaje przez całe okno. Logo to znak marki (WCAG 1.4.3 wyłącza logotypy z progu).
+  // Odcinki policzone offline z plików filmu (scratchpad sesji, ton/odcinki3.py): ton z wyższą medianą kontrastu pod lockupem
+  // (biel albo #111, najsłabsza z szerokości wersji), odcinki co najmniej 0,5 s, zmiana na środku przenikania (przejście koloru
+  // 200 ms w CaseLockup). Wersja na telefon (-m) liczona dla 390 i 320, desktop dla 1440. Film nagrany bez paska menu macOS
+  // i wycięcia kamery z makiety ekranu (runda 3), więc pod lockupem nie ma już czarnych elementów paska Safari.
+  // Telefon 2,72-3,52 s: kadr mieszany (ciemne i jasne paski okien), ciemny ton wybrany ręcznie, bo przy 390 trzyma 4,9:1;
+  // przy 320 w 3,03-3,52 s mediana spada do 1,3 (zgłoszone w meldunku, odcinek krótszy niż 0,5 s nie jest dozwolony).
   const TONES: Record<'d' | 'm', [number, 'dark' | 'light'][]> = {
-    d: [[0, 'dark'], [1.517, 'light'], [3.583, 'dark'], [6.733, 'light'], [9.217, 'dark']],
-    m: [[0, 'dark'], [1.433, 'light'], [3.367, 'dark'], [5.383, 'light'], [6.117, 'dark'], [6.733, 'light'], [9.183, 'dark']],
+    d: [[0, 'dark'], [1.5, 'light'], [3.6, 'dark'], [6.717, 'light'], [9.233, 'dark']],
+    m: [[0, 'dark'], [1.417, 'light'], [2.717, 'dark'], [5.4, 'light'], [6.1, 'dark'], [6.733, 'light'], [9.2, 'dark']],
   };
   const openEl = document.querySelector<HTMLElement>('.case .open');
   const openV = openEl?.querySelector<HTMLVideoElement>('video');
@@ -567,7 +567,7 @@ const ld = {
   /* 1. Otwarcie */
   /* bez belki: film na pełny ekran, lockup (CaseLockup) unosi się nad nim */
   .open { position: relative; height: min(100vh, 62.5vw); min-height: 460px; background: #2a2018; color: #fff; overflow: hidden; }
-  /* Film nagrany z eskapizm.com z ukrytym nagłówkiem strony (logo, menu, pasek postępu; runda 4, nagraj.cjs z krokiem js),
+  /* Film nagrany z eskapizm.com z ukrytym nagłówkiem strony (logo, menu, pasek postępu) oraz paskiem menu macOS i wycięciem kamery z makiety ekranu laptopa (nagraj.cjs z krokiem js),
      więc pod lockupem nie ma drugiego logo i nic nie trzeba kadrować ani rozmywać. Bez winiety i bez przyciemnienia:
      czytelność lockupu trzyma ton według czasu filmu (skrypt niżej, data-tone na .open). */
   .open :global(.open-film) { position: absolute; inset: 0; }
