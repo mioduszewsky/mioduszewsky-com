@@ -6,7 +6,7 @@
 // Nagrania: klatka po klatce z produkcji eskapizm.com (scratchpad sesji, nagraj.cjs), wideo leniwie (Loop.astro), telefon z eskapizm.com (EskapizmPhone.astro).
 import { Image, getImage } from 'astro:assets';
 import VariantLayout from '../../layouts/VariantLayout.astro';
-import SiteMenu from '../SiteMenu.astro';
+import CaseLockup from './CaseLockup.astro';
 import BrandFooter from '../BrandFooter.astro';
 import EskapizmPhone from './EskapizmPhone.astro';
 import Loop from './Loop.astro';
@@ -26,11 +26,12 @@ import indonezja from '../../assets/realizacje/eskapizm/indonezja.jpg';
 import blog from '../../assets/realizacje/eskapizm/blog.jpg';
 import poslubne from '../../assets/realizacje/eskapizm/poslubne.jpg';
 import quiz from '../../assets/realizacje/eskapizm/quiz.jpg';
-import cannversity from '../../assets/realizacje/hero-cannversity.webp';
+import { nextCase } from '../../content/realizacje-kolejnosc';
 
 interface Props { locale: 'pl' | 'en' }
 const { locale } = Astro.props;
 const pl = locale === 'pl';
+const next = nextCase('eskapizm', locale);
 
 // Spacja nierozdzielająca po jednoliterowych spójnikach (PL), żeby nie zostawały na końcu linii.
 const P = pl ? (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;') : (t: string) => t;
@@ -38,7 +39,7 @@ const P = pl ? (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&
 const T = pl ? {
   title: 'Case eskapizm: od kalkulatora do planu w telefonie · mioduszewsky',
   description: 'Eskapizm to spółka moja i Justyny. Kalkulator, zamówienie z fakturą, AI Plan Builder, plan w telefonie klienta i panel wspólników w jednym systemie.',
-  skip: 'Przejdź do treści', home: 'mioduszewsky. Strona główna.', homeHref: '/pl/', alt: '/work/eskapizm/',
+  skip: 'Przejdź do treści', homeHref: '/pl/', alt: '/work/eskapizm/',
   label: 'Case study · 2025-2026',
   filmAlt: 'Film ze strony głównej eskapizm.com: wieczór przy biurku, na laptopie przybywa okien z lotami, noclegami i promami, potem hasło „Zostaw nam planowanie”, telefon z gotowym planem i zatoka na Phi Phi.',
   h2: 'Godzinna rozmowa zamienia się w plan podróży w telefonie klienta.',
@@ -101,12 +102,11 @@ const T = pl ? {
   endP: 'Opisz mi to w 15 minut. Powiem, co zbudowałbym najpierw.',
   btn: 'Umów 15 minut', contact: '/pl/kontakt/#ctForm',
   more: 'Aplikacja albo system: jak pracuję', moreHref: '/pl/uslugi/aplikacje-i-systemy/',
-  next: 'Następny case', nextName: 'Cannversity', nextNote: 'W przygotowaniu',
-  nextAlt: 'Pierwszy ekran strony Cannversity.',
+  next: 'Następny case',
 } : {
   title: 'eskapizm: from a calculator to a plan on the phone · mioduszewsky',
   description: 'Eskapizm is the company Justyna and I run. A calculator, ordering with invoices, AI Plan Builder, the client\'s plan on their phone and one partner dashboard.',
-  skip: 'Skip to content', home: 'mioduszewsky. Home page.', homeHref: '/', alt: '/pl/realizacje/eskapizm/',
+  skip: 'Skip to content', homeHref: '/', alt: '/pl/realizacje/eskapizm/',
   label: 'Case study · 2025-2026',
   filmAlt: 'The film on the eskapizm.com homepage (in Polish): an evening at the desk, flight, hotel and ferry windows piling up on the laptop, then the line "Leave the planning to us", a phone with the finished plan and the bay on Phi Phi.',
   h2: 'An hour-long conversation turns into a travel plan on the client\'s phone.',
@@ -169,8 +169,7 @@ const T = pl ? {
   endP: 'Walk me through it in 15 minutes. I\'ll tell you what I\'d build first.',
   btn: 'Book 15 minutes', contact: '/contact/#ctForm',
   more: 'Apps and systems: how I work', moreHref: '/services/apps-and-systems/',
-  next: 'Next case', nextName: 'Cannversity', nextNote: 'Coming soon',
-  nextAlt: 'First screen of the Cannversity website.',
+  next: 'Next case',
 };
 const quoteHref = 'https://eskapizm.com/blog/planowanie-podrozy-na-wasna-reke-czy-z-pomoca-eskapizm';
 const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
@@ -204,23 +203,15 @@ const ld = {
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
     <a class="skip" href="#main">{T.skip}</a>
-    <header class="nav">
-      <a class="mark" href={T.homeHref} aria-label={T.home}>
-        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
-          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-nav.webm" type="video/webm" />
-        </video>
-      </a>
-      <SiteMenu locale={locale} alternatePath={T.alt} />
-    </header>
+    <CaseLockup locale={locale} client="eskapizm" alternatePath={T.alt} tone="dark" />
 
     <main id="main">
       <article>
-        <!-- 1. Otwarcie: sama nazwa na filmie, pełny ekran -->
-        <header class="open">
+        <!-- 1. Otwarcie: sam film na pełny ekran; nazwa i etykieta tylko dla czytników i wyszukiwarek (decyzja Kacpra 20.10: napis zasłaniał film) -->
+        <header class="open" data-tone="dark">
           <Loop name="otwarcie" mobile="otwarcie-m" w={1920} h={1200} mw={720} mh={1558} alt={T.filmAlt} eager class="open-film" />
-          <div class="open-scrim" aria-hidden="true"></div>
-          <div class="open-txt">
+          <div class="open-top" aria-hidden="true"></div>
+          <div class="open-txt sr">
             <p class="lbl">{T.label}</p>
             <h1>eskapizm</h1>
           </div>
@@ -264,7 +255,7 @@ const ld = {
 
         <!-- 5. Stacja 01: biurko wieczorem, telefon z kalkulatorem -->
         <section class="station" id="stacja-01" data-station="0" aria-labelledby="s1-h">
-          <div class="scene desk evening">
+          <div class="scene desk evening" data-tone="dark">
             <img class="scene-bg" srcset={biurkoSet} sizes="100vw" src={biurkoSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" />
             <div class="shade" aria-hidden="true"></div>
             <div class="s-txt s-right"><p class="lbl">01</p><h2 id="s1-h" class="st" set:html={P(T.s1.t)} /><p class="ss" set:html={P(T.s1.s)} /></div>
@@ -280,7 +271,7 @@ const ld = {
 
         <!-- 6. Stacja 02: zamówienie na ekranie laptopa z tej samej sceny, telefon z płatnością obok -->
         <section class="station" id="stacja-02" data-station="1" aria-labelledby="s2-h">
-          <div class="scene desk dusk">
+          <div class="scene desk dusk" data-tone="dark">
             <div class="desk-img">
               <img class="scene-bg" srcset={biurkoSet} sizes="(max-width: 767px) 250vw, 100vw" src={biurkoSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" />
               <!-- prostokąt ekranu laptopa z silnika filmu: PHOTO.scr [560.5, 290, 557.5, 348.5] na 1678x937 -->
@@ -302,7 +293,8 @@ const ld = {
         <section class="station green" id="stacja-03" data-station="2" aria-labelledby="s3-h">
           <div class="wrap g-head"><p class="lbl">03</p><h2 id="s3-h" class="st" set:html={P(T.s3.t)} /><p class="ss" set:html={P(T.s3.s)} /></div>
           <div class="wrap">
-            <div class="screen"><Loop name="builder" mobile="builder-m" w={1920} h={1200} mw={780} mh={488} alt={T.s3.alt} /></div>
+            <!-- ton lockupu nad zrzutami: na komputerze pod lockupem ciemny czat i ciemny pasek panelu, na telefonie jasny ekran -->
+            <div class="screen" data-tone="dark" data-tone-m="light"><Loop name="builder" mobile="builder-m" w={1920} h={1200} mw={780} mh={488} alt={T.s3.alt} /></div>
             <figure class="chat m-only"><Image src={builderCzat} widths={[390, 780]} sizes="100vw" alt={T.s3.altChat} loading="lazy" /></figure>
           </div>
           <div class="detail wrap">
@@ -313,7 +305,7 @@ const ld = {
 
         <!-- 8. Stacja 04: zatoka Phi Phi, trio telefonów (kulminacja) -->
         <section class="station" id="stacja-04" data-station="3" aria-labelledby="s4-h">
-          <div class="scene bay">
+          <div class="scene bay" data-tone="dark">
             <picture>
               <source media="(max-width: 767px)" srcset={zatokaPionSet} sizes="100vw" />
               <Image class="scene-bg" src={zatoka} widths={[1280, 1920, 2560]} sizes="100vw" alt={T.s4.sceneAlt} loading="lazy" />
@@ -342,7 +334,7 @@ const ld = {
         <section class="station green" id="stacja-05" data-station="4" aria-labelledby="s5-h">
           <div class="wrap g-head"><p class="lbl">05</p><h2 id="s5-h" class="st" set:html={P(T.s5.t)} /><p class="ss" set:html={P(T.s5.s)} /></div>
           <figure class="wrap">
-            <div class="screen"><Image src={issues} widths={[780, 1280, 1920, 2560]} sizes="(max-width: 1320px) 100vw, 1200px" alt={T.s5.alt} loading="lazy" /></div>
+            <div class="screen" data-tone="dark" data-tone-m="light"><Image src={issues} widths={[780, 1280, 1920, 2560]} sizes="(max-width: 1320px) 100vw, 1200px" alt={T.s5.alt} loading="lazy" /></div>
             <figcaption class="cap" set:html={P(T.s5.cap)} />
           </figure>
           <div class="detail wrap">
@@ -378,7 +370,7 @@ const ld = {
         </figure>
       </article>
 
-      <!-- 12. Koniec: kontakt i następny case (bez linku, dopóki case Cannversity nie jest gotowy, decyzja Fincha 19.10) -->
+      <!-- 12. Koniec: kontakt i następny case z pętli realizacji (src/content/realizacje-kolejnosc.ts) -->
       <section class="end" aria-labelledby="end-h">
         <div class="wrap end-in">
           <h2 id="end-h" class="h" set:html={P(T.endH)} />
@@ -388,10 +380,10 @@ const ld = {
             <p class="more"><a href={T.moreHref}>{T.more}</a></p>
           </div>
         </div>
-        <div class="next">
-          <Image src={cannversity} widths={[780, 1440, 2048]} sizes="100vw" alt={T.nextAlt} loading="lazy" />
-          <div class="next-txt wrap"><p class="lbl">{T.next} · {T.nextNote}</p><p class="next-name">{T.nextName}</p></div>
-        </div>
+        <a class="next" href={next.href}>
+          <Image src={next.img} widths={[780, 1440, 2048]} sizes="100vw" alt="" loading="lazy" />
+          <span class="next-txt wrap"><span class="lbl">{T.next}</span><span class="next-name">{next.name}</span></span>
+        </a>
       </section>
     </main>
 
@@ -480,7 +472,7 @@ const ld = {
     --paper: #fcfff5; --ink: #1c1917; --dim: #57534e; --rule: rgb(28 25 23 / .14);
     --green: #1e3b25; --on-green: #f3f6ec; --brand: #ffcc33;
     --gutter: clamp(20px, 5vw, 96px);
-    --t-name: clamp(84px, 13.2vw, 190px); --t-num: clamp(64px, 8.4vw, 124px); --t-h: clamp(32px, 3.9vw, 56px);
+    --t-num: clamp(64px, 8.4vw, 124px); --t-h: clamp(32px, 3.9vw, 56px);
     --t-body: 18px; --t-cap: 14px;
     font-family: 'GeneralSansV', sans-serif; background: var(--paper); color: var(--ink); overflow-x: clip; font-size: var(--t-body); line-height: 1.6;
   }
@@ -493,8 +485,7 @@ const ld = {
   .case img { display: block; max-width: 100%; height: auto; }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
   .skip:focus { transform: none; }
-  .nav { background: var(--paper); height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
-  .mark video { width: clamp(155px, 18vw, 220px); display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .18)); }
+  .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   .wrap { max-width: 1320px; margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
   .m-only { display: none; }
 
@@ -504,14 +495,12 @@ const ld = {
   .cap { font-size: var(--t-cap); line-height: 1.5; color: var(--dim); }
 
   /* 1. Otwarcie */
-  .open { position: relative; height: min(calc(100vh - 104px), 62.5vw); min-height: 460px; background: #2a2018; color: #fff; overflow: hidden; }
+  /* bez belki: film na pełny ekran, lockup (CaseLockup) unosi się nad nim */
+  .open { position: relative; height: min(100vh, 62.5vw); min-height: 460px; background: #2a2018; color: #fff; overflow: hidden; }
   .open :global(.open-film) { position: absolute; inset: 0; }
-  /* film pod nazwą bywa jasny i gęsty (kaskada okien), więc dół kadru zawsze ciemny */
-  .open-scrim { position: absolute; inset: 0; background: linear-gradient(0deg, rgb(12 8 4 / .86) 0%, rgb(12 8 4 / .62) 30%, rgb(12 8 4 / .2) 52%, transparent 66%), linear-gradient(90deg, rgb(12 8 4 / .4), transparent 62%); pointer-events: none; }
-  /* nazwa nad paskiem cookies serwisu (pierwsza wizyta) i nad paskami przeglądarki */
-  .open-txt { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 88px; }
-  .open h1 { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: var(--t-name); line-height: .86; letter-spacing: -.05em; margin-top: 18px; }
-  .open .lbl { opacity: .9; }
+  /* film co dwie sekundy przechodzi z ciemnego biurka w jasny ekran laptopa (pasek menu, strona eskapizmu na kremie):
+     miękkie przyciemnienie samej góry kadru trzyma biały lockup czytelnym w każdej klatce */
+  .open-top { position: absolute; inset: 0 0 auto; height: 180px; background: linear-gradient(180deg, rgb(12 8 4 / .55) 0%, rgb(12 8 4 / .28) 50%, transparent 100%); pointer-events: none; }
 
   /* 2. Teza */
   .thesis { padding-block: clamp(80px, 10vw, 160px) clamp(56px, 7vw, 104px); }
@@ -618,10 +607,13 @@ const ld = {
   .more { margin-top: 20px; font-size: 16px !important; }
   .more a { color: inherit; text-underline-offset: 4px; }
   .end :focus-visible { outline-color: #fff; }
-  .next { position: relative; height: clamp(280px, 36vw, 520px); overflow: hidden; }
+  .next { position: relative; display: block; height: clamp(280px, 36vw, 520px); overflow: hidden; color: inherit; text-decoration: none; }
+  .next:hover .next-name { text-decoration: underline; text-underline-offset: .12em; text-decoration-thickness: .05em; }
+  .end .next:focus-visible { outline-offset: -6px; }
   .next img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; filter: saturate(.6) blur(10px); transform: scale(1.08); }
   .next::after { content: ''; position: absolute; inset: 0; background: rgb(14 26 17 / .9); }
   .next-txt { position: absolute; left: 0; right: 0; bottom: clamp(28px, 4vw, 56px); z-index: 2; color: #fff; }
+  .next-txt .lbl, .next-name { display: block; }
   .next-name { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(56px, 8vw, 120px); line-height: .9; letter-spacing: -.045em; margin-top: 14px; }
 
   /* Pigułka stacji */
@@ -639,15 +631,10 @@ const ld = {
   }
   @media (max-width: 767px) {
     .case { --t-body: 17px; }
-    .nav { height: 80px; padding-block: 16px; }
     .m-only { display: block; }
     .d-only, .case :global(.d-only) { display: none !important; }
     .lead { font-size: 18px; }
-    .open { height: calc(100svh - 80px); min-height: 440px; max-height: 920px; }
-    .open h1 { font-size: 22vw; }
-    /* telefon: pasek cookies ma 137-156 px (320 px szerokości), więc nazwa stoi 176 px nad dołem pierwszego ekranu (pomiar 19.10: wcześniej zasłonięta w całości) */
-    .open-txt { bottom: calc(176px + env(safe-area-inset-bottom, 0px)); }
-    .open-scrim { background: linear-gradient(0deg, rgb(12 8 4 / .88) 0%, rgb(12 8 4 / .72) 38%, rgb(12 8 4 / .25) 62%, transparent 75%); }
+    .open { height: 100svh; min-height: 440px; max-height: 920px; }
     .meta { grid-template-columns: 1fr 1fr; }
     .nums, .nums.four { grid-template-columns: 1fr; gap: 36px; }
     .nums.four { grid-template-columns: 1fr 1fr; }
