@@ -8,6 +8,10 @@
 // Sekcje z filmem lub zdjęciem pod lockupem dostają w markupie data-tone="dark" albo "light" (z obrazu koloru nie odczytasz);
 // gdy obraz na telefonie jest inny (np. osobne nagranie pionowe), data-tone-m ustawia ton do 767 px szerokości.
 // Ten sam ton steruje przyciskiem Menu i przełącznikiem języka (zmienne --menu-* w SiteMenu).
+// Chowanie (Sławek, runda 2): ton z tła nie chroni przed treścią pod lockupem (czarne logo na czarnym haśle, 1,0:1).
+// Pierwszy ekran: lockup zawsze, bez podkładu. Po 80 px w dół chowa się, w górę wraca; nad treścią (scrollY powyżej
+// wysokości lockupu) dostaje miękki podkład w tonie osobno pod lockupem i pod Menu. Nie chowa się z focusem w środku
+// ani przy otwartym Menu.
 import SiteMenu from '../SiteMenu.astro';
 import { routes, type Locale } from '../../i18n/site';
 
@@ -109,9 +113,22 @@ const home = routes[locale].home;
   /* film pod lockupem bywa jasny i gęsty: w tonie ciemnym delikatny cień pod białym ×, klientem i nazwą */
   [data-lk-tone='dark'] :is(.lk-x, .lk-client) { filter: drop-shadow(0 1px 6px rgb(0 0 0 / .45)); }
   .lk-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-  .case-lockup, .lk-x, .lk-client { transition: color .2s ease; }
+  .case-lockup { transition: color .2s ease, transform .25s ease; }
+  .lk-x, .lk-client { transition: color .2s ease; }
+  .case-lockup[data-lk-hidden] { transform: translateY(-100%); }
+  /* podkład: dwie pigułki dopasowane do zawartości (lockup i Menu z językiem), nie belka na całą szerokość */
+  .lk, .case-lockup > :global(.site-menu) { position: relative; isolation: isolate; }
+  .lk::before, .case-lockup > :global(.site-menu)::before {
+    content: ''; position: absolute; z-index: -1; border-radius: 999px; pointer-events: none;
+    background: rgb(248 249 242 / .86); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    opacity: 0; transition: opacity .2s ease;
+  }
+  .lk::before { inset: calc(var(--lk-h) * -.12) -14px; }
+  .case-lockup > :global(.site-menu)::before { inset: -6px -14px -6px -6px; }
+  .case-lockup[data-lk-tone='dark'] .lk::before, .case-lockup[data-lk-tone='dark'] > :global(.site-menu)::before { background: rgb(17 17 17 / .55); }
+  .case-lockup[data-lk-solid] .lk::before, .case-lockup[data-lk-solid] > :global(.site-menu)::before { opacity: 1; }
   @media (prefers-reduced-motion: reduce) {
-    .lk-v, .case-lockup, .lk-x, .lk-client { transition: none; }
+    .lk-v, .case-lockup, .lk-x, .lk-client, .lk::before, .case-lockup > :global(.site-menu)::before { transition: none; }
   }
 </style>
 
@@ -146,14 +163,28 @@ const home = routes[locale].home;
       return null;
     };
     const measure = () => {
-      const r = mark.getBoundingClientRect();
-      const top = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).find((el) => !lk.contains(el)) ?? null;
+      // pozycja bez transformacji (offset* względem lockupu stojącego w 0,0): ton liczy się też w trakcie chowania i powrotu
+      const top = document.elementsFromPoint(mark.offsetLeft + mark.offsetWidth / 2, mark.offsetTop + mark.offsetHeight / 2).find((el) => !lk.contains(el)) ?? null;
       return toneOf(top) ?? toneOf(document.body) ?? 'light';
     };
     const play = (v?: HTMLVideoElement) => { if (v && !still.matches && v.paused) { v.preload = 'auto'; v.play().catch(() => {}); } };
+    // Chowanie i podkład. Histereza 6 px: drżenie palca nie przełącza; lastY rusza dopiero po wyraźnym ruchu.
+    const panel = lk.querySelector<HTMLElement>('[popover]');
+    const menuOpen = () => { try { return !!panel?.matches(':popover-open'); } catch { return false; } };
+    let lastY = scrollY;
+    const place = () => {
+      const y = Math.max(0, scrollY);
+      let hide = lk.hasAttribute('data-lk-hidden');
+      if (y <= 80 || lk.matches(':focus-within') || menuOpen()) { hide = false; lastY = y; }
+      else if (y - lastY > 6) { hide = true; lastY = y; }
+      else if (lastY - y > 6) { hide = false; lastY = y; }
+      lk.toggleAttribute('data-lk-hidden', hide);
+      lk.toggleAttribute('data-lk-solid', !hide && y > lk.offsetHeight);
+    };
     let tick = false;
     const upd = () => {
       tick = false;
+      place();
       const t = measure();
       if (lk.dataset.lkTone === t) return;
       lk.dataset.lkTone = t;
@@ -167,6 +198,8 @@ const home = routes[locale].home;
     addEventListener('resize', req, { passive: true });
     addEventListener('load', req);
     addEventListener('pageshow', req);
+    lk.addEventListener('focusin', req);
+    panel?.addEventListener('toggle', req);
     upd();
   }
 </script>
