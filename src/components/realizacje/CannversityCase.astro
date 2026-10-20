@@ -244,8 +244,8 @@ const ld = {
         )}
       </section>
     </main>
-    <!-- Stopka ma kremowe tło i marginesy (inset); pas w tym samym kremie, żeby marginesy nie świeciły żółcią. -->
-    <div class="foot"><BrandFooter locale={locale} inset /></div>
+    <!-- Stopka na pełną szerokość (full), treść na krawędzi .wrap (runda 5, 20.10); pas .foot zostaje w tym samym kremie. -->
+    <div class="foot"><BrandFooter locale={locale} full /></div>
   </div>
 </VariantLayout>
 
@@ -268,6 +268,8 @@ const ld = {
     /* Żółć Cannversity hsl(45 100% 60%) = #ffcc33, czerń marki hsl(0 0% 8%) = #141414. Bez zaokrągleń i cieni. */
     --cann: #ffcc33; --black: #141414; --white: #fff; --line: 3px;
     --gutter: clamp(20px, 3.4vw, 56px); --max: 1440px;
+    /* stopka mioduszewsky na pełną szerokość, treść na tej samej lewej krawędzi co .wrap (runda 5, 20.10) */
+    --footer-pad: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
     /* Jedna siatka dla całej strony (runda 3): 12 kolumn, jeden odstęp. Tekst obok obrazu = 4 kolumny, nagranie
        z komputera 9, wyjście 7 + 5; każda druga kolumna zaczyna się na linii tej samej siatki. */
     --cols: repeat(12, minmax(0, 1fr)); --cgap: clamp(16px, 2.6vw, 40px);
