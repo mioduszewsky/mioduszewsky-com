@@ -3,7 +3,14 @@
 // Z lewej lockup: wideo 3D mioduszewsky (link do strony głównej), cienki ×, logo klienta (nie link). Z prawej SiteMenu.
 // Logo klienta: plik src/assets/realizacje/logo-klientow/<client>.svg (fill="currentColor"), czytany przez glob,
 // więc nowy klient = nowy plik, bez edycji komponentu. Brak pliku = nazwa klienta tekstem.
-// Ton (dark: żółte wideo, biały klient; light: czarne wideo, czarny klient) wybiera jeden skrypt na dole:
+// Logo mioduszewsky zawsze to samo, żółte 3D (decyzja Kacpra 20.10, ok. 08:00: bez przeskoku na płaską czarną wersję):
+// pod wideo leży obraz 3D z pierwszej klatki (WebP z alfą, 400 i 800 px) jako stan przed wczytaniem, przy „ogranicz ruch”
+// i gdy wideo nie ruszy. Wideo bez autoplay, startuje ze skryptu tylko bez ograniczenia ruchu; obraz chowa się na 'playing'.
+// Czytelność na każdym tle daje ciemnobrązowy kontur ok. 0,7 px CSS wpalony w wideo i obraz (logo-nav-kontur.*,
+// logo-nav-3d-*; z logo.webm 2048 px, promień 7 px, przepis assets/logo3d/kontur.py): żółte na żółci
+// #ffcc33 bez konturu 1,0:1 na krawędzi, z konturem 4,3:1; krem 5,5:1. Kontur z CSS (drop-shadow) WebKit pomija na wideo,
+// stąd wpalony. Ton ciemny dokłada tylko miękki cień jak dotąd.
+// Ton (dark: biały × i klient; light: × i klient #111) wybiera jeden skrypt na dole:
 // co leży pod środkiem lockupu, pierwszy przodek z data-tone albo nieprzezroczystym tłem, kontrast wg WCAG.
 // Sekcje z filmem lub zdjęciem pod lockupem dostają w markupie data-tone="dark" albo "light" (z obrazu koloru nie odczytasz);
 // gdy obraz na telefonie jest inny (np. osobne nagranie pionowe), data-tone-m ustawia ton do 767 px szerokości.
@@ -59,13 +66,10 @@ const home = routes[locale].home;
   <div class="lk">
     <a class="lk-home" href={home} aria-label={pl ? 'mioduszewsky. Strona główna.' : 'mioduszewsky. Home page.'}>
       <span class="lk-vid" aria-hidden="true">
-        <video class="lk-v" data-lk-v="dark" loop muted playsinline autoplay={tone === 'dark'} preload={tone === 'dark' ? 'metadata' : 'none'} width="800" height="222" tabindex="-1" poster="/logo3d/logo-nav-poster.webp">
-          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-nav.webm" type="video/webm" />
-        </video>
-        <video class="lk-v" data-lk-v="light" loop muted playsinline autoplay={tone === 'light'} preload={tone === 'light' ? 'metadata' : 'none'} width="600" height="166" tabindex="-1" poster="/logo3d/logo-czarne-nav-poster.webp">
-          <source src="/logo3d/logo-czarne-nav.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-czarne-nav.webm" type="video/webm" />
+        <img class="lk-img" src="/logo3d/logo-nav-3d-800.webp" srcset="/logo3d/logo-nav-3d-400.webp 400w, /logo3d/logo-nav-3d-800.webp 800w" sizes="190px" width="800" height="222" alt="" fetchpriority="high" />
+        <video class="lk-v" loop muted playsinline disablepictureinpicture preload="none" width="800" height="222" tabindex="-1">
+          <source src="/logo3d/logo-nav-kontur.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav-kontur.webm" type="video/webm" />
         </video>
       </span>
     </a>
@@ -100,10 +104,11 @@ const home = routes[locale].home;
   .lk-home { display: block; flex: none; margin-inline: calc(var(--lk-w) * -47 / 800); border-radius: 4px; }
   .lk-home:focus-visible { outline: 2px solid var(--lk-fg); outline-offset: 2px; }
   .lk-vid { display: grid; width: var(--lk-w); }
-  .lk-v { grid-area: 1 / 1; width: 100%; height: auto; display: block; transition: opacity .2s ease; }
+  [data-lk-tone='dark'] .lk-vid { filter: drop-shadow(0 4px 10px rgb(0 0 0 / .22)); }
+  .lk-img, .lk-v { grid-area: 1 / 1; width: 100%; height: auto; display: block; }
+  /* obraz 3D znika dopiero, gdy wideo gra (klatka 0 wideo = ten obraz), inaczej obrót liter dałby podwójny kontur */
+  .lk-vid[data-lk-live] .lk-img { visibility: hidden; }
   .lk-v::-webkit-media-controls-start-playback-button, .lk-v::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
-  [data-lk-tone='dark'] .lk-v[data-lk-v='light'], [data-lk-tone='light'] .lk-v[data-lk-v='dark'] { opacity: 0; }
-  [data-lk-tone='dark'] .lk-v[data-lk-v='dark'] { filter: drop-shadow(0 4px 10px rgb(0 0 0 / .22)); }
   /* × cienki, w kolorze lockupu, środek na środku x-height mioduszewsky */
   .lk-x { flex: none; width: calc(var(--lk-h) * .3); height: calc(var(--lk-h) * .3); margin: calc(var(--lk-h) * .355) calc(var(--lk-w) * .075) 0; fill: none; stroke: currentColor; stroke-width: 1.4; vector-effect: non-scaling-stroke; }
   .lk-x path { vector-effect: non-scaling-stroke; }
@@ -131,7 +136,7 @@ const home = routes[locale].home;
   .case-lockup[data-lk-tone='dark'] .lk::before, .case-lockup[data-lk-tone='dark'] > :global(.site-menu)::before { background: rgb(17 17 17 / .6); }
   .case-lockup[data-lk-solid] .lk::before, .case-lockup[data-lk-solid] > :global(.site-menu)::before { opacity: 1; }
   @media (prefers-reduced-motion: reduce) {
-    .lk-v, .case-lockup, .lk-x, .lk-client, .lk::before, .case-lockup > :global(.site-menu)::before { transition: none; }
+    .case-lockup, .lk-x, .lk-client, .lk::before, .case-lockup > :global(.site-menu)::before { transition: none; }
   }
 </style>
 
@@ -144,7 +149,8 @@ const home = routes[locale].home;
   if (lk && mark) {
     const still = matchMedia('(prefers-reduced-motion: reduce)');
     const narrow = matchMedia('(max-width: 767px)');
-    const vids = Object.fromEntries([...lk.querySelectorAll<HTMLVideoElement>('[data-lk-v]')].map((v) => [v.dataset.lkV, v]));
+    const box = lk.querySelector<HTMLElement>('.lk-vid');
+    const vid = lk.querySelector<HTMLVideoElement>('.lk-v');
     const lin = (v: number) => ((v /= 255) <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4);
     const lum = (c: number[]) => .2126 * lin(c[0]) + .7152 * lin(c[1]) + .0722 * lin(c[2]);
     const INK = lum([17, 17, 17]);
@@ -173,7 +179,31 @@ const home = routes[locale].home;
       const top = document.elementsFromPoint(geo.x, geo.y).find((el) => !lk.contains(el)) ?? null;
       return toneOf(top) ?? toneOf(document.body) ?? 'light';
     };
-    const play = (v?: HTMLVideoElement) => { if (v && !still.matches && v.paused) { v.preload = 'auto'; v.play().catch(() => {}); } };
+    // Wideo logo: gra tylko bez ograniczenia ruchu i gdy lockup jest na ekranie; obraz 3D pod spodem chowa się
+    // dopiero na 'playing', wraca, gdy wideo straci klatki (emptied, error).
+    const live = (on: boolean) => box?.toggleAttribute('data-lk-live', on);
+    vid?.addEventListener('playing', () => live(true));
+    ['emptied', 'error'].forEach((e) => vid?.addEventListener(e, () => live(false)));
+    vid?.querySelector('source:last-of-type')?.addEventListener('error', () => live(false));
+    // Jedna próba play() naraz. WebKit odmawia (NotAllowedError) wywołaniu przed pierwszym renderem strony, więc po odmowie
+    // najwyżej 3 ponowienia co 0,4/0,8/1,2 s, potem dopiero po geście użytkownika (np. iOS w trybie oszczędzania energii),
+    // zamiast próby w każdej klatce scrolla. Pauza zostawia klatkę obrotu: każda klatka to to samo żółte 3D z konturem.
+    let trying = false, refused = false, fails = 0;
+    const shown = () => !lk.hasAttribute('data-lk-hidden');
+    const motion = (run: boolean) => {
+      if (!vid) return;
+      if (run && !still.matches) {
+        if (!vid.paused || trying || refused) return;
+        trying = true; vid.preload = 'auto';
+        vid.play().then(() => { fails = 0; }, (e: DOMException) => {
+          if (e?.name !== 'NotAllowedError') return;
+          refused = true;
+          if (++fails <= 3) setTimeout(() => { refused = false; motion(shown()); }, 400 * fails);
+        }).finally(() => { trying = false; });
+      } else if (!vid.paused) vid.pause();
+    };
+    addEventListener('pointerdown', () => { if (refused) { refused = false; motion(shown()); } }, { passive: true });
+    still.addEventListener?.('change', () => motion(shown()));
     // Chowanie i podkład. Histereza 6 px: drżenie palca nie przełącza; lastY rusza dopiero po wyraźnym ruchu.
     const panel = lk.querySelector<HTMLElement>('[popover]');
     const menuOpen = () => { try { return !!panel?.matches(':popover-open'); } catch { return false; } };
@@ -193,12 +223,8 @@ const home = routes[locale].home;
       // ...potem zapisy
       lk.toggleAttribute('data-lk-hidden', hide);
       lk.toggleAttribute('data-lk-solid', !hide && y > geo.h);
-      if (lk.dataset.lkTone === t) return;
-      lk.dataset.lkTone = t;
-      const on = vids[t], off = vids[t === 'dark' ? 'light' : 'dark'];
-      // WebKit odmawia play() wideo z opacity 0: start dopiero w następnej klatce, gdy jest już widoczne
-      requestAnimationFrame(() => play(on));
-      setTimeout(() => { if (lk.dataset.lkTone === t) off?.pause(); }, 250);
+      motion(!hide);
+      if (lk.dataset.lkTone !== t) lk.dataset.lkTone = t;
     };
     const req = () => { if (!tick) { tick = true; requestAnimationFrame(upd); } };
     addEventListener('scroll', req, { passive: true });
