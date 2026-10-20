@@ -191,9 +191,11 @@ const ld = {
           </div>
         </section>
 
-        <!-- 4. Hasło strony krojem Cannversity (Inter, gruba kursywa), w skali plakatu. -->
+        <!-- 4. Hasło strony krojem Cannversity (Inter, gruba kursywa), w skali plakatu. Runda 3 (Kacper 20.10: schodek
+             drugiej linijki wyglądał na błąd): jedno zdanie = jeden wiersz, oba od lewej krawędzi strony, dłuższe zdanie
+             wypełnia kolumnę jak nazwa w otwarciu. --hw = szerokość dłuższego zdania w em (zmierzona w przeglądarce). -->
         <figure class="band">
-          <blockquote lang={pl ? 'pl' : 'en'}><p>{T.s4.haslo[0]}</p><p>{T.s4.haslo[1]}</p></blockquote>
+          <blockquote lang={pl ? 'pl' : 'en'} style={`--hw: ${pl ? 11.66 : 9.8}`}><p>{T.s4.haslo[0]}</p><p>{T.s4.haslo[1]}</p></blockquote>
         </figure>
 
         <!-- 5. Dwa języki: ten sam pierwszy ekran po polsku i po angielsku, obok siebie. -->
@@ -267,6 +269,9 @@ const ld = {
     /* Żółć Cannversity hsl(45 100% 60%) = #ffcc33, czerń marki hsl(0 0% 8%) = #141414. Bez zaokrągleń i cieni. */
     --cann: #ffcc33; --black: #141414; --white: #fff; --line: 3px;
     --gutter: clamp(20px, 3.4vw, 56px); --max: 1440px;
+    /* Jedna siatka dla całej strony (runda 3): 12 kolumn, jeden odstęp. Tekst obok obrazu = 4 kolumny, nagranie
+       z komputera 9, wyjście 7 + 5; każda druga kolumna zaczyna się na linii tej samej siatki. */
+    --cols: repeat(12, minmax(0, 1fr)); --cgap: clamp(16px, 2.6vw, 40px);
     font-family: 'InterCase', system-ui, sans-serif; background: var(--cann); color: var(--black); overflow-x: clip;
   }
   /* Kroje Cannversity, hostowane lokalnie: Inter (tekst i hasło) i Archivo w szerokości 125 (nazwa, jak w logo). */
@@ -292,6 +297,8 @@ const ld = {
     --pad-b: clamp(40px, 6vh, 72px); padding-top: calc(96px + clamp(8px, 1.6vw, 24px)); padding-bottom: var(--pad-b); }
   /* Miejsce pod kreską: tekst po lewej, roślina od kreski (lekko ją przecina) do dolnej krawędzi otwarcia. */
   .open-body { position: relative; flex: 1; display: flex; }
+  /* margin-inline: auto w kolumnie flex zwęża .wrap do treści i centruje ją (nazwa stała 2 px w prawo od reszty). */
+  .open > .wrap { width: 100%; }
   .metka { font-size: clamp(11px, .95vw, 14px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
   /* Nazwa wypełnia szerokość kolumny: 10,1 em to szerokość „CANNVERSITY” w Archivo 125/800 z rozstawem .05em. */
   .name { margin-top: clamp(4px, .6vw, 10px) !important; font-family: 'ArchivoCann', 'Arial Black', sans-serif; font-stretch: 125%; font-weight: 800; letter-spacing: .05em; line-height: .92; white-space: nowrap;
@@ -321,18 +328,22 @@ const ld = {
   .ink { background: var(--black); color: var(--white); }
   /* Roślina z otwarcia stoi na górnej krawędzi tej czarnej sekcji. */
   .motion { padding: clamp(56px, 7vw, 112px) 0 clamp(72px, 9vw, 140px); }
-  .motion .head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); column-gap: clamp(24px, 4vw, 64px); row-gap: 16px; align-items: end; }
-  .motion .kicker { grid-column: 1 / -1; }
+  /* Nagłówek jedną kolumną od lewej krawędzi (wcześniej lead w prawej kolumnie, na innej linii niż telefon niżej). */
+  .motion .head { display: grid; row-gap: 16px; }
   .lead { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; color: rgb(255 255 255 / .82); max-width: 30em; }
-  .duo-vid { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: minmax(0, 74fr) minmax(0, 22fr); gap: clamp(16px, 2.6vw, 40px); align-items: start; }
+  .duo-vid { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
+  .duo-vid .desk { grid-column: 1 / span 9; }
+  .duo-vid .phone { grid-column: 10 / -1; }
   .duo-vid figure { border: var(--line) solid var(--cann); }
   .phone figcaption { padding: 10px 12px; font-size: 14px; background: var(--cann); color: var(--black); font-weight: 600; }
 
   /* 3. Jak działa */
   .paper { background: var(--white); padding: clamp(72px, 9vw, 140px) 0; }
   .steps { list-style: none; padding: 0; margin-top: clamp(40px, 5vw, 72px) !important; border-top: var(--line) solid var(--black); }
-  .steps li { display: grid; grid-template-columns: minmax(0, 32fr) minmax(0, 64fr); gap: clamp(24px, 4vw, 64px); padding: clamp(28px, 3.4vw, 52px) 0; border-bottom: var(--line) solid var(--black); align-items: start; }
+  .steps li { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); padding: clamp(28px, 3.4vw, 52px) 0; border-bottom: var(--line) solid var(--black); align-items: start; }
   .step-txt { display: grid; gap: 10px; align-content: start; }
+  .step-txt, .langs-txt { grid-column: 1 / span 4; }
+  .shot, .pair { grid-column: 5 / -1; }
   .num { font-family: 'ArchivoCann', 'Arial Black', sans-serif; font-stretch: 125%; font-weight: 800; font-size: clamp(44px, 5vw, 80px); line-height: 1; letter-spacing: .02em; }
   .label { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
   .steps h3 { font-weight: 800; font-size: clamp(22px, 1.9vw, 28px); line-height: 1.15; letter-spacing: -.01em; }
@@ -341,13 +352,15 @@ const ld = {
   .shot img { display: block; width: 100%; height: auto; }
 
   /* 4. Hasło */
-  .band { background: var(--cann); padding: clamp(56px, 8vw, 128px) 0; overflow: hidden; }
-  .band blockquote { padding-inline: var(--gutter); max-width: var(--max); margin-inline: auto; box-sizing: border-box; font-style: italic; font-weight: 900; font-size: clamp(42px, 10.5vw, 168px); line-height: .98; letter-spacing: -.045em; }
-  .band blockquote p + p { margin-left: clamp(24px, 9vw, 160px) !important; }
+  /* Rozmiar z szerokości kolumny (cqi = szerokość .band bez paska przewijania), nie z vw. */
+  .band { background: var(--cann); padding: clamp(56px, 8vw, 128px) 0; overflow: hidden; container-type: inline-size; }
+  .band blockquote { padding-inline: var(--gutter); max-width: var(--max); margin-inline: auto; box-sizing: border-box; font-style: italic; font-weight: 900;
+    font-size: calc((min(100cqi, var(--max)) - 2 * var(--gutter)) / var(--hw)); line-height: .98; letter-spacing: -.045em; }
+  .band blockquote p { white-space: nowrap; }
 
   /* 5. Dwa języki */
   .langs { padding: clamp(72px, 9vw, 140px) 0; }
-  .langs-in { display: grid; grid-template-columns: minmax(0, 30fr) minmax(0, 66fr); gap: clamp(24px, 4vw, 64px); align-items: start; }
+  .langs-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
   .langs-txt { display: grid; gap: 20px; }
   .langs-txt p { font-size: clamp(17px, 1.35vw, 19px); line-height: 1.6; color: rgb(255 255 255 / .84); max-width: 30em; }
   .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 24px); }
@@ -360,9 +373,9 @@ const ld = {
 
   /* 6. Wyjście */
   .end { background: var(--cann); padding-top: clamp(72px, 9vw, 140px); }
-  .end-in { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(24px, 4vw, 64px); align-items: end; padding-bottom: clamp(56px, 7vw, 104px); }
-  .end h2 { max-width: 12em; }
-  .end-txt { display: grid; gap: 24px; }
+  .end-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: end; padding-bottom: clamp(56px, 7vw, 104px); }
+  .end h2 { max-width: 12em; grid-column: 1 / span 7; }
+  .end-txt { display: grid; gap: 24px; grid-column: 8 / -1; }
   .end-txt p { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 26em; }
   .end-act { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
   .btn { display: inline-block; padding: 18px 30px; background: var(--black); color: var(--cann); text-decoration: none; font-size: 16px; font-weight: 800; letter-spacing: .02em; }
@@ -380,13 +393,20 @@ const ld = {
     .rows > div { padding: 8px 0; }
   }
   @media (max-width: 900px) {
-    .motion .head, .duo-vid, .steps li, .langs-in, .end-in { grid-template-columns: minmax(0, 1fr); }
+    .duo-vid, .steps li, .langs-in, .end-in { grid-template-columns: minmax(0, 1fr); }
+    .duo-vid > *, .steps li > *, .langs-in > *, .end-in > * { grid-column: 1 / -1; }
     /* Tablet i telefon: tekst na całą szerokość, roślina pod nim w prawym dolnym rogu; dolny odstęp robi jej miejsce. */
     .open-body { flex-direction: column; }
     .open-txt { grid-template-columns: minmax(0, 560px); align-content: start; }
     .open { --pad-b: 0px; }
     .plant { position: static; align-self: flex-end; width: min(78vw, 560px); height: auto; margin-top: clamp(-16px, -2vw, 0px); }
-    .duo-vid .phone { width: 62%; justify-self: center; }
+    .duo-vid .desk { grid-column: 1 / -1; }
+    .duo-vid .phone { grid-column: 1 / -1; width: 62%; justify-self: start; }
+    /* Hasło w telefonie i na tablecie: zdanie w jednym wierszu byłoby za drobne, więc łamie się na dwa równe,
+       nadal od tej samej lewej krawędzi. */
+    .band blockquote { font-size: clamp(40px, 14cqi, 110px); }
+    .band blockquote p { white-space: normal; text-wrap: balance; }
+    .band blockquote p + p { margin-top: .12em; }
   }
   @media (max-width: 700px) {
     .zdanie { font-size: clamp(28px, 8.4vw, 36px); }
