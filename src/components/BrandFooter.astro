@@ -1,12 +1,13 @@
 ---
 import ContactBadge from './ContactBadge.astro';
 import { routes, type Locale } from '../i18n/site';
-interface Props { locale?: Locale; inset?: boolean; invitation?: boolean; as?: 'footer' | 'div' }
-const { locale = 'pl', inset = false, invitation = false, as: Tag = 'footer' } = Astro.props;
+// full: tło na pełną szerokość, treść odsunięta paddingiem --footer-pad (case study, uwaga Kacpra 20.10: inset zostawiał po bokach pasy innego tła)
+interface Props { locale?: Locale; inset?: boolean; full?: boolean; invitation?: boolean; as?: 'footer' | 'div' }
+const { locale = 'pl', inset = false, full = false, invitation = false, as: Tag = 'footer' } = Astro.props;
 const pl = locale === 'pl';
 const r = routes[locale];
 ---
-<Tag class:list={['brand-footer', { inset, invitation }]}>
+<Tag class:list={['brand-footer', { inset, full, invitation }]}>
   {invitation && <div class="footer-invitation"><slot /></div>}
   <div class="fcol">
           <p class="flabel">{pl ? 'Kontakt' : 'Contact'}</p>
@@ -38,6 +39,7 @@ const r = routes[locale];
 <style>
   .brand-footer { --ink: #000; --blue: #0522ff; --dim: #777265; font-family: 'GeneralSansV', sans-serif; color: var(--ink); background: #f8f9f2; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 4vw; align-items: center; padding-block: 3vh 24px; border-top: 1px solid #0002; }
   .inset { margin-inline: clamp(24px, 5vw, 96px); }
+  .full { padding-inline: var(--footer-pad, clamp(24px, 5vw, 96px)); }
   .fcol { display: flex; flex-direction: column; gap: 0.5rem; font-size: 13.5px; line-height: 1.5; color: #4c483c; }
   .fcol a { color: var(--ink); text-decoration: none; width: fit-content; position: relative; }
   .fcol a::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 100%; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1); }
