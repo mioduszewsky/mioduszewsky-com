@@ -530,7 +530,7 @@ const ld = {
   const names: string[] = JSON.parse(pill?.dataset.names || '[]');
   const wide = matchMedia('(min-width: 768px)');
   const HOLD = .3;
-  let vh = innerHeight, edge = 0, cur = -2, tick = false, x = -1;
+  let vh = innerHeight, edge = 0, cur = -2, tick = false, x = -1, inSec = false;
   // geometria raz i przy resize/fontach: wysokość przypiętego ekranu i odległość góry pigułki od dołu ekranu.
   // vh = wysokość .st-pin (100vh w CSS), nie innerHeight: sekcja ma 5,4 tej samej jednostki, więc przy ruchomych paskach
   // Safari przejazd i postój liczą się w tej samej wysokości co CSS (recenzja Codexa).
@@ -562,6 +562,7 @@ const ld = {
       if (x !== -1) { x = -1; track.style.transform = ''; }
       idx = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
     }
+    inSec = r.top < innerHeight && r.bottom > 0;
     const now = Math.min(N - 1, Math.max(0, idx));
     if (now !== active) { active = now; syncTrack(); }
     const on = r.top <= innerHeight * .5 && r.bottom > innerHeight - edge;
@@ -586,10 +587,15 @@ const ld = {
   };
   addEventListener('resize', re, { passive: true });
   // przejście przez 768 px (obrót tabletu, zmiana okna) w trakcie sekcji: ta sama stacja w nowym trybie (recenzja Codexa)
+  // Po zmianie trybu wysokość sekcji jest już inna (5,4 ekranu albo jeden slajd), więc „czy byłem w sekcji” bierze się
+  // z ostatniej klatki, a nie z bieżącego położenia.
   wide.addEventListener('change', () => {
-    const keep = active, r = sec?.getBoundingClientRect();
+    const keep = active;
     measure();
-    if (r && r.top < innerHeight && r.bottom > 0) go(keep, 'auto');
+    if (inSec && sec) {
+      if (!wide.matches) scrollTo({ top: sec.getBoundingClientRect().top + scrollY, behavior: 'auto' });
+      go(keep, 'auto');
+    }
     re();
   });
   document.fonts?.ready.then(re);
