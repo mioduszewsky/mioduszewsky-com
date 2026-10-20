@@ -6,7 +6,7 @@
 // Treść: docs/case-studies/glassstone/COPY.md, fakty: FAKTY.md. Nowe są tylko podpisy rysunków.
 // Skala pisma: tytuł, śródtytuł, tekst, podpis (+ liczby w rozmiarze tytułu). Mono tylko w rysunkach.
 import VariantLayout from '../../../layouts/VariantLayout.astro';
-import SiteMenu from '../../../components/SiteMenu.astro';
+import CaseLockup from '../../../components/realizacje/CaseLockup.astro';
 import BrandFooter from '../../../components/BrandFooter.astro';
 
 const contact = '/pl/kontakt/?service=' + encodeURIComponent('Aplikacja lub system') + '#ctForm';
@@ -169,15 +169,9 @@ const steps = [
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
     <a class="skip" href="#main">Przejdź do treści</a>
-    <header class="nav">
-      <a class="mark" href="/pl/" aria-label="mioduszewsky. Strona główna.">
-        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
-          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-nav.webm" type="video/webm" />
-        </video>
-      </a>
-      <SiteMenu locale="pl" alternatePath="/" />
-    </header>
+    <!-- Bez belki (Kacper 20.10): nad kremowym otwarciem unosi się wspólne logo „mioduszewsky × GlassStone” z menu.
+         Otwarcie trzyma pod nie dawne 104 px belki, więc kompozycja pierwszego ekranu się nie rusza. -->
+    <CaseLockup locale="pl" client="glassstone" alternatePath="/" tone="light" fit={{ h: .487, base: 381 / 385 }} />
 
     <main id="main">
       <article>
@@ -414,13 +408,12 @@ const steps = [
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
   .skip:focus { transform: none; }
-  .nav { height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
-  .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
 
   .wrap { max-width: 1320px; margin-inline: auto; padding-inline: var(--gutter); }
 
   /* Cztery rozmiary pisma: tytuł (też liczby), śródtytuł, tekst, podpis. */
-  .hero { padding-top: clamp(32px, 9vh, 104px); }
+  /* Góra otwarcia: dawne 104 px belki (teraz lockup unosi się nad treścią) plus dotychczasowy odstęp. */
+  .hero { padding-top: calc(104px + clamp(32px, 9vh, 104px)); }
   .kicker { font-size: 16px; color: var(--dim); }
   h1 { margin-top: 20px !important; max-width: 13em; font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(36px, 6.6vw, 100px); line-height: 1.02; letter-spacing: -.035em; }
   .lead { margin-top: clamp(28px, 4vw, 48px) !important; max-width: 36em; font-size: 21px; line-height: 1.6; }
