@@ -78,7 +78,7 @@ const home = routes[locale].home;
   /* Wysokość lockupu dla stron, których otwarcie stoi w układzie (nie pod filmem): padding-top: var(--case-lockup-h). */
   :global(:root) { --case-lockup-h: clamp(72px, 7vw, 100px); }
   .case-lockup {
-    --lk-w: clamp(72px, calc((100vw - 2 * var(--gutter, 20px) - 136px) / var(--lk-k)), 190px);
+    --lk-w: clamp(60px, calc((100vw - 2 * var(--gutter, 20px) - 136px) / var(--lk-k)), 190px);
     --lk-h: calc(var(--lk-w) * 222 / 800);
     --lk-fg: #111;
     position: fixed; z-index: 100; inset: 0 0 auto; box-sizing: border-box;
