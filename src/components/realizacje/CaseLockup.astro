@@ -6,8 +6,10 @@
 // Logo mioduszewsky zawsze to samo, żółte 3D (decyzja Kacpra 20.10, ok. 08:00: bez przeskoku na płaską czarną wersję):
 // pod wideo leży obraz 3D z pierwszej klatki (WebP z alfą, 400 i 800 px) jako stan przed wczytaniem, przy „ogranicz ruch”
 // i gdy wideo nie ruszy. Wideo bez autoplay, startuje ze skryptu tylko bez ograniczenia ruchu; obraz chowa się na 'playing'.
-// Ton zmienia tylko obwódkę logo: jasne tło (krem, żółć Cannversity, biel) = cienki ciepły kontur i cień, bo żółte na żółtym
-// ma 1,2:1 (z konturem krawędź 3,3:1); ciemne tło = miękki cień jak dotąd.
+// Czytelność na każdym tle daje ciemnobrązowy kontur ok. 0,7 px CSS wpalony w wideo i obraz (logo-nav-kontur.*,
+// logo-nav-3d-*; z logo.webm 2048 px, promień 7 px, przepis assets/logo3d/kontur.py): żółte na żółci
+// #ffcc33 bez konturu 1,0:1 na krawędzi, z konturem 4,3:1; krem 5,5:1. Kontur z CSS (drop-shadow) WebKit pomija na wideo,
+// stąd wpalony. Ton ciemny dokłada tylko miękki cień jak dotąd.
 // Ton (dark: biały × i klient; light: × i klient #111) wybiera jeden skrypt na dole:
 // co leży pod środkiem lockupu, pierwszy przodek z data-tone albo nieprzezroczystym tłem, kontrast wg WCAG.
 // Sekcje z filmem lub zdjęciem pod lockupem dostają w markupie data-tone="dark" albo "light" (z obrazu koloru nie odczytasz);
@@ -66,8 +68,8 @@ const home = routes[locale].home;
       <span class="lk-vid" aria-hidden="true">
         <img class="lk-img" src="/logo3d/logo-nav-3d-800.webp" srcset="/logo3d/logo-nav-3d-400.webp 400w, /logo3d/logo-nav-3d-800.webp 800w" sizes="190px" width="800" height="222" alt="" fetchpriority="high" />
         <video class="lk-v" loop muted playsinline disablepictureinpicture preload="none" width="800" height="222" tabindex="-1">
-          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+          <source src="/logo3d/logo-nav-kontur.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav-kontur.webm" type="video/webm" />
         </video>
       </span>
     </a>
@@ -101,10 +103,7 @@ const home = routes[locale].home;
   .lk { display: flex; align-items: flex-start; min-width: 0; height: var(--lk-h); }
   .lk-home { display: block; flex: none; margin-inline: calc(var(--lk-w) * -47 / 800); border-radius: 4px; }
   .lk-home:focus-visible { outline: 2px solid var(--lk-fg); outline-offset: 2px; }
-  .lk-vid {
-    display: grid; width: var(--lk-w); transition: filter .2s ease;
-    filter: drop-shadow(0 0 .4px rgb(60 36 0 / .95)) drop-shadow(0 0 .4px rgb(60 36 0 / .95)) drop-shadow(0 2px 4px rgb(40 25 0 / .3));
-  }
+  .lk-vid { display: grid; width: var(--lk-w); }
   [data-lk-tone='dark'] .lk-vid { filter: drop-shadow(0 4px 10px rgb(0 0 0 / .22)); }
   .lk-img, .lk-v { grid-area: 1 / 1; width: 100%; height: auto; display: block; }
   /* obraz 3D znika dopiero, gdy wideo gra (klatka 0 wideo = ten obraz), inaczej obrót liter dałby podwójny kontur */
@@ -137,7 +136,7 @@ const home = routes[locale].home;
   .case-lockup[data-lk-tone='dark'] .lk::before, .case-lockup[data-lk-tone='dark'] > :global(.site-menu)::before { background: rgb(17 17 17 / .6); }
   .case-lockup[data-lk-solid] .lk::before, .case-lockup[data-lk-solid] > :global(.site-menu)::before { opacity: 1; }
   @media (prefers-reduced-motion: reduce) {
-    .lk-vid, .case-lockup, .lk-x, .lk-client, .lk::before, .case-lockup > :global(.site-menu)::before { transition: none; }
+    .case-lockup, .lk-x, .lk-client, .lk::before, .case-lockup > :global(.site-menu)::before { transition: none; }
   }
 </style>
 
@@ -186,11 +185,18 @@ const home = routes[locale].home;
     vid?.addEventListener('playing', () => live(true));
     ['emptied', 'error'].forEach((e) => vid?.addEventListener(e, () => live(false)));
     vid?.querySelector('source:last-of-type')?.addEventListener('error', () => live(false));
+    // Jedna próba play() naraz; po odmowie (np. iOS w trybie oszczędzania energii) bez ponawiania w każdej klatce
+    // scrolla, dopiero po geście użytkownika. Pauza zostawia klatkę obrotu: każda klatka to to samo żółte 3D z konturem.
+    let trying = false, refused = false;
     const motion = (run: boolean) => {
       if (!vid) return;
-      if (run && !still.matches) { if (vid.paused) { vid.preload = 'auto'; vid.play().catch(() => {}); } }
-      else if (!vid.paused) vid.pause();
+      if (run && !still.matches) {
+        if (!vid.paused || trying || refused) return;
+        trying = true; vid.preload = 'auto';
+        vid.play().catch((e: DOMException) => { if (e?.name === 'NotAllowedError') refused = true; }).finally(() => { trying = false; });
+      } else if (!vid.paused) vid.pause();
     };
+    addEventListener('pointerdown', () => { if (refused) { refused = false; motion(!lk.hasAttribute('data-lk-hidden')); } }, { passive: true });
     still.addEventListener?.('change', () => motion(!lk.hasAttribute('data-lk-hidden')));
     // Chowanie i podkład. Histereza 6 px: drżenie palca nie przełącza; lastY rusza dopiero po wyraźnym ruchu.
     const panel = lk.querySelector<HTMLElement>('[popover]');
