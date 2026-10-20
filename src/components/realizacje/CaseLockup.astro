@@ -185,19 +185,25 @@ const home = routes[locale].home;
     vid?.addEventListener('playing', () => live(true));
     ['emptied', 'error'].forEach((e) => vid?.addEventListener(e, () => live(false)));
     vid?.querySelector('source:last-of-type')?.addEventListener('error', () => live(false));
-    // Jedna próba play() naraz; po odmowie (np. iOS w trybie oszczędzania energii) bez ponawiania w każdej klatce
-    // scrolla, dopiero po geście użytkownika. Pauza zostawia klatkę obrotu: każda klatka to to samo żółte 3D z konturem.
-    let trying = false, refused = false;
+    // Jedna próba play() naraz. WebKit odmawia (NotAllowedError) wywołaniu przed pierwszym renderem strony, więc po odmowie
+    // najwyżej 3 ponowienia co 0,4/0,8/1,2 s, potem dopiero po geście użytkownika (np. iOS w trybie oszczędzania energii),
+    // zamiast próby w każdej klatce scrolla. Pauza zostawia klatkę obrotu: każda klatka to to samo żółte 3D z konturem.
+    let trying = false, refused = false, fails = 0;
+    const shown = () => !lk.hasAttribute('data-lk-hidden');
     const motion = (run: boolean) => {
       if (!vid) return;
       if (run && !still.matches) {
         if (!vid.paused || trying || refused) return;
         trying = true; vid.preload = 'auto';
-        vid.play().catch((e: DOMException) => { if (e?.name === 'NotAllowedError') refused = true; }).finally(() => { trying = false; });
+        vid.play().then(() => { fails = 0; }, (e: DOMException) => {
+          if (e?.name !== 'NotAllowedError') return;
+          refused = true;
+          if (++fails <= 3) setTimeout(() => { refused = false; motion(shown()); }, 400 * fails);
+        }).finally(() => { trying = false; });
       } else if (!vid.paused) vid.pause();
     };
-    addEventListener('pointerdown', () => { if (refused) { refused = false; motion(!lk.hasAttribute('data-lk-hidden')); } }, { passive: true });
-    still.addEventListener?.('change', () => motion(!lk.hasAttribute('data-lk-hidden')));
+    addEventListener('pointerdown', () => { if (refused) { refused = false; motion(shown()); } }, { passive: true });
+    still.addEventListener?.('change', () => motion(shown()));
     // Chowanie i podkład. Histereza 6 px: drżenie palca nie przełącza; lastY rusza dopiero po wyraźnym ruchu.
     const panel = lk.querySelector<HTMLElement>('[popover]');
     const menuOpen = () => { try { return !!panel?.matches(':popover-open'); } catch { return false; } };
