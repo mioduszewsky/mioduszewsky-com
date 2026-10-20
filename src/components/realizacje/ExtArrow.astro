@@ -1,0 +1,13 @@
+---
+// Strzałka linku zewnętrznego w case'ach (Kacper 20.10, ok. 14:00): znak ↗ nie istnieje w GeneralSans ani w Nohemi, więc
+// przeglądarka brała go z fontu systemowego i wyglądał jak emoji. Tu wektor rysowany kreską kroju strony: wysokość
+// wersalika, linia bazowa tekstu, grubość kreski rośnie z wagą (prop weight), kolor akcentu mioduszewsky (#0522ff, kropka w stopce).
+interface Props { weight?: number }
+const { weight = 500 } = Astro.props;
+const w = (1.1 + (weight - 400) / 300 * .5).toFixed(2);
+---
+<svg class="ext-arrow" viewBox="0 0 10 10" aria-hidden="true" focusable="false" style={`--ext-w:${w}`}><path d="M1.6 8.4 8.4 1.6M2.6 1.6h5.8v5.8" /></svg>
+
+<style>
+  .ext-arrow { display: inline-block; width: .7em; height: .7em; margin-left: .28em; vertical-align: 0; overflow: visible; fill: none; stroke: #0522ff; stroke-width: var(--ext-w); stroke-linecap: square; stroke-linejoin: miter; }
+</style>
