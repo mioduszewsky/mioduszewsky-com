@@ -7,6 +7,7 @@
 import { Image, getImage } from 'astro:assets';
 import VariantLayout from '../../layouts/VariantLayout.astro';
 import CaseLockup from './CaseLockup.astro';
+import ExtArrow from './ExtArrow.astro';
 import BrandFooter from '../BrandFooter.astro';
 import EskapizmPhone from './EskapizmPhone.astro';
 import Loop from './Loop.astro';
@@ -252,17 +253,12 @@ const ld = {
         </section>
 
         <!-- 4. Mapa systemu -->
-        <nav class="map wrap" aria-labelledby="map-h">
+        <div class="map wrap">
           <div class="map-head">
             <h2 id="map-h" class="h" set:html={P(T.mapH)} />
             <p class="lbl">{T.mapPlan}</p>
           </div>
-          <ol class="map-list">
-            {T.stops.map(([n, w], i) => (
-              <li><a href={`#stacja-${num(i)}`}><span class="lbl">{num(i)}</span><span class="mn">{n}</span><span class="mw">{w}</span></a></li>
-            ))}
-          </ol>
-        </nav>
+        </div>
 
         <!-- 5. Stacja 01: biurko wieczorem, telefon z kalkulatorem -->
         <section class="station" id="stacja-01" data-station="0" aria-labelledby="s1-h">
@@ -307,7 +303,7 @@ const ld = {
           <div class="wrap g-head"><p class="lbl">03</p><h2 id="s3-h" class="st" set:html={P(T.s3.t)} /><p class="ss" set:html={P(T.s3.s)} /></div>
           <div class="wrap">
             <!-- ton lockupu nad zrzutami: na komputerze pod lockupem ciemny czat i ciemny pasek panelu, na telefonie jasny ekran -->
-            <div class="screen" data-tone="dark" data-tone-m="light"><Loop name="builder" mobile="builder-m" w={1920} h={1200} mw={780} mh={488} alt={T.s3.alt} /></div>
+            <div class="screen" data-tone="light"><Loop name="builder" mobile="builder-m" w={1920} h={1200} mw={780} mh={488} alt={T.s3.alt} /></div>
             <figure class="chat m-only"><Image src={builderCzat} widths={[390, 780]} sizes="100vw" alt={T.s3.altChat} loading="lazy" /></figure>
           </div>
           <div class="detail wrap">
@@ -363,7 +359,7 @@ const ld = {
               <li class={i < 4 ? 'r4' : 'r3'}>
                 <a href={restHref[i]} target="_blank" rel="noopener" aria-label={`${T.rest[i][0]}. ${T.newTab}`}>
                   <Image src={img} widths={[640, 960, 1280]} sizes={i < 4 ? '(max-width: 767px) 84vw, 25vw' : '(max-width: 767px) 84vw, 33vw'} alt={T.rest[i][1]} loading="lazy" />
-                  <p class="cap">{T.rest[i][0]}<span aria-hidden="true">&nbsp;↗</span></p>
+                  <p class="cap">{T.rest[i][0]}<ExtArrow /></p>
                 </a>
               </li>
             ))}
@@ -397,7 +393,7 @@ const ld = {
       </section>
     </main>
 
-    <div class="pill" data-pill hidden aria-hidden="true"><span class="pill-n"></span><span class="pill-t"></span><span class="pill-dots">{stations.map(() => <i></i>)}</span></div>
+    <div class="pill" data-pill data-names={JSON.stringify(T.stops.map(([n]) => n))} hidden aria-hidden="true"><span class="pill-n"></span><span class="pill-t"></span><span class="pill-dots">{stations.map(() => <i></i>)}</span></div>
     <BrandFooter locale={locale} full />
   </div>
 </VariantLayout>
@@ -495,7 +491,7 @@ const ld = {
   // Pigułka stacji: numer i nazwa bieżącej stacji, widoczna tylko w trakcie stacji.
   const pill = document.querySelector<HTMLElement>('[data-pill]');
   const st = [...document.querySelectorAll<HTMLElement>('[data-station]')];
-  const names = [...document.querySelectorAll<HTMLElement>('.map-list .mn')].map((e) => e.textContent || '');
+  const names: string[] = JSON.parse(pill?.dataset.names || '[]');
   let cur = -2, tick = false;
   // Odległość górnej krawędzi pigułki od dołu ekranu (bottom + wysokość), mierzona raz i przy resize, nie w każdej klatce:
   // po ostatniej stacji pigułka znika, zanim dół stacji minie jej górną krawędź, więc nie zasłania treści po stacjach
@@ -595,11 +591,6 @@ const ld = {
   .map { padding-block: clamp(64px, 8vw, 120px); border-top: 1px solid var(--rule); display: grid; gap: 40px; }
   .map-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px 40px; }
   .map-head .lbl { color: var(--dim); }
-  .map-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
-  .map-list a { display: grid; gap: 6px; padding: 18px 16px 0 0; color: inherit; text-decoration: none; }
-  .map-list .mn { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: 22px; line-height: 1.1; letter-spacing: -.02em; }
-  .map-list .mw { font-size: var(--t-cap); color: var(--dim); }
-  .map-list a:hover .mn { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; }
 
   /* Sceny */
   .scene { position: relative; overflow: hidden; color: #fff; background: #2a2018; }
@@ -700,7 +691,6 @@ const ld = {
 
   @media (max-width: 1100px) {
     .s-txt { width: min(36%, 360px); }
-    .map-list { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 24px; }
   }
   @media (max-width: 767px) {
     .case { --t-body: 17px; }
@@ -711,10 +701,6 @@ const ld = {
     .meta { grid-template-columns: 1fr 1fr; }
     .nums, .nums.four { grid-template-columns: 1fr; gap: 36px; }
     .nums.four { grid-template-columns: 1fr 1fr; }
-    .map-list { grid-template-columns: 1fr; border-top: 0; }
-    .map-list li { border-top: 1px solid var(--rule); }
-    .map-list a { grid-template-columns: 32px 1fr; padding: 14px 0; align-items: baseline; column-gap: 12px; }
-    .map-list .mw { grid-column: 2; }
     /* Sceny na telefonie: tekst na górze kadru, urządzenie pod nim, nic w dolnych 10% */
     .scene { aspect-ratio: auto; max-height: none; }
     /* tło sceny wypełnia całą wysokość (runda 5): `.case img { height: auto }` wygrywał z .scene-bg i pod zdjęciem zostawał pusty brązowy pas */
