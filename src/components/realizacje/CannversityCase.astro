@@ -4,8 +4,8 @@
 // (runda 1) i „Plakat z szablonu” (spray, natrysk, raster). Prosta strona pokazana prosto: żółć #ffcc33 i czerń
 // marki, nazwa krojem z logo Cannversity (Archivo, szerokość 125, waga 800, sprawdzone nakładką na logo),
 // twarde bloki i kreski, bez zaokrągleń i cieni. Jeden akcent z prawdziwego materiału: roślina z hero cannversity.com,
-// wycięta z białego tła (docs/case-studies/cannversity/runda-2/wytnij2.cjs), wyrasta zza bloku z nagraniem.
-// Jedna roślina na ekran, dlatego nagranie w pierwszym ekranie zaczyna się od sekcji „Trzy filary”, nie od hero.
+// wycięta z białego tła (docs/case-studies/cannversity/runda-2/wytnij2.cjs). 20.10 hero bez nagrania (Kacper: nagrania są
+// zaraz niżej); roślina wyrasta z prawego dolnego rogu pierwszego ekranu. Jedna roślina na ekran.
 // Treść: docs/case-studies/cannversity/runda-2/COPY.md i COPY-EN.md (Ghost), fakty: docs/case-studies/cannversity/FAKTY.md.
 // Nagrania: klatka po klatce 60 kl./s z żywej cannversity.com (PL z /, EN z /en), bez banera (strona nie ma bramki
 // zgody, sprawdzone liczbą), poza kadrem sekcja z logo partnerów (R5). Skrypty: docs/case-studies/cannversity/runda-2/.
@@ -45,7 +45,6 @@ const T = pl ? {
   zdanie: 'Strona dla tych, którzy robią w konopiach.',
   wiersze: [['Dla kogo', 'Founderzy i marki z branży konopnej'], ['Jak działa', 'Trzy sytuacje i trzy filary oferty'], ['Prowadzi do', 'Bezpłatnej rozmowy, 30\u00a0minut online']],
   link: 'Zobacz cannversity.com',
-  altBlok: 'Nagranie przewijania cannversity.com na komputerze: sekcja „Trzy filary. Jeden cel.” z kartami Strategy & Roadmap, MVP & Product Build i Business Advisory, a pod nią „Zaczynamy od rozmowy” z kartą „0 zł” i przyciskiem „Wybierz termin w kalendarzu”.',
   s2: {
     kicker: 'Na żywo',
     h2: 'Pierwsze cztery sekcje, bez montażu.',
@@ -77,7 +76,6 @@ const T = pl ? {
   zdanie: 'A website for people knee-deep in cannabis.',
   wiersze: [['Who it’s for', 'Cannabis founders and brands'], ['How it works', 'Three situations and three pillars'], ['Where it leads', 'A free 30\u2011minute call, online']],
   link: 'Visit cannversity.com',
-  altBlok: 'Screen recording of cannversity.com/en scrolling on a desktop: the “Three pillars. One goal.” section with the Strategy & Roadmap, MVP & Product Build and Business Advisory cards, then “We start with a conversation” with the free first call card and the calendar button.',
   s2: {
     kicker: 'Live',
     h2: 'The first four sections, no cuts.',
@@ -124,29 +122,24 @@ const ld = {
 
     <main id="main">
       <article>
-        <!-- 1. Otwarcie: nazwa, zdanie, trzy wiersze, blok z nagraniem i roślina zza bloku. -->
+        <!-- 1. Otwarcie bez nagrania (Kacper 20.10: nagrania są zaraz niżej, w „Na żywo”). Pierwszy ekran to plakat:
+             nazwa na całą szerokość, zdanie i trzy wiersze po lewej, roślina z cannversity.com wyrasta z prawego dolnego
+             rogu, z czarnej sekcji pod spodem, i sięga do kreski pod nazwą. -->
         <header class="open">
           <div class="wrap">
             <p class="metka">{T.metka}</p>
             <h1 class="name"><span class="name-in" aria-hidden="true">CANNVERSITY</span><span class="sr">Cannversity: {T.zdanie}</span></h1>
             <div class="rule" aria-hidden="true"></div>
           </div>
-          <div class="wrap open-grid">
-            <div class="open-txt">
-              <p class="zdanie" aria-hidden="true" set:html={P(T.zdanie)} />
-              <dl class="rows">
-                {T.wiersze.map(([k, v]) => <div><dt>{k}</dt><dd set:html={P(v)} /></div>)}
-              </dl>
-              <a class="live" href={live} target="_blank" rel="noopener">{T.link}<span aria-hidden="true"> ↗</span></a>
-            </div>
-            <div class="open-media">
-              <img class="plant" src="/case/cannversity/roslina.webp" width="860" height="675" alt="" decoding="async" />
-              <div class="blok">
-                <video class="vid" data-tone="light" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/blok-poster.webp`} aria-label={T.altBlok}>
-                  <source src={`${dir}/blok.mp4`} type="video/mp4" />
-                </video>
-              </div>
-            </div>
+          <div class="open-body">
+          <div class="wrap open-txt">
+            <p class="zdanie" aria-hidden="true" set:html={P(T.zdanie)} />
+            <dl class="rows">
+              {T.wiersze.map(([k, v]) => <div><dt>{k}</dt><dd set:html={P(v)} /></div>)}
+            </dl>
+            <a class="live" href={live} target="_blank" rel="noopener">{T.link}<span aria-hidden="true"> ↗</span></a>
+          </div>
+          <img class="plant" src="/case/cannversity/roslina.webp" width="860" height="675" alt="" decoding="async" />
           </div>
         </header>
 
@@ -294,25 +287,30 @@ const ld = {
   .skip:focus { transform: none; }
   .wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
 
-  /* 1. Otwarcie */
-  .open { padding-top: calc(96px + clamp(8px, 1.6vw, 24px)); padding-bottom: 0; }
+  /* 1. Otwarcie: pełny pierwszy ekran, roślina przyklejona do prawego dolnego rogu (zdjęcie jest ucięte z prawej i z dołu). */
+  .open { position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 100svh; box-sizing: border-box;
+    --pad-b: clamp(40px, 6vh, 72px); padding-top: calc(96px + clamp(8px, 1.6vw, 24px)); padding-bottom: var(--pad-b); }
+  /* Miejsce pod kreską: tekst po lewej, roślina od kreski (lekko ją przecina) do dolnej krawędzi otwarcia. */
+  .open-body { position: relative; flex: 1; display: flex; }
   .metka { font-size: clamp(11px, .95vw, 14px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
   /* Nazwa wypełnia szerokość kolumny: 10,1 em to szerokość „CANNVERSITY” w Archivo 125/800 z rozstawem .05em. */
   .name { margin-top: clamp(4px, .6vw, 10px) !important; font-family: 'ArchivoCann', 'Arial Black', sans-serif; font-stretch: 125%; font-weight: 800; letter-spacing: .05em; line-height: .92; white-space: nowrap;
     font-size: calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 10.1); margin-right: -.05em; }
   .rule { margin-top: clamp(14px, 2vw, 30px); height: clamp(3px, .28vw, 5px); background: var(--black); }
-  .open-grid { display: grid; grid-template-columns: minmax(0, 30fr) minmax(0, 66fr); gap: clamp(24px, 3.6vw, 56px); margin-top: clamp(24px, 2.6vw, 40px); align-items: start; }
-  .open-txt { display: grid; gap: clamp(20px, 2vw, 30px); align-content: start; }
-  .zdanie { font-style: italic; font-weight: 900; font-size: clamp(30px, 2.5vw, 40px); line-height: 1.05; letter-spacing: -.02em; }
+  /* Tekst w lewych 5/12, nad rośliną (z-index), wyśrodkowany w pionie w miejscu pod kreską. */
+  .open-txt { position: relative; z-index: 1; width: 100%; display: grid; gap: clamp(18px, 3vh, 32px); align-content: center;
+    grid-template-columns: minmax(0, min(560px, 42%)); padding-top: clamp(28px, 4.5vh, 56px); }
+  .zdanie { font-style: italic; font-weight: 900; font-size: clamp(30px, 3.3vw, 52px); line-height: 1.02; letter-spacing: -.025em; }
   .rows { border-top: var(--line) solid var(--black); }
   .rows > div { display: grid; grid-template-columns: minmax(0, 9.5em) minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: var(--line) solid var(--black); }
   .rows dt { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding-top: 4px; }
   .rows dd { font-size: clamp(16px, 1.2vw, 18px); font-weight: 800; line-height: 1.3; }
   .live { justify-self: start; color: inherit; font-weight: 600; font-size: 16px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
-  .open-media { position: relative; margin-right: calc(var(--gutter) * -1); padding-top: clamp(72px, 7.5vw, 124px); }
-  /* Roślina z hero cannversity.com wyrasta zza bloku; dół rośliny chowa się za blokiem. */
-  .plant { position: absolute; z-index: 0; right: -4%; top: clamp(-70px, -4.2vw, -24px); width: 56%; height: auto; pointer-events: none; }
-  .blok { position: relative; z-index: 1; background: var(--black); padding: clamp(10px, 1.3vw, 20px) 0 0 clamp(10px, 1.3vw, 20px); }
+  /* Roślina z hero cannversity.com (860 px, większej nie ma). Wysokość = miejsce od kreski do dołu ekranu, szerokość
+     najwyżej 54% okna; prawa i dolna krawędź zdjęcia leżą na krawędzi okna i czarnej sekcji niżej. */
+  .plant { position: absolute; z-index: 0; right: 0; bottom: calc(var(--pad-b) * -1); height: calc(100% + var(--pad-b) + clamp(16px, 2.4vw, 40px));
+    /* Szerokość z proporcji zdjęcia (od wysokości); w wąskim i wysokim oknie limit 60vw, wtedy contain trzyma proporcje. */
+    width: auto; aspect-ratio: 860 / 675; max-width: min(60vw, 860px); object-fit: contain; object-position: right bottom; pointer-events: none; }
   .vid { display: block; width: 100%; height: auto; background: var(--black); }
 
   /* Wspólne nagłówki sekcji: gruba kursywa Inter, jak nagłówki cannversity.com. */
@@ -321,7 +319,7 @@ const ld = {
 
   /* 2. Strona w ruchu */
   .ink { background: var(--black); color: var(--white); }
-  /* Czarny blok z otwarcia kończy się równo z sekcją i przechodzi w tę czarną sekcję. */
+  /* Roślina z otwarcia stoi na górnej krawędzi tej czarnej sekcji. */
   .motion { padding: clamp(56px, 7vw, 112px) 0 clamp(72px, 9vw, 140px); }
   .motion .head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); column-gap: clamp(24px, 4vw, 64px); row-gap: 16px; align-items: end; }
   .motion .kicker { grid-column: 1 / -1; }
@@ -375,10 +373,19 @@ const ld = {
   .next-n { font-style: italic; font-weight: 900; font-size: clamp(36px, 6vw, 96px); line-height: 1; letter-spacing: -.03em; }
   .next:hover .next-n { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 10px; }
 
+  /* Niskie okno komputera: ciaśniejsze odstępy, żeby otwarcie mieściło się w pierwszym ekranie. */
+  @media (min-width: 901px) and (max-height: 760px) {
+    .open-txt { gap: 14px; padding-top: 20px; }
+    .zdanie { font-size: clamp(28px, 2.9vw, 44px); }
+    .rows > div { padding: 8px 0; }
+  }
   @media (max-width: 900px) {
-    .open-grid, .motion .head, .duo-vid, .steps li, .langs-in, .end-in { grid-template-columns: minmax(0, 1fr); }
-    .open-media { padding-top: clamp(80px, 22vw, 140px); }
-    .plant { width: 78%; right: -12%; top: 0; }
+    .motion .head, .duo-vid, .steps li, .langs-in, .end-in { grid-template-columns: minmax(0, 1fr); }
+    /* Tablet i telefon: tekst na całą szerokość, roślina pod nim w prawym dolnym rogu; dolny odstęp robi jej miejsce. */
+    .open-body { flex-direction: column; }
+    .open-txt { grid-template-columns: minmax(0, 560px); align-content: start; }
+    .open { --pad-b: 0px; }
+    .plant { position: static; align-self: flex-end; width: min(78vw, 560px); height: auto; margin-top: clamp(-16px, -2vw, 0px); }
     .duo-vid .phone { width: 62%; justify-self: center; }
   }
   @media (max-width: 700px) {
