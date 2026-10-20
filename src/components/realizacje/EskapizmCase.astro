@@ -202,6 +202,13 @@ const ld = {
 <VariantLayout title={T.title} description={T.description} bg="#FCFFF5" fg="#1c1917" switcher={false} robots="noindex, nofollow" locale={locale} alternatePath={T.alt}>
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
+    <script is:inline>
+      // Przeładowanie zaczyna od otwarcia (wada 2, 20.10): przeglądarka przywracała dawną pozycję w dwóch krokach
+      // (Chromium wcześnie, potem jeszcze raz przy zdarzeniu load; WebKit dopiero przy load), a load czeka na film otwarcia,
+      // więc przez kilka sekund był widoczny inny kadr i skok. Tylko ten wpis historii i tylko przy przeładowaniu;
+      // przy wyjściu ze strony wraca „auto” (powrót wstecz jak dotąd), kotwice (#main, #stacja-..) działają jak zwykle.
+      try { var nv = performance.getEntriesByType('navigation')[0]; if (nv && nv.type === 'reload') { history.scrollRestoration = 'manual'; addEventListener('pagehide', function () { history.scrollRestoration = 'auto'; }); } } catch (e) {}
+    </script>
     <a class="skip" href="#main">{T.skip}</a>
     <CaseLockup locale={locale} client="eskapizm" alternatePath={T.alt} tone="dark" />
 
@@ -210,7 +217,6 @@ const ld = {
         <!-- 1. Otwarcie: sam film na pełny ekran; nazwa i etykieta tylko dla czytników i wyszukiwarek (decyzja Kacpra 20.10: napis zasłaniał film) -->
         <header class="open" data-tone="dark">
           <Loop name="otwarcie" mobile="otwarcie-m" w={1920} h={1200} mw={720} mh={1558} alt={T.filmAlt} eager class="open-film" />
-          <div class="open-top" aria-hidden="true"></div>
           <div class="open-txt sr">
             <p class="lbl">{T.label}</p>
             <h1>eskapizm</h1>
@@ -233,7 +239,8 @@ const ld = {
           </ul>
           <figure class="kaskada">
             <picture>
-              <source media="(max-width: 767px)" srcset={kaskadaMSet} sizes="100vw" />
+              {/* wymiary pionowej wersji: bez nich do wczytania obowiązywały proporcje desktopu i strona rosła o ok. 600 px nad przewiniętym miejscem */}
+              <source media="(max-width: 767px)" srcset={kaskadaMSet} sizes="100vw" width="780" height="1688" />
               <Image src={kaskadaD} widths={[1280, 1920, 2560, 2880]} sizes="100vw" alt={T.kaskadaAlt} loading="lazy" />
             </picture>
             <figcaption class="wrap cap" set:html={P(T.kaskadaCap)} />
@@ -442,6 +449,45 @@ const ld = {
     seen.unobserve(el); seen.observe(el);
   }));
 
+  // Ton lockupu według czasu filmu otwarcia (decyzja Sławka 20.10, runda 5): film przechodzi z ciemnego biurka w jasny ekran
+  // i kremową stronę, więc data-tone na .open zmienia się z czasem filmu, a lockup (CaseLockup) dostaje sygnał do ponownego
+  // pomiaru tylko przy zmianie tonu (focusin bez bąbelkowania na samym lockupie: słucha go tylko CaseLockup).
+  // Odcinki policzone offline z plików filmu (scratchpad sesji, ton/odcinki2.py): ton z wyższym kontrastem pod lockupem
+  // (10. percentyl pikseli, biel albo #111), odcinki co najmniej 0,5 s, zmiana na środku przenikania (przejście koloru 200 ms
+  // w CaseLockup). Wersja na telefon (-m) liczona dla 390 i 320, desktop dla 1440.
+  // Świadomy wyjątek: na telefonie 1,43-3,37 s pod lockupem jest pasek menu Safari z filmu (jasny pasek, czarny napis
+  // i czarne wycięcie kamery pod „× eskapizm”). Żaden ton nie daje tam 4,5:1 w najgorszych 10% pikseli; ton jasny ma wyższą
+  // medianę (11,9:1 wobec 1,5:1) i zostaje przez całe okno. Logo to znak marki (WCAG 1.4.3 wyłącza logotypy z progu).
+  const TONES: Record<'d' | 'm', [number, 'dark' | 'light'][]> = {
+    d: [[0, 'dark'], [1.517, 'light'], [3.583, 'dark'], [6.733, 'light'], [9.217, 'dark']],
+    m: [[0, 'dark'], [1.433, 'light'], [3.367, 'dark'], [5.383, 'light'], [6.117, 'dark'], [6.733, 'light'], [9.183, 'dark']],
+  };
+  const openEl = document.querySelector<HTMLElement>('.case .open');
+  const openV = openEl?.querySelector<HTMLVideoElement>('video');
+  const lockup = document.querySelector<HTMLElement>('[data-case-lockup]');
+  if (openEl && openV && lockup) {
+    let raf = 0, onScreen = true;
+    // bez wyświetlonej klatki (plakat, ograniczenie ruchu) ton z pierwszej klatki
+    const toneAt = () => {
+      const t = !still.matches && openV.readyState >= 2 ? openV.currentTime : 0;
+      const T = TONES[/otwarcie-m\./.test(openV.currentSrc) ? 'm' : 'd'];
+      let k = T[0][1]; for (const [s, v] of T) if (t >= s) k = v;
+      return k;
+    };
+    const apply = () => {
+      const k = toneAt();
+      if (openEl.dataset.tone === k) return;
+      openEl.dataset.tone = k;
+      lockup.dispatchEvent(new FocusEvent('focusin', { bubbles: false }));
+    };
+    const loop = () => { apply(); raf = !openV.paused && onScreen ? requestAnimationFrame(loop) : 0; };
+    const start = () => { if (!raf && !openV.paused && onScreen) raf = requestAnimationFrame(loop); };
+    ['play', 'playing', 'timeupdate'].forEach((e) => openV.addEventListener(e, start));
+    ['pause', 'seeked', 'emptied'].forEach((e) => openV.addEventListener(e, apply));
+    new IntersectionObserver((es) => { onScreen = es[0].isIntersecting; if (onScreen) { apply(); start(); } }).observe(openEl);
+    still.addEventListener('change', apply);
+  }
+
   // Pigułka stacji: numer i nazwa bieżącej stacji, widoczna tylko w trakcie stacji.
   const pill = document.querySelector<HTMLElement>('[data-pill]');
   const st = [...document.querySelectorAll<HTMLElement>('[data-station]')];
@@ -511,14 +557,10 @@ const ld = {
   /* 1. Otwarcie */
   /* bez belki: film na pełny ekran, lockup (CaseLockup) unosi się nad nim */
   .open { position: relative; height: min(100vh, 62.5vw); min-height: 460px; background: #2a2018; color: #fff; overflow: hidden; }
-  /* Nagrany nagłówek eskapizm.com (logo, pigułka menu, pasek Safari) pod lockupem jest rozmyty w samych plikach filmu
-     i plakatów (runda 3; kadrowanie z rundy 2 cofnięte, bo zasłaniało pytanie filmu): desktop wiersze 0-97 z 1200
-     + wygaszenie do 121, wersja pionowa 0-80 z 1558 + wygaszenie do 104. Skrypt: scratchpad sesji, film-blur.sh. */
+  /* Film nagrany z eskapizm.com z ukrytym nagłówkiem strony (logo, menu, pasek postępu; runda 4, nagraj.cjs z krokiem js),
+     więc pod lockupem nie ma drugiego logo i nic nie trzeba kadrować ani rozmywać. Bez winiety i bez przyciemnienia:
+     czytelność lockupu trzyma ton według czasu filmu (skrypt niżej, data-tone na .open). */
   .open :global(.open-film) { position: absolute; inset: 0; }
-  /* film co dwie sekundy przechodzi z ciemnego biurka w jasny ekran laptopa (pasek menu, strona eskapizmu na kremie):
-     miękkie przyciemnienie samej góry kadru trzyma biały lockup czytelnym w każdej klatce (>= 4,5:1 pod lockupem,
-     pomiar co 0,25 s przy 1440, 390 i 320; do dołu lockupu ok. 0,55 (najsłabsze z zapasem: 0,53 dawało 4,5 przy 320), potem miękko do zera w 1/4 wysokości ekranu) */
-  .open-top { --lk-end: 84px; position: absolute; inset: 0 0 auto; height: 25vh; background: linear-gradient(180deg, rgb(12 8 4 / .58) 0, rgb(12 8 4 / .54) var(--lk-end), rgb(12 8 4 / .3) calc(var(--lk-end) + (100% - var(--lk-end)) * .4), rgb(12 8 4 / .1) calc(var(--lk-end) + (100% - var(--lk-end)) * .75), transparent 100%); pointer-events: none; }
 
   /* 2. Teza */
   .thesis { padding-block: clamp(80px, 10vw, 160px) clamp(56px, 7vw, 104px); }
@@ -653,7 +695,6 @@ const ld = {
     .d-only, .case :global(.d-only) { display: none !important; }
     .lead { font-size: 18px; }
     .open { height: 100svh; min-height: 440px; max-height: 920px; }
-    .open-top { --lk-end: 60px; height: 25svh; }
     .meta { grid-template-columns: 1fr 1fr; }
     .nums, .nums.four { grid-template-columns: 1fr; gap: 36px; }
     .nums.four { grid-template-columns: 1fr 1fr; }
