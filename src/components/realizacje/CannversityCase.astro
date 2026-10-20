@@ -43,6 +43,8 @@ const T = pl ? {
   skip: 'Przejdź do treści',
   // Metka = czym jest Cannversity dla Kacpra (Kacper 20.10, 08:35). Źródło: FAKTY.md C1, R7.
   metka: 'Odnoga mojej marki osobistej dla branży konopnej',
+  // telefon (do 480 px): ten sam sens w jednej linii (Kacper 20.10: dwie linie kleiły się do nazwy); FAKTY R7
+  metkaKrotka: 'Konopna odnoga mojej marki',
   zdanie: 'Strona dla tych, którzy robią w konopiach.',
   wiersze: [['Dla kogo', 'Founderzy i marki z branży konopnej'], ['Jak działa', 'Trzy sytuacje i trzy filary oferty'], ['Prowadzi do', 'Bezpłatnej rozmowy, 30\u00a0minut online']],
   link: 'Zobacz cannversity.com',
@@ -74,6 +76,7 @@ const T = pl ? {
   about: 'Cannversity, my service for cannabis founders and brands: strategy, MVPs and websites, advisory',
   skip: 'Skip to content',
   metka: 'The cannabis offshoot of my personal brand',
+  metkaKrotka: 'My brand’s cannabis offshoot',
   zdanie: 'A website for people knee-deep in cannabis.',
   wiersze: [['Who it’s for', 'Cannabis founders and brands'], ['How it works', 'Three situations and three pillars'], ['Where it leads', 'A free 30\u2011minute call, online']],
   link: 'Visit cannversity.com',
@@ -128,7 +131,7 @@ const ld = {
              rogu, z czarnej sekcji pod spodem, i sięga do kreski pod nazwą. -->
         <header class="open">
           <div class="wrap">
-            <p class="metka">{T.metka}</p>
+            <p class="metka"><span class="metka-d">{T.metka}</span><span class="metka-m">{T.metkaKrotka}</span></p>
             <h1 class="name"><span class="name-in" aria-hidden="true">CANNVERSITY</span><span class="sr">Cannversity: {T.zdanie}</span></h1>
             <div class="rule" aria-hidden="true"></div>
           </div>
@@ -303,6 +306,7 @@ const ld = {
   /* margin-inline: auto w kolumnie flex zwęża .wrap do treści i centruje ją (nazwa stała 2 px w prawo od reszty). */
   .open > .wrap { width: 100%; }
   .metka { font-size: clamp(11px, .95vw, 14px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .metka-m { display: none; }
   /* Nazwa wypełnia szerokość kolumny: 10,1 em to szerokość „CANNVERSITY” w Archivo 125/800 z rozstawem .05em. */
   .name { margin-top: clamp(4px, .6vw, 10px) !important; font-family: 'ArchivoCann', 'Arial Black', sans-serif; font-stretch: 125%; font-weight: 800; letter-spacing: .05em; line-height: .92; white-space: nowrap;
     font-size: calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 10.1); margin-right: -.05em; }
@@ -418,9 +422,13 @@ const ld = {
     .rows > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
     .pair img { aspect-ratio: auto; }
   }
-  /* Telefon: metka ma dwa wiersze (równe), więc otwarcie zaczyna się 14 px wyżej, żeby czubki rośliny zostały w pierwszym ekranie 320x568. */
+  /* Telefon: krótka metka w jednej linii (pełna łamała się na dwie i kleiła do nazwy, Kacper 20.10) i oddech 12 px nad
+     nazwą. Otwarcie dalej zaczyna się 14 px wyżej niż na komputerze, żeby czubki rośliny zostały w pierwszym ekranie 320x568. */
   @media (max-width: 480px) {
     .open { padding-top: calc(82px + clamp(8px, 1.6vw, 24px)); }
-    .case .metka { text-wrap: balance; }
+    .metka-d { display: none; }
+    .metka-m { display: inline; }
+    .case .metka { font-size: 12px; white-space: nowrap; }
+    .case .name { margin-top: 12px !important; }
   }
 </style>
