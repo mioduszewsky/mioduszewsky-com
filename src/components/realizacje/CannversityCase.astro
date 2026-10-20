@@ -271,7 +271,10 @@ const ld = {
 <style>
   .case {
     /* Żółć Cannversity hsl(45 100% 60%) = #ffcc33, czerń marki hsl(0 0% 8%) = #141414. Bez zaokrągleń i cieni. */
-    --cann: #ffcc33; --black: #141414; --white: #fff; --line: 3px;
+    --cann: #ffcc33; --black: #141414; --white: #fff;
+    /* jedna grubość linii w całym case'ie: tabelka, kroki, ramki nagrań i zrzutów (Kacper 20.10: 3 px za grube);
+       mocniejsza zostaje tylko kreska pod nazwą w otwarciu (.rule), jako akcent */
+    --line: 1.5px;
     --gutter: clamp(20px, 3.4vw, 56px); --max: 1440px;
     /* stopka mioduszewsky na pełną szerokość, treść na tej samej lewej krawędzi co .wrap (runda 5, 20.10) */
     --footer-pad: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
@@ -342,7 +345,13 @@ const ld = {
   .duo-vid .desk { grid-column: 1 / span 9; }
   .duo-vid .phone { grid-column: 10 / -1; }
   .duo-vid figure { border: var(--line) solid var(--cann); }
-  .phone figcaption { padding: 10px 12px; font-size: 14px; background: var(--cann); color: var(--black); font-weight: 600; }
+  /* Obie ramki tej samej wysokości (Kacper 20.10: „tu trzeba wyśrodkować”): wysokość wiersza daje nagranie z komputera,
+     telefon się do niej rozciąga (contain: size, żeby jego nagranie nie podnosiło wiersza), nagranie telefonu kadrowane
+     od góry, podpis pod nim wyśrodkowany. */
+  .duo-vid { align-items: stretch; }
+  .duo-vid .phone { display: flex; flex-direction: column; contain: size; }
+  .duo-vid .phone .vid { flex: 1 1 0; min-height: 0; height: auto; object-fit: cover; object-position: top; }
+  .phone figcaption { padding: 10px 12px; font-size: 14px; background: var(--cann); color: var(--black); font-weight: 600; text-align: center; text-wrap: balance; }
 
   /* 3. Jak działa */
   .paper { background: var(--white); padding: clamp(72px, 9vw, 140px) 0; }
@@ -410,7 +419,9 @@ const ld = {
     .open { --pad-b: 0px; }
     .plant { position: static; align-self: flex-end; width: min(78vw, 560px); height: auto; margin-top: clamp(-16px, -2vw, 0px); }
     .duo-vid .desk { grid-column: 1 / -1; }
-    .duo-vid .phone { grid-column: 1 / -1; width: 62%; justify-self: start; }
+    /* jedna kolumna: telefon na środku pod nagraniem z komputera, w naturalnej wysokości */
+    .duo-vid .phone { grid-column: 1 / -1; width: 62%; justify-self: center; contain: none; }
+    .duo-vid .phone .vid { flex: none; object-fit: fill; }
     /* Hasło w telefonie i na tablecie: zdanie w jednym wierszu byłoby za drobne, więc łamie się na dwa równe,
        nadal od tej samej lewej krawędzi. */
     .band blockquote { font-size: clamp(40px, 14cqi, 110px); }
