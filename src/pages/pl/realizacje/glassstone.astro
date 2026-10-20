@@ -361,7 +361,7 @@ const steps = [
         </div>
       </section>
     </main>
-    <BrandFooter locale="pl" inset />
+    <BrandFooter locale="pl" full />
   </div>
 </VariantLayout>
 
@@ -398,6 +398,8 @@ const steps = [
     --blue: #0522ff; --brand: #ffcc33;
     --cad-dim: #178a34; --cad-note: #c95a12; --cad-red: #c70404;
     --gutter: clamp(20px, 5vw, 96px); --focus: var(--blue);
+    /* stopka mioduszewsky na pełną szerokość, treść na tej samej lewej krawędzi co .wrap (runda 5, 20.10) */
+    --footer-pad: max(var(--gutter), calc((100% - 1320px) / 2 + var(--gutter)));
     font-family: 'GeneralSansV', sans-serif; background: var(--ivory); color: var(--ink); overflow-x: clip;
   }
   @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
