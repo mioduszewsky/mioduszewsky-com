@@ -8,8 +8,11 @@
 import VariantLayout from '../../../layouts/VariantLayout.astro';
 import CaseLockup from '../../../components/realizacje/CaseLockup.astro';
 import BrandFooter from '../../../components/BrandFooter.astro';
+import { nextCase } from '../../../content/realizacje-kolejnosc';
 
 const contact = '/pl/kontakt/?service=' + encodeURIComponent('Aplikacja lub system') + '#ctForm';
+// Następna realizacja z pętli wspólnej dla czterech case'ów (src/content/realizacje-kolejnosc.ts)
+const next = nextCase('glassstone', 'pl');
 // Opinia pojawia się dopiero po akceptacji Filipa (docs/case-studies/OPINIE-ROZMOWA.md).
 const quote: { text: string; name: string; role: string } | null = null;
 const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;');
@@ -353,7 +356,7 @@ const steps = [
             <p>Opisz mi to w&nbsp;15 minut. Powiem, czy da się to zautomatyzować i&nbsp;co by to zmieniło.</p>
             <a class="btn" href={contact}>Umów 15 minut</a>
             <p class="more"><a href="/pl/uslugi/aplikacje-i-systemy/">Aplikacja lub system: jak pracuję</a></p>
-            <p class="more"><a href="/pl/realizacje/eskapizm/">Następna realizacja: eskapizm</a></p>
+            <p class="more"><a href={next.href}>Następna realizacja: {next.name}</a></p>
           </div>
         </div>
       </section>
