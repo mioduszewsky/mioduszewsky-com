@@ -3,16 +3,31 @@
 // i `.phone` z `hero-film/hero-film.css` (bryła 543x1125, tytanowy rant z tego samego gradientu, ekran 500x1082
 // z promieniem 78,5, wyspa 116x34, pasek home, odblask szkła). Bez JS. Wymiary w jednostkach bryły (--u = 1/543 szerokości),
 // więc telefon skaluje się od rodzica: rodzic ustala wysokość albo szerokość, proporcje trzyma aspect-ratio.
-interface Props { class?: string; style?: string; tilt?: number; dark?: boolean }
-const { class: cls = '', style = '', tilt = 0, dark = false } = Astro.props;
+// Bezpieczne strefy ekranu jak w iOS (runda 3, 20.10): iPhone 15/16 ma ekran 393x852 pt, pasek statusu 59 pt i pasek Home 34 pt,
+// czyli na ekranie 500x1082 makiety 75 i 43 jednostki. Treść slotu (nagranie, zrzut) siedzi między strefami, nie pod wyspą
+// ani pod paskiem Home. Strefy mają kolor górnej i dolnej krawędzi treści (top: kolor albo gradient, bottom: kolor; domyślnie krem eskapizmu).
+// W górnej strefie godzina i ikony jak w iOS; status={false}, gdy nagranie ma własny pasek statusu (wtedy treść od góry ekranu,
+// kadrowana tak, żeby jej pasek wypadł w strefie). pos = object-position treści: nagrania 390x844 są wyższe niż pole między
+// strefami, więc pos mówi, z której strony obciąć (domyślnie dół, nagłówek strony zostaje).
+interface Props { class?: string; style?: string; tilt?: number; dark?: boolean; status?: boolean; top?: string; bottom?: string; pos?: string }
+const { class: cls = '', style = '', tilt = 0, dark = false, status = true, top = '#FCFFF5', bottom, pos = 'top' } = Astro.props;
+const vars = `--zt:${top};--zb:${bottom ?? (top.includes('gradient') ? '#FCFFF5' : top)};--pos:${pos};`;
 ---
-<div class:list={['esk-phone', cls]} style={`${tilt ? `--tilt:${tilt}deg;` : ''}${style}`} data-dark={dark ? '' : undefined}>
+<div class:list={['esk-phone', cls]} style={`${tilt ? `--tilt:${tilt}deg;` : ''}${vars}${style}`} data-dark={dark ? '' : undefined} data-status={status ? '' : undefined}>
   <i class="glow" aria-hidden="true"></i>
   <i class="btn l1" aria-hidden="true"></i><i class="btn l2" aria-hidden="true"></i><i class="btn l3" aria-hidden="true"></i><i class="btn r1" aria-hidden="true"></i>
   <div class="frame">
     <i class="bezel" aria-hidden="true"></i>
     <div class="screen">
-      <slot />
+      <div class="content"><slot /></div>
+      {status && <i class="zt" aria-hidden="true"></i>}
+      {status && (
+        <i class="sb" aria-hidden="true">
+          <b>10:50</b>
+          {/* zasięg, Wi-Fi, bateria (rysunek jak w iOS 17) */}
+          <svg viewBox="0 0 90 16" fill="currentColor"><rect x="0" y="10" width="4.2" height="5" rx="1.2" /><rect x="6" y="7.3" width="4.2" height="7.7" rx="1.2" /><rect x="12" y="4.6" width="4.2" height="10.4" rx="1.2" /><rect x="18" y="1.8" width="4.2" height="13.2" rx="1.2" /><path d="M30.6 7.3a11.2 11.2 0 0 1 15.8 0M34.1 10.6a6.3 6.3 0 0 1 8.8 0" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" /><circle cx="38.5" cy="13.6" r="1.9" /><rect x="55.2" y="2.6" width="30" height="11.6" rx="3.6" fill="none" stroke="currentColor" stroke-opacity=".38" stroke-width="1.1" /><rect x="57.3" y="4.7" width="22.5" height="7.4" rx="2" /><rect x="86.6" y="6.4" width="2.2" height="4.2" rx="1" fill-opacity=".42" /></svg>
+        </i>
+      )}
       <i class="island" aria-hidden="true"></i>
       <i class="home" aria-hidden="true"></i>
       <i class="sheen" aria-hidden="true"></i>
@@ -45,11 +60,20 @@ const { class: cls = '', style = '', tilt = 0, dark = false } = Astro.props;
   .bezel { inset: calc(4.5 * var(--u)); border-radius: calc(85.5 * var(--u)); background: #070707; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), 0 0 0 .5px rgba(0, 0, 0, .6); }
   .screen {
     left: calc(11.5 * var(--u)); top: calc(11.5 * var(--u)); width: calc(500 * var(--u)); height: calc(1082 * var(--u));
-    border-radius: calc(78.5 * var(--u)); overflow: hidden; background: #FCFFF5;
+    border-radius: calc(78.5 * var(--u)); overflow: hidden; background: var(--zb);
     /* Safari: zaokrąglenie z overflow nad wideo */
     -webkit-mask-image: -webkit-radial-gradient(white, black); isolation: isolate;
   }
-  .screen :global(img), .screen :global(video), .screen :global(picture), .screen :global(.loop) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  /* pole treści między strefami: pasek statusu 75 (59 z 852 pt), pasek Home 43 (34 z 852 pt) */
+  .content { position: absolute; left: 0; right: 0; top: 0; bottom: calc(43 * var(--u)); overflow: hidden; }
+  [data-status] .content { top: calc(75 * var(--u)); }
+  /* tło górnej strefy: kolor albo gradient (np. poziome przejście tła strony z nagrania) */
+  .zt { top: 0; left: 0; right: 0; height: calc(75 * var(--u)); background: var(--zt); }
+  .content :global(img), .content :global(video), .content :global(picture), .content :global(.loop) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); display: block; }
+  /* pasek statusu: godzina i ikony na wysokości środka wyspy, każda grupa na środku swojego „ucha” obok wyspy */
+  .sb { top: calc(11 * var(--u)); height: calc(34 * var(--u)); left: 0; right: 0; z-index: 29; color: #0a0a0a; font: 600 calc(21 * var(--u)) / 1 -apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif; letter-spacing: -.01em; }
+  .sb b { position: absolute; top: 50%; left: calc(96 * var(--u)); translate: -50% -50%; font-weight: inherit; }
+  .sb svg { position: absolute; top: 50%; left: calc(404 * var(--u)); width: calc(90 * var(--u)); height: calc(16 * var(--u)); translate: -50% -50%; }
   .island { top: calc(11 * var(--u)); left: 50%; width: calc(116 * var(--u)); height: calc(34 * var(--u)); margin-left: calc(-58 * var(--u)); border-radius: calc(18 * var(--u)); background: #000; z-index: 30; }
   .home { bottom: calc(8 * var(--u)); left: 50%; width: calc(139 * var(--u)); height: calc(5 * var(--u)); margin-left: calc(-69.5 * var(--u)); border-radius: 3px; background: #111; opacity: .8; z-index: 30; }
   .sheen { inset: 0; pointer-events: none; z-index: 31; background: linear-gradient(118deg, transparent 22%, rgba(255, 255, 255, .11) 34%, rgba(255, 255, 255, .04) 42%, transparent 52%); }
