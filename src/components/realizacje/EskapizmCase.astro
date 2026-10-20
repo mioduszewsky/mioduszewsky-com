@@ -260,94 +260,103 @@ const ld = {
           </div>
         </div>
 
-        <!-- 5. Stacja 01: biurko wieczorem, telefon z kalkulatorem -->
-        <section class="station" id="stacja-01" data-station="0" aria-labelledby="s1-h">
-          <div class="scene desk evening" data-tone="dark">
-            <img class="scene-bg" srcset={biurkoEkranSet} sizes="100vw" src={biurkoEkranSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" />
-            <div class="shade" aria-hidden="true"></div>
-            <div class="s-txt s-right"><p class="lbl">01</p><h2 id="s1-h" class="st" set:html={P(T.s1.t)} /><p class="ss" set:html={P(T.s1.s)} /></div>
-            <EskapizmPhone class="ph ph-s1" dark top="#FCFFF4" bottom="#FCFFF4">
-              {/* runda 5: kalkulator w formie z żywej strony, zielony dok z dołu i panel wysuwany z dołu (nagranie z produkcji 390x752,
-                 proporcja pola treści makiety 500:964, więc 600x1156 wchodzi 1:1 między strefy bez przycinania) */}
-              <Loop name="kalkulator" w={600} h={1156} alt={T.s1.alt} />
-            </EskapizmPhone>
-          </div>
-          <div class="detail wrap">
-            <p class="for"><span>{T.s1.f[0]}:</span> <span set:html={P(T.s1.f[1])} /></p>
-            <div class="dtxt"><p set:html={P(T.s1.d)} /></div>
-          </div>
-        </section>
+        <!-- 5-9. Stacje 01-05 w poziomie (Kacper 20.10, ok. 14:15, punkt D): pasek postępu na dole jest poziomy, więc stacje
+             jadą w bok. Komputer: sekcja przypięta, przewijanie w dół przesuwa tor o jedną stację na ekran (skrypt niżej).
+             Telefon: pas przewijany palcem w bok z przyciąganiem, pion przewija stronę. Na slajdzie scena, numer, nazwa i jedno
+             zdanie; dłuższe opisy pod sekcją (Szczegóły stacji), żeby nic w slajdzie nie wymagało przewijania w pionie. -->
+        <section class="stations" data-stations aria-labelledby="map-h">
+          <div class="st-pin">
+            <div class="st-track" data-track>
+              <!-- Stacja 01: biurko wieczorem, telefon z kalkulatorem -->
+              <section class="station" id="stacja-01" data-station="0" aria-labelledby="s1-h">
+                <div class="scene desk evening" data-tone="dark">
+                  <img class="scene-bg" srcset={biurkoEkranSet} sizes="100vw" src={biurkoEkranSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" />
+                  <div class="shade" aria-hidden="true"></div>
+                  <div class="s-txt s-right"><p class="lbl">01</p><h2 id="s1-h" class="st" set:html={P(T.s1.t)} /><p class="ss" set:html={P(T.s1.s)} /></div>
+                  <EskapizmPhone class="ph ph-s1" dark top="#FCFFF4" bottom="#FCFFF4">
+                    {/* runda 5: kalkulator w formie z żywej strony, zielony dok z dołu i panel wysuwany z dołu (nagranie z produkcji 390x752,
+                       proporcja pola treści makiety 500:964, więc 600x1156 wchodzi 1:1 między strefy bez przycinania) */}
+                    <Loop name="kalkulator" w={600} h={1156} alt={T.s1.alt} />
+                  </EskapizmPhone>
+                </div>
+              </section>
 
-        <!-- 6. Stacja 02: zamówienie na ekranie laptopa z tej samej sceny, telefon z płatnością obok -->
-        <section class="station" id="stacja-02" data-station="1" aria-labelledby="s2-h">
-          <div class="scene desk dusk" data-tone="dark">
-            <div class="desk-img">
-              <img class="scene-bg" srcset={biurkoSet} sizes="(max-width: 767px) 250vw, 100vw" src={biurkoSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" />
-              <!-- prostokąt ekranu laptopa z silnika filmu: PHOTO.scr [560.5, 290, 557.5, 348.5] na 1678x937 -->
-              <div class="laptop"><Loop name="zamowienie" w={960} h={600} alt={T.s2.alt} /><i class="glass" aria-hidden="true"></i></div>
+              <!-- Stacja 02: zamówienie na ekranie laptopa z tej samej sceny, telefon z płatnością obok -->
+              <section class="station" id="stacja-02" data-station="1" aria-labelledby="s2-h">
+                <div class="scene desk dusk" data-tone="dark">
+                  <div class="desk-img">
+                    <img class="scene-bg" srcset={biurkoSet} sizes="(max-width: 767px) 250vw, 100vw" src={biurkoSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" />
+                    <!-- prostokąt ekranu laptopa z silnika filmu: PHOTO.scr [560.5, 290, 557.5, 348.5] na 1678x937 -->
+                    <div class="laptop"><Loop name="zamowienie" w={960} h={600} alt={T.s2.alt} /><i class="glass" aria-hidden="true"></i></div>
+                  </div>
+                  <div class="shade" aria-hidden="true"></div>
+                  <div class="s-txt s-left"><p class="lbl">02</p><h2 id="s2-h" class="st" set:html={P(T.s2.t)} /><p class="ss" set:html={P(T.s2.s)} /></div>
+                  <EskapizmPhone class="ph ph-s2" dark bottom="#F4F4F3" pos="50% 87%">
+                    <Loop name="platnosc" w={600} h={1298} alt={T.s2.altPhone} />
+                  </EskapizmPhone>
+                </div>
+              </section>
+
+              <!-- Stacja 03: warsztat Justyny na zieleni -->
+              <section class="station green" id="stacja-03" data-station="2" aria-labelledby="s3-h">
+                <div class="g-slide">
+                  <div class="g-txt"><p class="lbl">03</p><h2 id="s3-h" class="st" set:html={P(T.s3.t)} /><p class="ss" set:html={P(T.s3.s)} /></div>
+                  <div class="g-media">
+                    <!-- ton lockupu nad zrzutem: jasny ekran buildera (lockup bez tła od 20.10) -->
+                    <div class="screen" data-tone="light"><Loop name="builder" mobile="builder-m" w={1920} h={1200} mw={780} mh={488} alt={T.s3.alt} /></div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Stacja 04: zatoka Phi Phi, trio telefonów (kulminacja) -->
+              <section class="station" id="stacja-04" data-station="3" aria-labelledby="s4-h">
+                <div class="scene bay" data-tone="dark">
+                  <picture>
+                    <source media="(max-width: 767px)" srcset={zatokaPionSet} sizes="100vw" />
+                    <Image class="scene-bg" src={zatoka} widths={[1280, 1920, 2560]} sizes="100vw" alt={T.s4.sceneAlt} loading="lazy" />
+                  </picture>
+                  <div class="shade" aria-hidden="true"></div>
+                  <div class="s-txt s-left"><p class="lbl">04</p><h2 id="s4-h" class="st" set:html={P(T.s4.t)} /><p class="ss" set:html={P(T.s4.s)} /></div>
+                  <div class="trio">
+                    <EskapizmPhone class="ph t-side d-only" tilt={-5} dark top="#FAFBF6"><Image src={trio[0]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[0]} loading="lazy" /></EskapizmPhone>
+                    <EskapizmPhone class="ph t-mid" dark top="#FAFBF6"><Loop name="moj-plan" w={600} h={1298} alt={T.s4.altPlan} /></EskapizmPhone>
+                    <EskapizmPhone class="ph t-side d-only" tilt={5} dark top="#FAFBF6"><Image src={trio[1]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[1]} loading="lazy" /></EskapizmPhone>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Stacja 05: panel na zieleni -->
+              <section class="station green" id="stacja-05" data-station="4" aria-labelledby="s5-h">
+                <div class="g-slide">
+                  <div class="g-txt"><p class="lbl">05</p><h2 id="s5-h" class="st" set:html={P(T.s5.t)} /><p class="ss" set:html={P(T.s5.s)} /></div>
+                  <figure class="g-media">
+                    <div class="screen" data-tone="dark" data-tone-m="light"><Image src={issues} widths={[780, 1280, 1920, 2560]} sizes="(max-width: 767px) 100vw, 66vw" alt={T.s5.alt} loading="lazy" /></div>
+                    <figcaption class="cap" set:html={P(T.s5.cap)} />
+                  </figure>
+                </div>
+              </section>
             </div>
-            <div class="shade" aria-hidden="true"></div>
-            <div class="s-txt s-left"><p class="lbl">02</p><h2 id="s2-h" class="st" set:html={P(T.s2.t)} /><p class="ss" set:html={P(T.s2.s)} /></div>
-            <EskapizmPhone class="ph ph-s2" dark bottom="#F4F4F3" pos="50% 87%">
-              <Loop name="platnosc" w={600} h={1298} alt={T.s2.altPhone} />
-            </EskapizmPhone>
-          </div>
-          <div class="detail wrap">
-            <p class="for"><span>{T.s2.f[0]}:</span> <span set:html={P(T.s2.f[1])} /></p>
-            <div class="dtxt"><p set:html={P(T.s2.d)} /><ul class="reg">{T.s2.reg.map((r) => <li>{r}</li>)}</ul></div>
           </div>
         </section>
 
-        <!-- 7. Stacja 03: warsztat Justyny na zieleni -->
-        <section class="station green" id="stacja-03" data-station="2" aria-labelledby="s3-h">
-          <div class="wrap g-head"><p class="lbl">03</p><h2 id="s3-h" class="st" set:html={P(T.s3.t)} /><p class="ss" set:html={P(T.s3.s)} /></div>
-          <div class="wrap">
-            <!-- ton lockupu nad zrzutami: na komputerze pod lockupem ciemny czat i ciemny pasek panelu, na telefonie jasny ekran -->
-            <div class="screen" data-tone="light"><Loop name="builder" mobile="builder-m" w={1920} h={1200} mw={780} mh={488} alt={T.s3.alt} /></div>
-            <figure class="chat m-only"><Image src={builderCzat} widths={[390, 780]} sizes="100vw" alt={T.s3.altChat} loading="lazy" /></figure>
-          </div>
-          <div class="detail wrap">
-            <p class="for"><span>{T.s3.f[0]}:</span> <span set:html={P(T.s3.f[1])} /></p>
-            <div class="dtxt"><p set:html={P(T.s3.d)} /></div>
-          </div>
-        </section>
-
-        <!-- 8. Stacja 04: zatoka Phi Phi, trio telefonów (kulminacja) -->
-        <section class="station" id="stacja-04" data-station="3" aria-labelledby="s4-h">
-          <div class="scene bay" data-tone="dark">
-            <picture>
-              <source media="(max-width: 767px)" srcset={zatokaPionSet} sizes="100vw" />
-              <Image class="scene-bg" src={zatoka} widths={[1280, 1920, 2560]} sizes="100vw" alt={T.s4.sceneAlt} loading="lazy" />
-            </picture>
-            <div class="shade" aria-hidden="true"></div>
-            <div class="s-txt s-left"><p class="lbl">04</p><h2 id="s4-h" class="st" set:html={P(T.s4.t)} /><p class="ss" set:html={P(T.s4.s)} /></div>
-            <div class="trio">
-              <EskapizmPhone class="ph t-side d-only" tilt={-5} dark top="#FAFBF6"><Image src={trio[0]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[0]} loading="lazy" /></EskapizmPhone>
-              <EskapizmPhone class="ph t-mid" dark top="#FAFBF6"><Loop name="moj-plan" w={600} h={1298} alt={T.s4.altPlan} /></EskapizmPhone>
-              <EskapizmPhone class="ph t-side d-only" tilt={5} dark top="#FAFBF6"><Image src={trio[1]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[1]} loading="lazy" /></EskapizmPhone>
-            </div>
-          </div>
-          {/* runda 5 (20.10): bez filmiku narratora pod sceną; cel stacji = plan w telefonie klienta, pokazany przez trzy telefony w scenie */}
-          <div class="detail wrap">
-            <p class="for"><span>{T.s4.f[0]}:</span> <span set:html={P(T.s4.f[1])} /></p>
-            <div class="dtxt"><p set:html={P(T.s4.d)} /></div>
-          </div>
-        </section>
-
-        <!-- 9. Stacja 05: panel na zieleni -->
-        <section class="station green" id="stacja-05" data-station="4" aria-labelledby="s5-h">
-          <div class="wrap g-head"><p class="lbl">05</p><h2 id="s5-h" class="st" set:html={P(T.s5.t)} /><p class="ss" set:html={P(T.s5.s)} /></div>
-          <figure class="wrap">
-            <div class="screen" data-tone="dark" data-tone-m="light"><Image src={issues} widths={[780, 1280, 1920, 2560]} sizes="(max-width: 1320px) 100vw, 1200px" alt={T.s5.alt} loading="lazy" /></div>
-            <figcaption class="cap" set:html={P(T.s5.cap)} />
-          </figure>
-          <div class="detail wrap">
-            <div class="for-col">
-              <p class="for"><span>{T.s5.f[0]}:</span> <span set:html={P(T.s5.f[1])} /></p>
-              <p class="repo" set:html={P(T.s5.repo)} />
-            </div>
-            <div class="dtxt"><p set:html={P(T.s5.d)} /></div>
-          </div>
+        <!-- Szczegóły stacji: zdanie „dla kogo” i opis każdej stacji, pod przewijaną sekcją (D: slajd = jeden ekran) -->
+        <section class="st-details wrap" aria-label={pl ? 'Stacje w szczegółach' : 'The stations in detail'}>
+          <ol>
+            {stations.map((s, i) => (
+              <li class="dr">
+                <p class="dr-n"><span class="lbl">{num(i)}</span> <span class="dr-t">{T.stops[i][0]}</span></p>
+                <div class="dr-for">
+                  <p class="for"><span>{s.f[0]}:</span> <span set:html={P(s.f[1])} /></p>
+                  {i === 4 && <p class="repo" set:html={P(T.s5.repo)} />}
+                </div>
+                <div class="dtxt">
+                  <p set:html={P(s.d)} />
+                  {i === 1 && <ul class="reg">{T.s2.reg.map((r) => <li>{r}</li>)}</ul>}
+                  {i === 2 && <figure class="chat m-only"><Image src={builderCzat} widths={[390, 780]} sizes="100vw" alt={T.s3.altChat} loading="lazy" /></figure>}
+                </div>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <!-- 10. Reszta systemu: 4 + 3 -->
@@ -393,7 +402,7 @@ const ld = {
       </section>
     </main>
 
-    <div class="pill" data-pill data-names={JSON.stringify(T.stops.map(([n]) => n))} hidden aria-hidden="true"><span class="pill-n"></span><span class="pill-t"></span><span class="pill-dots">{stations.map(() => <i></i>)}</span></div>
+    <nav class="pill" data-pill data-names={JSON.stringify(T.stops.map(([n]) => n))} hidden aria-label={pl ? 'Stacje' : 'Stations'}><span class="pill-n" aria-hidden="true"></span><span class="pill-t" aria-hidden="true"></span><span class="pill-dots">{stations.map((_, i) => <button type="button" data-go={i} aria-label={`${num(i)} ${T.stops[i][0]}`}><i></i></button>)}</span></nav>
     <BrandFooter locale={locale} full />
   </div>
 </VariantLayout>
@@ -423,7 +432,18 @@ const ld = {
     v.addEventListener('canplay', () => { if (el.dataset.inview && !still.matches && v.paused) play(el, v); });
     return true;
   };
-  const near = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && !still.matches && load(e.target as HTMLElement)) near.unobserve(e.target); }), { rootMargin: '100% 0px' });
+  // Stacje w poziomie: slajdy poza ekranem są przycięte przez tor (overflow), więc ani obserwator, ani loading="lazy"
+  // nie widzą ich „blisko” i slajd wjeżdżał pusty. Gdy tor zbliża się do ekranu (ekran przed nim), wczytują się obrazy
+  // i pętle wszystkich stacji naraz; grają nadal tylko pętle w widoku (seen).
+  const trackEl = document.querySelector<HTMLElement>('[data-track]');
+  const trackLoops = loops.filter((el) => trackEl?.contains(el));
+  if (trackEl) new IntersectionObserver((es, o) => { if (es.some((e) => e.isIntersecting)) { trackEl.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((i) => { i.loading = 'eager'; }); o.disconnect(); } }, { rootMargin: '100% 0px' }).observe(trackEl);
+  const near = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting || still.matches) return;
+    const el = e.target as HTMLElement;
+    const group = trackEl?.contains(el) ? trackLoops : [el];
+    group.forEach((g) => { if (load(g)) near.unobserve(g); });
+  }), { rootMargin: '100% 0px' });
   const seen = new IntersectionObserver((es) => es.forEach((e) => {
     const v = (e.target as HTMLElement).querySelector('video');
     if (!v) return;
@@ -488,37 +508,75 @@ const ld = {
     still.addEventListener('change', apply);
   }
 
-  // Pigułka stacji: numer i nazwa bieżącej stacji, widoczna tylko w trakcie stacji.
+  // Stacje w poziomie (D, 20.10). Komputer (od 768 px): sekcja .stations ma wysokość 5,4 ekranu, .st-pin jest przyklejony,
+  // a tor przesuwa się o jedną stację na ekran przewinięcia: przez pierwsze 30% ekranu stacja stoi, w pozostałych 70%
+  // przejeżdża do następnej (smoothstep), ostatnia stoi jeszcze 0,4 ekranu, potem strona jedzie w dół. Tylko transform,
+  // odczyt pozycji raz na klatkę. Telefon: tor to poziomy pas z przyciąganiem (CSS), indeks z scrollLeft.
+  // Pigułka na dole: numer i nazwa bieżącej stacji, kropki przenoszą do stacji. Widoczna tylko w trakcie sekcji.
+  const sec = document.querySelector<HTMLElement>('[data-stations]');
+  const track = document.querySelector<HTMLElement>('[data-track]');
   const pill = document.querySelector<HTMLElement>('[data-pill]');
-  const st = [...document.querySelectorAll<HTMLElement>('[data-station]')];
+  const N = document.querySelectorAll('[data-station]').length;
   const names: string[] = JSON.parse(pill?.dataset.names || '[]');
-  let cur = -2, tick = false;
-  // Odległość górnej krawędzi pigułki od dołu ekranu (bottom + wysokość), mierzona raz i przy resize, nie w każdej klatce:
-  // po ostatniej stacji pigułka znika, zanim dół stacji minie jej górną krawędź, więc nie zasłania treści po stacjach
-  // (QA 20.10). Między stacjami numer przełącza się wprost na połowie ekranu, bez przerwy (przerwa = mignięcie).
-  let edge = 0;
+  const wide = matchMedia('(min-width: 768px)');
+  const HOLD = .3;
+  let vh = innerHeight, edge = 0, cur = -2, tick = false, x = -1;
+  // geometria raz i przy resize/fontach: wysokość ekranu i odległość góry pigułki od dołu ekranu
   const measure = () => {
-    if (!pill) return;
+    if (!sec || !pill) return;
+    vh = innerHeight;
     const was = pill.hidden;
     if (was) { pill.style.visibility = 'hidden'; pill.hidden = false; }
     edge = innerHeight - pill.getBoundingClientRect().top;
     if (was) { pill.hidden = true; pill.style.visibility = ''; }
   };
+  // pozycja toru w stacjach (0..N-1) z tego, o ile góra sekcji weszła nad ekran (odczyt rect w tej samej klatce)
+  const pos = (above: number) => {
+    const p = Math.min(Math.max(above / vh, 0), N - 1);
+    const seg = Math.floor(p);
+    if (seg >= N - 1) return N - 1;
+    const t = Math.min(Math.max((p - seg - HOLD) / (1 - HOLD), 0), 1);
+    return seg + t * t * (3 - 2 * t);
+  };
   const upd = () => {
-    tick = false; if (!pill) return;
-    const line = innerHeight * .5, pillTop = innerHeight - edge; let idx = -1;
-    st.forEach((s, i) => { const r = s.getBoundingClientRect(); if (r.top <= line && r.bottom > (i === st.length - 1 ? pillTop : line)) idx = i; });
-    if (idx === cur) return; cur = idx;
-    pill.hidden = idx < 0;
-    if (idx >= 0) {
-      pill.querySelector('.pill-n')!.textContent = String(idx + 1).padStart(2, '0');
-      pill.querySelector('.pill-t')!.textContent = names[idx] || '';
-      pill.querySelectorAll('.pill-dots i').forEach((d, i) => d.classList.toggle('on', i === idx));
+    tick = false; if (!sec || !track || !pill) return;
+    const r = sec.getBoundingClientRect();
+    let idx: number;
+    if (wide.matches) {
+      const nx = pos(-r.top);
+      if (nx !== x) { x = nx; track.style.transform = `translate3d(${(-x * 100 / N).toFixed(4)}%, 0, 0)`; }
+      idx = Math.round(x);
+    } else {
+      if (x !== -1) { x = -1; track.style.transform = ''; }
+      idx = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+    }
+    const on = r.top <= innerHeight * .5 && r.bottom > innerHeight - edge;
+    const k = on ? Math.min(N - 1, Math.max(0, idx)) : -1;
+    if (k === cur) return; cur = k;
+    pill.hidden = k < 0;
+    if (k >= 0) {
+      pill.querySelector('.pill-n')!.textContent = String(k + 1).padStart(2, '0');
+      pill.querySelector('.pill-t')!.textContent = names[k] || '';
+      pill.querySelectorAll('.pill-dots button').forEach((d, i) => d.toggleAttribute('aria-current', i === k));
     }
   };
-  addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
-  addEventListener('resize', () => { measure(); upd(); }, { passive: true });
-  document.fonts?.ready.then(() => { measure(); upd(); });
+  const req = () => { if (!tick) { tick = true; requestAnimationFrame(upd); } };
+  addEventListener('scroll', req, { passive: true });
+  track?.addEventListener('scroll', req, { passive: true });
+  const re = () => { measure(); x = -2; cur = -2; req(); };
+  addEventListener('resize', re, { passive: true });
+  wide.addEventListener('change', re);
+  document.fonts?.ready.then(re);
+  addEventListener('load', re);
+  // kropki: komputer przewija stronę do środka postoju stacji, telefon przesuwa pas
+  pill?.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest<HTMLElement>('[data-go]');
+    if (!b || !track) return;
+    const i = +b.dataset.go!;
+    const smooth = still.matches ? 'auto' : 'smooth';
+    if (wide.matches) scrollTo({ top: sec!.getBoundingClientRect().top + scrollY + i * vh + HOLD * vh / 2, behavior: smooth });
+    else track.scrollTo({ left: i * track.clientWidth, behavior: smooth });
+  });
   measure();
   upd();
 </script>
@@ -601,13 +659,13 @@ const ld = {
   .evening .shade { background: linear-gradient(90deg, rgb(14 9 5 / .35) 0%, rgb(14 9 5 / .45) 45%, rgb(14 9 5 / .78) 100%); }
   .dusk .shade { background: linear-gradient(90deg, rgb(14 9 5 / .7) 0%, rgb(14 9 5 / .2) 38%, transparent 60%); }
   .bay .shade { background: linear-gradient(90deg, rgb(4 20 18 / .62) 0%, rgb(4 20 18 / .18) 40%, transparent 62%), linear-gradient(0deg, rgb(4 20 18 / .35), transparent 30%); }
-  .s-txt { position: absolute; top: clamp(32px, 6%, 80px); width: min(30%, 380px); z-index: 3; }
+  .s-txt { position: absolute; top: clamp(32px, 6%, 80px); width: var(--stxt-w); z-index: 3; }
   .s-left { left: var(--gutter); }
   .s-right { right: var(--gutter); top: auto; bottom: 34%; }
   .st { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: var(--t-h); line-height: 1; letter-spacing: -.03em; margin-top: 14px; }
   .ss { margin-top: 16px; font-size: 18px; line-height: 1.5; opacity: .92; }
   /* wysokość sceny biurka: min(100vw * 937/1678, 100vh); telefon dostaje jawną wysokość i szerokość z proporcji bryły 543x1125 */
-  .case { --desk-h: min(55.84vw, 100vh); --bay-h: max(560px, min(100vh, 66vw)); }
+  .case { --desk-h: min(55.84vw, 100vh); --bay-h: max(560px, min(100vh, 66vw)); --stxt-w: min(30vw, 380px); }
   .scene :global(.ph) { position: absolute; z-index: 2; height: var(--ph-h); width: calc(var(--ph-h) * 543 / 1125); }
   .scene :global(.ph-s1) { --ph-h: calc(var(--desk-h) * .84); top: 8%; left: 50%; translate: -50% 0; }
   .laptop { position: absolute; left: 33.402%; top: 30.950%; width: 33.224%; height: 37.193%; overflow: hidden; border-radius: .2vw; background: #fcfff5; }
@@ -620,28 +678,42 @@ const ld = {
   .trio :global(.t-side) { --ph-h: calc(var(--bay-h) * .64); }
   .trio :global(.t-mid) { z-index: 3; }
 
-  /* Szczegóły pod sceną: po lewej zdanie „dla kogo”, po prawej konkret */
-  .detail { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 1fr) minmax(0, 6fr); padding-block: clamp(48px, 6vw, 88px) clamp(80px, 9vw, 140px); }
-  .detail > :first-child { grid-column: 1; }
-  .detail > .dtxt { grid-column: 3; }
-  .for { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(22px, 2vw, 30px); line-height: 1.2; letter-spacing: -.02em; max-width: 16em; }
-  .for span:first-child { color: var(--dim); }
-  .dtxt { font-size: var(--t-body); line-height: 1.65; max-width: 34em; }
-  .reg { margin-top: 28px; border-top: 1px solid var(--rule); }
-  .reg li { padding: 12px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
-  .for-col { display: grid; gap: 32px; align-content: start; }
-  .repo { font-size: 15px; line-height: 1.5; padding-top: 16px; border-top: 1px solid currentColor; opacity: .85; max-width: 26em; }
-
-  /* Zieleń: warsztat Justyny i panel */
-  .green { background: var(--green); color: var(--on-green); padding-top: clamp(72px, 9vw, 136px); }
-  .green .g-head { margin-bottom: clamp(40px, 5vw, 64px); max-width: 1320px; }
+  /* 5-9. Stacje w poziomie (D). Komputer: 5,4 ekranu przewinięcia, przypięty ekran, tor 5 slajdów przesuwany transformem. */
+  /* urządzenia liczone jak w dawnej scenie (od szerokości), żeby w niskich oknach nie wchodziły na tekst; trio mieści się
+     obok tekstu stacji (szerokość trzech telefonów z odstępami to ok. 1,04 wysokości sceny) */
+  .stations { position: relative; height: calc(100vh * 5.4); --desk-h: min(100vh, 55.84vw); --bay-h: min(100vh, (100vw - 2 * var(--gutter) - var(--stxt-w) - 4vw) / 1.04); }
+  .stations .trio { left: calc(var(--gutter) + var(--stxt-w) + 2vw); }
+  .st-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  .st-track { display: flex; width: 500%; height: 100%; }
+  .station { position: relative; flex: 0 0 20%; height: 100%; overflow: hidden; }
+  .stations .scene { position: absolute; inset: 0; height: auto; aspect-ratio: auto; max-height: none; }
+  /* tło sceny na całą wysokość slajdu (`.case img { height: auto }` wygrywał i pod zdjęciem zostawał ciemny pas) */
+  .stations .scene .scene-bg { height: 100%; }
+  /* zamówienie: zdjęcie z ekranem laptopa trzyma proporcje 1678:937 i wypełnia slajd jak cover, więc laptop zostaje na ekranie zdjęcia */
+  .stations .desk-img { inset: auto; left: 50%; top: 50%; width: max(100%, 100vh * 1678 / 937); aspect-ratio: 1678 / 937; translate: -50% -50%; }
+  /* zieleń: tekst z lewej, ekran z prawej, całość w jednym ekranie (miejsce na lockup u góry i pigułkę na dole) */
+  .green { background: var(--green); color: var(--on-green); }
+  .g-slide { position: absolute; inset: 0; box-sizing: border-box; max-width: 1440px; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(32px, 4vw, 72px); align-items: center; padding: clamp(96px, 13vh, 140px) var(--gutter) clamp(88px, 12vh, 120px); }
+  .g-media { justify-self: end; width: min(100%, (100vh - 280px) * 1.6); }
   .green .ss { max-width: 30em; }
-  .green .cap, .green .for span:first-child { color: rgb(243 246 236 / .7); }
-  .green .reg, .green .reg li { border-color: rgb(243 246 236 / .2); }
+  .green .cap { color: rgb(243 246 236 / .7); margin-top: 14px; }
   .screen { position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / .18), 0 30px 80px -20px rgb(0 0 0 / .45), 0 12px 24px -12px rgb(0 0 0 / .35); background: #fff; }
   .screen :global(.loop) { aspect-ratio: 1920 / 1200; }
-  .green figure .cap { margin-top: 16px; }
   .green .screen img { width: 100%; }
+
+  /* Szczegóły stacji pod sekcją: numer i nazwa, zdanie „dla kogo”, opis */
+  .st-details { padding-block: clamp(72px, 9vw, 136px) clamp(48px, 6vw, 88px); }
+  .st-details ol { border-top: 1px solid var(--rule); }
+  .dr { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 5fr); gap: 20px clamp(24px, 3vw, 48px); padding-block: clamp(28px, 3vw, 44px); border-bottom: 1px solid var(--rule); }
+  .dr-n { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.02em; }
+  .dr-n .lbl { display: block; margin-bottom: 10px; font-family: 'GeneralSansV', sans-serif; letter-spacing: .12em; color: var(--dim); }
+  .dr-for { display: grid; gap: 28px; align-content: start; }
+  .for { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(20px, 1.7vw, 26px); line-height: 1.2; letter-spacing: -.02em; max-width: 16em; }
+  .for span:first-child { color: var(--dim); }
+  .dtxt { font-size: var(--t-body); line-height: 1.65; max-width: 34em; }
+  .reg { margin-top: 24px; border-top: 1px solid var(--rule); }
+  .reg li { padding: 12px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
+  .repo { font-size: 15px; line-height: 1.5; padding-top: 16px; border-top: 1px solid currentColor; opacity: .85; max-width: 26em; }
 
   /* 10. Reszta systemu */
   .rest { padding-block: clamp(96px, 11vw, 168px) clamp(64px, 7vw, 104px); }
@@ -681,16 +753,36 @@ const ld = {
   .end .next:focus-visible { outline-offset: -6px; }
 
   /* Pigułka stacji */
-  .pill { position: fixed; z-index: 80; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 14px; border-radius: 999px; background: rgb(28 25 23 / .82); color: #fff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: 14px; white-space: nowrap; box-shadow: 0 10px 30px rgb(0 0 0 / .25); }
+  .pill { position: fixed; z-index: 80; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; align-items: center; gap: 12px; padding: 4px 8px 4px 16px; border-radius: 999px; background: rgb(28 25 23 / .82); color: #fff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: 14px; white-space: nowrap; box-shadow: 0 10px 30px rgb(0 0 0 / .25); }
   .pill[hidden] { display: none; }
   .pill-n { font-size: 12px; letter-spacing: .1em; opacity: .7; }
   .pill-t { font-weight: 600; }
-  .pill-dots { display: flex; gap: 5px; margin-left: 4px; }
-  .pill-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgb(255 255 255 / .3); }
-  .pill-dots i.on { background: var(--brand); }
+  .pill-dots { display: flex; margin-left: 2px; }
+  /* kropki klikalne (D): pole 26x32 wokół kropki 7 px */
+  .pill-dots button { display: grid; place-items: center; width: 26px; height: 32px; padding: 0; border: 0; background: none; cursor: pointer; }
+  .pill-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgb(255 255 255 / .35); transition: background-color .2s ease; }
+  .pill-dots button:hover i { background: rgb(255 255 255 / .75); }
+  .pill-dots button[aria-current] i { background: var(--brand); }
+  .pill .pill-dots button:focus-visible { outline: 2px solid #fff; outline-offset: -3px; border-radius: 8px; }
 
   @media (max-width: 1100px) {
-    .s-txt { width: min(36%, 360px); }
+    /* tekst stacji 01 z prawej nie może wchodzić na telefon na środku (1024: telefon kończy się na 628 px) */
+    .case { --stxt-w: min(32vw, 340px); }
+  }
+  /* tablet w pionie w trybie przypiętym: tekst u góry slajdu, urządzenia pod nim (jak na telefonie, tylko większe) */
+  @media (min-width: 768px) and (max-aspect-ratio: 6/5) {
+    .s-txt, .s-right, .s-left { left: var(--gutter); right: var(--gutter); top: clamp(96px, 10vh, 128px); bottom: auto; width: auto; max-width: 30em; }
+    .evening .shade { background: linear-gradient(180deg, rgb(14 9 5 / .82) 0%, rgb(14 9 5 / .55) 34%, rgb(14 9 5 / .4) 100%); }
+    .dusk .shade { background: linear-gradient(180deg, rgb(14 9 5 / .82) 0%, rgb(14 9 5 / .35) 30%, transparent 55%); }
+    .bay .shade { background: linear-gradient(180deg, rgb(4 20 18 / .7) 0%, rgb(4 20 18 / .2) 32%, transparent 55%); }
+    .stations { --dev-h: calc(100vh - 460px); }
+    .scene :global(.ph-s1) { --ph-h: var(--dev-h); top: auto; bottom: 96px; }
+    .scene :global(.ph-s2) { --ph-h: var(--dev-h); bottom: 96px; }
+    .stations .trio { inset: auto var(--gutter) 96px; height: var(--dev-h); }
+    .trio :global(.ph) { --ph-h: min(var(--dev-h), (100vw - 2 * var(--gutter)) * .78); }
+    .trio :global(.t-side) { --ph-h: calc(min(var(--dev-h), (100vw - 2 * var(--gutter)) * .78) * .72); }
+    .g-slide { display: flex; flex-direction: column; justify-content: center; gap: 48px; }
+    .g-media { width: 100%; }
   }
   @media (max-width: 767px) {
     .case { --t-body: 17px; }
@@ -712,17 +804,24 @@ const ld = {
     .s-txt, .s-right, .s-left { left: var(--gutter); right: var(--gutter); top: 32px; bottom: auto; width: auto; }
     .st { font-size: 36px; }
     .ss { font-size: 16px; max-width: 22em; }
-    .scene :global(.ph-s1) { --ph-h: 520px; top: auto; bottom: 48px; }
+    /* Stacje na telefonie (D): poziomy pas z przyciąganiem, slajd na wysokość widocznego ekranu (svh: z paskami Safari),
+       co najmniej 540 px. Pion przewija stronę (bez touch-action), urządzenia liczone od wysokości slajdu, dół 72 px wolny na pigułkę. */
+    .stations { height: auto; --slide-h: max(100svh, 540px); --desk-h: var(--slide-h); --bay-h: var(--slide-h); }
+    .st-pin { position: static; height: auto; overflow: visible; }
+    .st-track { width: auto; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .st-track::-webkit-scrollbar { display: none; }
+    .station { flex: 0 0 100%; height: var(--slide-h); scroll-snap-align: start; scroll-snap-stop: always; }
+    .scene :global(.ph-s1) { --ph-h: calc(var(--slide-h) - 268px); top: auto; bottom: 72px; }
     /* zamówienie: zdjęcie biurka powiększone tak, żeby ekran laptopa wypełnił ok. 83% szerokości */
-    .desk-img { inset: auto; left: -75%; width: 250%; top: 200px; aspect-ratio: 1678 / 937; height: auto; }
+    .stations .desk-img { left: -75%; top: 190px; width: 250%; translate: none; }
     .dusk .scene-bg { position: absolute; }
-    .scene :global(.ph-s2) { --ph-h: 330px; right: 6%; bottom: 40px; }
+    .scene :global(.ph-s2) { --ph-h: min(330px, calc(var(--slide-h) - 330px)); right: 6%; bottom: 72px; }
     .bay { height: 780px; min-height: 0; }
-    .trio { inset: auto 0 48px; height: 540px; }
-    .trio :global(.ph) { --ph-h: 540px; }
-    .detail { grid-template-columns: 1fr; gap: 28px; padding-block: 40px 88px; }
-    .detail > .dtxt, .detail > :first-child { grid-column: 1; }
-    .green .g-head { margin-bottom: 32px; }
+    .trio, .stations .trio { inset: auto 0 72px; height: calc(var(--slide-h) - 268px); }
+    .trio :global(.ph) { --ph-h: calc(var(--slide-h) - 268px); }
+    .g-slide { display: flex; flex-direction: column; gap: 28px; padding: 32px var(--gutter) 72px; }
+    .g-media { width: 100%; margin-block: auto; }
+    .dr { grid-template-columns: 1fr; gap: 16px; }
     .chat { margin-top: 20px; }
     .chat img { width: 100%; border-radius: 12px; }
     .rest-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); scrollbar-width: none; }
@@ -733,10 +832,5 @@ const ld = {
     .thesis { padding-bottom: 160px; }
     .next-in { flex-direction: column; align-items: flex-start; gap: 12px; }
     .pill { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
-  }
-  @media (max-width: 380px) {
-    .scene :global(.ph-s1) { --ph-h: 470px; }
-    .trio { height: 480px; }
-    .trio :global(.ph) { --ph-h: 480px; }
   }
 </style>
