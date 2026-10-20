@@ -3,7 +3,7 @@
 // tekst napisany po angielsku (nie tłumaczony), nagrania i zrzuty z angielskiej wersji igorgrabowski.com.
 // Treść: docs/case-studies/igor/COPY-EN.md, fakty: FAKTY.md.
 import VariantLayout from '../../layouts/VariantLayout.astro';
-import SiteMenu from '../../components/SiteMenu.astro';
+import CaseLockup from '../../components/realizacje/CaseLockup.astro';
 import BrandFooter from '../../components/BrandFooter.astro';
 
 const contact = '/contact/?service=' + encodeURIComponent('Website') + '#ctForm';
@@ -37,15 +37,9 @@ const posts = [
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
     <a class="skip" href="#main">Skip to content</a>
-    <header class="nav">
-      <a class="mark" href="/" aria-label="mioduszewsky. Home.">
-        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
-          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-nav.webm" type="video/webm" />
-        </video>
-      </a>
-      <SiteMenu locale="en" alternatePath="/pl/realizacje/igor-grabowski/" />
-    </header>
+    <!-- Bez belki (Kacper 20.10): nad niebieską sceną unosi się wspólne logo „mioduszewsky × Igor Grabowski” z menu.
+         Scena trzyma pod nie dawne 104 px belki, więc kompozycja pierwszego ekranu się nie rusza. -->
+    <CaseLockup locale="en" client="igor-grabowski" alternatePath="/pl/realizacje/igor-grabowski/" tone="dark" fit={{ h: 939 * .325 / 520, base: 743 / 939 }} />
 
     <main id="main">
       <article>
@@ -244,12 +238,6 @@ const posts = [
   .case ::selection { background: var(--brand); color: var(--ink); }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
   .skip:focus { transform: none; }
-  .nav { background: var(--igor); height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
-  /* Nav na tej stronie w kolorze sceny: biała pigułka menu i biały przełącznik języka. */
-  .case .nav :global(.menu-toggle) { background: #fff; border-color: #fff; }
-  .case .nav :global(.language-switch) { color: #fff; }
-  .case .nav :global(.language-switch:focus-visible), .case .nav :global(.menu-toggle:focus-visible) { outline-color: #fff; }
-  .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
   .wrap { max-width: 1320px; margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
 
   h2 { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(32px, 4.4vw, 64px); line-height: 1.02; letter-spacing: -.03em; max-width: 14em; }
@@ -258,7 +246,8 @@ const posts = [
   .txt p + p { margin-top: 18px !important; }
 
   /* Scena: pełny niebieski Igora, jego strona w dużej skali, dookoła jego posty. */
-  .stage { background: var(--igor); color: #fff; padding: clamp(32px, 6vw, 80px) 0 clamp(48px, 6vw, 80px); overflow: clip; }
+  /* Góra sceny: dawne 104 px belki (teraz lockup unosi się nad sceną) plus dotychczasowy odstęp. */
+  .stage { background: var(--igor); color: #fff; padding: calc(104px + clamp(32px, 6vw, 80px)) 0 clamp(48px, 6vw, 80px); overflow: clip; }
   .stage ::selection { background: #fff; color: var(--igor); }
   .stage .kicker { font-size: 16px; color: rgb(255 255 255 / .75); }
   h1 { margin-top: 20px !important; font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(38px, 7.4vw, 116px); line-height: .98; letter-spacing: -.04em; max-width: 12em; }
