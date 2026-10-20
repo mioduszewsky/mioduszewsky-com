@@ -497,10 +497,16 @@ const ld = {
   /* 1. Otwarcie */
   /* bez belki: film na pełny ekran, lockup (CaseLockup) unosi się nad nim */
   .open { position: relative; height: min(100vh, 62.5vw); min-height: 460px; background: #2a2018; color: #fff; overflow: hidden; }
-  .open :global(.open-film) { position: absolute; inset: 0; }
+  /* Kadrowanie (Sławek, runda 2): film to nagranie eskapizm.com z własnym nagłówkiem (logo, pigułka menu, pasek Safari)
+     dokładnie pod lockupem. Pomiar co 0,25 s: dolna krawędź nagłówka 100 px z 1200 (pigułka menu przy 5,5-8,5 s),
+     w wersji pionowej 80 px z 1558 (logo przy 0 i 4 s). Pudełko filmu wyższe o Y i przyklejone do dołu, więc góra
+     wychodzi nad ekran: Y = pas x skala + 8 px. Skala z szerokości (cover): pas/szer. pliku x 100vw; skala z wysokości:
+     pas/wys. pliku x (H + Y), stąd druga gałąź max() w procentach wysokości otwarcia. */
+  .open :global(.open-film) { position: absolute; inset: auto 0 0; top: calc(-1 * max(5.21vw + 8px, 9.1% + 9px)); }
   /* film co dwie sekundy przechodzi z ciemnego biurka w jasny ekran laptopa (pasek menu, strona eskapizmu na kremie):
-     miękkie przyciemnienie samej góry kadru trzyma biały lockup czytelnym w każdej klatce */
-  .open-top { position: absolute; inset: 0 0 auto; height: 180px; background: linear-gradient(180deg, rgb(12 8 4 / .55) 0%, rgb(12 8 4 / .28) 50%, transparent 100%); pointer-events: none; }
+     miękkie przyciemnienie samej góry kadru trzyma biały lockup czytelnym w każdej klatce (>= 4,5:1 pod lockupem,
+     pomiar co 0,25 s przy 1440, 390 i 320; do dołu lockupu ok. 0,6, potem miękko do zera w 1/4 wysokości ekranu) */
+  .open-top { --lk-end: 84px; position: absolute; inset: 0 0 auto; height: 25vh; background: linear-gradient(180deg, rgb(12 8 4 / .62) 0, rgb(12 8 4 / .58) var(--lk-end), rgb(12 8 4 / .3) calc(var(--lk-end) + (100% - var(--lk-end)) * .4), rgb(12 8 4 / .1) calc(var(--lk-end) + (100% - var(--lk-end)) * .75), transparent 100%); pointer-events: none; }
 
   /* 2. Teza */
   .thesis { padding-block: clamp(80px, 10vw, 160px) clamp(56px, 7vw, 104px); }
@@ -635,6 +641,8 @@ const ld = {
     .d-only, .case :global(.d-only) { display: none !important; }
     .lead { font-size: 18px; }
     .open { height: 100svh; min-height: 440px; max-height: 920px; }
+    .open :global(.open-film) { top: calc(-1 * max(11.12vw + 8px, 5.42% + 9px)); }
+    .open-top { --lk-end: 60px; height: 25svh; }
     .meta { grid-template-columns: 1fr 1fr; }
     .nums, .nums.four { grid-template-columns: 1fr; gap: 36px; }
     .nums.four { grid-template-columns: 1fr 1fr; }
