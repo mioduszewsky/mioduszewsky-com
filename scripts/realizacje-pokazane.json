@@ -49,6 +49,14 @@
             "WYNIK_LICZBOWY",
             "TRESC_OPINII"
           ]
+        },
+        {
+          "osoba": "klient:brajan",
+          "elementy": [
+            "IMIE",
+            "ZDJECIE",
+            "TRESC_OPINII"
+          ]
         }
       ]
     },
@@ -61,6 +69,14 @@
             "IMIE",
             "ZDJECIE",
             "WYNIK_LICZBOWY",
+            "TRESC_OPINII"
+          ]
+        },
+        {
+          "osoba": "klient:brajan",
+          "elementy": [
+            "IMIE",
+            "ZDJECIE",
             "TRESC_OPINII"
           ]
         }
