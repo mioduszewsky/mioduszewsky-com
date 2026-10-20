@@ -11,6 +11,8 @@ import BrandFooter from '../BrandFooter.astro';
 import EskapizmPhone from './EskapizmPhone.astro';
 import Loop from './Loop.astro';
 import biurko from '../../assets/realizacje/eskapizm/scena-biurko.webp';
+// stacja 01: to samo zdjęcie z kadrem kaskady okien z filmu otwarcia wypalonym na ekranie laptopa (runda 3, perspektywa z narożników ekranu)
+import biurkoEkran from '../../assets/realizacje/eskapizm/scena-biurko-ekran.webp';
 import zatoka from '../../assets/realizacje/eskapizm/scena-zatoka.webp';
 import zatokaPion from '../../assets/realizacje/eskapizm/scena-zatoka-pion.webp';
 import kaskadaD from '../../assets/realizacje/eskapizm/kaskada-d.jpg';
@@ -47,14 +49,14 @@ const T = pl ? {
   meta: [['Klient', 'Eskapizm sp. z o.o., Wrocław'], ['Moja rola', 'wspólnik, produkt i technologia'], ['Czas', 'od września 2025, w toku'], ['Stos', 'React, Supabase, Cloudflare Pages, Paynow, Fakturownia']],
   nums: [
     ['141', 'stron', 'Tyle stron o podróżach odwiedza średnio ktoś, kto planuje jeden wyjazd.', 'Expedia Group, 2023'],
-    ['33', 'sprawy', 'Lista „do ogarnięcia” w Notatkach po siódmym wieczorze, żadna nie jest odhaczona.', 'film na eskapizm.com'],
-    ['7', 'wieczorów', 'Od poniedziałku do niedzieli przy laptopie, a okien z każdym wieczorem przybywa.', 'film na eskapizm.com'],
+    ['500+', 'interakcji', 'Tyle cyfrowych interakcji ma po drodze ktoś, kto planuje jeden wyjazd.', 'Think with Google'],
+    ['33', 'sprawy', 'Lista „do ogarnięcia” w Notatkach po tygodniu wieczorów przy laptopie, żadna nie jest odhaczona.', 'film na eskapizm.com'],
   ],
   kaskadaCap: 'Pulpit z filmu: loty, noclegi, promy, forum ze sprzecznymi radami, SMS od mamy i lista spraw w Notatkach.',
   kaskadaAlt: 'Pulpit laptopa z filmu eskapizmu zasłonięty oknami: ceny lotów, wiadomość od mamy, rozkład promów, szczepienia i formularz wjazdowy, wyniki wyszukiwania noclegów. Z prawej Notatki „Tajlandia: do ogarnięcia” z licznikiem „33 sprawy · 0 odhaczonych”.',
   mapH: 'Pięć systemów od kalkulatora do panelu',
   mapPlan: 'Przykładowy plan: Tajlandia, 25 stycznia - 9 lutego 2027',
-  stops: [['Klient liczy', 'kalkulator wieczorów'], ['Klient zamawia', 'zamówienie, płatność, faktura'], ['Justyna składa', 'AI Plan Builder'], ['Klient dostaje', '„Mój plan” w telefonie'], ['Wspólnicy prowadzą', 'panel zadań i zgłoszeń']],
+  stops: [['Klient liczy', 'kalkulator wieczorów'], ['Klient zamawia', 'zamówienie, płatność, faktura'], ['Justyna składa', 'AI Plan Builder'], ['Klient dostaje', '„Mój plan” w telefonie'], ['Wspólnicy zgłaszają', 'zgłoszenia i zadania w panelu']],
   s1: { t: 'Klient liczy', s: 'Cztery pytania, 20 sekund i wynik w wieczorach po pracy.',
     d: 'Kalkulator „Ile wieczorów oddasz na planowanie?” pyta m.in. o trasę i szczegółowość planu. Wynik liczy z danych Expedia Group i Think with Google i podaje w wieczorach po pracy. Ma własną stronę od lutego 2026 i sekcję na głównej, a uruchamia go też przycisk na końcu filmu. Z wyniku klient przechodzi do pakietów albo przykładowego planu.',
     f: ['Dla klienta', 'koszt planowania policzony w jego własnych wieczorach.'],
@@ -78,11 +80,11 @@ const T = pl ? {
     altPlan: 'Przykładowy plan Tajlandia 2027 na telefonie: przegląd, potem plan dnia z kolejnymi dniami wyjazdu.',
     alts: ['Telefon z ekranem „Plan dnia” przykładowego planu Tajlandia 2027: kolejne dni wyjazdu z programem.', 'Telefon z ekranem „Budżet” przykładowego planu Tajlandia 2027: całkowity budżet na osobę i koszty w kategoriach.'],
     sceneAlt: 'Zatoka na Phi Phi z finału filmu eskapizmu: zielone skały nad turkusową wodą.' },
-  s5: { t: 'Wspólnicy prowadzą', s: 'Każda strona panelu ma przycisk „Zgłoś problem lub pomysł”.',
-    d: 'Zadania firmy żyją w ClickUpie (aplikacji do zadań), w trzech listach: wspólnej, mojej i Justyny. Panel w aplikacji eskapizmu pokazuje je na jednej tablicy z przełącznikiem Zespół / Kacper / Justyna / Wszystko i kalendarzem. Zgłoszenia z panelu i z AI Plan Buildera trafiają do jednej listy z licznikiem w menu.',
-    f: ['Dla nas', 'zadania i zgłoszenia obojga w jednym panelu.'],
+  s5: { t: 'Wspólnicy zgłaszają', s: 'Gdy coś w panelu firmy nie działa, jeden przycisk wysyła to na listę do naprawy.',
+    d: 'Na stronach panelu jest przycisk „Zgłoś problem lub pomysł”, a AI Plan Builder ma własny raport, który sam dołącza ostatnią wiadomość z czatu i kroki odtworzenia. Wszystko trafia na jedną listę z licznikiem w menu. W tym samym panelu jedna tablica pokazuje zadania firmy z ClickUpa (aplikacji do zadań): wspólne, moje i Justyny.',
+    f: ['Dla nas', 'każde zgłoszenie ma status, od „Nowe” do „Naprawione”.'],
     repo: 'Justyna pracuje w tym samym kodzie i sama wgrała do niego plan pary klientów.',
-    cap: 'Zgłoszenia w panelu: 41 naprawionych, żadne nie czeka. Treść zamazana.',
+    cap: 'Lista zgłoszeń, stan na 19.10.2026: 41 naprawionych, żadne nie czeka. Treść zamazana.',
     alt: 'Ekran zgłoszeń w panelu admina eskapizmu: liczniki Nowe 0, W toku 0, Naprawione 41, Odrzucone 0, pod nimi wiersze ze źródłem, statusem i datą, treść rozmyta.' },
   restH: 'Wokół pięciu stacji: strony krajów, blog, quiz i podróże poślubne.',
   restP: 'Cztery strony krajów mają jeden układ, a wyszukiwarki dostają tę samą treść co ludzie.',
@@ -102,7 +104,8 @@ const T = pl ? {
   endP: 'Opisz mi to w 15 minut. Powiem, co zbudowałbym najpierw.',
   btn: 'Umów 15 minut', contact: '/pl/kontakt/#ctForm',
   more: 'Aplikacja albo system: jak pracuję', moreHref: '/pl/uslugi/aplikacje-i-systemy/',
-  next: 'Następny case',
+  next: 'Następna realizacja',
+  newTab: 'Otwiera eskapizm.com w nowej karcie.',
 } : {
   title: 'eskapizm: from a calculator to a plan on the phone · mioduszewsky',
   description: 'Eskapizm is the company Justyna and I run. A calculator, ordering with invoices, AI Plan Builder, the client\'s plan on their phone and one partner dashboard.',
@@ -114,14 +117,14 @@ const T = pl ? {
   meta: [['Client', 'Eskapizm sp. z o.o. (a Polish limited company), Wrocław'], ['My role', 'co-founder, product and technology'], ['Timeline', 'September 2025 to now'], ['Stack', 'React, Supabase, Cloudflare Pages, Paynow, Fakturownia']],
   nums: [
     ['141', 'pages', 'That\'s how many travel pages people visit, on average, to plan one trip.', 'Expedia Group, 2023'],
-    ['33', 'to-dos', 'The Notes list after the seventh evening, and not one item checked off.', 'film on eskapizm.com (in Polish)'],
-    ['7', 'evenings', 'Monday to Sunday at the laptop, with more windows piling up every night.', 'film on eskapizm.com (in Polish)'],
+    ['500+', 'touchpoints', 'That\'s the minimum number of online touchpoints in planning one trip.', 'Think with Google'],
+    ['33', 'to-dos', 'The Notes list after a week of evenings at the laptop, and not one item checked off.', 'film on eskapizm.com (in Polish)'],
   ],
   kaskadaCap: 'From the film: flights, stays, ferries, a forum of conflicting advice, a text from Mom, the Notes list.',
   kaskadaAlt: 'A laptop desktop from the eskapizm film, buried under windows: flight prices, a message from Mom, a ferry timetable, vaccinations, an entry form, hotel results. On the right, the Polish Notes list "Tajlandia: do ogarnięcia" (Thailand: to sort out) shows 33 to-dos, 0 done.',
   mapH: 'Five systems, calculator to dashboard',
   mapPlan: 'Sample plan: Thailand, January 25 - February 9, 2027',
-  stops: [['The client counts', 'evenings calculator'], ['The client orders', 'order, payment, invoice'], ['Justyna builds', 'AI Plan Builder'], ['The client gets it', '"My plan" on the phone'], ['The partners run it', 'tasks and reports dashboard']],
+  stops: [['The client counts', 'evenings calculator'], ['The client orders', 'order, payment, invoice'], ['Justyna builds', 'AI Plan Builder'], ['The client gets it', '"My plan" on the phone'], ['The partners flag it', 'reports and tasks dashboard']],
   s1: { t: 'The client counts', s: 'Four questions, 20 seconds, and the answer comes back in evenings after work.',
     d: 'The calculator, "How many evenings will you spend planning?", asks four questions, route and level of detail among them. It turns Expedia Group and Think with Google data into evenings after work. It\'s had its own page since February 2026, and the button at the end of the film opens it. The result links to packages and a sample plan.',
     f: ['For the client', 'what planning costs, counted in their own evenings.'],
@@ -145,11 +148,11 @@ const T = pl ? {
     altPlan: 'The sample Thailand 2027 plan on a phone (in Polish): the overview, then the day plan, day by day.',
     alts: ['A phone showing the "Plan dnia" (day plan) screen of the sample Thailand 2027 plan: the trip day by day.', 'A phone showing the "Budżet" (budget) screen of the sample Thailand 2027 plan: the total budget per person and costs by category.'],
     sceneAlt: 'The bay on Phi Phi from the end of the eskapizm film: green cliffs over turquoise water.' },
-  s5: { t: 'The partners run it', s: 'Every page of the dashboard has a "Report a problem or an idea" button.',
-    d: 'The company\'s tasks live in ClickUp, a task app, in three lists: shared, mine and Justyna\'s. The dashboard in the eskapizm app mirrors them on one board with a Team / Kacper / Justyna / All switch and a calendar. Reports from the dashboard and from AI Plan Builder land in one list with a counter in the menu.',
-    f: ['For us', 'both partners\' tasks and reports in one place.'],
+  s5: { t: 'The partners flag it', s: 'If something in the company dashboard breaks, one button puts it on the fix list.',
+    d: 'Dashboard pages have a "Report a problem or an idea" button, and AI Plan Builder has its own report that attaches the last chat message and the steps to reproduce by itself. Everything lands in one list with a counter in the menu. The same dashboard has one board for the company\'s tasks from ClickUp, a task app: shared, mine and Justyna\'s.',
+    f: ['For us', 'every report carries a status, from New to Fixed.'],
     repo: 'Justyna works in the same codebase and added a client couple\'s plan herself.',
-    cap: 'Reports in the dashboard: 41 fixed, none waiting. Text blurred.',
+    cap: 'The reports list on October 19, 2026: 41 fixed, none waiting. Text blurred.',
     alt: 'The reports page in the eskapizm admin panel: counters reading New 0, In progress 0, Fixed 41, Rejected 0, then rows with source, status and date, all text blurred.' },
   restH: 'Around the five stops: country pages, a blog, a quiz and honeymoons.',
   restP: 'The four country pages share one layout, and search engines get the same content people do.',
@@ -169,12 +172,15 @@ const T = pl ? {
   endP: 'Walk me through it in 15 minutes. I\'ll tell you what I\'d build first.',
   btn: 'Book 15 minutes', contact: '/contact/#ctForm',
   more: 'Apps and systems: how I work', moreHref: '/services/apps-and-systems/',
-  next: 'Next case',
+  next: 'Next project',
+  newTab: 'Opens eskapizm.com in a new tab.',
 };
 const quoteHref = 'https://eskapizm.com/blog/planowanie-podrozy-na-wasna-reke-czy-z-pomoca-eskapizm';
 const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
 const num = (i: number) => String(i + 1).padStart(2, '0');
 const rest = [tajlandia, wietnam, filipiny, indonezja, blog, poslubne, quiz];
+// żywe strony eskapizm.com do kafli (sitemap.xml 20.10.2026; strony tylko po polsku, więc te same adresy w EN)
+const restHref = ['tajlandia', 'wietnam', 'filipiny', 'indonezja', 'blog', 'podroze-poslubne', 'quiz'].map((p) => `https://eskapizm.com/${p}`);
 const trio = [planDnia, planBudzet];
 
 // Scena biurka i zatoki: obraz jako <picture>, desktop i telefon osobno (telefon dostaje mniejsze pliki).
@@ -182,6 +188,8 @@ const biurkoSet = (await getImage({ src: biurko, widths: [828, 1280, 1920, 2560,
 const kaskadaMSet = (await getImage({ src: kaskadaM, widths: [390, 780], format: 'webp' })).srcSet.attribute;
 const zatokaPionSet = (await getImage({ src: zatokaPion, widths: [600, 900, 1200], format: 'webp' })).srcSet.attribute;
 const biurkoSrc = (await getImage({ src: biurko, width: 1920, format: 'webp' })).src;
+const biurkoEkranSet = (await getImage({ src: biurkoEkran, widths: [828, 1280, 1920, 2560, 3356], format: 'webp' })).srcSet.attribute;
+const biurkoEkranSrc = (await getImage({ src: biurkoEkran, width: 1920, format: 'webp' })).src;
 
 const url = 'https://mioduszewsky.com' + (pl ? '/pl/realizacje/eskapizm/' : '/work/eskapizm/');
 const ld = {
@@ -263,10 +271,10 @@ const ld = {
         <!-- 5. Stacja 01: biurko wieczorem, telefon z kalkulatorem -->
         <section class="station" id="stacja-01" data-station="0" aria-labelledby="s1-h">
           <div class="scene desk evening" data-tone="dark">
-            <img class="scene-bg" srcset={biurkoSet} sizes="100vw" src={biurkoSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" />
+            <img class="scene-bg" srcset={biurkoEkranSet} sizes="100vw" src={biurkoEkranSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" />
             <div class="shade" aria-hidden="true"></div>
             <div class="s-txt s-right"><p class="lbl">01</p><h2 id="s1-h" class="st" set:html={P(T.s1.t)} /><p class="ss" set:html={P(T.s1.s)} /></div>
-            <EskapizmPhone class="ph ph-s1" dark>
+            <EskapizmPhone class="ph ph-s1" dark top="linear-gradient(90deg, #F6F9F0, #F6F9F0 22%, #FAFDF2 50%, #FCFFF4 62%)" bottom="#FCFFF4">
               <Loop name="kalkulator" w={600} h={1298} alt={T.s1.alt} />
             </EskapizmPhone>
           </div>
@@ -286,7 +294,7 @@ const ld = {
             </div>
             <div class="shade" aria-hidden="true"></div>
             <div class="s-txt s-left"><p class="lbl">02</p><h2 id="s2-h" class="st" set:html={P(T.s2.t)} /><p class="ss" set:html={P(T.s2.s)} /></div>
-            <EskapizmPhone class="ph ph-s2" dark>
+            <EskapizmPhone class="ph ph-s2" dark bottom="#F4F4F3" pos="50% 87%">
               <Loop name="platnosc" w={600} h={1298} alt={T.s2.altPhone} />
             </EskapizmPhone>
           </div>
@@ -320,9 +328,9 @@ const ld = {
             <div class="shade" aria-hidden="true"></div>
             <div class="s-txt s-left"><p class="lbl">04</p><h2 id="s4-h" class="st" set:html={P(T.s4.t)} /><p class="ss" set:html={P(T.s4.s)} /></div>
             <div class="trio">
-              <EskapizmPhone class="ph t-side d-only" tilt={-5} dark><Image src={trio[0]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[0]} loading="lazy" /></EskapizmPhone>
-              <EskapizmPhone class="ph t-mid" dark><Loop name="moj-plan" w={600} h={1298} alt={T.s4.altPlan} /></EskapizmPhone>
-              <EskapizmPhone class="ph t-side d-only" tilt={5} dark><Image src={trio[1]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[1]} loading="lazy" /></EskapizmPhone>
+              <EskapizmPhone class="ph t-side d-only" tilt={-5} dark top="#FAFBF6"><Image src={trio[0]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[0]} loading="lazy" /></EskapizmPhone>
+              <EskapizmPhone class="ph t-mid" dark top="#FAFBF6"><Loop name="moj-plan" w={600} h={1298} alt={T.s4.altPlan} /></EskapizmPhone>
+              <EskapizmPhone class="ph t-side d-only" tilt={5} dark top="#FAFBF6"><Image src={trio[1]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[1]} loading="lazy" /></EskapizmPhone>
             </div>
           </div>
           <div class="detail wrap">
@@ -360,8 +368,10 @@ const ld = {
           <ul class="rest-grid">
             {rest.map((img, i) => (
               <li class={i < 4 ? 'r4' : 'r3'}>
-                <Image src={img} widths={[640, 960, 1280]} sizes={i < 4 ? '(max-width: 767px) 84vw, 25vw' : '(max-width: 767px) 84vw, 33vw'} alt={T.rest[i][1]} loading="lazy" />
-                <p class="cap">{T.rest[i][0]}</p>
+                <a href={restHref[i]} target="_blank" rel="noopener" aria-label={`${T.rest[i][0]}. ${T.newTab}`}>
+                  <Image src={img} widths={[640, 960, 1280]} sizes={i < 4 ? '(max-width: 767px) 84vw, 25vw' : '(max-width: 767px) 84vw, 33vw'} alt={T.rest[i][1]} loading="lazy" />
+                  <p class="cap">{T.rest[i][0]}<span aria-hidden="true">&nbsp;↗</span></p>
+                </a>
               </li>
             ))}
           </ul>
@@ -377,7 +387,8 @@ const ld = {
         </figure>
       </article>
 
-      <!-- 12. Koniec: kontakt i następny case z pętli realizacji (src/content/realizacje-kolejnosc.ts) -->
+      <!-- 12. Koniec: jeden zielony blok jak w Cannversity (runda 3): kontakt, pod cienką linią wiersz następnej realizacji
+           z pętli (src/content/realizacje-kolejnosc.ts), potem stopka mioduszewsky -->
       <section class="end" aria-labelledby="end-h">
         <div class="wrap end-in">
           <h2 id="end-h" class="h" set:html={P(T.endH)} />
@@ -388,8 +399,7 @@ const ld = {
           </div>
         </div>
         <a class="next" href={next.href}>
-          <Image src={next.img} widths={[780, 1440, 2048]} sizes="100vw" alt="" loading="lazy" />
-          <span class="next-txt wrap"><span class="lbl">{T.next}</span><span class="next-name">{next.name}</span></span>
+          <span class="wrap next-in"><span class="next-k lbl">{T.next}</span><span class="next-n">{next.name}<span class="next-a" aria-hidden="true">→</span></span></span>
         </a>
       </section>
     </main>
@@ -563,7 +573,9 @@ const ld = {
   .open :global(.open-film) { position: absolute; inset: 0; }
 
   /* 2. Teza */
-  .thesis { padding-block: clamp(80px, 10vw, 160px) clamp(56px, 7vw, 104px); }
+  /* dół tezy: duży oddech między siatką meta a liczbami (runda 3: dwie siatki obok siebie źle się czytały).
+     Teza zajmuje co najmniej ekran liczony od nagłówka, więc póki nagłówek i meta są w ekranie, liczby są jeszcze pod nim. */
+  .thesis { --pt: clamp(80px, 10vw, 160px); box-sizing: border-box; min-height: calc(100vh + var(--pt)); padding-block: var(--pt) clamp(160px, 24vh, 300px); }
   .meta { margin-top: clamp(48px, 5vw, 72px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 32px; border-top: 1px solid var(--rule); padding-top: 20px; }
   .meta dt { color: var(--dim); }
   .meta dd { margin-top: 8px; font-size: 15px; line-height: 1.5; }
@@ -573,6 +585,9 @@ const ld = {
   .nums.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .nums .n { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: var(--t-num); line-height: .9; letter-spacing: -.045em; font-variant-numeric: tabular-nums; }
   .nums .u { font-size: .32em; letter-spacing: -.02em; }
+  .nums .n > span:first-child { white-space: nowrap; }
+  /* jednostka pod liczbą we wszystkich trzech kolumnach: „500+ interakcji” nie mieści się w jednej linii kolumny */
+  .problem .nums .u { display: block; margin-top: .3em; line-height: 1; }
   .nums .c { margin-top: 18px; font-size: 16px; line-height: 1.5; max-width: 22em; }
   .nums .src { margin-top: 12px; color: var(--dim); font-size: 11px; }
   .problem { padding-bottom: clamp(80px, 9vw, 140px); }
@@ -650,6 +665,10 @@ const ld = {
   .rest-grid .r4 { grid-column: span 3; }
   .rest-grid .r3 { grid-column: span 4; }
   .rest-grid img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: top; border-radius: 8px; box-shadow: 0 0 0 1px var(--rule), 0 14px 30px -18px rgb(0 0 0 / .35); }
+  .rest-grid a { display: block; color: inherit; text-decoration: none; border-radius: 8px; }
+  .rest-grid img { transition: transform .3s ease, box-shadow .3s ease; }
+  .rest-grid a:hover img { transform: translateY(-3px); box-shadow: 0 0 0 1px var(--rule), 0 20px 36px -18px rgb(0 0 0 / .45); }
+  .rest-grid a:hover .cap { text-decoration: underline; text-underline-offset: 3px; }
   .rest-grid .cap { margin-top: 12px; color: var(--ink); }
 
   .scale { padding-block: clamp(56px, 7vw, 104px); border-top: 1px solid var(--rule); }
@@ -660,21 +679,22 @@ const ld = {
 
   /* 12. Koniec */
   .end { background: var(--green); color: var(--on-green); }
-  .end-in { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px 64px; align-items: end; padding-block: clamp(80px, 10vw, 152px); }
+  .end-in { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px 64px; align-items: end; padding-block: clamp(80px, 10vw, 152px) clamp(56px, 7vw, 104px); }
   .end-in p { font-size: 20px; line-height: 1.5; max-width: 24em; }
   .btn { display: inline-block; margin-top: 28px; padding: 16px 32px; border-radius: 999px; background: var(--brand); color: var(--ink); text-decoration: none; font-size: 16px; font-weight: 600; }
   .btn:hover { background: #fff; }
   .more { margin-top: 20px; font-size: 16px !important; }
   .more a { color: inherit; text-underline-offset: 4px; }
-  .end :focus-visible { outline-color: #fff; }
-  .next { position: relative; display: block; height: clamp(280px, 36vw, 520px); overflow: hidden; color: inherit; text-decoration: none; }
-  .next:hover .next-name { text-decoration: underline; text-underline-offset: .12em; text-decoration-thickness: .05em; }
+  /* biały obrys na zieleni: :is(a, button) jak w regule ogólnej, inaczej wygrywał zielony obrys (niewidoczny na zieleni) */
+  .end :is(a, button):focus-visible { outline-color: #fff; }
+  /* następna realizacja: wiersz w tym samym zielonym bloku, nad nim cienka linia (układ i skala jak .next-n w Cannversity) */
+  .next { display: block; color: inherit; text-decoration: none; }
+  .next-in { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: clamp(28px, 4vw, 56px); border-top: 1px solid rgb(243 246 236 / .2); }
+  .next-k { color: rgb(243 246 236 / .7); }
+  .next-n { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(36px, 6vw, 96px); line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
+  .next-a { display: inline-block; margin-left: .22em; transition: transform .25s ease; }
+  .next:hover .next-a { transform: translateX(8px); }
   .end .next:focus-visible { outline-offset: -6px; }
-  .next img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; filter: saturate(.6) blur(10px); transform: scale(1.08); }
-  .next::after { content: ''; position: absolute; inset: 0; background: rgb(14 26 17 / .9); }
-  .next-txt { position: absolute; left: 0; right: 0; bottom: clamp(28px, 4vw, 56px); z-index: 2; color: #fff; }
-  .next-txt .lbl, .next-name { display: block; }
-  .next-name { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: clamp(56px, 8vw, 120px); line-height: .9; letter-spacing: -.045em; margin-top: 14px; }
 
   /* Pigułka stacji */
   .pill { position: fixed; z-index: 80; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 14px; border-radius: 999px; background: rgb(28 25 23 / .82); color: #fff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: 14px; white-space: nowrap; box-shadow: 0 10px 30px rgb(0 0 0 / .25); }
@@ -724,9 +744,13 @@ const ld = {
     .green .g-head { margin-bottom: 32px; }
     .chat { margin-top: 20px; }
     .chat img { width: 100%; border-radius: 12px; }
-    .rest-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
+    .rest-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); scrollbar-width: none; }
     .rest-grid li { flex: 0 0 84%; scroll-snap-align: start; }
+    /* miejsce na obrys fokusu kafla (przewijany pas obcina wszystko poza sobą) */
+    .rest-grid { padding-block: 8px; margin-block: calc(clamp(48px, 5vw, 72px) - 8px) -8px; }
     .end-in { grid-template-columns: 1fr; }
+    .thesis { padding-bottom: 160px; }
+    .next-in { flex-direction: column; align-items: flex-start; gap: 12px; }
     .pill { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
   }
   @media (max-width: 380px) {
