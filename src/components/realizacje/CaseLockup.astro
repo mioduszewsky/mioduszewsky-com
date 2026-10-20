@@ -162,9 +162,12 @@ const home = routes[locale].home;
       }
       return null;
     };
+    // Geometria lockupu (wysokość i punkt pomiaru tonu, z offset*, czyli bez transformacji chowania) w pamięci:
+    // odświeżana tylko po resize, orientationchange i wczytaniu fontów, żeby klatka scrolla nie wymuszała układu.
+    let geo = { h: 0, x: 0, y: 0 }, dirty = true;
+    const readGeo = () => { geo = { h: lk.offsetHeight, x: mark.offsetLeft + mark.offsetWidth / 2, y: mark.offsetTop + mark.offsetHeight / 2 }; dirty = false; };
     const measure = () => {
-      // pozycja bez transformacji (offset* względem lockupu stojącego w 0,0): ton liczy się też w trakcie chowania i powrotu
-      const top = document.elementsFromPoint(mark.offsetLeft + mark.offsetWidth / 2, mark.offsetTop + mark.offsetHeight / 2).find((el) => !lk.contains(el)) ?? null;
+      const top = document.elementsFromPoint(geo.x, geo.y).find((el) => !lk.contains(el)) ?? null;
       return toneOf(top) ?? toneOf(document.body) ?? 'light';
     };
     const play = (v?: HTMLVideoElement) => { if (v && !still.matches && v.paused) { v.preload = 'auto'; v.play().catch(() => {}); } };
@@ -172,20 +175,21 @@ const home = routes[locale].home;
     const panel = lk.querySelector<HTMLElement>('[popover]');
     const menuOpen = () => { try { return !!panel?.matches(':popover-open'); } catch { return false; } };
     let lastY = scrollY;
-    const place = () => {
-      const y = Math.max(0, scrollY);
-      let hide = lk.hasAttribute('data-lk-hidden');
-      if (y <= 80 || lk.matches(':focus-within') || menuOpen()) { hide = false; lastY = y; }
-      else if (y - lastY > 6) { hide = true; lastY = y; }
-      else if (lastY - y > 6) { hide = false; lastY = y; }
-      lk.toggleAttribute('data-lk-hidden', hide);
-      lk.toggleAttribute('data-lk-solid', !hide && y > lk.offsetHeight);
-    };
     let tick = false;
     const upd = () => {
       tick = false;
-      place();
+      // najpierw wszystkie odczyty...
+      if (dirty) readGeo();
+      const y = Math.max(0, scrollY);
+      const hold = y <= 80 || lk.matches(':focus-within') || menuOpen();
       const t = measure();
+      let hide = lk.hasAttribute('data-lk-hidden');
+      if (hold) { hide = false; lastY = y; }
+      else if (y - lastY > 6) { hide = true; lastY = y; }
+      else if (lastY - y > 6) { hide = false; lastY = y; }
+      // ...potem zapisy
+      lk.toggleAttribute('data-lk-hidden', hide);
+      lk.toggleAttribute('data-lk-solid', !hide && y > geo.h);
       if (lk.dataset.lkTone === t) return;
       lk.dataset.lkTone = t;
       const on = vids[t], off = vids[t === 'dark' ? 'light' : 'dark'];
@@ -195,8 +199,12 @@ const home = routes[locale].home;
     };
     const req = () => { if (!tick) { tick = true; requestAnimationFrame(upd); } };
     addEventListener('scroll', req, { passive: true });
-    addEventListener('resize', req, { passive: true });
-    addEventListener('load', req);
+    const regeo = () => { dirty = true; req(); };
+    addEventListener('resize', regeo, { passive: true });
+    addEventListener('orientationchange', regeo);
+    document.fonts?.addEventListener?.('loadingdone', regeo);
+    document.fonts?.ready.then(regeo);
+    addEventListener('load', regeo);
     addEventListener('pageshow', req);
     lk.addEventListener('focusin', req);
     panel?.addEventListener('toggle', req);
