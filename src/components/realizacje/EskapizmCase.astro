@@ -19,8 +19,8 @@ import kaskadaD from '../../assets/realizacje/eskapizm/kaskada-d.jpg';
 import kaskadaM from '../../assets/realizacje/eskapizm/kaskada-m.jpg';
 import planDnia from '../../assets/realizacje/eskapizm/plan-dnia.jpg';
 import planBudzet from '../../assets/realizacje/eskapizm/plan-budzet.jpg';
-import builderCzat from '../../assets/realizacje/eskapizm/builder-czat.jpg';
-import issues from '../../assets/realizacje/eskapizm/admin-issues-naprawione-1440.webp';
+// stacja 05 (D3): ten sam zrzut z konta 19.10, kadr na menu panelu i liczniki zgłoszeń, wystająca kreska separatora zamalowana
+import panel from '../../assets/realizacje/eskapizm/admin-panel-menu.webp';
 import tajlandia from '../../assets/realizacje/eskapizm/tajlandia.jpg';
 import wietnam from '../../assets/realizacje/eskapizm/wietnam.jpg';
 import filipiny from '../../assets/realizacje/eskapizm/filipiny.jpg';
@@ -35,8 +35,8 @@ const { locale } = Astro.props;
 const pl = locale === 'pl';
 const next = nextCase('eskapizm', locale);
 
-// Spacja nierozdzielająca po jednoliterowych spójnikach (PL), żeby nie zostawały na końcu linii.
-const P = pl ? (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;') : (t: string) => t;
+// Spacja nierozdzielająca po jednoliterowych spójnikach (PL), żeby nie zostawały na końcu linii; lookbehind łapie też łańcuch „a z ”.
+const P = pl ? (t: string) => t.replace(/(?<=^|[\s(„;])([wziouaWZIOUA]) /g, '$1&nbsp;') : (t: string) => t;
 
 const T = pl ? {
   title: 'Case eskapizm: od kalkulatora do planu w telefonie · mioduszewsky',
@@ -56,34 +56,32 @@ const T = pl ? {
   kaskadaAlt: 'Pulpit laptopa z filmu eskapizmu zasłonięty oknami: ceny lotów, wiadomość od mamy, rozkład promów, szczepienia i formularz wjazdowy, wyniki wyszukiwania noclegów. Z prawej Notatki „Tajlandia: do ogarnięcia” z licznikiem „33 sprawy · 0 odhaczonych”.',
   mapH: 'Pięć systemów od kalkulatora do panelu',
   mapPlan: 'Przykładowy plan: Tajlandia, 25 stycznia - 9 lutego 2027',
-  stops: [['Klient liczy', 'kalkulator wieczorów'], ['Klient zamawia', 'zamówienie, płatność, faktura'], ['Justyna składa', 'AI Plan Builder'], ['Klient dostaje', '„Mój plan” w telefonie'], ['Wspólnicy zgłaszają', 'zgłoszenia i zadania w panelu']],
+  stops: [['Klient liczy', 'kalkulator wieczorów'], ['Klient zamawia', 'zamówienie, płatność, faktura'], ['Justyna składa', 'AI Plan Builder'], ['Klient dostaje', '„Mój plan” w telefonie'], ['Prowadzimy we dwoje', 'cała firma w jednym panelu']],
   s1: { t: 'Klient liczy', s: 'Cztery pytania, 20 sekund i wynik w wieczorach po pracy.',
-    d: 'Kalkulator „Ile wieczorów oddasz na planowanie?” pyta m.in. o trasę i szczegółowość planu. Wynik liczy z danych Expedia Group i Think with Google i podaje w wieczorach po pracy. Ma własną stronę od lutego 2026 i sekcję na głównej, a uruchamia go też przycisk na końcu filmu. Z wyniku klient przechodzi do pakietów albo przykładowego planu.',
+    d: 'Liczy z danych Expedia Group i Think with Google, a z wyniku klient przechodzi do pakietów albo przykładowego planu.',
     f: ['Dla klienta', 'koszt planowania policzony w jego własnych wieczorach.'],
     alt: 'Telefon na biurku wieczorem. Na ekranie eskapizm.com: z dołu wysuwa się zielony dok „Ile wieczorów planowania?”, po dotknięciu panel z czterema pytaniami po kolei, a na końcu wynik w godzinach i wieczorach po pracy.' },
   s2: { t: 'Klient zamawia', s: 'Wybiera pakiet, długość wyjazdu i liczbę osób, płaci BLIK-iem, kartą albo przelewem.',
-    d: 'Do wyboru są trzy pakiety: Basic, Full i Concierge. Cenę liczy serwer z długości wyjazdu i liczby osób, kwotę z przeglądarki ignoruje. Po płatności Fakturownia (program do faktur) wystawia fakturę z nazwą wariantu, dane firmy wchodzą po NIP, a status w KSeF (państwowym systemie e-faktur) synchronizuje się sam. Zamówienie z płatnością działa od listopada 2025, KSeF od czerwca 2026.',
-    f: ['Dla nas', 'faktura i KSeF bez siadania do Fakturowni.'],
-    reg: ['Paynow: BLIK, karta albo przelew', 'Fakturownia: faktura po płatności, dane firmy po NIP', 'KSeF: status faktury synchronizuje się sam'],
+    d: 'Po płatności faktura wystawia się sama, dane firmy wchodzą po NIP, a status w KSeF (państwowym systemie e-faktur) synchronizuje się sam.',
+    f: ['Dla nas', 'faktura i KSeF bez siadania do Fakturowni (programu do faktur).'],
     alt: 'Biurko z filmu eskapizmu, na ekranie laptopa zamówienie: karta „Plan Full” z wyborem planu, długości wyjazdu (7 albo 14 dni), liczby osób (1-4 albo 5-8) i ceną razem.',
     altPhone: 'Telefon przed laptopem z zamówieniem eskapizmu i paskiem płatności z przyciskiem „Zapłać”.' },
   s3: { t: 'Justyna składa', s: 'Justyna pisze do agenta potocznie, a agent zmienia plan, który zobaczy klient.',
-    d: 'AI Plan Builder działa od stycznia 2026 w panelu admina, klient go nie widzi. Sesja jest przypięta do jednego klienta, a publikacja aktualizuje jego plan w „Mój plan”. Zrzut ekranu w czacie działa jak polecenie „zrób tak jak tu”, a PDF wchodzi do planu 1:1. Bez potwierdzenia AI niczego nie usunie ani nie ukryje, a każdy zapis ma kopię.',
+    d: 'Zrzut ekranu w czacie działa jak polecenie „zrób tak jak tu”, a PDF wchodzi do planu 1:1. Każdy zapis ma kopię.',
     f: ['Dla Justyny', 'nic z planu nie znika bez jej zgody.'],
-    alt: 'Ekran AI Plan Buildera: z lewej czat Justyny z agentem i potwierdzenia wykonanych zmian, z prawej podgląd planu podróży do Tajlandii z paskiem „Kontrola planu: Plan wygląda dobrze”. Imiona klientów zmienione.',
-    altChat: 'Wycinek czatu buildera: Justyna prosi o dodanie opcjonalnej wycieczki i dołącza zrzut ekranu, agent odpowiada „WYKONANO” i podaje wpływ zmiany na dni i budżet. Na dole pole wiadomości z trybami Plan i Agent.' },
+    alt: 'Ekran AI Plan Buildera: z lewej czat Justyny z agentem i potwierdzenia wykonanych zmian, z prawej podgląd planu podróży do Tajlandii z paskiem „Kontrola planu: Plan wygląda dobrze”. Imiona klientów zmienione.' },
   s4: { t: 'Klient dostaje', s: 'Plan otwiera się w telefonie, w przeglądarce, po zalogowaniu do „Mój plan”.',
-    d: 'Sekcje to m.in. plan dnia, atrakcje, noclegi, restauracje, transfery, budżet, lista rzeczy i pogoda. Jest też czat AI o tej podróży, z miesięcznym budżetem AI na klienta. Plan może stać pod prywatnym adresem bez logowania. Przychodzi do 7 dni roboczych od briefu (zebranych ustaleń o wyjeździe).',
+    d: 'W środku plan dnia, noclegi, transfery, budżet, pogoda i czat AI o tej podróży. Przychodzi do 7 dni roboczych od briefu (ustaleń o wyjeździe).',
     f: ['Dla klienta', 'plan, który otwiera z telefonu i o który może zapytać.'],
     altPlan: 'Przykładowy plan Tajlandia 2027 na telefonie: przegląd, potem plan dnia z kolejnymi dniami wyjazdu.',
     alts: ['Telefon z ekranem „Plan dnia” przykładowego planu Tajlandia 2027: kolejne dni wyjazdu z programem.', 'Telefon z ekranem „Budżet” przykładowego planu Tajlandia 2027: całkowity budżet na osobę i koszty w kategoriach.'],
     sceneAlt: 'Zatoka na Phi Phi z finału filmu eskapizmu: zielone skały nad turkusową wodą.' },
-  s5: { t: 'Wspólnicy zgłaszają', s: 'Gdy coś w panelu firmy nie działa, jeden przycisk wysyła to na listę do naprawy.',
-    d: 'Na stronach panelu jest przycisk „Zgłoś problem lub pomysł”, a AI Plan Builder ma własny raport, który sam dołącza ostatnią wiadomość z czatu i kroki odtworzenia. Wszystko trafia na jedną listę z licznikiem w menu. W tym samym panelu jedna tablica pokazuje zadania firmy z ClickUpa (aplikacji do zadań): wspólne, moje i Justyny.',
-    f: ['Dla nas', 'każde zgłoszenie ma status, od „Nowe” do „Naprawione”.'],
-    repo: 'Justyna pracuje w tym samym kodzie i sama wgrała do niego plan pary klientów.',
-    cap: 'Lista zgłoszeń, stan na 19.10.2026: 41 naprawionych, żadne nie czeka. Treść zamazana.',
-    alt: 'Ekran zgłoszeń w panelu admina eskapizmu: liczniki Nowe 0, W toku 0, Naprawione 41, Odrzucone 0, pod nimi wiersze ze źródłem, statusem i datą, treść rozmyta.' },
+  // stacja 05 od nowa (D3, Kacper 20.10): sens dla obcego w jednym zdaniu, firmę prowadzimy we dwoje z jednego panelu
+  s5: { t: 'Prowadzimy we dwoje', s: 'Zamówienia, plany klientów, zadania i zgłoszenia mamy w jednym panelu.',
+    d: 'Zadania z ClickUpa (aplikacji do zadań) leżą na jednej tablicy: wspólne, moje i Justyny. Błąd zgłaszamy przyciskiem z każdej strony panelu.',
+    f: ['Dla nas', '41 zgłoszeń naprawionych, żadne nie czeka (19.10.2026).'],
+    cap: 'Menu panelu i ekran zgłoszeń, stan na 19.10.2026. Treść zgłoszeń zamazana.',
+    alt: 'Panel admina eskapizmu: z lewej menu z pozycjami Dashboard, Marketing, Użytkownicy, Zamówienia, Zadania, Plany, Kody rabatowe, Afiliacje, AI Plan Builder, Bugs, CMS / Blog i dalszymi, z prawej ekran zgłoszeń z licznikami Nowe 0, W toku 0, Naprawione 41 i wierszami zgłoszeń z rozmytą treścią.' },
   restH: 'Wokół pięciu stacji: strony krajów, blog, quiz i podróże poślubne.',
   restP: 'Cztery strony krajów mają jeden układ, a wyszukiwarki dostają tę samą treść co ludzie.',
   rest: [
@@ -122,34 +120,31 @@ const T = pl ? {
   kaskadaAlt: 'A laptop desktop from the eskapizm film, buried under windows: flight prices, a message from Mom, a ferry timetable, vaccinations, an entry form, hotel results. On the right, the Polish Notes list "Tajlandia: do ogarnięcia" (Thailand: to sort out) shows 33 to-dos, 0 done.',
   mapH: 'Five systems, calculator to dashboard',
   mapPlan: 'Sample plan: Thailand, January 25 - February 9, 2027',
-  stops: [['The client counts', 'evenings calculator'], ['The client orders', 'order, payment, invoice'], ['Justyna builds', 'AI Plan Builder'], ['The client gets it', '"My plan" on the phone'], ['The partners flag it', 'reports and tasks dashboard']],
+  stops: [['The client counts', 'evenings calculator'], ['The client orders', 'order, payment, invoice'], ['Justyna builds', 'AI Plan Builder'], ['The client gets it', '"My plan" on the phone'], ['The two of us run it', 'the whole company, one dashboard']],
   s1: { t: 'The client counts', s: 'Four questions, 20 seconds, and the answer comes back in evenings after work.',
-    d: 'The calculator, "How many evenings will you spend planning?", asks four questions, route and level of detail among them. It turns Expedia Group and Think with Google data into evenings after work. It\'s had its own page since February 2026, and the button at the end of the film opens it. The result links to packages and a sample plan.',
+    d: 'It runs on Expedia Group and Think with Google data, and the result leads to packages or a sample plan.',
     f: ['For the client', 'what planning costs, counted in their own evenings.'],
     alt: 'A phone on a desk in the evening. On screen, eskapizm.com (in Polish): a green dock slides up from the bottom, a tap opens a panel with four questions, one at a time, then the result in hours and evenings after work.' },
   s2: { t: 'The client orders', s: 'Package, trip length, group size, then pay by BLIK, card or transfer.',
-    d: 'Packages: Basic, Full, Concierge. The server prices the order from trip length and group size and ignores any amount the browser sends. Once paid, Fakturownia (our invoicing app) issues an invoice named after the variant, pulls company details from the tax ID and syncs its status with KSeF, Poland\'s e-invoicing system. Live since November 2025, KSeF since June 2026.',
-    f: ['For us', 'invoices and KSeF happen without anyone opening Fakturownia.'],
-    reg: ['Paynow: BLIK (Polish mobile payments), card or transfer', 'Fakturownia: invoice on payment, details from tax ID', 'KSeF: invoice status syncs on its own'],
+    d: 'Once paid, the invoice issues itself, company details come in from the tax ID, and its status syncs with KSeF, Poland\'s e-invoicing system.',
+    f: ['For us', 'invoices and KSeF without anyone opening Fakturownia, our invoicing app.'],
     alt: 'The desk from the eskapizm film, with the order form on the laptop screen: a "Plan Full" card with choices for plan, trip length (7 or 14 days), group size (1-4 or 5-8) and the total. The form is in Polish.',
     altPhone: 'A phone in front of the laptop showing the eskapizm order with a payment bar and a "Zapłać" (Pay) button.' },
   s3: { t: 'Justyna builds', s: 'Justyna chats with the agent in plain Polish, and it updates the client\'s plan.',
-    d: 'AI Plan Builder has lived in the admin panel since January 2026. Clients never see it. Each session is pinned to one client, and publishing updates their plan in "My plan". A pasted screenshot means "make it like this," and a PDF goes in 1:1. The AI can\'t delete or hide anything without confirmation, and every save is backed up.',
+    d: 'A pasted screenshot means "make it like this," and a PDF goes into the plan 1:1. Every save is backed up.',
     f: ['For Justyna', 'nothing leaves the plan without her say-so.'],
-    alt: 'The AI Plan Builder screen in Polish: Justyna\'s chat with the agent on the left, and on the right a preview of a Thailand travel plan under a bar reading "Kontrola planu: Plan wygląda dobrze" (Plan check: plan looks good). Client names changed.',
-    altChat: 'A slice of the builder chat: Justyna asks for an optional day trip and attaches a screenshot, and the agent replies "WYKONANO" (done) with the effect on days and budget. At the bottom, the message box with Plan and Agent modes.' },
+    alt: 'The AI Plan Builder screen in Polish: Justyna\'s chat with the agent on the left, and on the right a preview of a Thailand travel plan under a bar reading "Kontrola planu: Plan wygląda dobrze" (Plan check: plan looks good). Client names changed.' },
   s4: { t: 'The client gets it', s: 'The plan opens on their phone, in the browser, behind their own login.',
-    d: 'Sections cover the day plan, attractions, stays, restaurants, transfers, budget, packing list and weather. There\'s also an AI chat about this exact trip, with a monthly AI budget per client. A plan can live at a private link with no login, too. It arrives within 7 business days of the brief (everything we\'ve agreed about the trip).',
+    d: 'Inside: the day plan, stays, transfers, budget, weather and an AI chat about this exact trip. It arrives within 7 business days of the brief (what we\'ve agreed about the trip).',
     f: ['For the client', 'a plan on their phone that takes questions.'],
     altPlan: 'The sample Thailand 2027 plan on a phone (in Polish): the overview, then the day plan, day by day.',
     alts: ['A phone showing the "Plan dnia" (day plan) screen of the sample Thailand 2027 plan: the trip day by day.', 'A phone showing the "Budżet" (budget) screen of the sample Thailand 2027 plan: the total budget per person and costs by category.'],
     sceneAlt: 'The bay on Phi Phi from the end of the eskapizm film: green cliffs over turquoise water.' },
-  s5: { t: 'The partners flag it', s: 'If something in the company dashboard breaks, one button puts it on the fix list.',
-    d: 'Dashboard pages have a "Report a problem or an idea" button, and AI Plan Builder has its own report that attaches the last chat message and the steps to reproduce by itself. Everything lands in one list with a counter in the menu. The same dashboard has one board for the company\'s tasks from ClickUp, a task app: shared, mine and Justyna\'s.',
-    f: ['For us', 'every report carries a status, from New to Fixed.'],
-    repo: 'Justyna works in the same codebase and added a client couple\'s plan herself.',
-    cap: 'The reports list on October 19, 2026: 41 fixed, none waiting. Text blurred.',
-    alt: 'The reports page in the eskapizm admin panel: counters reading New 0, In progress 0, Fixed 41, Rejected 0, then rows with source, status and date, all text blurred.' },
+  s5: { t: 'The two of us run it', s: 'Orders, client plans, tasks and bug reports all live in one dashboard.',
+    d: 'Tasks from ClickUp, a task app, sit on one board: shared, mine and Justyna\'s. Every dashboard page has a button for reporting a bug.',
+    f: ['For us', '41 reports fixed, none waiting (October 19, 2026).'],
+    cap: 'The dashboard menu and the reports screen, October 19, 2026. Report text blurred.',
+    alt: 'The eskapizm admin dashboard, in Polish: on the left a menu with Dashboard, Marketing, Users, Orders, Tasks, Plans, Discount codes, Affiliates, AI Plan Builder, Bugs, CMS / Blog and more, on the right the bug reports screen with counters New 0, In progress 0, Fixed 41 and rows of reports with blurred text.' },
   restH: 'Around the five stops: country pages, a blog, a quiz and honeymoons.',
   restP: 'The four country pages share one layout, and search engines get the same content people do.',
   rest: [
@@ -172,7 +167,6 @@ const T = pl ? {
   newTab: 'Opens eskapizm.com in a new tab.',
 };
 const quoteHref = 'https://eskapizm.com/blog/planowanie-podrozy-na-wasna-reke-czy-z-pomoca-eskapizm';
-const stations = [T.s1, T.s2, T.s3, T.s4, T.s5];
 const num = (i: number) => String(i + 1).padStart(2, '0');
 const rest = [tajlandia, wietnam, filipiny, indonezja, blog, poslubne, quiz];
 // żywe strony eskapizm.com do kafli (sitemap.xml 20.10.2026; strony tylko po polsku, więc te same adresy w EN)
@@ -260,11 +254,12 @@ const ld = {
         <!-- 5-9. Stacje jako karty w stosie (D2, koncepcja zaakceptowana przez Fincha 20.10). Zwykłe przewijanie w pionie:
              każda karta przykleja się u góry (sticky), następna wjeżdża na nią od dołu, karta pod spodem lekko się cofa i ciemnieje
              (skrypt niżej, tylko transform i opacity). Każda stacja ma inne tło, tekst zawsze w tym samym miejscu (lewy górny róg,
-             pod strefą lockupu), kroki 01-05 w dolnej krawędzi każdej karty. Opisy stacji pod kartami (Szczegóły stacji). -->
+             pod strefą lockupu), kroki 01-05 w dolnej krawędzi każdej karty. D3 (Kacper 20.10): cała treść stacji na karcie
+             (zdanie, krótki opis, „dla kogo”), bez sekcji szczegółów pod stosem; teksty skrócone przez Ghosta pod 1000x568. -->
         <section class="cards" data-cards aria-labelledby="map-h">
           <article class="card k-dark" id="stacja-01" data-station="0" aria-labelledby="s1-h">
             <div class="k-bg" data-tone="dark"><img srcset={biurkoEkranSet} sizes="100vw" src={biurkoEkranSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" /><i class="k-shade"></i></div>
-            <div class="k-txt"><p class="k-n">{num(0)}<span> / 05</span></p><h2 id="s1-h" class="st" set:html={P(T.s1.t)} /><p class="ss" set:html={P(T.s1.s)} /></div>
+            <div class="k-txt"><p class="k-n">{num(0)}<span> / 05</span></p><h2 id="s1-h" class="st" set:html={P(T.s1.t)} /><p class="ss" set:html={P(T.s1.s)} /><div class="k-more"><p class="k-d" set:html={P(T.s1.d)} /><p class="k-f"><span class="k-fl">{T.s1.f[0]}</span><span set:html={P(T.s1.f[1])} /></p></div></div>
             <div class="k-vis">
               {/* runda 5: kalkulator w formie z żywej strony, zielony dok z dołu i panel wysuwany z dołu (nagranie z produkcji 390x752,
                  proporcja pola treści makiety 500:964, więc 600x1156 wchodzi 1:1 między strefy bez przycinania) */}
@@ -275,7 +270,7 @@ const ld = {
           </article>
           <!-- karta 02 bez zdjęcia biurka (D2: 01 i 02 miały to samo tło): krem, rysowany laptop z nagraniem zamówienia, telefon z płatnością -->
           <article class="card k-cream" id="stacja-02" data-station="1" aria-labelledby="s2-h">
-            <div class="k-txt"><p class="k-n">{num(1)}<span> / 05</span></p><h2 id="s2-h" class="st" set:html={P(T.s2.t)} /><p class="ss" set:html={P(T.s2.s)} /></div>
+            <div class="k-txt"><p class="k-n">{num(1)}<span> / 05</span></p><h2 id="s2-h" class="st" set:html={P(T.s2.t)} /><p class="ss" set:html={P(T.s2.s)} /><div class="k-more"><p class="k-d" set:html={P(T.s2.d)} /><p class="k-f"><span class="k-fl">{T.s2.f[0]}</span><span set:html={P(T.s2.f[1])} /></p></div></div>
             <div class="k-vis k-order">
               <div class="k-laptop"><div class="k-lscreen"><Loop name="zamowienie" w={960} h={600} alt={T.s2.alt} /></div><i class="k-lbase" aria-hidden="true"></i></div>
               <EskapizmPhone class="ph k-ph2" dark bottom="#F4F4F3" pos="50% 87%"><Loop name="platnosc" w={600} h={1298} alt={T.s2.altPhone} /></EskapizmPhone>
@@ -284,7 +279,7 @@ const ld = {
             <i class="k-dim" aria-hidden="true"></i>
           </article>
           <article class="card k-green" id="stacja-03" data-station="2" aria-labelledby="s3-h">
-            <div class="k-txt"><p class="k-n">{num(2)}<span> / 05</span></p><h2 id="s3-h" class="st" set:html={P(T.s3.t)} /><p class="ss" set:html={P(T.s3.s)} /></div>
+            <div class="k-txt"><p class="k-n">{num(2)}<span> / 05</span></p><h2 id="s3-h" class="st" set:html={P(T.s3.t)} /><p class="ss" set:html={P(T.s3.s)} /><div class="k-more"><p class="k-d" set:html={P(T.s3.d)} /><p class="k-f"><span class="k-fl">{T.s3.f[0]}</span><span set:html={P(T.s3.f[1])} /></p></div></div>
             <div class="k-vis">
               <!-- ton lockupu nad zrzutem: jasny ekran buildera (lockup bez tła od 20.10) -->
               <div class="screen k-screen" data-tone="light"><Loop name="builder" mobile="builder-m" w={1920} h={1200} mw={780} mh={488} alt={T.s3.alt} /></div>
@@ -294,7 +289,7 @@ const ld = {
           </article>
           <article class="card k-dark k-bay" id="stacja-04" data-station="3" aria-labelledby="s4-h">
             <div class="k-bg" data-tone="dark"><picture><source media="(max-width: 767px)" srcset={zatokaPionSet} sizes="100vw" /><Image src={zatoka} widths={[1280, 1920, 2560]} sizes="100vw" alt={T.s4.sceneAlt} loading="lazy" /></picture><i class="k-shade"></i></div>
-            <div class="k-txt"><p class="k-n">{num(3)}<span> / 05</span></p><h2 id="s4-h" class="st" set:html={P(T.s4.t)} /><p class="ss" set:html={P(T.s4.s)} /></div>
+            <div class="k-txt"><p class="k-n">{num(3)}<span> / 05</span></p><h2 id="s4-h" class="st" set:html={P(T.s4.t)} /><p class="ss" set:html={P(T.s4.s)} /><div class="k-more"><p class="k-d" set:html={P(T.s4.d)} /><p class="k-f"><span class="k-fl">{T.s4.f[0]}</span><span set:html={P(T.s4.f[1])} /></p></div></div>
             <div class="k-vis k-trio">
               <EskapizmPhone class="ph k-side d-only" tilt={-5} dark top="#FAFBF6"><Image src={trio[0]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[0]} loading="lazy" /></EskapizmPhone>
               <EskapizmPhone class="ph k-mid" dark top="#FAFBF6"><Loop name="moj-plan" w={600} h={1298} alt={T.s4.altPlan} /></EskapizmPhone>
@@ -304,9 +299,9 @@ const ld = {
             <i class="k-dim" aria-hidden="true"></i>
           </article>
           <article class="card k-ink" id="stacja-05" data-station="4" aria-labelledby="s5-h">
-            <div class="k-txt"><p class="k-n">{num(4)}<span> / 05</span></p><h2 id="s5-h" class="st" set:html={P(T.s5.t)} /><p class="ss" set:html={P(T.s5.s)} /></div>
+            <div class="k-txt"><p class="k-n">{num(4)}<span> / 05</span></p><h2 id="s5-h" class="st" set:html={P(T.s5.t)} /><p class="ss" set:html={P(T.s5.s)} /><div class="k-more"><p class="k-d" set:html={P(T.s5.d)} /><p class="k-f"><span class="k-fl">{T.s5.f[0]}</span><span set:html={P(T.s5.f[1])} /></p></div></div>
             <figure class="k-vis k-fig">
-              <div class="screen k-screen" data-tone="dark" data-tone-m="light"><Image src={issues} widths={[780, 1280, 1920, 2560]} sizes="(max-width: 767px) 100vw, 66vw" alt={T.s5.alt} loading="lazy" /></div>
+              <div class="screen k-screen" data-tone="dark" data-tone-m="light"><Image src={panel} widths={[780, 1280, 1920, 2290]} sizes="(max-width: 767px) 100vw, 60vw" alt={T.s5.alt} loading="lazy" /></div>
               <figcaption class="cap" set:html={P(T.s5.cap)} />
             </figure>
             <ol class="k-steps" aria-hidden="true">{T.stops.map(([n], j) => <li class:list={[{ on: j === 4, done: j < 4 }]}><b>{num(j)}</b><span>{n}</span></li>)}</ol>
@@ -314,25 +309,6 @@ const ld = {
           </article>
         </section>
 
-        <!-- Szczegóły stacji: zdanie „dla kogo” i opis każdej stacji, pod kartami (karta = jeden ekran) -->
-        <section class="st-details wrap" aria-label={pl ? 'Stacje w szczegółach' : 'The stations in detail'}>
-          <ol>
-            {stations.map((s, i) => (
-              <li class="dr">
-                <p class="dr-n"><span class="lbl">{num(i)}</span> <span class="dr-t">{T.stops[i][0]}</span></p>
-                <div class="dr-for">
-                  <p class="for"><span>{s.f[0]}:</span> <span set:html={P(s.f[1])} /></p>
-                  {i === 4 && <p class="repo" set:html={P(T.s5.repo)} />}
-                </div>
-                <div class="dtxt">
-                  <p set:html={P(s.d)} />
-                  {i === 1 && <ul class="reg">{T.s2.reg.map((r) => <li>{r}</li>)}</ul>}
-                  {i === 2 && <figure class="chat m-only"><Image src={builderCzat} widths={[390, 780]} sizes="100vw" alt={T.s3.altChat} loading="lazy" /></figure>}
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
 
         <!-- 10. Reszta systemu: 4 + 3 -->
         <section class="rest wrap" aria-labelledby="rest-h">
@@ -582,7 +558,7 @@ const ld = {
 
   /* 5-9. Karty w stosie (D2). Karta przykleja się 12 px od góry i ma wysokość ekranu minus dwa takie odstępy.
      Tekst zaczyna się pod strefą lockupu (--case-lockup-h), żeby lockup przy powrocie w górę nie wchodził na tytuł. */
-  .cards { --k-top: 12px; --k-h: calc(100vh - 2 * var(--k-top)); --k-pad: clamp(24px, 3.2vw, 56px); --k-tw: min(30%, 380px);
+  .cards { --k-top: 12px; --k-h: calc(100vh - 2 * var(--k-top)); --k-pad: clamp(24px, 3.2vw, 56px); --k-tw: min(36%, 440px);
     --k-tt: max(clamp(28px, 7vh, 72px), calc(var(--case-lockup-h) - var(--k-top))); --steps-h: 64px; padding-inline: 12px; display: flow-root; }
   .card { position: sticky; top: var(--k-top); height: var(--k-h); margin-bottom: 24px; border-radius: 22px; overflow: hidden; isolation: isolate;
     --fg: #fff; --fg-dim: rgb(255 255 255 / .62); --kl: rgb(255 255 255 / .28); color: var(--fg); transform-origin: 50% 0; }
@@ -595,8 +571,9 @@ const ld = {
   .k-bg { position: absolute; inset: 0; z-index: -1; }
   /* `.case img { height: auto }` wygrywał z samym `.k-bg img` i pod zdjęciem zostawał pas */
   .case .k-bg img { width: 100%; height: 100%; object-fit: cover; }
-  .k-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(14 9 5 / .8) 0%, rgb(14 9 5 / .5) 34%, rgb(14 9 5 / .12) 62%), linear-gradient(0deg, rgb(14 9 5 / .6), transparent 22%); }
-  .k-bay .k-shade { background: linear-gradient(90deg, rgb(4 20 18 / .78) 0%, rgb(4 20 18 / .32) 34%, transparent 60%), linear-gradient(0deg, rgb(4 20 18 / .65), transparent 24%); }
+  /* D3: pod dłuższym tekstem (opis i „dla kogo”) cień trzyma się do ~40% szerokości */
+  .k-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(14 9 5 / .84) 0%, rgb(14 9 5 / .72) 36%, rgb(14 9 5 / .16) 62%), linear-gradient(0deg, rgb(14 9 5 / .6), transparent 22%); }
+  .k-bay .k-shade { background: linear-gradient(90deg, rgb(4 20 18 / .82) 0%, rgb(4 20 18 / .62) 36%, transparent 60%), linear-gradient(0deg, rgb(4 20 18 / .65), transparent 24%); }
   .k-dim { position: absolute; inset: 0; z-index: 5; background: #000; opacity: 0; pointer-events: none; }
   /* tekst: to samo miejsce w każdej karcie */
   .k-txt { position: absolute; left: var(--k-pad); top: var(--k-tt); width: var(--k-tw); }
@@ -604,6 +581,18 @@ const ld = {
   .k-n span { color: var(--fg-dim); }
   .st { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: var(--t-h); line-height: 1; letter-spacing: -.03em; margin-top: 14px; }
   .ss { margin-top: 16px; font-size: 18px; line-height: 1.5; opacity: .86; }
+  /* D3: opis i „dla kogo” na karcie, pod zdaniem stacji */
+  .k-more { margin-top: 20px; font-size: 15px; line-height: 1.5; }
+  .k-d { opacity: .78; }
+  .k-f { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--kl); font-weight: 500; }
+  .k-fl { display: block; margin-bottom: 4px; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; opacity: .66; }
+  /* niskie okno poziome (1000x568): ciaśniej, żeby tekst zmieścił się nad krokami */
+  @media (max-height: 640px) and (min-aspect-ratio: 9/10) {
+    .st { font-size: min(var(--t-h), 40px); margin-top: 10px; }
+    .ss { margin-top: 12px; font-size: 16px; }
+    .k-more { margin-top: 14px; font-size: 14px; }
+    .k-f { margin-top: 12px; padding-top: 10px; }
+  }
   /* obraz: prawa część karty nad krokami; rozmiary od pola obrazu (container query), telefony mieszczą się też na szerokość */
   .k-vis { position: absolute; left: calc(var(--k-pad) + var(--k-tw) + 3vw); right: var(--k-pad); top: var(--k-tt); bottom: calc(var(--steps-h) + 20px); container-type: size; display: grid; place-items: center; margin: 0; }
   .k-vis :global(.k-ph) { position: relative; height: min(100cqh, 100cqw * 1125 / 543); width: auto; aspect-ratio: 543 / 1125; }
@@ -633,19 +622,6 @@ const ld = {
   .k-steps li.on { color: var(--fg); font-weight: 600; }
   .k-steps b { font-weight: 600; margin-right: 8px; }
 
-  /* Szczegóły stacji pod kartami: numer i nazwa, zdanie „dla kogo”, opis */
-  .st-details { padding-block: clamp(72px, 9vw, 136px) clamp(48px, 6vw, 88px); }
-  .st-details ol { border-top: 1px solid var(--rule); }
-  .dr { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 5fr); gap: 20px clamp(24px, 3vw, 48px); padding-block: clamp(28px, 3vw, 44px); border-bottom: 1px solid var(--rule); }
-  .dr-n { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.02em; }
-  .dr-n .lbl { display: block; margin-bottom: 10px; font-family: 'GeneralSansV', sans-serif; letter-spacing: .12em; color: var(--dim); }
-  .dr-for { display: grid; gap: 28px; align-content: start; }
-  .for { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(20px, 1.7vw, 26px); line-height: 1.2; letter-spacing: -.02em; max-width: 16em; }
-  .for span:first-child { color: var(--dim); }
-  .dtxt { font-size: var(--t-body); line-height: 1.65; max-width: 34em; }
-  .reg { margin-top: 24px; border-top: 1px solid var(--rule); }
-  .reg li { padding: 12px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
-  .repo { font-size: 15px; line-height: 1.5; padding-top: 16px; border-top: 1px solid currentColor; opacity: .85; max-width: 26em; }
 
   /* 10. Reszta systemu */
   .rest { padding-block: clamp(96px, 11vw, 168px) clamp(64px, 7vw, 104px); }
@@ -692,7 +668,7 @@ const ld = {
     .k-txt { width: auto; max-width: 34em; flex: none; }
     .k-vis { flex: 1 1 0; min-height: 0; margin-block: 24px 20px; }
     .k-steps { flex: none; }
-    .k-shade, .k-bay .k-shade { background: linear-gradient(180deg, rgb(14 9 5 / .82) 0%, rgb(14 9 5 / .45) 32%, rgb(14 9 5 / .15) 62%, rgb(14 9 5 / .55) 100%); }
+    .k-shade, .k-bay .k-shade { background: linear-gradient(180deg, rgb(14 9 5 / .86) 0%, rgb(14 9 5 / .78) 48%, rgb(14 9 5 / .2) 70%, rgb(14 9 5 / .55) 100%); }
     .k-order { place-items: start center; }
     .k-laptop { width: min(100cqw, 100cqh * 1.1); }
     .k-vis :global(.k-ph2) { height: min(64cqh, 40cqw * 1125 / 543); right: 4cqw; }
@@ -711,12 +687,12 @@ const ld = {
     .card { border-radius: 18px; }
     .st { font-size: 32px; margin-top: 10px; }
     .ss { font-size: 16px; max-width: 22em; }
+    .k-more { margin-top: 12px; font-size: 14px; line-height: 1.45; }
+    .k-f { margin-top: 10px; padding-top: 8px; }
+    .k-vis { margin-block: 16px 14px; }
     .k-steps { gap: 6px; grid-template-columns: repeat(5, auto); justify-content: space-between; }
     .k-steps li span { display: none; }
     .k-steps li.on span { display: inline; }
-    .dr { grid-template-columns: 1fr; gap: 16px; }
-    .chat { margin-top: 20px; }
-    .chat img { width: 100%; border-radius: 12px; }
     .rest-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); scrollbar-width: none; }
     .rest-grid li { flex: 0 0 84%; scroll-snap-align: start; }
     /* miejsce na obrys fokusu kafla (przewijany pas obcina wszystko poza sobą) */
@@ -724,5 +700,14 @@ const ld = {
     .end-in { grid-template-columns: 1fr; }
     .thesis { padding-bottom: 160px; }
     .next-in { flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+  /* najmniejsze telefony (320x568): opis stacji i podpis kadru 05 znikają z ekranu (zostaje zdanie i „dla kogo”, żeby obraz nie zmalał do paska),
+     ale zostają dla czytników ekranu (recenzja Codexa) */
+  @media (max-width: 360px) and (max-height: 620px) {
+    .k-d, .k-fig .cap { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+    .k-f { margin-top: 12px; }
+    /* nazwa bieżącej stacji w krokach mieści się w całości (05 „Prowadzimy we dwoje”) */
+    .k-steps { gap: 4px; }
+    .k-steps li { font-size: 12px; }
   }
 </style>
