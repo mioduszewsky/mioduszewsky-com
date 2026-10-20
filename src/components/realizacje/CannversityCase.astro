@@ -14,6 +14,7 @@ import BrandFooter from '../BrandFooter.astro';
 import CaseLockup from './CaseLockup.astro';
 import { cannabisHref } from '../../content/cannabis';
 import type { Locale } from '../../i18n/site';
+import { nextCase as loopNext } from '../../content/realizacje-kolejnosc';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -28,12 +29,10 @@ const livePl = cannabisHref('realizacje', 'pl');
 const contact = pl ? '/pl/kontakt/#ctForm' : '/contact/#ctForm';
 const dir = `/case/cannversity/${pl ? 'pl' : 'en'}`;
 
-// Następna realizacja: Igor Grabowski (Kacper 20.10), PL i EN. Gdyby jego strony nie było, pierwsza istniejąca z listy.
-const pagesPl = import.meta.glob('../../pages/pl/realizacje/*.astro');
-const pagesEn = import.meta.glob('../../pages/work/*.astro');
-const order: [string, string][] = [['igor-grabowski', 'Igor Grabowski'], ['glassstone', 'GlassStone'], ['eskapizm', 'eskapizm']];
-const nextCase = order.find(([s]) => `../../pages/${pl ? 'pl/realizacje' : 'work'}/${s}.astro` in (pl ? pagesPl : pagesEn));
-const nextHref = nextCase ? `${pl ? '/pl/realizacje/' : '/work/'}${nextCase[0]}/` : undefined;
+// Następna realizacja: z pętli wspólnej dla czterech case'ów (src/content/realizacje-kolejnosc.ts), kształt [slug, nazwa] jak wcześniej.
+const next = loopNext('cannversity', locale);
+const nextCase: [string, string] = [next.slug, next.name];
+const nextHref = next.href;
 
 const T = pl ? {
   title: 'Cannversity: strona PL i EN dla branży konopnej · mioduszewsky',
