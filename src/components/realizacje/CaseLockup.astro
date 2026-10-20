@@ -116,8 +116,9 @@ const home = routes[locale].home;
   .case-lockup { transition: color .2s ease, transform .25s ease; }
   .lk-x, .lk-client { transition: color .2s ease; }
   /* Schowany lockup znika całkiem: logo klienta z sygnetem wystaje pod pudełko o kilka px i po translateY(-100%)
-     zostawało u góry ekranu kreskami (Cannversity, zrzut Kacpra 20.10). visibility gaśnie po zjeździe, wraca od razu. */
-  .case-lockup[data-lk-hidden] { transform: translateY(-100%); visibility: hidden; transition: color .2s ease, transform .25s ease, visibility 0s linear .25s; }
+     zostawało u góry ekranu kreskami (Cannversity, zrzut Kacpra 20.10). Zjazd o 24 px dalej niż pudełko; bez visibility,
+     żeby Tab nadal trafiał w lockup i :focus-within go odsłaniał (recenzja Codexa). */
+  .case-lockup[data-lk-hidden] { transform: translateY(calc(-100% - 24px)); }
   /* podkład: dwie pigułki dopasowane do zawartości (lockup i Menu z językiem), nie belka na całą szerokość */
   .lk, .case-lockup > :global(.site-menu) { position: relative; isolation: isolate; }
   .lk::before, .case-lockup > :global(.site-menu)::before {
