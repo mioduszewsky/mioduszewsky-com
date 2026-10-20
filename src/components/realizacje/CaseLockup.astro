@@ -8,6 +8,10 @@
 // Sekcje z filmem lub zdjęciem pod lockupem dostają w markupie data-tone="dark" albo "light" (z obrazu koloru nie odczytasz);
 // gdy obraz na telefonie jest inny (np. osobne nagranie pionowe), data-tone-m ustawia ton do 767 px szerokości.
 // Ten sam ton steruje przyciskiem Menu i przełącznikiem języka (zmienne --menu-* w SiteMenu).
+// Logo mioduszewsky nie idzie za tonem (Kacper 20.10, 09:30): domyślnie zawsze żółte 3D, w pigułce zawsze żółte 3D.
+// Płaskie czarne (pełna czerń) tylko tam, gdzie żółte 3D znika: tło pod logo w kolorze zbliżonym do żółci #ffcc33
+// (odległość RGB poniżej 90; krem i biel to ok. 200, więc zostają przy 3D) albo sekcja z obrazem oznaczona data-logo="flat".
+// Pierwszy ekran ustawia prop logo (do pierwszego pomiaru skryptu, bez mignięcia).
 // Chowanie (Sławek, runda 2): ton z tła nie chroni przed treścią pod lockupem (czarne logo na czarnym haśle, 1,0:1).
 // Pierwszy ekran: lockup zawsze, bez podkładu. Po 80 px w dół chowa się, w górę wraca; nad treścią (scrollY powyżej
 // wysokości lockupu) dostaje miękki podkład w tonie osobno pod lockupem i pod Menu. Nie chowa się z focusem w środku
@@ -25,10 +29,12 @@ interface Props {
   alternatePath?: string;
   /** ton pierwszego ekranu (do pierwszego pomiaru skryptu, bez mignięcia) */
   tone?: 'dark' | 'light';
+  /** logo mioduszewsky na pierwszym ekranie: '3d' (domyślnie) albo 'flat', gdy otwarcie ma żółte tło */
+  logo?: '3d' | 'flat';
   /** dopasowanie logo klienta: h = wysokość pudełka SVG jako ułamek wysokości wideo, base = linia bazowa jako ułamek wysokości SVG */
   fit?: Partial<Fit>;
 }
-const { locale, client, alternatePath, tone = 'light', fit } = Astro.props;
+const { locale, client, alternatePath, tone = 'light', logo = '3d', fit } = Astro.props;
 const pl = locale === 'pl';
 const NAMES: Record<string, string> = { eskapizm: 'eskapizm', cannversity: 'Cannversity', glassstone: 'GlassStone', 'igor-grabowski': 'Igor Grabowski' };
 const name = Astro.props.clientName ?? NAMES[client] ?? client;
@@ -55,15 +61,15 @@ const k = (1 - 2 * PAD) + X + 2 * GAP + (aspect ? aspect * f.h * BOX : .9);
 const vars = `--lk-k:${k.toFixed(3)};--lk-ct:${(BASE - f.h * f.base).toFixed(4)};--lk-ch:${f.h.toFixed(4)}`;
 const home = routes[locale].home;
 ---
-<header class="case-lockup" data-case-lockup data-lk-tone={tone} style={vars}>
+<header class="case-lockup" data-case-lockup data-lk-tone={tone} data-lk-logo={logo} style={vars}>
   <div class="lk">
     <a class="lk-home" href={home} aria-label={pl ? 'mioduszewsky. Strona główna.' : 'mioduszewsky. Home page.'}>
       <span class="lk-vid" aria-hidden="true">
-        <video class="lk-v" data-lk-v="dark" loop muted playsinline autoplay={tone === 'dark'} preload={tone === 'dark' ? 'metadata' : 'none'} width="800" height="222" tabindex="-1" poster="/logo3d/logo-nav-poster.webp">
+        <video class="lk-v" data-lk-v="3d" loop muted playsinline autoplay={logo === '3d'} preload={logo === '3d' ? 'metadata' : 'none'} width="800" height="222" tabindex="-1" poster="/logo3d/logo-nav-poster.webp">
           <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
-        <video class="lk-v" data-lk-v="light" loop muted playsinline autoplay={tone === 'light'} preload={tone === 'light' ? 'metadata' : 'none'} width="600" height="166" tabindex="-1" poster="/logo3d/logo-czarne-nav-poster.webp">
+        <video class="lk-v" data-lk-v="flat" loop muted playsinline autoplay={logo === 'flat'} preload={logo === 'flat' ? 'metadata' : 'none'} width="600" height="166" tabindex="-1" poster="/logo3d/logo-czarne-nav-poster.webp">
           <source src="/logo3d/logo-czarne-nav.mp4" type="video/mp4;codecs=hvc1" />
           <source src="/logo3d/logo-czarne-nav.webm" type="video/webm" />
         </video>
@@ -102,8 +108,8 @@ const home = routes[locale].home;
   .lk-vid { display: grid; width: var(--lk-w); }
   .lk-v { grid-area: 1 / 1; width: 100%; height: auto; display: block; transition: opacity .2s ease; }
   .lk-v::-webkit-media-controls-start-playback-button, .lk-v::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
-  [data-lk-tone='dark'] .lk-v[data-lk-v='light'], [data-lk-tone='light'] .lk-v[data-lk-v='dark'] { opacity: 0; }
-  [data-lk-tone='dark'] .lk-v[data-lk-v='dark'] { filter: drop-shadow(0 4px 10px rgb(0 0 0 / .22)); }
+  [data-lk-logo='3d'] .lk-v[data-lk-v='flat'], [data-lk-logo='flat'] .lk-v[data-lk-v='3d'] { opacity: 0; }
+  [data-lk-tone='dark'] .lk-v[data-lk-v='3d'] { filter: drop-shadow(0 4px 10px rgb(0 0 0 / .22)); }
   /* × cienki, w kolorze lockupu, środek na środku x-height mioduszewsky */
   .lk-x { flex: none; width: calc(var(--lk-h) * .3); height: calc(var(--lk-h) * .3); margin: calc(var(--lk-h) * .355) calc(var(--lk-w) * .075) 0; fill: none; stroke: currentColor; stroke-width: 1.4; vector-effect: non-scaling-stroke; }
   .lk-x path { vector-effect: non-scaling-stroke; }
@@ -165,13 +171,26 @@ const home = routes[locale].home;
       }
       return null;
     };
+    // Wariant logo: 3D, chyba że pod logo leży żółte tło (odległość RGB od #ffcc33 poniżej 90) albo obraz z data-logo="flat".
+    // Sekcja z data-tone (film, zdjęcie) bez data-logo = 3D.
+    const YEL = [255, 204, 51];
+    const logoOf = (el: Element | null): '3d' | 'flat' => {
+      for (let n = el; n; n = n.parentElement) {
+        const d = (n as HTMLElement).dataset;
+        if (d?.logo === 'flat' || d?.logo === '3d') return d.logo;
+        if (d?.tone || d?.toneM) return '3d';
+        const c = bg(n);
+        if (c) return Math.hypot(c[0] - YEL[0], c[1] - YEL[1], c[2] - YEL[2]) < 90 ? 'flat' : '3d';
+      }
+      return '3d';
+    };
     // Geometria lockupu (wysokość i punkt pomiaru tonu, z offset*, czyli bez transformacji chowania) w pamięci:
     // odświeżana tylko po resize, orientationchange i wczytaniu fontów, żeby klatka scrolla nie wymuszała układu.
     let geo = { h: 0, x: 0, y: 0 }, dirty = true;
     const readGeo = () => { geo = { h: lk.offsetHeight, x: mark.offsetLeft + mark.offsetWidth / 2, y: mark.offsetTop + mark.offsetHeight / 2 }; dirty = false; };
     const measure = () => {
       const top = document.elementsFromPoint(geo.x, geo.y).find((el) => !lk.contains(el)) ?? null;
-      return toneOf(top) ?? toneOf(document.body) ?? 'light';
+      return { t: toneOf(top) ?? toneOf(document.body) ?? 'light', l: logoOf(top) };
     };
     const play = (v?: HTMLVideoElement) => { if (v && !still.matches && v.paused) { v.preload = 'auto'; v.play().catch(() => {}); } };
     // Chowanie i podkład. Histereza 6 px: drżenie palca nie przełącza; lastY rusza dopiero po wyraźnym ruchu.
@@ -185,20 +204,24 @@ const home = routes[locale].home;
       if (dirty) readGeo();
       const y = Math.max(0, scrollY);
       const hold = y <= 80 || lk.matches(':focus-within') || menuOpen();
-      const t = measure();
+      const { t, l: under } = measure();
       let hide = lk.hasAttribute('data-lk-hidden');
       if (hold) { hide = false; lastY = y; }
       else if (y - lastY > 6) { hide = true; lastY = y; }
       else if (lastY - y > 6) { hide = false; lastY = y; }
       // ...potem zapisy
       lk.toggleAttribute('data-lk-hidden', hide);
-      lk.toggleAttribute('data-lk-solid', !hide && y > geo.h);
-      if (lk.dataset.lkTone === t) return;
-      lk.dataset.lkTone = t;
-      const on = vids[t], off = vids[t === 'dark' ? 'light' : 'dark'];
+      const solid = !hide && y > geo.h;
+      lk.toggleAttribute('data-lk-solid', solid);
+      if (lk.dataset.lkTone !== t) lk.dataset.lkTone = t;
+      // w pigułce zawsze 3D
+      const l = solid ? '3d' : under;
+      if (lk.dataset.lkLogo === l) return;
+      lk.dataset.lkLogo = l;
+      const on = vids[l], off = vids[l === '3d' ? 'flat' : '3d'];
       // WebKit odmawia play() wideo z opacity 0: start dopiero w następnej klatce, gdy jest już widoczne
       requestAnimationFrame(() => play(on));
-      setTimeout(() => { if (lk.dataset.lkTone === t) off?.pause(); }, 250);
+      setTimeout(() => { if (lk.dataset.lkLogo === l) off?.pause(); }, 250);
     };
     const req = () => { if (!tick) { tick = true; requestAnimationFrame(upd); } };
     addEventListener('scroll', req, { passive: true });
