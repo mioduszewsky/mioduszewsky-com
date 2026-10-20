@@ -219,3 +219,31 @@ Werdykt Kacpra: „lipa, nie działa". **Nie podchodzić do tego ponownie** bez
 nowego pomysłu na kontrast - na stronie dalmatyńczyk działa wyłącznie dlatego,
 że stoi na kontrolowanej czystej czerni (`.finale` tło #000000), a favicon tej
 kontroli nad tłem nie ma.
+
+## Wariant czarny (ten sam balon) - 20.10.2026
+
+Zamówiony przez Kacpra 20.10 jako uniwersalny wariant do dalszego użytku: **ta sama bryła, połysk i światło, tylko
+czarny materiał** (`#111111`). Pierwsze użycie: lockup „mioduszewsky × klient” w case'ach (`CaseLockup.astro`),
+gdzie jasne tło (krem, biel, żółć Cannversity #ffcc33) dostaje czarne 3D, a ciemne tło i film żółte 3D.
+
+```bash
+blender -b -P tube_logo.py -- 111111 "$PWD/tube_czarne.blend"      # scena (w repo: tube_czarne.blend)
+blender -b tube_czarne.blend -o "$PWD/still_####" -F PNG -f 1       # stillka, ok. 20 s
+blender -b tube_czarne.blend -o "$PWD/frames/f_####" -F PNG -s 1 -e 180 -a   # pętla, ok. 70 min na CPU
+# wideo do nawigacji 800x222 (jak logo-nav):
+ffmpeg -framerate 30 -i frames/f_%04d.png -vf scale=800:222 -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf 36 -row-mt 1 logo-czarne-3d-nav.webm
+ffmpeg -framerate 30 -i frames/f_%04d.png -vf scale=800:222 -c:v hevc_videotoolbox -allow_sw 1 -alpha_quality 0.7 -q:v 58 -tag:v hvc1 -pix_fmt bgra logo-czarne-3d-nav.mp4
+```
+
+Pomiar (klatka 1, 380 px): mediana sRGB liter 25 (stare płaskie `logo-czarne-nav` 56, czytało się jako szare),
+kontrast mediany z żółcią #ffcc33 11,7:1, z kremem 16,6:1. Sylwetka zgodna z żółtym `logo.webm` (IoU 0,9998), więc
+przełączanie kolorów nie przeskakuje.
+
+**Gotowe pliki marki:** `marka/` (opis w `marka/README.md`): PNG i WebP z alfą 2048/1024/512 px, żółte i czarne.
+
+**ODRZUCONE 20.10: kontur wokół żółtego logo.** Ciemna obwódka (wpalona w wideo, żeby żółte czytało się na żółtym)
+- werdykt Kacpra: „balon nie ma obramówki”. Druga po faviconie dalmatyńczyka (20.07) próba ratowania kontrastu
+konturem, obie odrzucone. Kontrast z tłem rozwiązuje kolor balonu (żółty albo czarny), nie obrys.
+
+**`logo-czarne-nav.*` w `public/logo3d/` to stara, matowa grafitowa wersja**, odrzucona 20.10 („czarne wygląda na
+szare, płaskie”). Nie używać; zostaje tylko dlatego, że inne gałęzie mogą ją jeszcze wskazywać.
