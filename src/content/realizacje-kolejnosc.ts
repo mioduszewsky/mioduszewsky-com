@@ -1,7 +1,7 @@
 // Pętla „Następna realizacja” (decyzja Kacpra 20.10.2026), jedno źródło dla wszystkich czterech case'ów.
 // PL: eskapizm → Cannversity → Igor Grabowski → GlassStone → eskapizm.
 // EN bez GlassStone (strona tylko po polsku): eskapizm → Cannversity → Igor → eskapizm.
-// Kolejność kart na stronie zbiorczej (CaseIndex) jest ustawiona osobno i nie wynika z tego pliku.
+// Ta sama kolejność kart na stronie zbiorczej (CaseIndex czyta caseOrder).
 import type { Locale } from '../i18n/site';
 
 // bez obrazu: wiersz „Następna realizacja” to sam tekst (runda 3, 20.10)
