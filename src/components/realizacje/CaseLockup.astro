@@ -13,9 +13,12 @@
 // (odległość RGB poniżej 90; krem i biel to ok. 200, więc zostają przy 3D) albo sekcja z obrazem oznaczona data-logo="flat".
 // Pierwszy ekran ustawia prop logo (do pierwszego pomiaru skryptu, bez mignięcia).
 // Chowanie (Sławek, runda 2): ton z tła nie chroni przed treścią pod lockupem (czarne logo na czarnym haśle, 1,0:1).
-// Pierwszy ekran: lockup zawsze, bez podkładu. Po 80 px w dół chowa się, w górę wraca; nad treścią (scrollY powyżej
-// wysokości lockupu) dostaje miękki podkład w tonie osobno pod lockupem i pod Menu. Nie chowa się z focusem w środku
+// Pierwszy ekran: lockup zawsze, bez podkładu. Po 80 px w dół chowa się, w górę wraca. Nie chowa się z focusem w środku
 // ani przy otwartym Menu.
+// Podkład (pigułka) tylko tam, gdzie bez niego logo byłoby nieczytelne (Kacper 20.10, 11:10), osobno pod lockupem i pod Menu:
+// gdy w obrysie pigułki leży treść (tekst, element w linii, przycisk, kreska obramowania, obraz albo film węższy niż ekran)
+// albo granica dwóch teł. Nad gładkim tłem i nad filmem sceny na całą szerokość lockup unosi się bez podkładu.
+// Test obejmuje same litery i przycisk Menu, nie cały obrys pigułki. Pigułka gaśnie 350 ms po zejściu treści, żeby nie mrugała w przerwach między wierszami.
 import SiteMenu from '../SiteMenu.astro';
 import { routes, type Locale } from '../../i18n/site';
 
@@ -135,7 +138,7 @@ const home = routes[locale].home;
   .lk::before { inset: calc(var(--lk-h) * -.12) -14px; }
   .case-lockup > :global(.site-menu)::before { inset: -6px -14px -6px -6px; }
   .case-lockup[data-lk-tone='dark'] .lk::before, .case-lockup[data-lk-tone='dark'] > :global(.site-menu)::before { background: rgb(17 17 17 / .6); }
-  .case-lockup[data-lk-solid] .lk::before, .case-lockup[data-lk-solid] > :global(.site-menu)::before { opacity: 1; }
+  .case-lockup[data-lk-solid] .lk::before, .case-lockup[data-lk-solid-m] > :global(.site-menu)::before { opacity: 1; }
   @media (prefers-reduced-motion: reduce) {
     .lk-v, .case-lockup, .lk-x, .lk-client, .lk::before, .case-lockup > :global(.site-menu)::before { transition: none; }
   }
@@ -186,12 +189,111 @@ const home = routes[locale].home;
     };
     // Geometria lockupu (wysokość i punkt pomiaru tonu, z offset*, czyli bez transformacji chowania) w pamięci:
     // odświeżana tylko po resize, orientationchange i wczytaniu fontów, żeby klatka scrolla nie wymuszała układu.
-    let geo = { h: 0, x: 0, y: 0 }, dirty = true;
-    const readGeo = () => { geo = { h: lk.offsetHeight, x: mark.offsetLeft + mark.offsetWidth / 2, y: mark.offsetTop + mark.offsetHeight / 2 }; dirty = false; };
+    // Obszary czytelności: same litery lockupu (pudełko .lk, 4 px zapasu) i sam przycisk Menu z językiem. Nie cały obrys
+    // pigułki: treść obok liter nie psuje ich czytelności, a szeroki obrys zapalał pigułkę prawie wszędzie.
+    type Box = { l: number; r: number; t: number; b: number };
+    const menu = lk.querySelector<HTMLElement>(':scope > .site-menu');
+    let geo = { h: 0, x: 0, y: 0, boxes: [] as Box[] }, dirty = true;
+    const readGeo = () => {
+      const boxes = [{ l: mark.offsetLeft - 4, r: mark.offsetLeft + mark.offsetWidth + 4, t: mark.offsetTop - 4, b: mark.offsetTop + mark.offsetHeight + 4 }];
+      if (menu) boxes.push({ l: menu.offsetLeft, r: menu.offsetLeft + menu.offsetWidth, t: menu.offsetTop, b: menu.offsetTop + menu.offsetHeight });
+      geo = { h: lk.offsetHeight, x: mark.offsetLeft + mark.offsetWidth / 2, y: mark.offsetTop + mark.offsetHeight / 2, boxes };
+      dirty = false;
+    };
     const measure = () => {
       const top = document.elementsFromPoint(geo.x, geo.y).find((el) => !lk.contains(el)) ?? null;
       return { t: toneOf(top) ?? toneOf(document.body) ?? 'light', l: logoOf(top) };
     };
+    // Czy pod obszarem czytelności jest coś, na czym logo straci czytelność. Style i tła liczone raz na klatkę (Map w busy).
+    const over = (a: { left: number; right: number; top: number; bottom: number }, r: Box) => a.right - a.left > 0 && a.left < r.r && a.right > r.l && a.top < r.b && a.bottom > r.t;
+    const opaque = (c: string) => !/^rgba\(.*,\s*0\)$|^transparent$/.test(c);
+    const rng = document.createRange();
+    const MEDIA = /^(IMG|VIDEO|CANVAS|PICTURE|IFRAME|svg)$/;
+    const borders = (cs: CSSStyleDeclaration) => ['top', 'right', 'bottom', 'left'].some((s) => parseFloat(cs.getPropertyValue(`border-${s}-width`)) > 0 && opaque(cs.getPropertyValue(`border-${s}-color`)));
+    // pseudo-element z kolorem albo obramowaniem (kreska, znacznik). Pozycjonowany: prostokąt z top/left/width/height
+    // względem elementu (przybliżenie: element jako blok odniesienia). Inny: liczy się jak treść całego elementu.
+    const drawn = (el: Element, p: string, b: DOMRect, r: Box) => {
+      const s = getComputedStyle(el, p);
+      if (s.content === 'none' || s.display === 'none' || !(opaque(s.backgroundColor) || borders(s))) return false;
+      if (s.position !== 'absolute') return true;
+      const n = (v: string) => (v.endsWith('px') ? parseFloat(v) : NaN);
+      const w = n(s.width), h = n(s.height);
+      if (!(w >= 0 && h >= 0)) return true;
+      const left = !isNaN(n(s.left)) ? b.left + n(s.left) : !isNaN(n(s.right)) ? b.right - n(s.right) - w : b.left;
+      const top = !isNaN(n(s.top)) ? b.top + n(s.top) : !isNaN(n(s.bottom)) ? b.bottom - n(s.bottom) - h : b.top;
+      return over({ left, right: left + w, top, bottom: top + h }, r);
+    };
+    const content = (el: Element, r: Box, cs: CSSStyleDeclaration) => {
+      const media = el instanceof SVGElement ? (el.ownerSVGElement ?? el) : el;
+      if (MEDIA.test(media.tagName)) {
+        // tło to tylko obraz sceny: w sekcji oznaczonej data-tone i na całą szerokość ekranu (film otwarcia, sceny eskapizmu).
+        // Węższe nagranie, zrzut ekranu poza sceną (też na całą szerokość telefonu) albo ikona to treść.
+        const m = media.getBoundingClientRect();
+        return !(media.closest('[data-tone],[data-tone-m]') && m.width >= innerWidth * .98 && m.top <= r.t && m.bottom >= r.b);
+      }
+      if (/^(HR|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return true;
+      // element w linii tylko z widoczną treścią: tekst, tło albo obramowanie (pusta oprawa nie zapala pigułki)
+      if (cs.display.startsWith('inline') && (/\S/.test(el.textContent ?? '') || opaque(cs.backgroundColor) || borders(cs))) return true;
+      for (const n of el.childNodes) {
+        if (n.nodeType !== 3 || !/\S/.test(n.nodeValue ?? '')) continue;
+        rng.selectNodeContents(n);
+        for (const a of rng.getClientRects()) if (over(a, r)) return true;
+      }
+      const b = el.getBoundingClientRect();
+      if (drawn(el, '::before', b, r) || drawn(el, '::after', b, r)) return true;
+      const w = (s: string) => parseFloat(cs.getPropertyValue(`border-${s}-width`)) || 0;
+      const vis = (s: string) => w(s) > 0 && opaque(cs.getPropertyValue(`border-${s}-color`));
+      return (vis('top') && over({ left: b.left, right: b.right, top: b.top, bottom: b.top + w('top') }, r))
+        || (vis('bottom') && over({ left: b.left, right: b.right, top: b.bottom - w('bottom'), bottom: b.bottom }, r))
+        || (vis('left') && over({ left: b.left, right: b.left + w('left'), top: b.top, bottom: b.bottom }, r))
+        || (vis('right') && over({ left: b.right - w('right'), right: b.right, top: b.top, bottom: b.bottom }, r));
+    };
+    // wygląd tła w punkcie: ton sekcji z obrazem (data-tone) albo kolor pierwszego nieprzezroczystego przodka
+    const surface = (el: Element, memo: Map<Element, string>): string => {
+      const hit = memo.get(el);
+      if (hit) return hit;
+      let k = 'root';
+      for (let n: Element | null = el; n; n = n.parentElement) {
+        const d = (n as HTMLElement).dataset;
+        const t = (narrow.matches && d?.toneM) || d?.tone;
+        if (t) { k = `obraz:${t}`; break; }
+        const c = bg(n);
+        if (c) { k = c.join(); break; }
+      }
+      memo.set(el, k);
+      return k;
+    };
+    // Próbki: siatka co ok. 44 px na trzech wysokościach (tło i treść) plus dwa gęste piony co 6 px, które łapią
+    // poziome kreski i pojedyncze wiersze przechodzące przez litery między wierszami siatki. Ok. 50 trafień na obszar.
+    const busy = (r: Box) => {
+      const pts: [number, number][] = [];
+      const cols = Math.max(2, Math.round((r.r - r.l) / 44));
+      for (let i = 0; i <= cols; i++) for (let j = 0; j <= 2; j++) pts.push([r.l + (r.r - r.l) * i / cols, r.t + (r.b - r.t) * j / 2]);
+      for (const fx of [.3, .7]) for (let y = r.t + 3; y < r.b; y += 6) pts.push([r.l + (r.r - r.l) * fx, y]);
+      const seen = new Set<Element>(), memo = new Map<Element, string>();
+      let key: string | undefined;
+      for (const [px, py] of pts) {
+        const el = document.elementsFromPoint(Math.min(innerWidth - 1, Math.max(0, px)), Math.max(0, py)).find((e) => !lk.contains(e));
+        if (!el) continue;
+        if (!seen.has(el)) { seen.add(el); if (content(el, r, getComputedStyle(el))) return true; }
+        const k = surface(el, memo);
+        if (key === undefined) key = k;
+        else if (k !== key) return true;
+      }
+      return false;
+    };
+    const GRACE = 350;
+    // -Infinity = jeszcze bez treści pod lockupem (zero dawało fałszywą pigułkę przez pierwsze 350 ms strony)
+    // Koszt: pomiar obszaru to do ok. 50 hit-testów (1-3 ms). Żeby klatka scrolla została lekka (scroll-film eskapizmu
+    // rysuje w rAF), mierzony jest jeden obszar (lockup albo Menu, na zmianę) najwyżej co EVERY ms; drugi trzyma ostatni
+    // wynik, a GRACE to przykrywa. Pomiar pominięty w ostatniej klatce przewijania dogania timer (late).
+    // Pomiar kontrolny SETTLE ms po ostatnim ruchu: napisy scen dojeżdżają animacją już po zatrzymaniu przewijania.
+    // Przebieg z timera (forced) mierzy oba obszary i nie przestawia pomiaru kontrolnego, więc bez przewijania
+    // timery wygasają, zamiast krążyć.
+    const EVERY = 60, SETTLE = 700;
+    let need = [-Infinity, -Infinity], again = 0, turn = 0, wasUp = false, lastBusy = -Infinity, late = false;
+    let settle = 0, forced = false;
+    const force = () => { forced = true; req(); };
     const play = (v?: HTMLVideoElement) => { if (v && !still.matches && v.paused) { v.preload = 'auto'; v.play().catch(() => {}); } };
     // Chowanie i podkład. Histereza 6 px: drżenie palca nie przełącza; lastY rusza dopiero po wyraźnym ruchu.
     const panel = lk.querySelector<HTMLElement>('[popover]');
@@ -209,13 +311,32 @@ const home = routes[locale].home;
       if (hold) { hide = false; lastY = y; }
       else if (y - lastY > 6) { hide = true; lastY = y; }
       else if (lastY - y > 6) { hide = false; lastY = y; }
+      // pigułka: lockup widoczny nad treścią strony i coś pod obrysem (z wygaszeniem po GRACE)
+      const up = !hide && y > geo.h, now = performance.now();
+      if (!up) need = [-Infinity, -Infinity];
+      else if (!wasUp || forced || now - lastBusy >= EVERY) {
+        // w klatce wynurzenia i w przebiegu z timera mierz oba obszary, poza tym jeden na EVERY ms, na zmianę
+        turn = (turn + 1) % geo.boxes.length;
+        geo.boxes.forEach((r, i) => { if ((!wasUp || forced || i === turn) && busy(r)) need[i] = now; });
+        lastBusy = now;
+      } else late = true;
+      wasUp = up;
+      if (!forced) { clearTimeout(settle); if (up) settle = setTimeout(force, SETTLE); }
+      forced = false;
+      const solid = geo.boxes.map((_, i) => up && now - need[i] < GRACE);
       // ...potem zapisy
       lk.toggleAttribute('data-lk-hidden', hide);
-      const solid = !hide && y > geo.h;
-      lk.toggleAttribute('data-lk-solid', solid);
+      lk.toggleAttribute('data-lk-solid', !!solid[0]);
+      lk.toggleAttribute('data-lk-solid-m', !!solid[1]);
+      // pigułka w trakcie wygaszania: sprawdź jeszcze raz, gdy minie jej pozostały czas, także bez przewijania
+      clearTimeout(again);
+      const left = solid.map((s, i) => (s && need[i] !== now ? need[i] + GRACE - now : Infinity));
+      if (late) left.push(lastBusy + EVERY - now);
+      late = false;
+      if (Math.min(...left) < Infinity) again = setTimeout(force, Math.max(0, Math.min(...left)) + 16);
       if (lk.dataset.lkTone !== t) lk.dataset.lkTone = t;
       // w pigułce zawsze 3D
-      const l = solid ? '3d' : under;
+      const l = solid[0] ? '3d' : under;
       if (lk.dataset.lkLogo === l) return;
       lk.dataset.lkLogo = l;
       const on = vids[l], off = vids[l === '3d' ? 'flat' : '3d'];
