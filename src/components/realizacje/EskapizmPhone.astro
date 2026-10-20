@@ -69,7 +69,8 @@ const vars = `--zt:${top};--zb:${bottom ?? (top.includes('gradient') ? '#FCFFF5'
   [data-status] .content { top: calc(75 * var(--u)); }
   /* tło górnej strefy: kolor albo gradient (np. poziome przejście tła strony z nagrania) */
   .zt { top: 0; left: 0; right: 0; height: calc(75 * var(--u)); background: var(--zt); }
-  .content :global(img), .content :global(video), .content :global(picture), .content :global(.loop) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); display: block; }
+  /* .esk-phone na początku: wyższa waga niż `.case img { height: auto }` strony, inaczej zrzut miał naturalną wysokość i był tylko obcinany */
+  .esk-phone .content :global(img), .esk-phone .content :global(video), .esk-phone .content :global(picture), .esk-phone .content :global(.loop) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); display: block; }
   /* pasek statusu: godzina i ikony na wysokości środka wyspy, każda grupa na środku swojego „ucha” obok wyspy */
   .sb { top: calc(11 * var(--u)); height: calc(34 * var(--u)); left: 0; right: 0; z-index: 29; color: #0a0a0a; font: 600 calc(21 * var(--u)) / 1 -apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif; letter-spacing: -.01em; }
   .sb b { position: absolute; top: 50%; left: calc(96 * var(--u)); translate: -50% -50%; font-weight: inherit; }

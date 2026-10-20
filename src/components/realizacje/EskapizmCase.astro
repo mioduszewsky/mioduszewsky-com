@@ -275,7 +275,9 @@ const ld = {
             <div class="shade" aria-hidden="true"></div>
             <div class="s-txt s-right"><p class="lbl">01</p><h2 id="s1-h" class="st" set:html={P(T.s1.t)} /><p class="ss" set:html={P(T.s1.s)} /></div>
             <EskapizmPhone class="ph ph-s1" dark top="linear-gradient(90deg, #F6F9F0, #F6F9F0 22%, #FAFDF2 50%, #FCFFF4 62%)" bottom="#FCFFF4">
-              <Loop name="kalkulator" w={600} h={1298} alt={T.s1.alt} />
+              {/* nagranie 600x1156: pusty pas pod nagłówkiem strony (wiersze 72-213, pusty w każdej klatce) wycięty, żeby kadr 1:1 mieścił się
+                 między strefami telefonu i przycisk „Zobacz pakiety” był cały (runda 4) */}
+              <Loop name="kalkulator" w={600} h={1156} alt={T.s1.alt} />
             </EskapizmPhone>
           </div>
           <div class="detail wrap">
