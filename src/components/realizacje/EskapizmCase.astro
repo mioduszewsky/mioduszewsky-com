@@ -11,7 +11,6 @@ import ExtArrow from './ExtArrow.astro';
 import BrandFooter from '../BrandFooter.astro';
 import EskapizmPhone from './EskapizmPhone.astro';
 import Loop from './Loop.astro';
-import biurko from '../../assets/realizacje/eskapizm/scena-biurko.webp';
 // stacja 01: to samo zdjęcie z kadrem kaskady okien z filmu otwarcia wypalonym na ekranie laptopa (runda 3, perspektywa z narożników ekranu)
 import biurkoEkran from '../../assets/realizacje/eskapizm/scena-biurko-ekran.webp';
 import zatoka from '../../assets/realizacje/eskapizm/scena-zatoka.webp';
@@ -181,10 +180,8 @@ const restHref = ['tajlandia', 'wietnam', 'filipiny', 'indonezja', 'blog', 'podr
 const trio = [planDnia, planBudzet];
 
 // Scena biurka i zatoki: obraz jako <picture>, desktop i telefon osobno (telefon dostaje mniejsze pliki).
-const biurkoSet = (await getImage({ src: biurko, widths: [828, 1280, 1920, 2560, 3356], format: 'webp' })).srcSet.attribute;
 const kaskadaMSet = (await getImage({ src: kaskadaM, widths: [390, 780], format: 'webp' })).srcSet.attribute;
 const zatokaPionSet = (await getImage({ src: zatokaPion, widths: [600, 900, 1200], format: 'webp' })).srcSet.attribute;
-const biurkoSrc = (await getImage({ src: biurko, width: 1920, format: 'webp' })).src;
 const biurkoEkranSet = (await getImage({ src: biurkoEkran, widths: [828, 1280, 1920, 2560, 3356], format: 'webp' })).srcSet.attribute;
 const biurkoEkranSrc = (await getImage({ src: biurkoEkran, width: 1920, format: 'webp' })).src;
 
@@ -260,94 +257,81 @@ const ld = {
           </div>
         </div>
 
-        <!-- 5. Stacja 01: biurko wieczorem, telefon z kalkulatorem -->
-        <section class="station" id="stacja-01" data-station="0" aria-labelledby="s1-h">
-          <div class="scene desk evening" data-tone="dark">
-            <img class="scene-bg" srcset={biurkoEkranSet} sizes="100vw" src={biurkoEkranSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" />
-            <div class="shade" aria-hidden="true"></div>
-            <div class="s-txt s-right"><p class="lbl">01</p><h2 id="s1-h" class="st" set:html={P(T.s1.t)} /><p class="ss" set:html={P(T.s1.s)} /></div>
-            <EskapizmPhone class="ph ph-s1" dark top="#FCFFF4" bottom="#FCFFF4">
+        <!-- 5-9. Stacje jako karty w stosie (D2, koncepcja zaakceptowana przez Fincha 20.10). Zwykłe przewijanie w pionie:
+             każda karta przykleja się u góry (sticky), następna wjeżdża na nią od dołu, karta pod spodem lekko się cofa i ciemnieje
+             (skrypt niżej, tylko transform i opacity). Każda stacja ma inne tło, tekst zawsze w tym samym miejscu (lewy górny róg,
+             pod strefą lockupu), kroki 01-05 w dolnej krawędzi każdej karty. Opisy stacji pod kartami (Szczegóły stacji). -->
+        <section class="cards" data-cards aria-labelledby="map-h">
+          <article class="card k-dark" id="stacja-01" data-station="0" aria-labelledby="s1-h">
+            <div class="k-bg" data-tone="dark"><img srcset={biurkoEkranSet} sizes="100vw" src={biurkoEkranSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" /><i class="k-shade"></i></div>
+            <div class="k-txt"><p class="k-n">{num(0)}<span> / 05</span></p><h2 id="s1-h" class="st" set:html={P(T.s1.t)} /><p class="ss" set:html={P(T.s1.s)} /></div>
+            <div class="k-vis">
               {/* runda 5: kalkulator w formie z żywej strony, zielony dok z dołu i panel wysuwany z dołu (nagranie z produkcji 390x752,
                  proporcja pola treści makiety 500:964, więc 600x1156 wchodzi 1:1 między strefy bez przycinania) */}
-              <Loop name="kalkulator" w={600} h={1156} alt={T.s1.alt} />
-            </EskapizmPhone>
-          </div>
-          <div class="detail wrap">
-            <p class="for"><span>{T.s1.f[0]}:</span> <span set:html={P(T.s1.f[1])} /></p>
-            <div class="dtxt"><p set:html={P(T.s1.d)} /></div>
-          </div>
-        </section>
-
-        <!-- 6. Stacja 02: zamówienie na ekranie laptopa z tej samej sceny, telefon z płatnością obok -->
-        <section class="station" id="stacja-02" data-station="1" aria-labelledby="s2-h">
-          <div class="scene desk dusk" data-tone="dark">
-            <div class="desk-img">
-              <img class="scene-bg" srcset={biurkoSet} sizes="(max-width: 767px) 250vw, 100vw" src={biurkoSrc} width="3356" height="1874" alt="" loading="lazy" decoding="async" />
-              <!-- prostokąt ekranu laptopa z silnika filmu: PHOTO.scr [560.5, 290, 557.5, 348.5] na 1678x937 -->
-              <div class="laptop"><Loop name="zamowienie" w={960} h={600} alt={T.s2.alt} /><i class="glass" aria-hidden="true"></i></div>
+              <EskapizmPhone class="ph k-ph" dark top="#FCFFF4" bottom="#FCFFF4"><Loop name="kalkulator" w={600} h={1156} alt={T.s1.alt} /></EskapizmPhone>
             </div>
-            <div class="shade" aria-hidden="true"></div>
-            <div class="s-txt s-left"><p class="lbl">02</p><h2 id="s2-h" class="st" set:html={P(T.s2.t)} /><p class="ss" set:html={P(T.s2.s)} /></div>
-            <EskapizmPhone class="ph ph-s2" dark bottom="#F4F4F3" pos="50% 87%">
-              <Loop name="platnosc" w={600} h={1298} alt={T.s2.altPhone} />
-            </EskapizmPhone>
-          </div>
-          <div class="detail wrap">
-            <p class="for"><span>{T.s2.f[0]}:</span> <span set:html={P(T.s2.f[1])} /></p>
-            <div class="dtxt"><p set:html={P(T.s2.d)} /><ul class="reg">{T.s2.reg.map((r) => <li>{r}</li>)}</ul></div>
-          </div>
-        </section>
-
-        <!-- 7. Stacja 03: warsztat Justyny na zieleni -->
-        <section class="station green" id="stacja-03" data-station="2" aria-labelledby="s3-h">
-          <div class="wrap g-head"><p class="lbl">03</p><h2 id="s3-h" class="st" set:html={P(T.s3.t)} /><p class="ss" set:html={P(T.s3.s)} /></div>
-          <div class="wrap">
-            <!-- ton lockupu nad zrzutami: na komputerze pod lockupem ciemny czat i ciemny pasek panelu, na telefonie jasny ekran -->
-            <div class="screen" data-tone="light"><Loop name="builder" mobile="builder-m" w={1920} h={1200} mw={780} mh={488} alt={T.s3.alt} /></div>
-            <figure class="chat m-only"><Image src={builderCzat} widths={[390, 780]} sizes="100vw" alt={T.s3.altChat} loading="lazy" /></figure>
-          </div>
-          <div class="detail wrap">
-            <p class="for"><span>{T.s3.f[0]}:</span> <span set:html={P(T.s3.f[1])} /></p>
-            <div class="dtxt"><p set:html={P(T.s3.d)} /></div>
-          </div>
-        </section>
-
-        <!-- 8. Stacja 04: zatoka Phi Phi, trio telefonów (kulminacja) -->
-        <section class="station" id="stacja-04" data-station="3" aria-labelledby="s4-h">
-          <div class="scene bay" data-tone="dark">
-            <picture>
-              <source media="(max-width: 767px)" srcset={zatokaPionSet} sizes="100vw" />
-              <Image class="scene-bg" src={zatoka} widths={[1280, 1920, 2560]} sizes="100vw" alt={T.s4.sceneAlt} loading="lazy" />
-            </picture>
-            <div class="shade" aria-hidden="true"></div>
-            <div class="s-txt s-left"><p class="lbl">04</p><h2 id="s4-h" class="st" set:html={P(T.s4.t)} /><p class="ss" set:html={P(T.s4.s)} /></div>
-            <div class="trio">
-              <EskapizmPhone class="ph t-side d-only" tilt={-5} dark top="#FAFBF6"><Image src={trio[0]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[0]} loading="lazy" /></EskapizmPhone>
-              <EskapizmPhone class="ph t-mid" dark top="#FAFBF6"><Loop name="moj-plan" w={600} h={1298} alt={T.s4.altPlan} /></EskapizmPhone>
-              <EskapizmPhone class="ph t-side d-only" tilt={5} dark top="#FAFBF6"><Image src={trio[1]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[1]} loading="lazy" /></EskapizmPhone>
+            <ol class="k-steps" aria-hidden="true">{T.stops.map(([n], j) => <li class:list={[{ on: j === 0, done: j < 0 }]}><b>{num(j)}</b><span>{n}</span></li>)}</ol>
+            <i class="k-dim" aria-hidden="true"></i>
+          </article>
+          <!-- karta 02 bez zdjęcia biurka (D2: 01 i 02 miały to samo tło): krem, rysowany laptop z nagraniem zamówienia, telefon z płatnością -->
+          <article class="card k-cream" id="stacja-02" data-station="1" aria-labelledby="s2-h">
+            <div class="k-txt"><p class="k-n">{num(1)}<span> / 05</span></p><h2 id="s2-h" class="st" set:html={P(T.s2.t)} /><p class="ss" set:html={P(T.s2.s)} /></div>
+            <div class="k-vis k-order">
+              <div class="k-laptop"><div class="k-lscreen"><Loop name="zamowienie" w={960} h={600} alt={T.s2.alt} /></div><i class="k-lbase" aria-hidden="true"></i></div>
+              <EskapizmPhone class="ph k-ph2" dark bottom="#F4F4F3" pos="50% 87%"><Loop name="platnosc" w={600} h={1298} alt={T.s2.altPhone} /></EskapizmPhone>
             </div>
-          </div>
-          {/* runda 5 (20.10): bez filmiku narratora pod sceną; cel stacji = plan w telefonie klienta, pokazany przez trzy telefony w scenie */}
-          <div class="detail wrap">
-            <p class="for"><span>{T.s4.f[0]}:</span> <span set:html={P(T.s4.f[1])} /></p>
-            <div class="dtxt"><p set:html={P(T.s4.d)} /></div>
-          </div>
+            <ol class="k-steps" aria-hidden="true">{T.stops.map(([n], j) => <li class:list={[{ on: j === 1, done: j < 1 }]}><b>{num(j)}</b><span>{n}</span></li>)}</ol>
+            <i class="k-dim" aria-hidden="true"></i>
+          </article>
+          <article class="card k-green" id="stacja-03" data-station="2" aria-labelledby="s3-h">
+            <div class="k-txt"><p class="k-n">{num(2)}<span> / 05</span></p><h2 id="s3-h" class="st" set:html={P(T.s3.t)} /><p class="ss" set:html={P(T.s3.s)} /></div>
+            <div class="k-vis">
+              <!-- ton lockupu nad zrzutem: jasny ekran buildera (lockup bez tła od 20.10) -->
+              <div class="screen k-screen" data-tone="light"><Loop name="builder" mobile="builder-m" w={1920} h={1200} mw={780} mh={488} alt={T.s3.alt} /></div>
+            </div>
+            <ol class="k-steps" aria-hidden="true">{T.stops.map(([n], j) => <li class:list={[{ on: j === 2, done: j < 2 }]}><b>{num(j)}</b><span>{n}</span></li>)}</ol>
+            <i class="k-dim" aria-hidden="true"></i>
+          </article>
+          <article class="card k-dark k-bay" id="stacja-04" data-station="3" aria-labelledby="s4-h">
+            <div class="k-bg" data-tone="dark"><picture><source media="(max-width: 767px)" srcset={zatokaPionSet} sizes="100vw" /><Image src={zatoka} widths={[1280, 1920, 2560]} sizes="100vw" alt={T.s4.sceneAlt} loading="lazy" /></picture><i class="k-shade"></i></div>
+            <div class="k-txt"><p class="k-n">{num(3)}<span> / 05</span></p><h2 id="s4-h" class="st" set:html={P(T.s4.t)} /><p class="ss" set:html={P(T.s4.s)} /></div>
+            <div class="k-vis k-trio">
+              <EskapizmPhone class="ph k-side d-only" tilt={-5} dark top="#FAFBF6"><Image src={trio[0]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[0]} loading="lazy" /></EskapizmPhone>
+              <EskapizmPhone class="ph k-mid" dark top="#FAFBF6"><Loop name="moj-plan" w={600} h={1298} alt={T.s4.altPlan} /></EskapizmPhone>
+              <EskapizmPhone class="ph k-side d-only" tilt={5} dark top="#FAFBF6"><Image src={trio[1]} widths={[300, 600]} sizes="300px" alt={T.s4.alts[1]} loading="lazy" /></EskapizmPhone>
+            </div>
+            <ol class="k-steps" aria-hidden="true">{T.stops.map(([n], j) => <li class:list={[{ on: j === 3, done: j < 3 }]}><b>{num(j)}</b><span>{n}</span></li>)}</ol>
+            <i class="k-dim" aria-hidden="true"></i>
+          </article>
+          <article class="card k-ink" id="stacja-05" data-station="4" aria-labelledby="s5-h">
+            <div class="k-txt"><p class="k-n">{num(4)}<span> / 05</span></p><h2 id="s5-h" class="st" set:html={P(T.s5.t)} /><p class="ss" set:html={P(T.s5.s)} /></div>
+            <figure class="k-vis k-fig">
+              <div class="screen k-screen" data-tone="dark" data-tone-m="light"><Image src={issues} widths={[780, 1280, 1920, 2560]} sizes="(max-width: 767px) 100vw, 66vw" alt={T.s5.alt} loading="lazy" /></div>
+              <figcaption class="cap" set:html={P(T.s5.cap)} />
+            </figure>
+            <ol class="k-steps" aria-hidden="true">{T.stops.map(([n], j) => <li class:list={[{ on: j === 4, done: j < 4 }]}><b>{num(j)}</b><span>{n}</span></li>)}</ol>
+            <i class="k-dim" aria-hidden="true"></i>
+          </article>
         </section>
 
-        <!-- 9. Stacja 05: panel na zieleni -->
-        <section class="station green" id="stacja-05" data-station="4" aria-labelledby="s5-h">
-          <div class="wrap g-head"><p class="lbl">05</p><h2 id="s5-h" class="st" set:html={P(T.s5.t)} /><p class="ss" set:html={P(T.s5.s)} /></div>
-          <figure class="wrap">
-            <div class="screen" data-tone="dark" data-tone-m="light"><Image src={issues} widths={[780, 1280, 1920, 2560]} sizes="(max-width: 1320px) 100vw, 1200px" alt={T.s5.alt} loading="lazy" /></div>
-            <figcaption class="cap" set:html={P(T.s5.cap)} />
-          </figure>
-          <div class="detail wrap">
-            <div class="for-col">
-              <p class="for"><span>{T.s5.f[0]}:</span> <span set:html={P(T.s5.f[1])} /></p>
-              <p class="repo" set:html={P(T.s5.repo)} />
-            </div>
-            <div class="dtxt"><p set:html={P(T.s5.d)} /></div>
-          </div>
+        <!-- Szczegóły stacji: zdanie „dla kogo” i opis każdej stacji, pod kartami (karta = jeden ekran) -->
+        <section class="st-details wrap" aria-label={pl ? 'Stacje w szczegółach' : 'The stations in detail'}>
+          <ol>
+            {stations.map((s, i) => (
+              <li class="dr">
+                <p class="dr-n"><span class="lbl">{num(i)}</span> <span class="dr-t">{T.stops[i][0]}</span></p>
+                <div class="dr-for">
+                  <p class="for"><span>{s.f[0]}:</span> <span set:html={P(s.f[1])} /></p>
+                  {i === 4 && <p class="repo" set:html={P(T.s5.repo)} />}
+                </div>
+                <div class="dtxt">
+                  <p set:html={P(s.d)} />
+                  {i === 1 && <ul class="reg">{T.s2.reg.map((r) => <li>{r}</li>)}</ul>}
+                  {i === 2 && <figure class="chat m-only"><Image src={builderCzat} widths={[390, 780]} sizes="100vw" alt={T.s3.altChat} loading="lazy" /></figure>}
+                </div>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <!-- 10. Reszta systemu: 4 + 3 -->
@@ -393,7 +377,6 @@ const ld = {
       </section>
     </main>
 
-    <div class="pill" data-pill data-names={JSON.stringify(T.stops.map(([n]) => n))} hidden aria-hidden="true"><span class="pill-n"></span><span class="pill-t"></span><span class="pill-dots">{stations.map(() => <i></i>)}</span></div>
     <BrandFooter locale={locale} full />
   </div>
 </VariantLayout>
@@ -405,7 +388,7 @@ const ld = {
   const narrow = matchMedia('(max-width: 767px)');
   const loops = [...document.querySelectorAll<HTMLElement>('.case [data-loop]')];
   // WebKit odrzuca play() tuż po wczytaniu strony (NotAllowedError, pomiar 19.10: 261 ms) mimo muted i playsinline: ponów kilka razy, póki pętla jest w widoku
-  const play = (el: HTMLElement, v: HTMLVideoElement, n = 0) => v.play().catch(() => { if (n < 4) setTimeout(() => { if (el.dataset.inview && !still.matches && v.paused) play(el, v, n + 1); }, 700); });
+  const play = (el: HTMLElement, v: HTMLVideoElement, n = 0) => v.play().catch(() => { if (n < 4) setTimeout(() => { if (el.dataset.inview && allowed(el) && !still.matches && v.paused) play(el, v, n + 1); }, 700); });
   // zwraca true, gdy pętla ma już źródło (wtedy obserwacja „blisko” nie jest potrzebna)
   const load = (el: HTMLElement): boolean => {
     if (el.dataset.loaded) return true;
@@ -420,15 +403,24 @@ const ld = {
     v.preload = 'auto'; v.load(); el.dataset.loaded = '1';
     // obserwatory odpalają się w dowolnej kolejności, a WebKit odrzuca play() w trakcie wczytywania:
     // pętla w widoku rusza, gdy da się ją odtworzyć
-    v.addEventListener('canplay', () => { if (el.dataset.inview && !still.matches && v.paused) play(el, v); });
+    v.addEventListener('canplay', () => { if (el.dataset.inview && allowed(el) && !still.matches && v.paused) play(el, v); });
     return true;
   };
+  // Karty: zakryta karta dalej „przecina” ekran (obserwator nie widzi zakrycia), więc w kartach gra tylko pętla aktywnej
+  // karty (active ustawia skrypt kart niżej).
+  const cardLoops = loops.filter((el) => el.closest('[data-cards]'));
+  let active = 0;
+  const allowed = (el: HTMLElement) => !el.closest('[data-cards]') || Number(el.closest<HTMLElement>('[data-station]')?.dataset.station) === active;
+  const syncCards = () => cardLoops.forEach((el) => {
+    const v = el.querySelector('video'); if (!v) return;
+    if (el.dataset.inview && el.dataset.loaded && allowed(el) && !still.matches) { if (v.paused) play(el, v); } else v.pause();
+  });
   const near = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && !still.matches && load(e.target as HTMLElement)) near.unobserve(e.target); }), { rootMargin: '100% 0px' });
   const seen = new IntersectionObserver((es) => es.forEach((e) => {
     const v = (e.target as HTMLElement).querySelector('video');
     if (!v) return;
     (e.target as HTMLElement).dataset.inview = e.isIntersecting ? '1' : '';
-    if (e.isIntersecting && !still.matches && (e.target as HTMLElement).dataset.loaded) play(e.target as HTMLElement, v); else v.pause();
+    if (e.isIntersecting && allowed(e.target as HTMLElement) && !still.matches && (e.target as HTMLElement).dataset.loaded) play(e.target as HTMLElement, v); else v.pause();
   }), { threshold: .15 });
   loops.forEach((el) => {
     if (el.offsetParent === null && getComputedStyle(el).position !== 'fixed') return; // ukryta wersja (d-only na telefonie) nie ładuje się wcale
@@ -488,45 +480,41 @@ const ld = {
     still.addEventListener('change', apply);
   }
 
-  // Pigułka stacji: numer i nazwa bieżącej stacji, widoczna tylko w trakcie stacji.
-  const pill = document.querySelector<HTMLElement>('[data-pill]');
-  const st = [...document.querySelectorAll<HTMLElement>('[data-station]')];
-  const names: string[] = JSON.parse(pill?.dataset.names || '[]');
-  let cur = -2, tick = false;
-  // Odległość górnej krawędzi pigułki od dołu ekranu (bottom + wysokość), mierzona raz i przy resize, nie w każdej klatce:
-  // po ostatniej stacji pigułka znika, zanim dół stacji minie jej górną krawędź, więc nie zasłania treści po stacjach
-  // (QA 20.10). Między stacjami numer przełącza się wprost na połowie ekranu, bez przerwy (przerwa = mignięcie).
-  let edge = 0;
-  const measure = () => {
-    if (!pill) return;
-    const was = pill.hidden;
-    if (was) { pill.style.visibility = 'hidden'; pill.hidden = false; }
-    edge = innerHeight - pill.getBoundingClientRect().top;
-    if (was) { pill.hidden = true; pill.style.visibility = ''; }
+  // Karty w stosie (D2): karta pod spodem cofa się (skala do 94%) i ciemnieje (do 55%), gdy następna na nią wjeżdża;
+  // --p (0..1) wypełnia kreskę bieżącego kroku. Ruch robi przeglądarka (sticky), tu tylko odczyt pozycji kart raz na klatkę
+  // i zapis transform/opacity. Aktywna karta = ta na wierzchu (następna zakrywa ją mniej niż w połowie).
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-cards] .card')];
+  const dims = cards.map((c) => c.querySelector<HTMLElement>('.k-dim'));
+  let kt = false, top0 = 0, H = 1;
+  const kgeo = () => { if (cards[0]) { top0 = parseFloat(getComputedStyle(cards[0]).top) || 0; H = cards[0].offsetHeight || 1; } };
+  const kupd = () => {
+    kt = false; if (!cards.length) return;
+    const tops = cards.map((c) => c.getBoundingClientRect().top);
+    let now = 0;
+    cards.forEach((c, i) => {
+      const last = i === cards.length - 1;
+      // ostatnia karta: kreska kroku 05 wypełnia się, gdy stos zjeżdża z ekranu (bez skali i przyciemnienia)
+      const p = Math.min(1, Math.max(0, last ? (top0 - tops[i]) / H : 1 - (tops[i + 1] - top0) / H));
+      if (!last && p >= .5) now = i + 1;
+      c.style.setProperty('--p', p.toFixed(3));
+      if (last) return;
+      c.style.transform = p && !still.matches ? `scale(${(1 - .06 * p).toFixed(4)})` : '';
+      if (dims[i]) dims[i]!.style.opacity = (p * .55).toFixed(3);
+    });
+    if (now !== active) { active = now; syncCards(); }
   };
-  const upd = () => {
-    tick = false; if (!pill) return;
-    const line = innerHeight * .5, pillTop = innerHeight - edge; let idx = -1;
-    st.forEach((s, i) => { const r = s.getBoundingClientRect(); if (r.top <= line && r.bottom > (i === st.length - 1 ? pillTop : line)) idx = i; });
-    if (idx === cur) return; cur = idx;
-    pill.hidden = idx < 0;
-    if (idx >= 0) {
-      pill.querySelector('.pill-n')!.textContent = String(idx + 1).padStart(2, '0');
-      pill.querySelector('.pill-t')!.textContent = names[idx] || '';
-      pill.querySelectorAll('.pill-dots i').forEach((d, i) => d.classList.toggle('on', i === idx));
-    }
-  };
-  addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
-  addEventListener('resize', () => { measure(); upd(); }, { passive: true });
-  document.fonts?.ready.then(() => { measure(); upd(); });
-  measure();
-  upd();
+  const kreq = () => { if (!kt) { kt = true; requestAnimationFrame(kupd); } };
+  addEventListener('scroll', kreq, { passive: true });
+  addEventListener('resize', () => { kgeo(); kreq(); }, { passive: true });
+  still.addEventListener('change', kreq);
+  kgeo();
+  kupd();
 </script>
 
 <style>
   @font-face { font-family: 'NohemiV'; src: url('/fonts/Nohemi-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
   @font-face { font-family: 'GeneralSansV'; src: url('/fonts/GeneralSans-Variable.woff2') format('woff2'); font-weight: 200 700; font-display: swap; }
-  /* Układ: sceny pełnoekranowe (biurko wieczorem, zieleń warsztatu, zatoka), pod każdą wąska kolumna szczegółów.
+  /* Układ: film otwarcia, pięć stacji jako karty w stosie (każda w innym tle), pod nimi szczegóły stacji.
      Pismo: dwie rodziny, pięć stopni (nazwa, liczby, nagłówek, tekst, podpis) + etykieta. */
   .case {
     --paper: #fcfff5; --ink: #1c1917; --dim: #57534e; --rule: rgb(28 25 23 / .14);
@@ -592,56 +580,72 @@ const ld = {
   .map-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px 40px; }
   .map-head .lbl { color: var(--dim); }
 
-  /* Sceny */
-  .scene { position: relative; overflow: hidden; color: #fff; background: #2a2018; }
-  .desk { aspect-ratio: 1678 / 937; max-height: 100vh; }
-  .scene-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .desk-img { position: absolute; inset: 0; }
-  .shade { position: absolute; inset: 0; pointer-events: none; }
-  .evening .shade { background: linear-gradient(90deg, rgb(14 9 5 / .35) 0%, rgb(14 9 5 / .45) 45%, rgb(14 9 5 / .78) 100%); }
-  .dusk .shade { background: linear-gradient(90deg, rgb(14 9 5 / .7) 0%, rgb(14 9 5 / .2) 38%, transparent 60%); }
-  .bay .shade { background: linear-gradient(90deg, rgb(4 20 18 / .62) 0%, rgb(4 20 18 / .18) 40%, transparent 62%), linear-gradient(0deg, rgb(4 20 18 / .35), transparent 30%); }
-  .s-txt { position: absolute; top: clamp(32px, 6%, 80px); width: min(30%, 380px); z-index: 3; }
-  .s-left { left: var(--gutter); }
-  .s-right { right: var(--gutter); top: auto; bottom: 34%; }
+  /* 5-9. Karty w stosie (D2). Karta przykleja się 12 px od góry i ma wysokość ekranu minus dwa takie odstępy.
+     Tekst zaczyna się pod strefą lockupu (--case-lockup-h), żeby lockup przy powrocie w górę nie wchodził na tytuł. */
+  .cards { --k-top: 12px; --k-h: calc(100vh - 2 * var(--k-top)); --k-pad: clamp(24px, 3.2vw, 56px); --k-tw: min(30%, 380px);
+    --k-tt: max(clamp(28px, 7vh, 72px), calc(var(--case-lockup-h) - var(--k-top))); --steps-h: 64px; padding-inline: 12px; display: flow-root; }
+  .card { position: sticky; top: var(--k-top); height: var(--k-h); margin-bottom: 24px; border-radius: 22px; overflow: hidden; isolation: isolate;
+    --fg: #fff; --fg-dim: rgb(255 255 255 / .62); --kl: rgb(255 255 255 / .28); color: var(--fg); transform-origin: 50% 0; }
+  /* ostatnia karta też z dolnym marginesem (flow-root na .cards trzyma go w kontenerze): przyklejenie liczy się z marginesem
+     do końca treści kontenera, bez tego karty pod ostatnią wystawały nad nią o 12 px */
+  .k-dark { background: #2a2018; }
+  .k-cream { background: #f1ede1; --fg: var(--ink); --fg-dim: rgb(28 25 23 / .55); --kl: rgb(28 25 23 / .2); }
+  .k-green { background: var(--green); }
+  .k-ink { background: #171513; }
+  .k-bg { position: absolute; inset: 0; z-index: -1; }
+  /* `.case img { height: auto }` wygrywał z samym `.k-bg img` i pod zdjęciem zostawał pas */
+  .case .k-bg img { width: 100%; height: 100%; object-fit: cover; }
+  .k-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(14 9 5 / .8) 0%, rgb(14 9 5 / .5) 34%, rgb(14 9 5 / .12) 62%), linear-gradient(0deg, rgb(14 9 5 / .6), transparent 22%); }
+  .k-bay .k-shade { background: linear-gradient(90deg, rgb(4 20 18 / .78) 0%, rgb(4 20 18 / .32) 34%, transparent 60%), linear-gradient(0deg, rgb(4 20 18 / .65), transparent 24%); }
+  .k-dim { position: absolute; inset: 0; z-index: 5; background: #000; opacity: 0; pointer-events: none; }
+  /* tekst: to samo miejsce w każdej karcie */
+  .k-txt { position: absolute; left: var(--k-pad); top: var(--k-tt); width: var(--k-tw); }
+  .k-n { font-size: 13px; font-weight: 600; letter-spacing: .14em; }
+  .k-n span { color: var(--fg-dim); }
   .st { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: var(--t-h); line-height: 1; letter-spacing: -.03em; margin-top: 14px; }
-  .ss { margin-top: 16px; font-size: 18px; line-height: 1.5; opacity: .92; }
-  /* wysokość sceny biurka: min(100vw * 937/1678, 100vh); telefon dostaje jawną wysokość i szerokość z proporcji bryły 543x1125 */
-  .case { --desk-h: min(55.84vw, 100vh); --bay-h: max(560px, min(100vh, 66vw)); }
-  .scene :global(.ph) { position: absolute; z-index: 2; height: var(--ph-h); width: calc(var(--ph-h) * 543 / 1125); }
-  .scene :global(.ph-s1) { --ph-h: calc(var(--desk-h) * .84); top: 8%; left: 50%; translate: -50% 0; }
-  .laptop { position: absolute; left: 33.402%; top: 30.950%; width: 33.224%; height: 37.193%; overflow: hidden; border-radius: .2vw; background: #fcfff5; }
-  .laptop :global(.loop) { position: absolute; inset: 0; }
-  .laptop .glass { position: absolute; inset: 0; background: linear-gradient(115deg, transparent 28%, rgb(255 255 255 / .09) 40%, transparent 54%); pointer-events: none; }
-  .scene :global(.ph-s2) { --ph-h: calc(var(--desk-h) * .62); right: 13%; bottom: 7%; }
-  .bay { height: var(--bay-h); }
-  .trio { position: absolute; inset: 6% var(--gutter) 6% 30%; display: flex; justify-content: center; align-items: center; gap: 2.5%; }
-  .trio :global(.ph) { position: relative; --ph-h: calc(var(--bay-h) * .77); }
-  .trio :global(.t-side) { --ph-h: calc(var(--bay-h) * .64); }
-  .trio :global(.t-mid) { z-index: 3; }
-
-  /* Szczegóły pod sceną: po lewej zdanie „dla kogo”, po prawej konkret */
-  .detail { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 1fr) minmax(0, 6fr); padding-block: clamp(48px, 6vw, 88px) clamp(80px, 9vw, 140px); }
-  .detail > :first-child { grid-column: 1; }
-  .detail > .dtxt { grid-column: 3; }
-  .for { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(22px, 2vw, 30px); line-height: 1.2; letter-spacing: -.02em; max-width: 16em; }
-  .for span:first-child { color: var(--dim); }
-  .dtxt { font-size: var(--t-body); line-height: 1.65; max-width: 34em; }
-  .reg { margin-top: 28px; border-top: 1px solid var(--rule); }
-  .reg li { padding: 12px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
-  .for-col { display: grid; gap: 32px; align-content: start; }
-  .repo { font-size: 15px; line-height: 1.5; padding-top: 16px; border-top: 1px solid currentColor; opacity: .85; max-width: 26em; }
-
-  /* Zieleń: warsztat Justyny i panel */
-  .green { background: var(--green); color: var(--on-green); padding-top: clamp(72px, 9vw, 136px); }
-  .green .g-head { margin-bottom: clamp(40px, 5vw, 64px); max-width: 1320px; }
-  .green .ss { max-width: 30em; }
-  .green .cap, .green .for span:first-child { color: rgb(243 246 236 / .7); }
-  .green .reg, .green .reg li { border-color: rgb(243 246 236 / .2); }
+  .ss { margin-top: 16px; font-size: 18px; line-height: 1.5; opacity: .86; }
+  /* obraz: prawa część karty nad krokami; rozmiary od pola obrazu (container query), telefony mieszczą się też na szerokość */
+  .k-vis { position: absolute; left: calc(var(--k-pad) + var(--k-tw) + 3vw); right: var(--k-pad); top: var(--k-tt); bottom: calc(var(--steps-h) + 20px); container-type: size; display: grid; place-items: center; margin: 0; }
+  .k-vis :global(.k-ph) { position: relative; height: min(100cqh, 100cqw * 1125 / 543); width: auto; aspect-ratio: 543 / 1125; }
+  .k-order { place-items: center start; }
+  .k-laptop { width: min(84cqw, 100cqh * 1.3); }
+  .k-lscreen { position: relative; aspect-ratio: 16 / 10; border: max(6px, .9cqw) solid #1b1b1d; border-radius: 1.4cqw 1.4cqw 0 0; overflow: hidden; background: #fcfff5; }
+  .k-lscreen :global(.loop) { position: absolute; inset: 0; }
+  .k-lbase { display: block; height: max(10px, 1.6cqw); margin-inline: -6%; background: linear-gradient(#d6d6da, #a2a2a8); border-radius: 0 0 1.2cqw 1.2cqw; }
+  .k-vis :global(.k-ph2) { position: absolute; right: 0; bottom: 0; height: min(80cqh, 38cqw * 1125 / 543); width: auto; aspect-ratio: 543 / 1125; }
+  .k-trio { display: flex; justify-content: center; align-items: center; gap: 2.5cqw; }
+  .k-trio :global(.ph) { position: relative; height: min(96cqh, 74cqw); width: auto; aspect-ratio: 543 / 1125; }
+  .k-trio :global(.k-side) { height: min(80cqh, 62cqw); }
+  .k-screen { width: min(100cqw, 100cqh * 1.6); }
+  .k-fig { place-content: center; justify-items: start; }
+  .k-fig .k-screen { width: min(100cqw, (100cqh - 44px) * 1.6); }
+  .k-fig .cap { color: var(--fg-dim); margin-top: 12px; }
   .screen { position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / .18), 0 30px 80px -20px rgb(0 0 0 / .45), 0 12px 24px -12px rgb(0 0 0 / .35); background: #fff; }
   .screen :global(.loop) { aspect-ratio: 1920 / 1200; }
-  .green figure .cap { margin-top: 16px; }
-  .green .screen img { width: 100%; }
+  .case .screen img { width: 100%; }
+  /* kroki 01-05 w dolnej krawędzi karty: przebyte kreski pełne, bieżący pogrubiony, jego kreska wypełnia się żółcią (--p) */
+  .k-steps { position: absolute; left: var(--k-pad); right: var(--k-pad); bottom: 0; height: var(--steps-h); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+  .k-steps li { position: relative; padding-top: 14px; font-size: 13px; line-height: 1.3; color: var(--fg-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .k-steps li::before, .k-steps li::after { content: ''; position: absolute; left: 0; top: 0; height: 2px; }
+  .k-steps li::before { right: 0; background: var(--kl); }
+  .k-steps li.done::before { background: var(--fg); }
+  .k-steps li.on::after { width: calc(var(--p, 0) * 100%); background: var(--brand); }
+  .k-steps li.on { color: var(--fg); font-weight: 600; }
+  .k-steps b { font-weight: 600; margin-right: 8px; }
+
+  /* Szczegóły stacji pod kartami: numer i nazwa, zdanie „dla kogo”, opis */
+  .st-details { padding-block: clamp(72px, 9vw, 136px) clamp(48px, 6vw, 88px); }
+  .st-details ol { border-top: 1px solid var(--rule); }
+  .dr { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 5fr); gap: 20px clamp(24px, 3vw, 48px); padding-block: clamp(28px, 3vw, 44px); border-bottom: 1px solid var(--rule); }
+  .dr-n { font-family: 'NohemiV', sans-serif; font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.02em; }
+  .dr-n .lbl { display: block; margin-bottom: 10px; font-family: 'GeneralSansV', sans-serif; letter-spacing: .12em; color: var(--dim); }
+  .dr-for { display: grid; gap: 28px; align-content: start; }
+  .for { font-family: 'NohemiV', sans-serif; font-weight: 500; font-size: clamp(20px, 1.7vw, 26px); line-height: 1.2; letter-spacing: -.02em; max-width: 16em; }
+  .for span:first-child { color: var(--dim); }
+  .dtxt { font-size: var(--t-body); line-height: 1.65; max-width: 34em; }
+  .reg { margin-top: 24px; border-top: 1px solid var(--rule); }
+  .reg li { padding: 12px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
+  .repo { font-size: 15px; line-height: 1.5; padding-top: 16px; border-top: 1px solid currentColor; opacity: .85; max-width: 26em; }
 
   /* 10. Reszta systemu */
   .rest { padding-block: clamp(96px, 11vw, 168px) clamp(64px, 7vw, 104px); }
@@ -680,17 +684,18 @@ const ld = {
   .next:hover .next-a { transform: translateX(8px); }
   .end .next:focus-visible { outline-offset: -6px; }
 
-  /* Pigułka stacji */
-  .pill { position: fixed; z-index: 80; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 14px; border-radius: 999px; background: rgb(28 25 23 / .82); color: #fff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: 14px; white-space: nowrap; box-shadow: 0 10px 30px rgb(0 0 0 / .25); }
-  .pill[hidden] { display: none; }
-  .pill-n { font-size: 12px; letter-spacing: .1em; opacity: .7; }
-  .pill-t { font-weight: 600; }
-  .pill-dots { display: flex; gap: 5px; margin-left: 4px; }
-  .pill-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgb(255 255 255 / .3); }
-  .pill-dots i.on { background: var(--brand); }
-
-  @media (max-width: 1100px) {
-    .s-txt { width: min(36%, 360px); }
+  /* Karty w kolumnie (telefon i okna w pionie, np. tablet): tekst u góry, obraz pod nim, kroki: numery + nazwa bieżącego. */
+  @media (max-width: 767px), (max-aspect-ratio: 9/10) {
+    /* karta jako kolumna: tekst od tej samej górnej linii, obraz zajmuje miejsce między tekstem a krokami (bez nachodzenia przy 3 liniach) */
+    .card { display: flex; flex-direction: column; padding: var(--k-tt) var(--k-pad) 0; box-sizing: border-box; }
+    .k-txt, .k-vis, .k-steps { position: relative; inset: auto; }
+    .k-txt { width: auto; max-width: 34em; flex: none; }
+    .k-vis { flex: 1 1 0; min-height: 0; margin-block: 24px 20px; }
+    .k-steps { flex: none; }
+    .k-shade, .k-bay .k-shade { background: linear-gradient(180deg, rgb(14 9 5 / .82) 0%, rgb(14 9 5 / .45) 32%, rgb(14 9 5 / .15) 62%, rgb(14 9 5 / .55) 100%); }
+    .k-order { place-items: start center; }
+    .k-laptop { width: min(100cqw, 100cqh * 1.1); }
+    .k-vis :global(.k-ph2) { height: min(64cqh, 40cqw * 1125 / 543); right: 4cqw; }
   }
   @media (max-width: 767px) {
     .case { --t-body: 17px; }
@@ -701,28 +706,15 @@ const ld = {
     .meta { grid-template-columns: 1fr 1fr; }
     .nums, .nums.four { grid-template-columns: 1fr; gap: 36px; }
     .nums.four { grid-template-columns: 1fr 1fr; }
-    /* Sceny na telefonie: tekst na górze kadru, urządzenie pod nim, nic w dolnych 10% */
-    .scene { aspect-ratio: auto; max-height: none; }
-    /* tło sceny wypełnia całą wysokość (runda 5): `.case img { height: auto }` wygrywał z .scene-bg i pod zdjęciem zostawał pusty brązowy pas */
-    .scene .scene-bg { height: 100%; }
-    .desk { height: 760px; }
-    .evening .shade { background: linear-gradient(180deg, rgb(14 9 5 / .82) 0%, rgb(14 9 5 / .55) 34%, rgb(14 9 5 / .4) 100%); }
-    .dusk .shade { background: linear-gradient(180deg, rgb(14 9 5 / .82) 0%, rgb(14 9 5 / .35) 30%, transparent 55%); }
-    .bay .shade { background: linear-gradient(180deg, rgb(4 20 18 / .7) 0%, rgb(4 20 18 / .2) 32%, transparent 55%); }
-    .s-txt, .s-right, .s-left { left: var(--gutter); right: var(--gutter); top: 32px; bottom: auto; width: auto; }
-    .st { font-size: 36px; }
+    /* Karty na telefonie: karta na wysokość widocznego ekranu (svh, z paskami Safari), co najmniej 480 px */
+    .cards { --k-top: 8px; --k-h: max(calc(100svh - 16px), 480px); --k-pad: 20px; --steps-h: 54px; padding-inline: 8px; }
+    .card { border-radius: 18px; }
+    .st { font-size: 32px; margin-top: 10px; }
     .ss { font-size: 16px; max-width: 22em; }
-    .scene :global(.ph-s1) { --ph-h: 520px; top: auto; bottom: 48px; }
-    /* zamówienie: zdjęcie biurka powiększone tak, żeby ekran laptopa wypełnił ok. 83% szerokości */
-    .desk-img { inset: auto; left: -75%; width: 250%; top: 200px; aspect-ratio: 1678 / 937; height: auto; }
-    .dusk .scene-bg { position: absolute; }
-    .scene :global(.ph-s2) { --ph-h: 330px; right: 6%; bottom: 40px; }
-    .bay { height: 780px; min-height: 0; }
-    .trio { inset: auto 0 48px; height: 540px; }
-    .trio :global(.ph) { --ph-h: 540px; }
-    .detail { grid-template-columns: 1fr; gap: 28px; padding-block: 40px 88px; }
-    .detail > .dtxt, .detail > :first-child { grid-column: 1; }
-    .green .g-head { margin-bottom: 32px; }
+    .k-steps { gap: 6px; grid-template-columns: repeat(5, auto); justify-content: space-between; }
+    .k-steps li span { display: none; }
+    .k-steps li.on span { display: inline; }
+    .dr { grid-template-columns: 1fr; gap: 16px; }
     .chat { margin-top: 20px; }
     .chat img { width: 100%; border-radius: 12px; }
     .rest-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); scrollbar-width: none; }
@@ -732,11 +724,5 @@ const ld = {
     .end-in { grid-template-columns: 1fr; }
     .thesis { padding-bottom: 160px; }
     .next-in { flex-direction: column; align-items: flex-start; gap: 12px; }
-    .pill { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
-  }
-  @media (max-width: 380px) {
-    .scene :global(.ph-s1) { --ph-h: 470px; }
-    .trio { height: 480px; }
-    .trio :global(.ph) { --ph-h: 480px; }
   }
 </style>
