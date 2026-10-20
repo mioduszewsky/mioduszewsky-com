@@ -1,15 +1,15 @@
 // Kolejność realizacji i pętla „Następna realizacja” (decyzja Kacpra 20.10.2026), jedno miejsce dla case'ów.
-// Ta sama kolejność co karty na stronie zbiorczej (CaseIndex). PL: GlassStone → eskapizm → Igor Grabowski → Cannversity → GlassStone.
-// EN bez GlassStone (strona tylko po polsku): eskapizm → Igor → Cannversity → eskapizm.
+// Pętla (Kacper 20.10.2026): PL eskapizm → Cannversity → Igor Grabowski → GlassStone → eskapizm.
+// EN bez GlassStone (strona tylko po polsku): eskapizm → Cannversity → Igor → eskapizm.
 import type { Locale } from '../i18n/site';
 
 // bez obrazu: wiersz „Następna realizacja” to sam tekst (runda 3, 20.10)
 type Case = { slug: string; name: string; locales: Locale[] };
 export const caseOrder: Case[] = [
-  { slug: 'glassstone', name: 'GlassStone', locales: ['pl'] },
   { slug: 'eskapizm', name: 'eskapizm', locales: ['pl', 'en'] },
-  { slug: 'igor-grabowski', name: 'Igor Grabowski', locales: ['pl', 'en'] },
   { slug: 'cannversity', name: 'Cannversity', locales: ['pl', 'en'] },
+  { slug: 'igor-grabowski', name: 'Igor Grabowski', locales: ['pl', 'en'] },
+  { slug: 'glassstone', name: 'GlassStone', locales: ['pl'] },
 ];
 
 export const caseHref = (slug: string, locale: Locale) => (locale === 'pl' ? `/pl/realizacje/${slug}/` : `/work/${slug}/`);
