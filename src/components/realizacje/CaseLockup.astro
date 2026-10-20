@@ -3,12 +3,7 @@
 // Z lewej lockup: wideo 3D mioduszewsky (link do strony głównej), cienki ×, logo klienta (nie link). Z prawej SiteMenu.
 // Logo klienta: plik src/assets/realizacje/logo-klientow/<client>.svg (fill="currentColor"), czytany przez glob,
 // więc nowy klient = nowy plik, bez edycji komponentu. Brak pliku = nazwa klienta tekstem.
-// Logo mioduszewsky zawsze balonowe 3D z Blendera, nigdy płaskie i nigdy z konturem (Kacper 20.10, 08:00 i 09:10):
-// żółte na ciemnym tle, czarne (ten sam balon, ta sama bryła i światło, czarny lakier) na jasnym, także na żółci Cannversity.
-// Każdy kolor to obraz 3D z klatki 1 (WebP z alfą 400/800 px) i nad nim wideo pętli; obraz jest stanem przed wczytaniem,
-// przy „ogranicz ruch” i gdy wideo nie ruszy, chowa się, gdy wideo ma klatkę. Wideo bez autoplay, gra tylko kolor
-// bieżącego tonu, startuje ze skryptu. Źródła: assets/logo3d/ (tube_logo.py, marka/), opis w assets/logo3d/INSTRUKCJA.md.
-// Ton (dark: biały × i klient; light: × i klient #111) wybiera jeden skrypt na dole:
+// Ton (dark: żółte wideo, biały klient; light: czarne wideo, czarny klient) wybiera jeden skrypt na dole:
 // co leży pod środkiem lockupu, pierwszy przodek z data-tone albo nieprzezroczystym tłem, kontrast wg WCAG.
 // Sekcje z filmem lub zdjęciem pod lockupem dostają w markupie data-tone="dark" albo "light" (z obrazu koloru nie odczytasz);
 // gdy obraz na telefonie jest inny (np. osobne nagranie pionowe), data-tone-m ustawia ton do 767 px szerokości.
@@ -38,7 +33,7 @@ const pl = locale === 'pl';
 const NAMES: Record<string, string> = { eskapizm: 'eskapizm', cannversity: 'Cannversity', glassstone: 'GlassStone', 'igor-grabowski': 'Igor Grabowski' };
 const name = Astro.props.clientName ?? NAMES[client] ?? client;
 
-// Geometria wideo logo-nav i logo-czarne-3d-nav (oba 800x222, ta sama bryła), zmierzona z kanału alfa plakatu:
+// Geometria wideo logo-nav (800x222, czarne 600x166, te same proporcje), zmierzona z kanału alfa plakatu:
 // litery od 5,9% do 94,1% szerokości, linia bazowa na 67-67,5% wysokości (sprawdzone zrzutem 3x), góra wydłużeń (d, k) na 18%, x-height od 34,2%.
 const BOX = 222 / 800, PAD = 47 / 800, BASE = .675;
 // Dopasowania logo klientów. eskapizm: viewBox 3918x916, linia bazowa y=700, x-height 252-700, czyli x-height
@@ -59,26 +54,19 @@ const X = .3 * BOX, GAP = .075;
 const k = (1 - 2 * PAD) + X + 2 * GAP + (aspect ? aspect * f.h * BOX : .9);
 const vars = `--lk-k:${k.toFixed(3)};--lk-ct:${(BASE - f.h * f.base).toFixed(4)};--lk-ch:${f.h.toFixed(4)}`;
 const home = routes[locale].home;
-// Ton ciemny (ciemne tło) = żółte 3D, jasny = czarne 3D. Oba obrazy wczytywane od razu (kilkanaście kB), bo przełączenie
-// tonu nie może pokazać pustego miejsca.
-const SETS = [
-  { tone: 'dark', name: 'zolte', video: '/logo3d/logo-nav' },
-  { tone: 'light', name: 'czarne', video: '/logo3d/logo-czarne-3d-nav' },
-] as const;
 ---
 <header class="case-lockup" data-case-lockup data-lk-tone={tone} style={vars}>
   <div class="lk">
     <a class="lk-home" href={home} aria-label={pl ? 'mioduszewsky. Strona główna.' : 'mioduszewsky. Home page.'}>
       <span class="lk-vid" aria-hidden="true">
-        {SETS.map((v) => (
-          <span class="lk-set" data-lk-v={v.tone}>
-            <img class="lk-img" src={`/logo3d/logo-${v.name}-3d-800.webp`} srcset={`/logo3d/logo-${v.name}-3d-400.webp 400w, /logo3d/logo-${v.name}-3d-800.webp 800w`} sizes="190px" width="800" height="222" alt="" fetchpriority={v.tone === tone ? 'high' : 'low'} />
-            <video class="lk-v" loop muted playsinline disablepictureinpicture preload="none" width="800" height="222" tabindex="-1">
-              <source src={`${v.video}.mp4`} type="video/mp4;codecs=hvc1" />
-              <source src={`${v.video}.webm`} type="video/webm" />
-            </video>
-          </span>
-        ))}
+        <video class="lk-v" data-lk-v="dark" loop muted playsinline autoplay={tone === 'dark'} preload={tone === 'dark' ? 'metadata' : 'none'} width="800" height="222" tabindex="-1" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+        <video class="lk-v" data-lk-v="light" loop muted playsinline autoplay={tone === 'light'} preload={tone === 'light' ? 'metadata' : 'none'} width="600" height="166" tabindex="-1" poster="/logo3d/logo-czarne-nav-poster.webp">
+          <source src="/logo3d/logo-czarne-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-czarne-nav.webm" type="video/webm" />
+        </video>
       </span>
     </a>
     <svg class="lk-x" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1 1 9 9M9 1 1 9" /></svg>
@@ -112,13 +100,10 @@ const SETS = [
   .lk-home { display: block; flex: none; margin-inline: calc(var(--lk-w) * -47 / 800); border-radius: 4px; }
   .lk-home:focus-visible { outline: 2px solid var(--lk-fg); outline-offset: 2px; }
   .lk-vid { display: grid; width: var(--lk-w); }
-  .lk-set { grid-area: 1 / 1; display: grid; transition: opacity .2s ease; }
-  .lk-img, .lk-v { grid-area: 1 / 1; width: 100%; height: auto; display: block; }
-  [data-lk-tone='dark'] .lk-set[data-lk-v='light'], [data-lk-tone='light'] .lk-set[data-lk-v='dark'] { opacity: 0; }
-  [data-lk-tone='dark'] .lk-set[data-lk-v='dark'] { filter: drop-shadow(0 4px 10px rgb(0 0 0 / .22)); }
-  /* obraz 3D znika, gdy wideo ma klatkę (klatka 1 wideo = ten obraz), inaczej obrót liter dałby podwójny obraz */
-  .lk-set[data-lk-live] .lk-img { visibility: hidden; }
+  .lk-v { grid-area: 1 / 1; width: 100%; height: auto; display: block; transition: opacity .2s ease; }
   .lk-v::-webkit-media-controls-start-playback-button, .lk-v::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
+  [data-lk-tone='dark'] .lk-v[data-lk-v='light'], [data-lk-tone='light'] .lk-v[data-lk-v='dark'] { opacity: 0; }
+  [data-lk-tone='dark'] .lk-v[data-lk-v='dark'] { filter: drop-shadow(0 4px 10px rgb(0 0 0 / .22)); }
   /* × cienki, w kolorze lockupu, środek na środku x-height mioduszewsky */
   .lk-x { flex: none; width: calc(var(--lk-h) * .3); height: calc(var(--lk-h) * .3); margin: calc(var(--lk-h) * .355) calc(var(--lk-w) * .075) 0; fill: none; stroke: currentColor; stroke-width: 1.4; vector-effect: non-scaling-stroke; }
   .lk-x path { vector-effect: non-scaling-stroke; }
@@ -146,7 +131,7 @@ const SETS = [
   .case-lockup[data-lk-tone='dark'] .lk::before, .case-lockup[data-lk-tone='dark'] > :global(.site-menu)::before { background: rgb(17 17 17 / .6); }
   .case-lockup[data-lk-solid] .lk::before, .case-lockup[data-lk-solid] > :global(.site-menu)::before { opacity: 1; }
   @media (prefers-reduced-motion: reduce) {
-    .lk-set, .case-lockup, .lk-x, .lk-client, .lk::before, .case-lockup > :global(.site-menu)::before { transition: none; }
+    .lk-v, .case-lockup, .lk-x, .lk-client, .lk::before, .case-lockup > :global(.site-menu)::before { transition: none; }
   }
 </style>
 
@@ -159,6 +144,7 @@ const SETS = [
   if (lk && mark) {
     const still = matchMedia('(prefers-reduced-motion: reduce)');
     const narrow = matchMedia('(max-width: 767px)');
+    const vids = Object.fromEntries([...lk.querySelectorAll<HTMLVideoElement>('[data-lk-v]')].map((v) => [v.dataset.lkV, v]));
     const lin = (v: number) => ((v /= 255) <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4);
     const lum = (c: number[]) => .2126 * lin(c[0]) + .7152 * lin(c[1]) + .0722 * lin(c[2]);
     const INK = lum([17, 17, 17]);
@@ -187,46 +173,7 @@ const SETS = [
       const top = document.elementsFromPoint(geo.x, geo.y).find((el) => !lk.contains(el)) ?? null;
       return toneOf(top) ?? toneOf(document.body) ?? 'light';
     };
-    // Wideo logo: gra tylko kolor bieżącego tonu, bez ograniczenia ruchu i gdy lockup jest na ekranie. Obraz 3D pod spodem
-    // chowa się, gdy wideo ma klatkę (loadeddata, seeked, playing), wraca, gdy wideo je straci (emptied, error).
-    // Jedna próba play() naraz na wideo. WebKit odmawia (NotAllowedError) przed pierwszym renderem i dla wideo z opacity 0,
-    // więc po odmowie najwyżej 3 ponowienia co 0,4/0,8/1,2 s, potem dopiero po geście (np. iOS w trybie oszczędzania
-    // energii), zamiast próby w każdej klatce scrolla. Pauza zostawia klatkę obrotu, czyli nadal to samo 3D.
-    type Logo = { el: HTMLElement; v: HTMLVideoElement; trying: boolean; refused: boolean; fails: number };
-    const sets: Record<string, Logo> = {};
-    lk.querySelectorAll<HTMLElement>('[data-lk-v]').forEach((el) => {
-      const v = el.querySelector('video');
-      if (!v) return;
-      const s = (sets[el.dataset.lkV!] = { el, v, trying: false, refused: false, fails: 0 });
-      ['loadeddata', 'seeked', 'playing'].forEach((e) => v.addEventListener(e, () => { if (v.readyState >= 2) el.toggleAttribute('data-lk-live', true); }));
-      ['emptied', 'error'].forEach((e) => v.addEventListener(e, () => el.toggleAttribute('data-lk-live', false)));
-      v.querySelector('source:last-of-type')?.addEventListener('error', () => el.toggleAttribute('data-lk-live', false));
-      // po wczytaniu metadanych dogania drugi kolor, żeby przełączenie tonu nie cofało obrotu
-      v.addEventListener('loadedmetadata', () => sync(s));
-    });
-    const sync = (s: Logo) => {
-      const o = Object.values(sets).find((x) => x !== s);
-      if (o && o.v.readyState >= 1 && s.v.readyState >= 1 && o.v.currentTime > 0) s.v.currentTime = o.v.currentTime % (s.v.duration || 6);
-    };
-    const shown = () => !lk.hasAttribute('data-lk-hidden');
-    const start = (s: Logo) => {
-      if (!s.v.paused || s.trying || s.refused) return;
-      s.trying = true; s.v.preload = 'auto';
-      s.v.play().then(() => { s.fails = 0; }, (e: DOMException) => {
-        if (e?.name !== 'NotAllowedError') return;
-        s.refused = true;
-        if (++s.fails <= 3) setTimeout(() => { s.refused = false; motion(); }, 400 * s.fails);
-      }).finally(() => { s.trying = false; });
-    };
-    const motion = () => {
-      const run = shown() && !still.matches;
-      for (const [t, s] of Object.entries(sets)) {
-        if (run && t === lk.dataset.lkTone) start(s);
-        else if (!s.v.paused) s.v.pause();
-      }
-    };
-    addEventListener('pointerdown', () => { Object.values(sets).forEach((s) => { s.refused = false; }); motion(); }, { passive: true });
-    still.addEventListener?.('change', motion);
+    const play = (v?: HTMLVideoElement) => { if (v && !still.matches && v.paused) { v.preload = 'auto'; v.play().catch(() => {}); } };
     // Chowanie i podkład. Histereza 6 px: drżenie palca nie przełącza; lastY rusza dopiero po wyraźnym ruchu.
     const panel = lk.querySelector<HTMLElement>('[popover]');
     const menuOpen = () => { try { return !!panel?.matches(':popover-open'); } catch { return false; } };
@@ -246,11 +193,12 @@ const SETS = [
       // ...potem zapisy
       lk.toggleAttribute('data-lk-hidden', hide);
       lk.toggleAttribute('data-lk-solid', !hide && y > geo.h);
-      if (lk.dataset.lkTone === t) { motion(); return; }
+      if (lk.dataset.lkTone === t) return;
       lk.dataset.lkTone = t;
-      if (sets[t]) sync(sets[t]);
-      // start nowego koloru w następnej klatce, gdy przestaje mieć opacity 0 (WebKit odmawia play() niewidocznemu wideo)
-      requestAnimationFrame(motion);
+      const on = vids[t], off = vids[t === 'dark' ? 'light' : 'dark'];
+      // WebKit odmawia play() wideo z opacity 0: start dopiero w następnej klatce, gdy jest już widoczne
+      requestAnimationFrame(() => play(on));
+      setTimeout(() => { if (lk.dataset.lkTone === t) off?.pause(); }, 250);
     };
     const req = () => { if (!tick) { tick = true; requestAnimationFrame(upd); } };
     addEventListener('scroll', req, { passive: true });
