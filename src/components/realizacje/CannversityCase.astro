@@ -28,10 +28,10 @@ const livePl = cannabisHref('realizacje', 'pl');
 const contact = pl ? '/pl/kontakt/#ctForm' : '/contact/#ctForm';
 const dir = `/case/cannversity/${pl ? 'pl' : 'en'}`;
 
-// Następna realizacja: Cannversity stoi na końcu listy (CaseIndex), więc dalej idzie pierwsza istniejąca strona w tym języku.
+// Następna realizacja: Igor Grabowski (Kacper 20.10), PL i EN. Gdyby jego strony nie było, pierwsza istniejąca z listy.
 const pagesPl = import.meta.glob('../../pages/pl/realizacje/*.astro');
 const pagesEn = import.meta.glob('../../pages/work/*.astro');
-const order: [string, string][] = [['glassstone', 'GlassStone'], ['eskapizm', 'eskapizm'], ['igor-grabowski', 'Igor Grabowski']];
+const order: [string, string][] = [['igor-grabowski', 'Igor Grabowski'], ['glassstone', 'GlassStone'], ['eskapizm', 'eskapizm']];
 const nextCase = order.find(([s]) => `../../pages/${pl ? 'pl/realizacje' : 'work'}/${s}.astro` in (pl ? pagesPl : pagesEn));
 const nextHref = nextCase ? `${pl ? '/pl/realizacje/' : '/work/'}${nextCase[0]}/` : undefined;
 
@@ -226,7 +226,7 @@ const ld = {
         </section>
       </article>
 
-      <!-- 6. Wyjście: kontakt i następna realizacja zamiast martwej stopki. -->
+      <!-- 6. Wyjście: jeden żółty blok jak w eskapizmie (zielony): zachęta, pod kreską wiersz następnej realizacji, potem stopka. -->
       <section class="end" aria-labelledby="end-h">
         <div class="wrap end-in">
           <h2 id="end-h" set:html={P(T.s6.h2)} />
@@ -238,7 +238,6 @@ const ld = {
             </div>
           </div>
         </div>
-        {/* Następna realizacja znów jest linkiem (zlecenie Fincha 20.10: ostatni case prowadzi do pierwszego). */}
         {nextCase && (
           <a class="next" href={nextHref}>
             <span class="wrap next-in"><span class="next-k">{T.s6.nastepny}</span><span class="next-n">{nextCase[1]}<span aria-hidden="true"> →</span></span></span>
@@ -286,7 +285,7 @@ const ld = {
   .case p { text-wrap: pretty; }
   .case :is(a,button):focus-visible { outline: 3px solid var(--black); outline-offset: 4px; }
   .case .ink :is(a,button):focus-visible { outline-color: var(--cann); }
-  .case .next:focus-visible { outline-color: var(--cann); outline-offset: -8px; }
+  .case .next:focus-visible { outline-color: var(--black); outline-offset: -8px; }
   .case ::selection { background: var(--black); color: var(--cann); }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--black); color: var(--cann); transform: translateY(-200%); }
@@ -381,9 +380,11 @@ const ld = {
   .end-act { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
   .btn { display: inline-block; padding: 18px 30px; background: var(--black); color: var(--cann); text-decoration: none; font-size: 16px; font-weight: 800; letter-spacing: .02em; }
   .btn:hover { background: #333; }
-  .next { display: block; background: var(--black); color: var(--cann); text-decoration: none; }
-  .next-in { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: clamp(28px, 4vw, 56px); }
-  .next-k { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--white); }
+  /* Następna realizacja: wiersz w tym samym żółtym bloku (bez czarnego pasa), kreska nad nim na krawędziach treści. */
+  .next { display: block; color: var(--black); text-decoration: none; }
+  .next-in { position: relative; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: clamp(28px, 4vw, 56px); }
+  .next-in::before { content: ''; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); height: var(--line); background: var(--black); }
+  .next-k { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
   .next-n { font-style: italic; font-weight: 900; font-size: clamp(36px, 6vw, 96px); line-height: 1; letter-spacing: -.03em; }
   .next:hover .next-n { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 10px; }
 
