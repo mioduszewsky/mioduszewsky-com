@@ -13,7 +13,12 @@ Data: 20.10.2026. Każdy plik jednobarwny, `fill="currentColor"`, ciasny viewBox
 
 ## cannversity.svg
 
-Nie zrobione w tej rundzie: przekazane innemu zespołowi. Notatka dla wykonawcy: na cannversity.com logo to raster `assets/logo-horizontal-CGUL4rDn.png` (1772x443, z przezroczystością, identyczny z `~/cannversity/src/assets/logo-horizontal.png`), wymaga wektoryzacji.
+- Źródło: logo z nagłówka cannversity.com, raster `assets/logo-horizontal-CGUL4rDn.png` (1772x443, przezroczystość), identyczny z `~/cannversity/src/assets/logo-horizontal.png`. Wektora ani SVG w repo Cannversity nie ma.
+- Metoda: trasowanie konturów z tego PNG (jedna ścieżka, `fill="currentColor"`). Napis nie jest z fontu: Archivo 125/800 ma litery o 8-13% szersze, a „I” w logo ma szeryfy (IoU z fontu tylko 0,79).
+- viewBox `0 0 1424 320` (4,45:1): roślina x 1-194, kreska x 307-318, napis x 394-1422; wersaliki y 118-199, linia bazowa y=199.
+- W lockupie: `fit={{ h: 1, base: 199 / 320 }}` (wysokość SVG = wysokość wideo mioduszewsky, linia bazowa napisu na linii bazowej mioduszewsky).
+- Oryginalny kolor: zieleń w nagłówku, czerń w stopce (`logo-black.png`).
+- Weryfikacja: nakładka 1:1 na PNG, IoU 0,987 (pełne) i 0,992 (`cannversity-napis.svg`, sam napis, viewBox `0 0 1031 88`, zapas na małe skale). Nakładka: `docs/case-studies/final-2026-10-20/cannversity/logo-kontrola.png` (lokalnie, `docs/` poza gitem).
 
 ## glassstone.svg, igor-grabowski.svg
 

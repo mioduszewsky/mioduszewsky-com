@@ -11,6 +11,7 @@
 // zgody, sprawdzone liczbą), poza kadrem sekcja z logo partnerów (R5). Skrypty: docs/case-studies/cannversity/runda-2/.
 import VariantLayout from '../../layouts/VariantLayout.astro';
 import BrandFooter from '../BrandFooter.astro';
+import CaseLockup from './CaseLockup.astro';
 import { cannabisHref } from '../../content/cannabis';
 import type { Locale } from '../../i18n/site';
 
@@ -39,7 +40,7 @@ const T = pl ? {
   description: 'Cannversity to moja usługa dla founderów i marek konopnych. Zrobiłem jej stronę po polsku i angielsku. Prowadzi do bezpłatnej, 30-minutowej rozmowy.',
   headline: 'Cannversity: strona dla branży konopnej po polsku i po angielsku',
   about: 'Cannversity, moja usługa dla founderów i marek z branży konopnej: strategia, MVP i strony, doradztwo',
-  skip: 'Przejdź do treści', home: 'mioduszewsky. Strona główna.',
+  skip: 'Przejdź do treści',
   metka: 'Własny projekt · PL i EN',
   zdanie: 'Strona dla tych, którzy robią w konopiach.',
   wiersze: [['Dla kogo', 'Founderzy i marki z branży konopnej'], ['Jak działa', 'Trzy sytuacje i trzy filary oferty'], ['Prowadzi do', 'Bezpłatnej rozmowy, 30\u00a0minut online']],
@@ -71,7 +72,7 @@ const T = pl ? {
   description: 'Cannversity is my service for cannabis founders and brands. I built its site in Polish and English, and it leads to a free 30-minute call.',
   headline: 'Cannversity: a Polish and English website for the cannabis industry',
   about: 'Cannversity, my service for cannabis founders and brands: strategy, MVPs and websites, advisory',
-  skip: 'Skip to content', home: 'mioduszewsky. Home.',
+  skip: 'Skip to content',
   metka: 'My own project · PL & EN',
   zdanie: 'A website for people knee-deep in cannabis.',
   wiersze: [['Who it’s for', 'Cannabis founders and brands'], ['How it works', 'Three situations and three pillars'], ['Where it leads', 'A free 30\u2011minute call, online']],
@@ -117,8 +118,9 @@ const ld = {
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
     <a class="skip" href="#main">{T.skip}</a>
-    <!-- Górna belka (logo mioduszewsky + menu) zdjęta 20.10 (Kacper): nad treścią unosi się wspólne logo
-         „mioduszewsky × Cannversity”, otwarcie trzyma pod nie dawne 96 px belki, więc kompozycja się nie rusza. -->
+    <!-- Bez belki (Kacper 20.10): nad treścią unosi się wspólne logo „mioduszewsky × Cannversity” z menu.
+         Otwarcie trzyma pod nie dawne 96 px belki, więc kompozycja się nie rusza. -->
+    <CaseLockup locale={locale} client="cannversity" alternatePath={alt} tone="light" fit={{ h: 1, base: 199 / 320 }} />
 
     <main id="main">
       <article>
@@ -140,7 +142,7 @@ const ld = {
             <div class="open-media">
               <img class="plant" src="/case/cannversity/roslina.webp" width="860" height="675" alt="" decoding="async" />
               <div class="blok">
-                <video class="vid" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/blok-poster.webp`} aria-label={T.altBlok}>
+                <video class="vid" data-tone="light" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/blok-poster.webp`} aria-label={T.altBlok}>
                   <source src={`${dir}/blok.mp4`} type="video/mp4" />
                 </video>
               </div>
@@ -157,12 +159,12 @@ const ld = {
           </div>
           <div class="wrap duo-vid">
             <figure class="desk">
-              <video class="vid" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/strona-poster.webp`} aria-label={T.s2.altDesktop}>
+              <video class="vid" data-tone="light" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/strona-poster.webp`} aria-label={T.s2.altDesktop}>
                 <source src={`${dir}/strona.mp4`} type="video/mp4" />
               </video>
             </figure>
             <figure class="phone">
-              <video class="vid" loop muted playsinline preload="metadata" width="720" height="1280" poster={`${dir}/telefon-poster.webp`} aria-label={T.s2.altTelefon}>
+              <video class="vid" data-tone="light" loop muted playsinline preload="metadata" width="720" height="1280" poster={`${dir}/telefon-poster.webp`} aria-label={T.s2.altTelefon}>
                 <source src={`${dir}/telefon.mp4`} type="video/mp4" />
               </video>
               <figcaption set:html={P(T.s2.podpisTelefon)} />
