@@ -447,10 +447,21 @@ const ld = {
   const st = [...document.querySelectorAll<HTMLElement>('[data-station]')];
   const names = [...document.querySelectorAll<HTMLElement>('.map-list .mn')].map((e) => e.textContent || '');
   let cur = -2, tick = false;
+  // Odległość górnej krawędzi pigułki od dołu ekranu (bottom + wysokość), mierzona raz i przy resize, nie w każdej klatce:
+  // po ostatniej stacji pigułka znika, zanim dół stacji minie jej górną krawędź, więc nie zasłania treści po stacjach
+  // (QA 20.10). Między stacjami numer przełącza się wprost na połowie ekranu, bez przerwy (przerwa = mignięcie).
+  let edge = 0;
+  const measure = () => {
+    if (!pill) return;
+    const was = pill.hidden;
+    if (was) { pill.style.visibility = 'hidden'; pill.hidden = false; }
+    edge = innerHeight - pill.getBoundingClientRect().top;
+    if (was) { pill.hidden = true; pill.style.visibility = ''; }
+  };
   const upd = () => {
     tick = false; if (!pill) return;
-    const line = innerHeight * .5; let idx = -1;
-    st.forEach((s, i) => { const r = s.getBoundingClientRect(); if (r.top <= line && r.bottom > line) idx = i; });
+    const line = innerHeight * .5, pillTop = innerHeight - edge; let idx = -1;
+    st.forEach((s, i) => { const r = s.getBoundingClientRect(); if (r.top <= line && r.bottom > (i === st.length - 1 ? pillTop : line)) idx = i; });
     if (idx === cur) return; cur = idx;
     pill.hidden = idx < 0;
     if (idx >= 0) {
@@ -460,6 +471,9 @@ const ld = {
     }
   };
   addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
+  addEventListener('resize', () => { measure(); upd(); }, { passive: true });
+  document.fonts?.ready.then(() => { measure(); upd(); });
+  measure();
   upd();
 </script>
 
