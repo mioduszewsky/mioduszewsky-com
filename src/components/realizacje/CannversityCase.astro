@@ -240,12 +240,11 @@ const ld = {
             </div>
           </div>
         </div>
-        {/* Następna realizacja jako tekst bez linku, dopóki case GlassStone nie jest gotowy (Finch 19.10).
-            Link wraca przez nextHref, gdy case zostanie zaakceptowany. */}
+        {/* Następna realizacja znów jest linkiem (zlecenie Fincha 20.10: ostatni case prowadzi do pierwszego). */}
         {nextCase && (
-          <p class="next">
-            <span class="wrap next-in"><span class="next-k">{T.s6.nastepny}</span><span class="next-n">{nextCase[1]}</span></span>
-          </p>
+          <a class="next" href={nextHref}>
+            <span class="wrap next-in"><span class="next-k">{T.s6.nastepny}</span><span class="next-n">{nextCase[1]}<span aria-hidden="true"> →</span></span></span>
+          </a>
         )}
       </section>
     </main>
@@ -286,6 +285,7 @@ const ld = {
   .case p { text-wrap: pretty; }
   .case :is(a,button):focus-visible { outline: 3px solid var(--black); outline-offset: 4px; }
   .case .ink :is(a,button):focus-visible { outline-color: var(--cann); }
+  .case .next:focus-visible { outline-color: var(--cann); outline-offset: -8px; }
   .case ::selection { background: var(--black); color: var(--cann); }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--black); color: var(--cann); transform: translateY(-200%); }
@@ -371,6 +371,7 @@ const ld = {
   .next-in { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: clamp(28px, 4vw, 56px); }
   .next-k { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--white); }
   .next-n { font-style: italic; font-weight: 900; font-size: clamp(36px, 6vw, 96px); line-height: 1; letter-spacing: -.03em; }
+  .next:hover .next-n { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 10px; }
 
   @media (max-width: 900px) {
     .open-grid, .motion .head, .duo-vid, .steps li, .langs-in, .end-in { grid-template-columns: minmax(0, 1fr); }
