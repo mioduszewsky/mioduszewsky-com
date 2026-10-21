@@ -526,6 +526,10 @@ const ld = {
   /* 1. Otwarcie */
   /* bez belki: film na pełny ekran, lockup (CaseLockup) unosi się nad nim */
   .open { position: relative; height: min(100vh, 62.5vw); min-height: 460px; background: #2a2018; color: #fff; overflow: hidden; }
+  /* Lockup +18% (21.10) wchodził na niskim ekranie (1000x568) na nagłówek wypalony w filmie: nagłówek stoi tym wyżej, im niższy film.
+     Granica lockupu idzie więc za wysokością filmu (ta sama formuła co .open): przy 568 px zostaje dawne 190 px i ok. 7 px
+     przerwy, od ok. 670 px pełne 224 px. */
+  :global(.case-lockup) { --lk-max: clamp(190px, calc(min(100vh, 62.5vw) * .335), 224px); }
   /* Film nagrany z eskapizm.com z ukrytym nagłówkiem strony (logo, menu, pasek postępu) oraz paskiem menu macOS i wycięciem kamery z makiety ekranu laptopa (nagraj.cjs z krokiem js),
      więc pod lockupem nie ma drugiego logo i nic nie trzeba kadrować ani rozmywać. Bez winiety i bez przyciemnienia:
      czytelność lockupu trzyma ton według czasu filmu (skrypt niżej, data-tone na .open). */

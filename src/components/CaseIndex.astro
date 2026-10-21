@@ -21,9 +21,10 @@ import CaseLockup from './realizacje/CaseLockup.astro';
 import BrandFooter from './BrandFooter.astro';
 import heroGlassstone from '../assets/realizacje/hero-glassstone.webp';
 import heroEskapizm from '../assets/realizacje/hero-eskapizm.webp';
-// Igor (D5, 21.10): strona „O kolekcji” zamiast strony głównej. Treść strony głównej leży w lewej połowie, a w wachlarzu
-// karta z prawej pokazuje tylko prawą połowę, więc była prawie biała; „O kolekcji” ma niebieskie tło i hasła z prawej.
-import heroIgor from '../assets/realizacje/hero-igor-kolekcja.webp';
+// Igor (Kacper 21.10, po D5): karta wraca do hero strony głównej, jak eskapizm i Cannversity („O kolekcji” to nie hero).
+// Treść hero Igora leży w lewej połowie zrzutu, a karta z prawej strony wachlarza pokazuje tylko prawą połowę,
+// więc w spoczynku obraz w karcie przesuwa się w prawo (heroLeft, patrz .card[data-hero-left] w stylach).
+import heroIgor from '../assets/realizacje/hero-igor.webp';
 import heroCannversity from '../assets/realizacje/hero-cannversity.webp';
 
 interface Props { locale: 'pl' | 'en' }
@@ -59,12 +60,14 @@ const order = (slug: string) => caseOrder.findIndex((c) => c.slug === slug);
 const cases = [
   { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: pl ? 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' : "GlassStone homepage hero, in Polish: we don't sell stone, we create interiors you want to live in." },
   { slug: 'eskapizm', name: T.nameEskapizm, img: heroEskapizm, alt: pl ? 'Hero strony eskapizm: Kolejny wieczór na planowaniu podróży do Azji? Laptop na biurku w złotej godzinie.' : 'eskapizm homepage hero, in Polish: another evening spent planning a trip to Asia? A laptop on a desk at golden hour.' },
-  { slug: 'igor-grabowski', name: 'Igor Grabowski', img: heroIgor, alt: pl ? 'Strona „O kolekcji” Igora Grabowskiego: nagłówek „Jak to się zaczęło.”, z prawej „Inżynier → IT” i „Od 2020”.' : "The About the collection page on Igor Grabowski's site, in Polish: the heading reads \"How it started\", with \"Engineer → IT\" and \"Since 2020\" on the right." },
+  { slug: 'igor-grabowski', name: 'Igor Grabowski', heroLeft: true, img: heroIgor, alt: pl ? 'Pierwszy ekran strony kolekcji Igora Grabowskiego: po najechaniu na Prace pojawia się praca z kolekcji.' : "First screen of Igor Grabowski's collection site: hovering Works brings up a piece from the collection." },
   { slug: 'cannversity', name: 'Cannversity', img: heroCannversity, alt: pl ? 'Hero strony Cannversity: Od pomysłu do produktu. W branży konopnej.' : 'Cannversity homepage hero, in Polish: from idea to product, in the cannabis industry.' },
 ].filter((c) => caseOrder.some((o) => o.slug === c.slug && o.locales.includes(locale))).sort((a, b) => order(a.slug) - order(b.slug)).map((c) => ({ ...c, href: hasCase(c.slug) ? `${T.base}${c.slug}/` : undefined }));
 
 const n = cases.length;
 const center = (n - 1) / 2;
+// Telefon startuje od środkowej karty (Kacper 21.10: „z defaultu na środkowym”); przy parzystej liczbie lewa ze środkowych.
+const mid0 = Math.floor(center);
 // Warstwy: środek na wierzchu, brzegi pod spodem, żeby żadna karta nie chowała się za sąsiadami.
 const zOf = (i: number) => 20 - Math.round(Math.abs(i - center) * 4) + (i > center ? 1 : 0);
 
@@ -102,7 +105,7 @@ const ld = {
           const Tag = c.href ? 'a' : 'div';
           const o = i - center;
           return (
-            <li class="card" data-name={c.name} data-link={c.href ? '1' : undefined}
+            <li class="card" data-name={c.name} data-link={c.href ? '1' : undefined} data-hero-left={c.heroLeft && o > 0 ? '' : undefined}
               style={`--o:${o}; --enter:${Math.round(Math.abs(o) * 90)}ms; z-index:${zOf(i)}`} data-z={zOf(i)}>
               <Tag class="sheet" href={c.href} aria-label={c.href ? `${T.caseLabel}: ${c.name}` : undefined}>
                 <span class="frame">
@@ -114,8 +117,8 @@ const ld = {
         })}
       </ul>
       <div class="m-now" aria-hidden="true">
-        <span class="m-pill"><span class="m-name">{cases[0].name}</span><svg class="pill-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
-        <span class="m-bars">{cases.map((_, i) => <i class:list={[{ on: i === 0 }]} />)}</span>
+        <span class="m-pill"><span class="m-name">{cases[mid0].name}</span><svg class="pill-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
+        <span class="m-bars">{cases.map((_, i) => <i class:list={[{ on: i === mid0 }]} />)}</span>
       </div>
       <div class="pill" aria-hidden="true"><span class="pill-name"></span><svg class="pill-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></div>
     </main>
@@ -290,6 +293,10 @@ const ld = {
       }
     };
     const req = () => { if (!t) { t = true; requestAnimationFrame(upd); } };
+    // wejście na stronę i wejście w tryb telefonu (obrót, zwężenie okna): pas stoi na środkowej karcie, bez przejazdu
+    const mid0 = Math.floor((cs.length - 1) / 2);
+    const startMid = () => { track.scrollLeft = cs[mid0].offsetLeft + cs[mid0].offsetWidth / 2 - track.clientWidth / 2; };
+    if (phone.matches) startMid();
     track.addEventListener('scroll', req, { passive: true });
     addEventListener('resize', req, { passive: true });
     const center = (i: number) => track.scrollTo({ left: cs[i].offsetLeft + cs[i].offsetWidth / 2 - track.clientWidth / 2, behavior: calm.matches ? 'auto' : 'smooth' });
@@ -302,7 +309,7 @@ const ld = {
     track.addEventListener('focusin', (e) => { const el = e.target as Element; const i = cs.indexOf(el.closest<HTMLElement>('.card')!); if (phone.matches && i >= 0 && el.matches(':focus-visible')) center(i); });
     // wyjście z trybu telefonu (obrót, poszerzenie okna): wachlarz z kursorem dostaje z powrotem swoje warstwy
     phone.addEventListener('change', () => {
-      if (phone.matches) { mid = -1; req(); return; }
+      if (phone.matches) { mid = -1; startMid(); req(); return; }
       cs.forEach((card) => { card.style.removeProperty('--d'); card.style.removeProperty('--a'); card.style.zIndex = card.dataset.z || ''; card.classList.remove('is-mid'); });
     });
     upd();
@@ -415,6 +422,13 @@ const ld = {
   }
   .is-active .frame::after { opacity: 1; }
   .fan .sheet:focus-visible { outline-offset: 6px; }
+  /* Karta z prawej strony wachlarza, której treść hero leży w lewej połowie zrzutu (Igor). Lewą połowę karty przykrywa
+     środkowa (zmierzone 21.10: widać prawe 52% przy 1440 i 1000), więc w spoczynku obraz jedzie w prawo o tę połowę
+     i w widocznej części stoi nazwa i menu. Po najechaniu karta wychodzi na wierzch i obraz wraca na swoje miejsce.
+     Odsłonięty pas po lewej ma biel strony Igora, nie szarość ramki. Tylko wachlarz z kursorem: lista i telefon bez przesunięcia. */
+  .card[data-hero-left] .frame { background: #fff; }
+  .card[data-hero-left] .frame img { transition: transform .6s var(--ease-out); }
+  .card[data-hero-left]:not(.is-active) .frame img { transform: translateX(48%); }
 
   /* Etykieta przy kursorze: nazwa realizacji, strzałka tylko przy gotowym case. */
   .pill {
@@ -446,6 +460,7 @@ const ld = {
     /* Gotowe case'y idą na górę listy. */
     .card[data-link] { order: -1; }
     .card:active .sheet { scale: .98; }
+    .card[data-hero-left]:not(.is-active) .frame img { transform: none; }
     .sheet { transition: scale .25s var(--ease-out); }
     .sheet::before { box-shadow: 0 12px 28px rgb(0 0 0 / .14); }
     .pill { display: none; }
@@ -492,7 +507,7 @@ const ld = {
     .work .fan { grid-template-columns: 1fr 1fr; gap: 20px; padding-top: 40px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .card, .sheet, .pill { transition-duration: .01s !important; transition-delay: 0s !important; }
+    .card, .sheet, .pill, .frame img { transition-duration: .01s !important; transition-delay: 0s !important; }
     .fan:not(.is-ready) .card { opacity: 1; }
   }
 </style>
