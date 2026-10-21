@@ -128,4 +128,68 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/services/cofounder-as-a-service/" />
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://mioduszewsky.com/work/</loc>
+    <lastmod>2026-10-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/" />
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/pl/realizacje/</loc>
+    <lastmod>2026-10-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/" />
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/work/eskapizm/</loc>
+    <lastmod>2026-10-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/eskapizm/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/eskapizm/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/eskapizm/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/pl/realizacje/eskapizm/</loc>
+    <lastmod>2026-10-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/eskapizm/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/eskapizm/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/eskapizm/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/work/cannversity/</loc>
+    <lastmod>2026-10-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/cannversity/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/cannversity/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/cannversity/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/pl/realizacje/cannversity/</loc>
+    <lastmod>2026-10-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/cannversity/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/cannversity/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/cannversity/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/work/igor-grabowski/</loc>
+    <lastmod>2026-10-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/igor-grabowski/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/igor-grabowski/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/igor-grabowski/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/pl/realizacje/igor-grabowski/</loc>
+    <lastmod>2026-10-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/igor-grabowski/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/igor-grabowski/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/igor-grabowski/" />
+    <priority>0.7</priority>
+  </url>
 </urlset>

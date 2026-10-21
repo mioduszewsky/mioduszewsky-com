@@ -1,0 +1,231 @@
+---
+// Góra strony case'u (decyzja Kacpra 20.10.2026): bez belki, logo „mioduszewsky × klient” unosi się nad treścią.
+// Z lewej lockup: wideo 3D mioduszewsky (link do strony głównej), cienki ×, logo klienta (nie link). Z prawej SiteMenu.
+// Logo klienta: plik src/assets/realizacje/logo-klientow/<client>.svg (fill="currentColor"), czytany przez glob,
+// więc nowy klient = nowy plik, bez edycji komponentu. Brak pliku = nazwa klienta tekstem.
+// Ton (dark: żółte wideo, biały klient; light: czarne wideo, czarny klient) wybiera jeden skrypt na dole:
+// co leży pod środkiem lockupu, pierwszy przodek z data-tone albo nieprzezroczystym tłem, kontrast wg WCAG.
+// Sekcje z filmem lub zdjęciem pod lockupem dostają w markupie data-tone="dark" albo "light" (z obrazu koloru nie odczytasz);
+// gdy obraz na telefonie jest inny (np. osobne nagranie pionowe), data-tone-m ustawia ton do 767 px szerokości.
+// Ten sam ton steruje przyciskiem Menu i przełącznikiem języka (zmienne --menu-* w SiteMenu).
+// Logo mioduszewsky nie idzie za tonem (Kacper 20.10, 09:30): domyślnie zawsze żółte 3D, w pigułce zawsze żółte 3D.
+// Płaskie czarne (pełna czerń) tylko tam, gdzie żółte 3D znika: tło pod logo w kolorze zbliżonym do żółci #ffcc33
+// (odległość RGB poniżej 90; krem i biel to ok. 200, więc zostają przy 3D) albo sekcja z obrazem oznaczona data-logo="flat".
+// Pierwszy ekran ustawia prop logo (do pierwszego pomiaru skryptu, bez mignięcia).
+// Chowanie (Sławek, runda 2): pierwszy ekran lockup zawsze. Po 80 px w dół chowa się, w górę wraca. Nie chowa się z focusem
+// w środku ani przy otwartym Menu.
+// Bez pigułki i bez żadnego tła pod lockupem, nigdy (Kacper 20.10, ok. 14:10: „najgorsze, że ona w ogóle się robi”).
+// Lockup leci sam nad treścią; zmienia się tylko kolor ×, logo klienta i Menu (płynnie, 300 ms). Przycisk Menu bez wypełnienia.
+import SiteMenu from '../SiteMenu.astro';
+import { routes, type Locale } from '../../i18n/site';
+
+type Fit = { h: number; base: number };
+interface Props {
+  locale: Locale;
+  /** slug klienta = nazwa pliku SVG w logo-klientow; bez niego samo logo mioduszewsky (strona zbiorcza realizacji) */
+  client?: string;
+  /** nazwa klienta dla czytników ekranu i zastępczo, gdy nie ma pliku SVG */
+  clientName?: string;
+  alternatePath?: string;
+  /** ton pierwszego ekranu (do pierwszego pomiaru skryptu, bez mignięcia) */
+  tone?: 'dark' | 'light';
+  /** logo mioduszewsky na pierwszym ekranie: '3d' (domyślnie) albo 'flat', gdy otwarcie ma żółte tło */
+  logo?: '3d' | 'flat';
+  /** dopasowanie logo klienta: h = wysokość pudełka SVG jako ułamek wysokości wideo, base = linia bazowa jako ułamek wysokości SVG */
+  fit?: Partial<Fit>;
+}
+const { locale, client, alternatePath, tone = 'light', logo = '3d', fit } = Astro.props;
+const pl = locale === 'pl';
+const NAMES: Record<string, string> = { eskapizm: 'eskapizm', cannversity: 'Cannversity', glassstone: 'GlassStone', 'igor-grabowski': 'Igor Grabowski' };
+const name = Astro.props.clientName ?? (client ? NAMES[client] ?? client : '');
+
+// Geometria wideo logo-nav (800x222, czarne 600x166, te same proporcje), zmierzona z kanału alfa plakatu:
+// litery od 5,9% do 94,1% szerokości, linia bazowa na 67-67,5% wysokości (sprawdzone zrzutem 3x), góra wydłużeń (d, k) na 18%, x-height od 34,2%.
+const BOX = 222 / 800, PAD = 47 / 800, BASE = .675;
+// Dopasowania logo klientów. eskapizm: viewBox 3918x916, linia bazowa y=700, x-height 252-700, czyli x-height
+// równa x-height mioduszewsky (0,325 wysokości wideo). Domyślnie: wysokość wersalików = wysokość wydłużeń mioduszewsky.
+const FITS: Record<string, Fit> = { eskapizm: { h: .665, base: 700 / 916 } };
+const f: Fit = { h: .487, base: 1, ...(client ? FITS[client] : {}), ...fit };
+
+const files = import.meta.glob<string>('../../assets/realizacje/logo-klientow/*.svg', { query: '?raw', import: 'default', eager: true });
+const raw = files[`../../assets/realizacje/logo-klientow/${client}.svg`];
+const vb = raw?.match(/viewBox="([^"]+)"/)?.[1].split(/[\s,]+/).map(Number);
+const aspect = vb && vb[3] ? vb[2] / vb[3] : 0;
+// Napis klienta w lockupie jest dekoracją: nazwa idzie do czytników tekstem obok, więc SVG bez roli i etykiety.
+const svg = raw && raw.replace(/<svg\b([^>]*)>/, (_, a: string) => `<svg${a.replace(/\s(role|aria-label|width|height|class)="[^"]*"/g, '')} class="lk-svg" aria-hidden="true" focusable="false" preserveAspectRatio="xMinYMax meet">`);
+
+// Szerokość lockupu w jednostkach szerokości wideo: litery + × z oddechem + klient. Z tego skala, która mieści
+// lockup obok przycisku Menu i przełącznika języka (rezerwa 136 px) w każdej szerokości od 320 px, bez łamania.
+const X = .3 * BOX, GAP = .075;
+// Bez klienta (strona zbiorcza) skala liczona tak, jakby obok stał klient szerokości eskapizmu (.79), więc logo
+// mioduszewsky ma tę samą wielkość co w case'ach, także na telefonie (390 px: 112 px zamiast 190).
+const k = (1 - 2 * PAD) + X + 2 * GAP + (client ? (aspect ? aspect * f.h * BOX : .9) : .79);
+const vars = `--lk-k:${k.toFixed(3)};--lk-ct:${(BASE - f.h * f.base).toFixed(4)};--lk-ch:${f.h.toFixed(4)}`;
+const home = routes[locale].home;
+---
+<header class="case-lockup" data-case-lockup data-lk-tone={tone} data-lk-logo={logo} style={vars}>
+  <div class="lk">
+    <a class="lk-home" href={home} aria-label={pl ? 'mioduszewsky. Strona główna.' : 'mioduszewsky. Home page.'}>
+      <span class="lk-vid" aria-hidden="true">
+        <video class="lk-v" data-lk-v="3d" loop muted playsinline autoplay={logo === '3d'} preload={logo === '3d' ? 'metadata' : 'none'} width="800" height="222" tabindex="-1" poster="/logo3d/logo-nav-poster.webp">
+          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-nav.webm" type="video/webm" />
+        </video>
+        <video class="lk-v" data-lk-v="flat" loop muted playsinline autoplay={logo === 'flat'} preload={logo === 'flat' ? 'metadata' : 'none'} width="600" height="166" tabindex="-1" poster="/logo3d/logo-czarne-nav-poster.webp">
+          <source src="/logo3d/logo-czarne-nav.mp4" type="video/mp4;codecs=hvc1" />
+          <source src="/logo3d/logo-czarne-nav.webm" type="video/webm" />
+        </video>
+      </span>
+    </a>
+    {client && <>
+      <svg class="lk-x" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1 1 9 9M9 1 1 9" /></svg>
+      <span class="lk-client">
+        {svg ? <Fragment set:html={svg} /> : <span class="lk-name" aria-hidden="true">{name}</span>}
+        <span class="lk-sr">{pl ? `, realizacja: ${name}` : `, project: ${name}`}</span>
+      </span>
+    </>}
+  </div>
+  <SiteMenu locale={locale} alternatePath={alternatePath} compact />
+</header>
+
+<style>
+  /* Wysokość lockupu dla stron, których otwarcie stoi w układzie (nie pod filmem): padding-top: var(--case-lockup-h). */
+  :global(:root) { --case-lockup-h: clamp(72px, 7vw, 100px); }
+  .case-lockup {
+    --lk-w: clamp(60px, calc((100vw - 2 * var(--gutter, 20px) - 136px) / var(--lk-k)), 190px);
+    --lk-h: calc(var(--lk-w) * 222 / 800);
+    --lk-fg: #111;
+    position: fixed; z-index: 100; inset: 0 0 auto; box-sizing: border-box;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: clamp(12px, 2vw, 24px) var(--gutter, 20px) 0;
+    pointer-events: none; color: var(--lk-fg);
+    --menu-fg: #111; --menu-line: #111; --menu-bg: transparent; --menu-focus: #111;
+  }
+  .case-lockup[data-lk-tone='dark'] {
+    --lk-fg: #fff;
+    --menu-fg: #fff; --menu-line: rgb(255 255 255 / .9); --menu-bg: transparent; --menu-focus: #fff;
+  }
+  .case-lockup > :global(*), .lk-home { pointer-events: auto; }
+  .lk { display: flex; align-items: flex-start; min-width: 0; height: var(--lk-h); }
+  .lk-home { display: block; flex: none; margin-inline: calc(var(--lk-w) * -47 / 800); border-radius: 4px; }
+  .lk-home:focus-visible { outline: 2px solid var(--lk-fg); outline-offset: 2px; }
+  .lk-vid { display: grid; width: var(--lk-w); }
+  .lk-v { grid-area: 1 / 1; width: 100%; height: auto; display: block; transition: opacity .2s ease; }
+  .lk-v::-webkit-media-controls-start-playback-button, .lk-v::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
+  [data-lk-logo='3d'] .lk-v[data-lk-v='flat'], [data-lk-logo='flat'] .lk-v[data-lk-v='3d'] { opacity: 0; }
+  [data-lk-tone='dark'] .lk-v[data-lk-v='3d'] { filter: drop-shadow(0 4px 10px rgb(0 0 0 / .22)); }
+  /* × cienki, w kolorze lockupu, środek na środku x-height mioduszewsky */
+  .lk-x { flex: none; width: calc(var(--lk-h) * .3); height: calc(var(--lk-h) * .3); margin: calc(var(--lk-h) * .355) calc(var(--lk-w) * .075) 0; fill: none; stroke: currentColor; stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+  .lk-x path { vector-effect: non-scaling-stroke; }
+  .lk-client { flex: none; display: block; margin-top: calc(var(--lk-h) * var(--lk-ct)); height: calc(var(--lk-h) * var(--lk-ch)); line-height: 1; }
+  .lk-client :global(.lk-svg) { display: block; height: 100%; width: auto; overflow: visible; }
+  .lk-name { display: block; font: 600 calc(var(--lk-h) * .42)/1 'GeneralSansV', sans-serif; white-space: nowrap; }
+  /* film pod lockupem bywa jasny i gęsty: w tonie ciemnym delikatny cień pod białym ×, klientem i nazwą */
+  [data-lk-tone='dark'] :is(.lk-x, .lk-client) { filter: drop-shadow(0 1px 6px rgb(0 0 0 / .45)); }
+  .lk-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  .case-lockup { transition: color .3s ease, transform .25s ease; }
+  .lk-x, .lk-client { transition: color .3s ease, filter .3s ease; }
+  /* Schowany lockup znika całkiem: logo klienta z sygnetem wystaje pod pudełko o kilka px i po translateY(-100%)
+     zostawało u góry ekranu kreskami (Cannversity, zrzut Kacpra 20.10). Zjazd o 24 px dalej niż pudełko; bez visibility,
+     żeby Tab nadal trafiał w lockup i :focus-within go odsłaniał (recenzja Codexa). */
+  .case-lockup[data-lk-hidden] { transform: translateY(calc(-100% - 24px)); }
+  @media (prefers-reduced-motion: reduce) {
+    .lk-v, .case-lockup, .lk-x, .lk-client { transition: none; }
+  }
+</style>
+
+<script>
+  // Ton lockupu: przy scrollu (rAF, passive) sprawdza, co leży pod środkiem lockupu, i idzie w górę drzewa do
+  // pierwszego elementu z data-tone albo z nieprzezroczystym tłem. Z koloru tła luminancja względna (WCAG)
+  // i ten z dwóch tonów (biały albo #111), który daje wyższy kontrast.
+  const lk = document.querySelector<HTMLElement>('[data-case-lockup]');
+  const mark = lk?.querySelector<HTMLElement>('.lk');
+  if (lk && mark) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)');
+    const narrow = matchMedia('(max-width: 767px)');
+    const vids = Object.fromEntries([...lk.querySelectorAll<HTMLVideoElement>('[data-lk-v]')].map((v) => [v.dataset.lkV, v]));
+    const lin = (v: number) => ((v /= 255) <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4);
+    const lum = (c: number[]) => .2126 * lin(c[0]) + .7152 * lin(c[1]) + .0722 * lin(c[2]);
+    const INK = lum([17, 17, 17]);
+    // kolor tła albo null, gdy przezroczysty (alfa poniżej 0,5) lub w formacie, którego nie liczymy
+    const bg = (el: Element) => {
+      const m = getComputedStyle(el).backgroundColor.match(/^rgba?\(([^)]+)\)$/);
+      if (!m) return null;
+      const p = m[1].split(/[\s,/]+/).filter(Boolean).map(parseFloat);
+      return (p[3] ?? 1) < .5 ? null : p.slice(0, 3);
+    };
+    const toneOf = (el: Element | null): 'dark' | 'light' | null => {
+      for (let n = el; n; n = n.parentElement) {
+        const d = (n as HTMLElement).dataset;
+        const t = (narrow.matches && d?.toneM) || d?.tone;
+        if (t === 'dark' || t === 'light') return t;
+        const c = bg(n);
+        if (c) { const L = lum(c); return 1.05 / (L + .05) >= (L + .05) / (INK + .05) ? 'dark' : 'light'; }
+      }
+      return null;
+    };
+    // Wariant logo: 3D, chyba że pod logo leży żółte tło (odległość RGB od #ffcc33 poniżej 90) albo obraz z data-logo="flat".
+    // Sekcja z data-tone (film, zdjęcie) bez data-logo = 3D.
+    const YEL = [255, 204, 51];
+    const logoOf = (el: Element | null): '3d' | 'flat' => {
+      for (let n = el; n; n = n.parentElement) {
+        const d = (n as HTMLElement).dataset;
+        if (d?.logo === 'flat' || d?.logo === '3d') return d.logo;
+        if (d?.tone || d?.toneM) return '3d';
+        const c = bg(n);
+        if (c) return Math.hypot(c[0] - YEL[0], c[1] - YEL[1], c[2] - YEL[2]) < 90 ? 'flat' : '3d';
+      }
+      return '3d';
+    };
+    // Geometria lockupu (punkt pomiaru tonu, z offset*, czyli bez transformacji chowania) w pamięci: odświeżana tylko
+    // po resize, orientationchange i wczytaniu fontów, żeby klatka scrolla nie wymuszała układu.
+    let geo = { x: 0, y: 0 }, dirty = true;
+    const readGeo = () => {
+      geo = { x: mark.offsetLeft + mark.offsetWidth / 2, y: mark.offsetTop + mark.offsetHeight / 2 };
+      dirty = false;
+    };
+    const measure = () => {
+      const top = document.elementsFromPoint(geo.x, geo.y).find((el) => !lk.contains(el)) ?? null;
+      return { t: toneOf(top) ?? toneOf(document.body) ?? 'light', l: logoOf(top) };
+    };
+    const play = (v?: HTMLVideoElement) => { if (v && !still.matches && v.paused) { v.preload = 'auto'; v.play().catch(() => {}); } };
+    // Chowanie. Histereza 6 px: drżenie palca nie przełącza; lastY rusza dopiero po wyraźnym ruchu.
+    const panel = lk.querySelector<HTMLElement>('[popover]');
+    const menuOpen = () => { try { return !!panel?.matches(':popover-open'); } catch { return false; } };
+    let lastY = scrollY;
+    let tick = false;
+    const upd = () => {
+      tick = false;
+      // najpierw wszystkie odczyty...
+      if (dirty) readGeo();
+      const y = Math.max(0, scrollY);
+      const hold = y <= 80 || lk.matches(':focus-within') || menuOpen();
+      const { t, l } = measure();
+      let hide = lk.hasAttribute('data-lk-hidden');
+      if (hold) { hide = false; lastY = y; }
+      else if (y - lastY > 6) { hide = true; lastY = y; }
+      else if (lastY - y > 6) { hide = false; lastY = y; }
+      // ...potem zapisy
+      lk.toggleAttribute('data-lk-hidden', hide);
+      if (lk.dataset.lkTone !== t) lk.dataset.lkTone = t;
+      if (lk.dataset.lkLogo === l) return;
+      lk.dataset.lkLogo = l;
+      const on = vids[l], off = vids[l === '3d' ? 'flat' : '3d'];
+      // WebKit odmawia play() wideo z opacity 0: start dopiero w następnej klatce, gdy jest już widoczne
+      requestAnimationFrame(() => play(on));
+      setTimeout(() => { if (lk.dataset.lkLogo === l) off?.pause(); }, 250);
+    };
+    const req = () => { if (!tick) { tick = true; requestAnimationFrame(upd); } };
+    addEventListener('scroll', req, { passive: true });
+    const regeo = () => { dirty = true; req(); };
+    addEventListener('resize', regeo, { passive: true });
+    addEventListener('orientationchange', regeo);
+    document.fonts?.addEventListener?.('loadingdone', regeo);
+    document.fonts?.ready.then(regeo);
+    addEventListener('load', regeo);
+    addEventListener('pageshow', req);
+    lk.addEventListener('focusin', req);
+    panel?.addEventListener('toggle', req);
+    upd();
+  }
+</script>

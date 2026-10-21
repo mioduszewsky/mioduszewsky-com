@@ -4,6 +4,7 @@ export const routes = {
   en: {
     home: '/',
     services: '/services/',
+    work: '/work/',
     contact: '/contact/',
     privacy: '/privacy/',
     terms: '/terms/',
@@ -11,6 +12,7 @@ export const routes = {
   pl: {
     home: '/pl/',
     services: '/pl/uslugi/',
+    work: '/pl/realizacje/',
     contact: '/pl/kontakt/',
     privacy: '/pl/polityka-prywatnosci/',
     terms: '/pl/regulamin/',

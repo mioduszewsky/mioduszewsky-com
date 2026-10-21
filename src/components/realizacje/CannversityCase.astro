@@ -1,0 +1,445 @@
+---
+// Case study Cannversity, runda 2 (19.10.2026): kierunek „Prosto, z luzem”, zaakceptowany przez Kacpra.
+// Kierunek i historia: docs/case-studies/cannversity/runda-2/KIERUNEK.md. Odrzucone: otwarcie z menu mioduszewsky
+// (runda 1) i „Plakat z szablonu” (spray, natrysk, raster). Prosta strona pokazana prosto: żółć #ffcc33 i czerń
+// marki, nazwa krojem z logo Cannversity (Archivo, szerokość 125, waga 800, sprawdzone nakładką na logo),
+// twarde bloki i kreski, bez zaokrągleń i cieni. Jeden akcent z prawdziwego materiału: roślina z hero cannversity.com,
+// wycięta z białego tła (docs/case-studies/cannversity/runda-2/wytnij2.cjs). 20.10 hero bez nagrania (Kacper: nagrania są
+// zaraz niżej); roślina wyrasta z prawego dolnego rogu pierwszego ekranu. Jedna roślina na ekran.
+// Treść: docs/case-studies/cannversity/runda-2/COPY.md i COPY-EN.md (Ghost), fakty: docs/case-studies/cannversity/FAKTY.md.
+// Nagrania: klatka po klatce 60 kl./s z żywej cannversity.com (PL z /, EN z /en), bez banera (strona nie ma bramki
+// zgody, sprawdzone liczbą), poza kadrem sekcja z logo partnerów (R5). Skrypty: docs/case-studies/cannversity/runda-2/.
+import VariantLayout from '../../layouts/VariantLayout.astro';
+import BrandFooter from '../BrandFooter.astro';
+import CaseLockup from './CaseLockup.astro';
+import ExtArrow from './ExtArrow.astro';
+import { cannabisHref } from '../../content/cannabis';
+import type { Locale } from '../../i18n/site';
+import { nextCase as loopNext } from '../../content/realizacje-kolejnosc';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const pl = locale === 'pl';
+const P = (t: string) => pl ? t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;') : t;
+const self = pl ? '/pl/realizacje/cannversity/' : '/work/cannversity/';
+const alt = pl ? '/work/cannversity/' : '/pl/realizacje/cannversity/';
+const url = `https://mioduszewsky.com${self}`;
+const live = cannabisHref('realizacje', locale);
+const liveEn = cannabisHref('realizacje', 'en');
+const livePl = cannabisHref('realizacje', 'pl');
+const contact = pl ? '/pl/kontakt/#ctForm' : '/contact/#ctForm';
+const dir = `/case/cannversity/${pl ? 'pl' : 'en'}`;
+
+// Następna realizacja: z pętli wspólnej dla czterech case'ów (src/content/realizacje-kolejnosc.ts), kształt [slug, nazwa] jak wcześniej.
+const next = loopNext('cannversity', locale);
+const nextCase: [string, string] = [next.slug, next.name];
+const nextHref = next.href;
+
+const T = pl ? {
+  title: 'Cannversity: strona PL i EN dla branży konopnej · mioduszewsky',
+  description: 'Cannversity to moja usługa dla founderów i marek konopnych. Zrobiłem jej stronę po polsku i angielsku. Prowadzi do bezpłatnej, 30-minutowej rozmowy.',
+  headline: 'Cannversity: strona dla branży konopnej po polsku i po angielsku',
+  about: 'Cannversity, moja usługa dla founderów i marek z branży konopnej: strategia, MVP i strony, doradztwo',
+  skip: 'Przejdź do treści',
+  // Metka = czym jest Cannversity dla Kacpra (Kacper 20.10, 08:35). Źródło: FAKTY.md C1, R7.
+  metka: 'Odnoga mojej marki osobistej dla branży konopnej',
+  // telefon (do 480 px): ten sam sens w jednej linii (Kacper 20.10: dwie linie kleiły się do nazwy); FAKTY R7
+  metkaKrotka: 'Konopna odnoga mojej marki',
+  zdanie: 'Strona dla tych, którzy robią w konopiach.',
+  wiersze: [['Dla kogo', 'Founderzy i marki z branży konopnej'], ['Jak działa', 'Trzy sytuacje i trzy filary oferty'], ['Prowadzi do', 'Bezpłatnej rozmowy, 30\u00a0minut online']],
+  link: 'Zobacz cannversity.com',
+  s2: {
+    kicker: 'Na żywo',
+    h2: 'Pierwsze cztery sekcje, bez montażu.',
+    lead: 'Tak cannversity.com wygląda dziś na komputerze i w telefonie.',
+    podpisTelefon: 'Ta sama strona w telefonie, w jednej kolumnie.',
+    altDesktop: 'Nagranie przewijania cannversity.com na komputerze: hasło „Od pomysłu do produktu. W branży konopnej.” z przyciskiem „Umów bezpłatną rozmowę”, trzy sytuacje, od których zwykle zaczyna się współpraca, sekcja „Co dostajesz, zamiast zgadywać” i proces w trzech krokach.',
+    altTelefon: 'Nagranie przewijania cannversity.com w telefonie, w jednej kolumnie: hasło z przyciskiem do kalendarza, trzy sytuacje, sekcja „Co dostajesz, zamiast zgadywać” i proces w trzech krokach.',
+  },
+  s3: { h2: 'Jak ta strona prowadzi do rozmowy.', bloki: [
+    { etykieta: 'Sytuacje', tytul: 'Trzy sytuacje na start', tekst: 'Zaraz pod hasłem są trzy sytuacje, od których zwykle zaczyna się współpraca. Od „Mam pomysł, ale nie wiem, czy ma sens” po „Działam, ale utknąłem i potrzebuję sparingu”.', alt: 'Sekcja „Tu najczęściej zaczyna się współpraca” na cannversity.com: trzy karty z sytuacjami, każda z własnym przyciskiem.' },
+    { etykieta: 'Oferta', tytul: 'Trzy filary, po pięć konkretów', tekst: 'Strategy & Roadmap, MVP & Product Build i Business Advisory. Każdy ma listę tego, co dostajesz, od walidacji pomysłu po sparring dla founderów.', alt: 'Sekcja „Trzy filary. Jeden cel.” na cannversity.com: karty Strategy & Roadmap, MVP & Product Build i Business Advisory, każda z listą pięciu pozycji.' },
+    { etykieta: 'Rozmowa', tytul: 'Wszystkie drogi prowadzą do kalendarza', tekst: 'Przycisk do kalendarza Google jest w menu i w siedmiu sekcjach, razem 12 linków. Rozmowa trwa 30 minut, jest online i nic nie kosztuje. Kto woli pisać, ma formularz.', alt: 'Sekcja „Zaczynamy od rozmowy” na cannversity.com: plakietka „30 minut / online / bezpłatnie”, karta „0 zł” z napisem „Pierwsza rozmowa jest bezpłatna” i przycisk „Wybierz termin w kalendarzu”.' },
+  ] },
+  s4: { haslo: ['Od pomysłu do produktu.', 'W branży konopnej.'] },
+  s5: {
+    h2: 'Dwa języki, aż po regulamin.',
+    tekst: 'Wersja angielska ma własny adres cannversity.com/en, angielski tytuł i opis w kodzie oraz swoją politykę prywatności. Całość stoi na własnym hostingu, pod domeną cannversity.com.',
+    altPl: 'Pierwszy ekran cannversity.com po polsku: hasło „Od pomysłu do produktu. W branży konopnej.” i przycisk „Umów bezpłatną rozmowę”.',
+    altEn: 'Pierwszy ekran cannversity.com/en po angielsku: hasło „From idea to product. In cannabis.” i przycisk „Book a free call”.',
+  },
+  s6: { h2: 'Potrzebujesz prostej strony pod swoją ofertę?', tekst: 'Branża nie musi być konopna. Napisz, co sprzedajesz i komu, a odpiszę, jak ułożyłbym taką stronę.', btn: 'Napisz do mnie', nastepny: 'Następna realizacja', link: 'Zobacz cannversity.com' },
+} : {
+  title: 'Cannversity: a bilingual cannabis industry site · mioduszewsky',
+  description: 'Cannversity is my service for cannabis founders and brands. I built its site in Polish and English, and it leads to a free 30-minute call.',
+  headline: 'Cannversity: a Polish and English website for the cannabis industry',
+  about: 'Cannversity, my service for cannabis founders and brands: strategy, MVPs and websites, advisory',
+  skip: 'Skip to content',
+  metka: 'The cannabis offshoot of my personal brand',
+  metkaKrotka: 'My brand’s cannabis offshoot',
+  zdanie: 'A website for people knee-deep in cannabis.',
+  wiersze: [['Who it’s for', 'Cannabis founders and brands'], ['How it works', 'Three situations and three pillars'], ['Where it leads', 'A free 30\u2011minute call, online']],
+  link: 'Visit cannversity.com',
+  s2: {
+    kicker: 'Live',
+    h2: 'The first four sections, no cuts.',
+    lead: 'This is cannversity.com today, on a desktop and on a phone.',
+    podpisTelefon: 'Same site on a phone, in one column.',
+    altDesktop: 'Screen recording of cannversity.com/en scrolling on a desktop: the headline “From idea to product. In cannabis.” with the “Book a free call” button, three situations people usually start from, the “What you get instead of guessing” section and the three-step process.',
+    altTelefon: 'Screen recording of cannversity.com/en scrolling on a phone, in one column: the headline with the calendar button, three situations, “What you get instead of guessing” and the three-step process.',
+  },
+  s3: { h2: 'How the page gets you to a call.', bloki: [
+    { etykieta: 'Situations', tytul: 'Three ways in', tekst: 'Right under the headline sit three situations, from “I have an idea, but I don’t know if it makes sense” to “I’m running but stuck and need a sparring partner.”', alt: 'The “This is where it usually starts” section of cannversity.com/en: three cards with situations, each with its own button.' },
+    { etykieta: 'Offer', tytul: 'Three pillars, five deliverables each', tekst: 'Strategy & Roadmap, MVP & Product Build and Business Advisory. Each has a list of what you get, from idea validation to founder sparring.', alt: 'The “Three pillars. One goal.” section of cannversity.com/en: Strategy & Roadmap, MVP & Product Build and Business Advisory cards, each with a five-item list.' },
+    { etykieta: 'The call', tytul: 'Twelve links, one calendar', tekst: 'The Google Calendar button sits in the menu and in seven sections. The call is 30 minutes, online and free. Rather write? There’s a form for that.', alt: 'The “We start with a conversation” section of cannversity.com/en: a “30 minutes / online / free” badge, a card that says the first call is free and a “Pick a time in the calendar” button.' },
+  ] },
+  s4: { haslo: ['From idea to product.', 'In cannabis.'] },
+  s5: {
+    h2: 'Two languages, right down to the terms.',
+    tekst: 'cannversity.com/en has its own English title and description in the code, and a privacy policy. It all runs on its own hosting, under the cannversity.com domain.',
+    altPl: 'First screen of cannversity.com in Polish: the headline “Od pomysłu do produktu. W branży konopnej.” and the “Umów bezpłatną rozmowę” button.',
+    altEn: 'First screen of cannversity.com/en: the headline “From idea to product. In cannabis.” and the “Book a free call” button.',
+  },
+  s6: { h2: 'Need a simple site for your offer?', tekst: 'Cannabis optional. Tell me what you sell and to whom. I’ll write back with how I’d lay out the page.', btn: 'Get in touch', nastepny: 'Next project', link: 'Visit cannversity.com' },
+};
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Article', headline: T.headline, inLanguage: locale, about: T.about,
+      author: { '@type': 'Person', name: 'Kacper Mioduszewski', url: pl ? 'https://mioduszewsky.com/pl/' : 'https://mioduszewsky.com/' },
+      image: `https://mioduszewsky.com${dir}/hero-1440.webp`, mainEntityOfPage: url },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'mioduszewsky', item: pl ? 'https://mioduszewsky.com/pl/' : 'https://mioduszewsky.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Cannversity', item: url } ] },
+  ],
+};
+---
+<VariantLayout title={T.title} description={T.description} bg="#ffcc33" fg="#141414" switcher={false}
+  robots="index, follow, max-image-preview:large" locale={locale} alternatePath={alt}>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <div class="case">
+    <a class="skip" href="#main">{T.skip}</a>
+    <!-- Bez belki (Kacper 20.10): nad treścią unosi się wspólne logo „mioduszewsky × Cannversity” z menu.
+         Otwarcie trzyma pod nie dawne 96 px belki, więc kompozycja się nie rusza. -->
+    <CaseLockup locale={locale} client="cannversity" alternatePath={alt} tone="light" logo="flat" fit={{ h: 1, base: 199 / 320 }} />
+
+    <main id="main">
+      <article>
+        <!-- 1. Otwarcie bez nagrania (Kacper 20.10: nagrania są zaraz niżej, w „Na żywo”). Pierwszy ekran to plakat:
+             nazwa na całą szerokość, zdanie i trzy wiersze po lewej, roślina z cannversity.com wyrasta z prawego dolnego
+             rogu, z czarnej sekcji pod spodem, i sięga do kreski pod nazwą. -->
+        <header class="open">
+          <div class="wrap">
+            <p class="metka"><span class="metka-d">{T.metka}</span><span class="metka-m">{T.metkaKrotka}</span></p>
+            <h1 class="name"><span class="name-in" aria-hidden="true">CANNVERSITY</span><span class="sr">Cannversity: {T.zdanie}</span></h1>
+            <div class="rule" aria-hidden="true"></div>
+          </div>
+          <div class="open-body">
+          <div class="wrap open-txt">
+            <p class="zdanie" aria-hidden="true" set:html={P(T.zdanie)} />
+            <dl class="rows">
+              {T.wiersze.map(([k, v]) => <div><dt>{k}</dt><dd set:html={P(v)} /></div>)}
+            </dl>
+            <a class="live" href={live} target="_blank" rel="noopener">{T.link}<ExtArrow weight={600} /></a>
+          </div>
+          <img class="plant" src="/case/cannversity/roslina.webp" width="860" height="675" alt="" decoding="async" />
+          </div>
+        </header>
+
+        <!-- 2. Strona w ruchu: duże nagranie z komputera i pionowe z telefonu, bez ramek urządzeń. -->
+        <section class="ink motion" aria-labelledby="s2-h">
+          <div class="wrap head">
+            <p class="kicker">{T.s2.kicker}</p>
+            <h2 id="s2-h" set:html={P(T.s2.h2)} />
+            <p class="lead" set:html={P(T.s2.lead)} />
+          </div>
+          <div class="wrap duo-vid">
+            <figure class="desk">
+              <video class="vid" data-tone="light" loop muted playsinline preload="metadata" width="1920" height="1200" poster={`${dir}/strona-poster.webp`} aria-label={T.s2.altDesktop}>
+                <source src={`${dir}/strona.mp4`} type="video/mp4" />
+              </video>
+            </figure>
+            <figure class="phone">
+              <video class="vid" data-tone="light" loop muted playsinline preload="metadata" width="720" height="1280" poster={`${dir}/telefon-poster.webp`} aria-label={T.s2.altTelefon}>
+                <source src={`${dir}/telefon.mp4`} type="video/mp4" />
+              </video>
+              <figcaption set:html={P(T.s2.podpisTelefon)} />
+            </figure>
+          </div>
+        </section>
+
+        <!-- 3. Jak działa strona: trzy twarde bloki w kolejności strony, każdy ze zrzutem swojej sekcji. -->
+        <section class="paper" aria-labelledby="s3-h">
+          <div class="wrap">
+            <h2 id="s3-h" set:html={P(T.s3.h2)} />
+            <ol class="steps">
+              {T.s3.bloki.map((b, i) => {
+                const f = ['sytuacje', 'filary', 'rozmowa'][i];
+                return (
+                  <li>
+                    <div class="step-txt">
+                      <p class="num" aria-hidden="true">0{i + 1}</p>
+                      <p class="label">{b.etykieta}</p>
+                      <h3 set:html={P(b.tytul)} />
+                      <p set:html={P(b.tekst)} />
+                    </div>
+                    {/* ton lockupu nad zrzutem (lockup bez tła, Kacper 20.10 ok. 14:10): „rozmowa” to ciemna karta, reszta jasne strony */}
+                    <picture class="shot" data-tone={f === 'rozmowa' ? 'dark' : 'light'}>
+                      <source media="(max-width: 700px)" srcset={`${dir}/${f}-390.webp`} width="780" height="1386" />
+                      <img src={`${dir}/${f}-1440.webp`} width="1600" height={f === 'filary' ? 1000 : f === 'rozmowa' ? 872 : 840} loading="lazy" decoding="async" alt={b.alt} />
+                    </picture>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        </section>
+
+        <!-- 4. Hasło strony krojem Cannversity (Inter, gruba kursywa), w skali plakatu. Runda 3 (Kacper 20.10: schodek
+             drugiej linijki wyglądał na błąd): jedno zdanie = jeden wiersz, oba od lewej krawędzi strony, dłuższe zdanie
+             wypełnia kolumnę jak nazwa w otwarciu. --hw = szerokość dłuższego zdania w em (zmierzona w przeglądarce). -->
+        <figure class="band">
+          <blockquote lang={pl ? 'pl' : 'en'} style={`--hw: ${pl ? 11.66 : 9.8}`}><p>{T.s4.haslo[0]}</p><p>{T.s4.haslo[1]}</p></blockquote>
+        </figure>
+
+        <!-- 5. Dwa języki: ten sam pierwszy ekran po polsku i po angielsku, obok siebie. -->
+        <section class="ink langs" aria-labelledby="s5-h">
+          <div class="wrap langs-in">
+            <div class="langs-txt">
+              <h2 id="s5-h" set:html={P(T.s5.h2)} />
+              <p set:html={P(T.s5.tekst)} />
+            </div>
+            <div class="pair">
+              <figure>
+                <picture>
+                  <source media="(max-width: 700px)" srcset="/case/cannversity/pl/hero-390.webp" width="780" height="1386" />
+                  <img src="/case/cannversity/pl/hero-1440.webp" width="1600" height="1000" loading="lazy" decoding="async" alt={T.s5.altPl} />
+                </picture>
+                <figcaption><a href={livePl} target="_blank" rel="noopener">cannversity.com<ExtArrow weight={600} /></a></figcaption>
+              </figure>
+              <figure>
+                <picture>
+                  <source media="(max-width: 700px)" srcset="/case/cannversity/en/hero-390.webp" width="780" height="1386" />
+                  <img src="/case/cannversity/en/hero-1440.webp" width="1600" height="1000" loading="lazy" decoding="async" alt={T.s5.altEn} />
+                </picture>
+                <figcaption><a href={liveEn} target="_blank" rel="noopener">cannversity.com/en<ExtArrow weight={600} /></a></figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+      </article>
+
+      <!-- 6. Wyjście: jeden żółty blok jak w eskapizmie (zielony): zachęta, pod kreską wiersz następnej realizacji, potem stopka. -->
+      <section class="end" aria-labelledby="end-h">
+        <div class="wrap end-in">
+          <h2 id="end-h" set:html={P(T.s6.h2)} />
+          <div class="end-txt">
+            <p set:html={P(T.s6.tekst)} />
+            <div class="end-act">
+              <a class="btn" href={contact}>{T.s6.btn}</a>
+              <a class="live" href={live} target="_blank" rel="noopener">{T.s6.link}<ExtArrow weight={600} /></a>
+            </div>
+          </div>
+        </div>
+        {nextCase && (
+          <a class="next" href={nextHref}>
+            <span class="wrap next-in"><span class="next-k">{T.s6.nastepny}</span><span class="next-n">{nextCase[1]}<span aria-hidden="true"> →</span></span></span>
+          </a>
+        )}
+      </section>
+    </main>
+    <!-- Stopka na pełną szerokość (full), treść na krawędzi .wrap (runda 5, 20.10); pas .foot zostaje w tym samym kremie. -->
+    <div class="foot"><BrandFooter locale={locale} full /></div>
+  </div>
+</VariantLayout>
+
+<script>
+  // Pętle nagrań bez atrybutu autoplay: startuje je tylko skrypt, w ekranie i bez prefers-reduced-motion.
+  // Bez JS albo przy reduced motion zostaje plakat (pierwsza klatka).
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const vids = document.querySelectorAll<HTMLVideoElement>('.case video.vid');
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target as HTMLVideoElement;
+    if (e.isIntersecting && !still.matches) v.play().catch(() => {}); else v.pause();
+  }), { threshold: .2 });
+  vids.forEach((v) => io.observe(v));
+  // Włączenie „ogranicz ruch” w trakcie odtwarzania zatrzymuje pętle od razu (recenzja Codexa 19.10).
+  still.addEventListener('change', () => { if (still.matches) vids.forEach((v) => v.pause()); });
+</script>
+
+<style>
+  .case {
+    /* Żółć Cannversity hsl(45 100% 60%) = #ffcc33, czerń marki hsl(0 0% 8%) = #141414. Bez zaokrągleń i cieni. */
+    --cann: #ffcc33; --black: #141414; --white: #fff;
+    /* jedna grubość linii w całym case'ie: tabelka, kroki, ramki nagrań i zrzutów (Kacper 20.10: 3 px za grube);
+       mocniejsza zostaje tylko kreska pod nazwą w otwarciu (.rule), jako akcent */
+    --line: 1.5px;
+    --gutter: clamp(20px, 3.4vw, 56px); --max: 1440px;
+    /* stopka mioduszewsky na pełną szerokość, treść na tej samej lewej krawędzi co .wrap (runda 5, 20.10) */
+    --footer-pad: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
+    /* Jedna siatka dla całej strony (runda 3): 12 kolumn, jeden odstęp. Tekst obok obrazu = 4 kolumny, nagranie
+       z komputera 9, wyjście 7 + 5; każda druga kolumna zaczyna się na linii tej samej siatki. */
+    --cols: repeat(12, minmax(0, 1fr)); --cgap: clamp(16px, 2.6vw, 40px);
+    font-family: 'InterCase', system-ui, sans-serif; background: var(--cann); color: var(--black); overflow-x: clip;
+  }
+  /* Kroje Cannversity, hostowane lokalnie: Inter (tekst i hasło) i Archivo w szerokości 125 (nazwa, jak w logo). */
+  @font-face { font-family: 'InterCase'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('/fonts/cannversity/inter-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'InterCase'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('/fonts/cannversity/inter-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'InterCase'; font-style: italic; font-weight: 800 900; font-display: swap; src: url('/fonts/cannversity/inter-italic-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'InterCase'; font-style: italic; font-weight: 800 900; font-display: swap; src: url('/fonts/cannversity/inter-italic-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'ArchivoCann'; font-stretch: 125%; font-weight: 800; font-display: block; src: url('/fonts/cannversity/archivo-125-800-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  .case :is(h1,h2,h3,p,figure,blockquote,dl,dd,ol) { margin: 0; }
+  .case :is(h1,h2,h3) { text-wrap: balance; }
+  .case p { text-wrap: pretty; }
+  .case :is(a,button):focus-visible { outline: 3px solid var(--black); outline-offset: 4px; }
+  .case .ink :is(a,button):focus-visible { outline-color: var(--cann); }
+  .case .next:focus-visible { outline-color: var(--black); outline-offset: -8px; }
+  .case ::selection { background: var(--black); color: var(--cann); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--black); color: var(--cann); transform: translateY(-200%); }
+  .skip:focus { transform: none; }
+  .wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
+
+  /* 1. Otwarcie: pełny pierwszy ekran, roślina przyklejona do prawego dolnego rogu (zdjęcie jest ucięte z prawej i z dołu). */
+  .open { position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 100svh; box-sizing: border-box;
+    --pad-b: clamp(40px, 6vh, 72px); padding-top: calc(96px + clamp(8px, 1.6vw, 24px)); padding-bottom: var(--pad-b); }
+  /* Miejsce pod kreską: tekst po lewej, roślina od kreski (lekko ją przecina) do dolnej krawędzi otwarcia. */
+  .open-body { position: relative; flex: 1; display: flex; }
+  /* margin-inline: auto w kolumnie flex zwęża .wrap do treści i centruje ją (nazwa stała 2 px w prawo od reszty). */
+  .open > .wrap { width: 100%; }
+  .metka { font-size: clamp(11px, .95vw, 14px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .metka-m { display: none; }
+  /* Nazwa wypełnia szerokość kolumny: 10,1 em to szerokość „CANNVERSITY” w Archivo 125/800 z rozstawem .05em. */
+  .name { margin-top: clamp(4px, .6vw, 10px) !important; font-family: 'ArchivoCann', 'Arial Black', sans-serif; font-stretch: 125%; font-weight: 800; letter-spacing: .05em; line-height: .92; white-space: nowrap;
+    font-size: calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 10.1); margin-right: -.05em; }
+  .rule { margin-top: clamp(14px, 2vw, 30px); height: clamp(3px, .28vw, 5px); background: var(--black); }
+  /* Tekst w lewych 5/12, nad rośliną (z-index), wyśrodkowany w pionie w miejscu pod kreską. */
+  .open-txt { position: relative; z-index: 1; width: 100%; display: grid; gap: clamp(18px, 3vh, 32px); align-content: center;
+    grid-template-columns: minmax(0, min(560px, 42%)); padding-top: clamp(28px, 4.5vh, 56px); }
+  .zdanie { font-style: italic; font-weight: 900; font-size: clamp(30px, 3.3vw, 52px); line-height: 1.02; letter-spacing: -.025em; }
+  .rows { border-top: var(--line) solid var(--black); }
+  .rows > div { display: grid; grid-template-columns: minmax(0, 9.5em) minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: var(--line) solid var(--black); }
+  .rows dt { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding-top: 4px; }
+  .rows dd { font-size: clamp(16px, 1.2vw, 18px); font-weight: 800; line-height: 1.3; }
+  .live { justify-self: start; color: inherit; font-weight: 600; font-size: 16px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  /* Roślina z hero cannversity.com (860 px, większej nie ma). Wysokość = miejsce od kreski do dołu ekranu, szerokość
+     najwyżej 54% okna; prawa i dolna krawędź zdjęcia leżą na krawędzi okna i czarnej sekcji niżej. */
+  .plant { position: absolute; z-index: 0; right: 0; bottom: calc(var(--pad-b) * -1); height: calc(100% + var(--pad-b) + clamp(16px, 2.4vw, 40px));
+    /* Szerokość z proporcji zdjęcia (od wysokości); w wąskim i wysokim oknie limit 60vw, wtedy contain trzyma proporcje. */
+    width: auto; aspect-ratio: 860 / 675; max-width: min(60vw, 860px); object-fit: contain; object-position: right bottom; pointer-events: none; }
+  .vid { display: block; width: 100%; height: auto; background: var(--black); }
+
+  /* Wspólne nagłówki sekcji: gruba kursywa Inter, jak nagłówki cannversity.com. */
+  h2 { font-style: italic; font-weight: 900; font-size: clamp(34px, 4.4vw, 68px); line-height: 1.02; letter-spacing: -.025em; max-width: 15em; }
+  .kicker { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--cann); }
+
+  /* 2. Strona w ruchu */
+  .ink { background: var(--black); color: var(--white); }
+  /* Roślina z otwarcia stoi na górnej krawędzi tej czarnej sekcji. */
+  .motion { padding: clamp(56px, 7vw, 112px) 0 clamp(72px, 9vw, 140px); }
+  /* Nagłówek jedną kolumną od lewej krawędzi (wcześniej lead w prawej kolumnie, na innej linii niż telefon niżej). */
+  .motion .head { display: grid; row-gap: 16px; }
+  .lead { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; color: rgb(255 255 255 / .82); max-width: 30em; }
+  .duo-vid { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
+  .duo-vid .desk { grid-column: 1 / span 9; }
+  .duo-vid .phone { grid-column: 10 / -1; }
+  .duo-vid figure { border: var(--line) solid var(--cann); }
+  /* Obie ramki tej samej wysokości (Kacper 20.10: „tu trzeba wyśrodkować”): wysokość wiersza daje nagranie z komputera,
+     telefon się do niej rozciąga (contain: size, żeby jego nagranie nie podnosiło wiersza), nagranie telefonu kadrowane
+     od góry, podpis pod nim wyśrodkowany. */
+  .duo-vid { align-items: stretch; }
+  .duo-vid .phone { display: flex; flex-direction: column; contain: size; }
+  .duo-vid .phone .vid { flex: 1 1 0; min-height: 0; height: auto; object-fit: cover; object-position: top; }
+  .phone figcaption { padding: 10px 12px; font-size: 14px; background: var(--cann); color: var(--black); font-weight: 600; text-align: center; text-wrap: balance; }
+
+  /* 3. Jak działa */
+  .paper { background: var(--white); padding: clamp(72px, 9vw, 140px) 0; }
+  .steps { list-style: none; padding: 0; margin-top: clamp(40px, 5vw, 72px) !important; border-top: var(--line) solid var(--black); }
+  .steps li { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); padding: clamp(28px, 3.4vw, 52px) 0; border-bottom: var(--line) solid var(--black); align-items: start; }
+  .step-txt { display: grid; gap: 10px; align-content: start; }
+  .step-txt, .langs-txt { grid-column: 1 / span 4; }
+  .shot, .pair { grid-column: 5 / -1; }
+  .num { font-family: 'ArchivoCann', 'Arial Black', sans-serif; font-stretch: 125%; font-weight: 800; font-size: clamp(44px, 5vw, 80px); line-height: 1; letter-spacing: .02em; }
+  .label { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .steps h3 { font-weight: 800; font-size: clamp(22px, 1.9vw, 28px); line-height: 1.15; letter-spacing: -.01em; }
+  .step-txt > p:last-child { font-size: clamp(16px, 1.25vw, 19px); line-height: 1.6; max-width: 28em; }
+  .shot { display: block; border: var(--line) solid var(--black); background: var(--cann); }
+  .shot img { display: block; width: 100%; height: auto; }
+
+  /* 4. Hasło */
+  /* Rozmiar z szerokości kolumny (cqi = szerokość .band bez paska przewijania), nie z vw. */
+  .band { background: var(--cann); padding: clamp(56px, 8vw, 128px) 0; overflow: hidden; container-type: inline-size; }
+  .band blockquote { padding-inline: var(--gutter); max-width: var(--max); margin-inline: auto; box-sizing: border-box; font-style: italic; font-weight: 900;
+    font-size: calc((min(100cqi, var(--max)) - 2 * var(--gutter)) / var(--hw)); line-height: .98; letter-spacing: -.045em; }
+  .band blockquote p { white-space: nowrap; }
+
+  /* 5. Dwa języki */
+  .langs { padding: clamp(72px, 9vw, 140px) 0; }
+  .langs-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
+  .langs-txt { display: grid; gap: 20px; }
+  .langs-txt p { font-size: clamp(17px, 1.35vw, 19px); line-height: 1.6; color: rgb(255 255 255 / .84); max-width: 30em; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 24px); }
+  .pair figure { border: var(--line) solid var(--cann); background: var(--cann); }
+  .pair img { display: block; width: 100%; height: auto; }
+  .pair figcaption { padding: 10px 12px; font-size: clamp(12px, 3.2vw, 14px); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .foot { background: #f8f9f2; }
+  .pair figcaption a { color: var(--black); text-decoration: none; }
+  .pair figcaption a:hover { text-decoration: underline; }
+
+  /* 6. Wyjście */
+  .end { background: var(--cann); padding-top: clamp(72px, 9vw, 140px); }
+  .end-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: end; padding-bottom: clamp(56px, 7vw, 104px); }
+  .end h2 { max-width: 12em; grid-column: 1 / span 7; }
+  .end-txt { display: grid; gap: 24px; grid-column: 8 / -1; }
+  .end-txt p { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 26em; }
+  .end-act { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+  .btn { display: inline-block; padding: 18px 30px; background: var(--black); color: var(--cann); text-decoration: none; font-size: 16px; font-weight: 800; letter-spacing: .02em; }
+  .btn:hover { background: #333; }
+  /* Następna realizacja: wiersz w tym samym żółtym bloku (bez czarnego pasa), kreska nad nim na krawędziach treści. */
+  .next { display: block; color: var(--black); text-decoration: none; }
+  .next-in { position: relative; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: clamp(28px, 4vw, 56px); }
+  .next-in::before { content: ''; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); height: var(--line); background: var(--black); }
+  .next-k { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .next-n { font-style: italic; font-weight: 900; font-size: clamp(36px, 6vw, 96px); line-height: 1; letter-spacing: -.03em; }
+  .next:hover .next-n { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 10px; }
+
+  /* Niskie okno komputera: ciaśniejsze odstępy, żeby otwarcie mieściło się w pierwszym ekranie. */
+  @media (min-width: 901px) and (max-height: 760px) {
+    .open-txt { gap: 14px; padding-top: 20px; }
+    .zdanie { font-size: clamp(28px, 2.9vw, 44px); }
+    .rows > div { padding: 8px 0; }
+  }
+  @media (max-width: 900px) {
+    .duo-vid, .steps li, .langs-in, .end-in { grid-template-columns: minmax(0, 1fr); }
+    .duo-vid > *, .steps li > *, .langs-in > *, .end-in > *, .end h2 { grid-column: 1 / -1; }
+    /* Tablet i telefon: tekst na całą szerokość, roślina pod nim w prawym dolnym rogu; dolny odstęp robi jej miejsce. */
+    .open-body { flex-direction: column; }
+    .open-txt { grid-template-columns: minmax(0, 560px); align-content: start; }
+    .open { --pad-b: 0px; }
+    .plant { position: static; align-self: flex-end; width: min(78vw, 560px); height: auto; margin-top: clamp(-16px, -2vw, 0px); }
+    .duo-vid .desk { grid-column: 1 / -1; }
+    /* jedna kolumna: telefon na środku pod nagraniem z komputera, w naturalnej wysokości */
+    .duo-vid .phone { grid-column: 1 / -1; width: 62%; justify-self: center; contain: none; }
+    .duo-vid .phone .vid { flex: none; object-fit: fill; }
+    /* Hasło w telefonie i na tablecie: zdanie w jednym wierszu byłoby za drobne, więc łamie się na dwa równe,
+       nadal od tej samej lewej krawędzi. */
+    .band blockquote { font-size: clamp(40px, 14cqi, 110px); }
+    .band blockquote p { white-space: normal; text-wrap: balance; }
+    .band blockquote p + p { margin-top: .12em; }
+  }
+  @media (max-width: 700px) {
+    .zdanie { font-size: clamp(28px, 8.4vw, 36px); }
+    .rows > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
+    .pair img { aspect-ratio: auto; }
+  }
+  /* Telefon: krótka metka w jednej linii (pełna łamała się na dwie i kleiła do nazwy, Kacper 20.10) i oddech 12 px nad
+     nazwą. Otwarcie dalej zaczyna się 14 px wyżej niż na komputerze, żeby czubki rośliny zostały w pierwszym ekranie 320x568. */
+  @media (max-width: 480px) {
+    .open { padding-top: calc(82px + clamp(8px, 1.6vw, 24px)); }
+    .metka-d { display: none; }
+    .metka-m { display: inline; }
+    .case .metka { font-size: 12px; white-space: nowrap; }
+    .case .name { margin-top: 12px !important; }
+  }
+</style>

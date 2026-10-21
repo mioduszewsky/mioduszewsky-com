@@ -1,0 +1,36 @@
+---
+// Pętla wideo case'u (19.10.2026, uwaga Fincha o wadze): plakat jako <picture> od razu, wideo bez src.
+// Źródło (desktop albo telefon, osobne lżejsze pliki) wstawia skrypt strony, gdy sekcja jest ok. ekran od widoku;
+// gra tylko w widoku. Przy prefers-reduced-motion wideo nie ładuje się wcale, zostaje plakat.
+// Pliki: public/realizacje/eskapizm/<nazwa>.mp4|.webm|-poster.jpg; wersja na telefon z sufiksem -m (jeśli podana).
+interface Props { name: string; mobile?: string; w: number; h: number; mw?: number; mh?: number; alt: string; eager?: boolean; class?: string; fit?: 'cover' | 'contain'; desktopOnly?: boolean }
+const { name, mobile, w, h, mw, mh, alt, eager = false, class: cls = '', fit = 'cover', desktopOnly = false } = Astro.props;
+const V = '/realizacje/eskapizm/';
+const d = { mp4: V + name + '.mp4', webm: V + name + '.webm', poster: V + name + '-poster.jpg' };
+const m = mobile ? { mp4: V + mobile + '.mp4', webm: V + mobile + '.webm', poster: V + mobile + '-poster.jpg' } : null;
+---
+<div class:list={['loop', cls]} data-loop data-d-mp4={d.mp4} data-d-webm={d.webm} data-m-mp4={m?.mp4} data-m-webm={m?.webm} data-d-poster={d.poster} data-m-poster={m?.poster} data-desktop-only={desktopOnly ? '' : undefined} style={`--fit:${fit}`}>
+  <picture>
+    {m && <source media="(max-width: 767px)" srcset={m.poster} width={mw} height={mh} />}
+    <img src={d.poster} width={w} height={h} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} />
+  </picture>
+  {eager ? (
+    /* pierwszy ekran: autoplay w HTML (WebKit odrzuca play() ze skryptu dla dużego wideo w pierwszym ekranie), plik telefonu przez media */
+    <video autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1" data-autoplay>
+      {/* przy prefers-reduced-motion żadne źródło nie pasuje: nic się nie pobiera, zostaje plakat (recenzja Codexa 19.10) */}
+      {m && <source src={m.mp4} type="video/mp4" media="(prefers-reduced-motion: no-preference) and (max-width: 767px)" />}
+      <source src={d.mp4} type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
+    </video>
+  ) : (
+    <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+  )}
+</div>
+
+<style>
+  .loop { position: relative; overflow: hidden; }
+  .loop picture, .loop img, .loop video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: var(--fit, cover); object-position: var(--pos, top center); display: block; }
+  /* --pos ustawia rodzic, np. EskapizmPhone (kadrowanie nagrania między strefami ekranu) */
+  /* Safari bez autoodtwarzania (np. tryb niskiego zużycia energii) pokazuje własny przycisk odtwarzania: zostaje plakat bez przycisku */
+  .loop video::-webkit-media-controls-start-playback-button, .loop video::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
+  /* wideo widoczne od początku (WebKit odmawia play() elementom z opacity 0), do pierwszej klatki pokazuje ten sam plakat */
+</style>
