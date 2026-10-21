@@ -12,7 +12,8 @@ import CaseLockup from '../../../components/realizacje/CaseLockup.astro';
 import BrandFooter from '../../../components/BrandFooter.astro';
 import { nextCase } from '../../../content/realizacje-kolejnosc';
 
-const contact = '/pl/kontakt/?service=' + encodeURIComponent('Strona internetowa') + '#ctForm';
+// bez ?service=: formularz zna tylko usługi z listy w contact.astro, „Strona internetowa” przepadała po cichu
+const contact = '/pl/kontakt/#ctForm';
 // Następna realizacja z pętli wspólnej dla czterech case'ów (src/content/realizacje-kolejnosc.ts) (tekst linku opisuje GlassStone, więc cel sprawdzaj z tekstem)
 const next = nextCase('igor-grabowski', 'pl');
 // Opinia pojawia się dopiero po akceptacji Igora (docs/case-studies/OPINIE-ROZMOWA.md).
