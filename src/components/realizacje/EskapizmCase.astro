@@ -56,7 +56,7 @@ const T = pl ? {
   kaskadaAlt: 'Pulpit laptopa z filmu eskapizmu zasłonięty oknami: ceny lotów, wiadomość od mamy, rozkład promów, szczepienia i formularz wjazdowy, wyniki wyszukiwania noclegów. Z prawej Notatki „Tajlandia: do ogarnięcia” z licznikiem „33 sprawy · 0 odhaczonych”.',
   mapH: 'Pięć systemów od kalkulatora do panelu',
   mapPlan: 'Przykładowy plan: Tajlandia, 25 stycznia - 9 lutego 2027',
-  stops: [['Klient liczy', 'kalkulator wieczorów'], ['Klient zamawia', 'zamówienie, płatność, faktura'], ['Justyna składa', 'AI Plan Builder'], ['Klient dostaje', '„Mój plan” w telefonie'], ['Prowadzimy we dwoje', 'cała firma w jednym panelu']],
+  stops: [['Klient liczy', 'kalkulator wieczorów'], ['Klient zamawia', 'zamówienie, płatność, faktura'], ['Justyna składa', 'AI Plan Builder'], ['Klient dostaje', '„Mój plan” w telefonie'], ['Błędy się zdarzają', 'zgłoszenia i poprawki']],
   s1: { t: 'Klient liczy', s: 'Cztery pytania, 20 sekund i wynik w wieczorach po pracy.',
     d: 'Liczy z danych Expedia Group i Think with Google, a z wyniku klient przechodzi do pakietów albo przykładowego planu.',
     f: ['Dla klienta', 'koszt planowania policzony w jego własnych wieczorach.'],
@@ -76,11 +76,14 @@ const T = pl ? {
     altPlan: 'Przykładowy plan Tajlandia 2027 na telefonie: przegląd, potem plan dnia z kolejnymi dniami wyjazdu.',
     alts: ['Telefon z ekranem „Plan dnia” przykładowego planu Tajlandia 2027: kolejne dni wyjazdu z programem.', 'Telefon z ekranem „Budżet” przykładowego planu Tajlandia 2027: całkowity budżet na osobę i koszty w kategoriach.'],
     sceneAlt: 'Zatoka na Phi Phi z finału filmu eskapizmu: zielone skały nad turkusową wodą.' },
-  // stacja 05 od nowa (D3, Kacper 20.10): sens dla obcego w jednym zdaniu, firmę prowadzimy we dwoje z jednego panelu
-  s5: { t: 'Prowadzimy we dwoje', s: 'Zamówienia, plany klientów, zadania i zgłoszenia mamy w jednym panelu.',
-    d: 'Zadania z ClickUpa (aplikacji do zadań) leżą na jednej tablicy: wspólne, moje i Justyny. Błąd zgłaszamy przyciskiem z każdej strony panelu.',
-    f: ['Dla nas', '41 zgłoszeń naprawionych, żadne nie czeka (19.10.2026).'],
-    cap: 'Menu panelu i ekran zgłoszeń, stan na 19.10.2026. Treść zgłoszeń zamazana.',
+  // stacja 05 (D4, Kacper 21.10): błędów nie ukrywamy, zgłoszenie z każdego ekranu panelu trafia od razu do mnie i jest szybko naprawione.
+  // Liczby z bazy eskapizmu 21.10 (ai_builder_issue_reports + platform_issue_reports): 41 zgłoszeń, 32 od Justyny, wszystkie „fixed”;
+  // 14.07 Justyna zgłosiła 8, siedem zamkniętych tego samego dnia po 10-64 min (cztery do 14 min). Mediany całości nie podajemy:
+  // 25 zgłoszeń zamknięto jednym kliknięciem 08.07, więc resolved_at nie mówi, kiedy powstała poprawka.
+  s5: { t: 'Błędy się zdarzają', s: 'Kto pracuje w panelu, zgłasza błąd albo pomysł przyciskiem z dowolnego ekranu, a ja widzę zgłoszenie od razu.',
+    d: 'Najwięcej zgłasza Justyna, bo siedzi w panelu codziennie: 32 z 41. Wszystkie są naprawione, żadne nie czeka.',
+    f: ['Dla Justyny', 'z ośmiu błędów zgłoszonych 14 lipca siedem naprawiłem tego samego dnia, cztery w kwadrans.'],
+    cap: 'Ekran zgłoszeń w panelu, stan na 19.10.2026. Treść zgłoszeń zamazana.',
     alt: 'Panel admina eskapizmu: z lewej menu z pozycjami Dashboard, Marketing, Użytkownicy, Zamówienia, Zadania, Plany, Kody rabatowe, Afiliacje, AI Plan Builder, Bugs, CMS / Blog i dalszymi, z prawej ekran zgłoszeń z licznikami Nowe 0, W toku 0, Naprawione 41 i wierszami zgłoszeń z rozmytą treścią.' },
   restH: 'Wokół pięciu stacji: strony krajów, blog, quiz i podróże poślubne.',
   restP: 'Cztery strony krajów mają jeden układ, a wyszukiwarki dostają tę samą treść co ludzie.',
@@ -120,7 +123,7 @@ const T = pl ? {
   kaskadaAlt: 'A laptop desktop from the eskapizm film, buried under windows: flight prices, a message from Mom, a ferry timetable, vaccinations, an entry form, hotel results. On the right, the Polish Notes list "Tajlandia: do ogarnięcia" (Thailand: to sort out) shows 33 to-dos, 0 done.',
   mapH: 'Five systems, calculator to dashboard',
   mapPlan: 'Sample plan: Thailand, January 25 - February 9, 2027',
-  stops: [['The client counts', 'evenings calculator'], ['The client orders', 'order, payment, invoice'], ['Justyna builds', 'AI Plan Builder'], ['The client gets it', '"My plan" on the phone'], ['The two of us run it', 'the whole company, one dashboard']],
+  stops: [['The client counts', 'evenings calculator'], ['The client orders', 'order, payment, invoice'], ['Justyna builds', 'AI Plan Builder'], ['The client gets it', '"My plan" on the phone'], ['Bugs happen', 'reports and fixes']],
   s1: { t: 'The client counts', s: 'Four questions, 20 seconds, and the answer comes back in evenings after work.',
     d: 'It runs on Expedia Group and Think with Google data, and the result leads to packages or a sample plan.',
     f: ['For the client', 'what planning costs, counted in their own evenings.'],
@@ -140,10 +143,10 @@ const T = pl ? {
     altPlan: 'The sample Thailand 2027 plan on a phone (in Polish): the overview, then the day plan, day by day.',
     alts: ['A phone showing the "Plan dnia" (day plan) screen of the sample Thailand 2027 plan: the trip day by day.', 'A phone showing the "Budżet" (budget) screen of the sample Thailand 2027 plan: the total budget per person and costs by category.'],
     sceneAlt: 'The bay on Phi Phi from the end of the eskapizm film: green cliffs over turquoise water.' },
-  s5: { t: 'The two of us run it', s: 'Orders, client plans, tasks and bug reports all live in one dashboard.',
-    d: 'Tasks from ClickUp, a task app, sit on one board: shared, mine and Justyna\'s. Every dashboard page has a button for reporting a bug.',
-    f: ['For us', '41 reports fixed, none waiting (October 19, 2026).'],
-    cap: 'The dashboard menu and the reports screen, October 19, 2026. Report text blurred.',
+  s5: { t: 'Bugs happen', s: 'Anyone working in the dashboard can report a bug or an idea from any screen, and I see it right away.',
+    d: 'Justyna files most of them, since she\'s in the dashboard every day: 32 of 41. Every one is fixed, none waiting.',
+    f: ['For Justyna', 'she reported eight bugs on July 14, and I fixed seven that same day, four within 15 minutes.'],
+    cap: 'The bug reports screen in the dashboard, October 19, 2026. Report text blurred.',
     alt: 'The eskapizm admin dashboard, in Polish: on the left a menu with Dashboard, Marketing, Users, Orders, Tasks, Plans, Discount codes, Affiliates, AI Plan Builder, Bugs, CMS / Blog and more, on the right the bug reports screen with counters New 0, In progress 0, Fixed 41 and rows of reports with blurred text.' },
   restH: 'Around the five stops: country pages, a blog, a quiz and honeymoons.',
   restP: 'The four country pages share one layout, and search engines get the same content people do.',
@@ -706,7 +709,7 @@ const ld = {
   @media (max-width: 360px) and (max-height: 620px) {
     .k-d, .k-fig .cap { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
     .k-f { margin-top: 12px; }
-    /* nazwa bieżącej stacji w krokach mieści się w całości (05 „Prowadzimy we dwoje”) */
+    /* nazwa bieżącej stacji w krokach mieści się w całości (05 „Błędy się zdarzają”) */
     .k-steps { gap: 4px; }
     .k-steps li { font-size: 12px; }
   }
