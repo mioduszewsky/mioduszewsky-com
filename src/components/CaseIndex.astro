@@ -15,7 +15,7 @@
 import { caseOrder } from '../content/realizacje-kolejnosc';
 import { Image } from 'astro:assets';
 import VariantLayout from '../layouts/VariantLayout.astro';
-import SiteMenu from './SiteMenu.astro';
+import CaseLockup from './realizacje/CaseLockup.astro';
 import BrandFooter from './BrandFooter.astro';
 import heroGlassstone from '../assets/realizacje/hero-glassstone.webp';
 import heroEskapizm from '../assets/realizacje/hero-eskapizm.webp';
@@ -50,13 +50,14 @@ const hasCase = (slug: string) => `../pages/${pl ? 'pl/realizacje' : 'work'}/${s
 // w normalnej skali. Igor: strona główna z kursorem na „Prace”, więc widać pracę z kolekcji (sam spis wyglądał biednie),
 // z okna 1024×576, bo z 1280×720 strona wyglądała na oddaloną.
 // Kolejność kart = pętla „Następna realizacja” z src/content/realizacje-kolejnosc.ts (decyzja Fincha 20.10).
+// Karta jest tylko dla case'u z tej listy w danym języku (GlassStone zdjęty do przebudowy, Kacper 21.10).
 const order = (slug: string) => caseOrder.findIndex((c) => c.slug === slug);
 const cases = [
   { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: pl ? 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' : "GlassStone homepage hero, in Polish: we don't sell stone, we create interiors you want to live in." },
   { slug: 'eskapizm', name: T.nameEskapizm, img: heroEskapizm, alt: pl ? 'Hero strony eskapizm: Kolejny wieczór na planowaniu podróży do Azji? Laptop na biurku w złotej godzinie.' : 'eskapizm homepage hero, in Polish: another evening spent planning a trip to Asia? A laptop on a desk at golden hour.' },
   { slug: 'igor-grabowski', name: 'Igor Grabowski', img: heroIgor, alt: pl ? 'Pierwszy ekran strony kolekcji Igora Grabowskiego: po najechaniu na Prace pojawia się praca z kolekcji.' : "First screen of Igor Grabowski's collection site: hovering Works brings up a piece from the collection." },
   { slug: 'cannversity', name: 'Cannversity', img: heroCannversity, alt: pl ? 'Hero strony Cannversity: Od pomysłu do produktu. W branży konopnej.' : 'Cannversity homepage hero, in Polish: from idea to product, in the cannabis industry.' },
-].sort((a, b) => order(a.slug) - order(b.slug)).map((c) => ({ ...c, href: hasCase(c.slug) ? `${T.base}${c.slug}/` : undefined }));
+].filter((c) => caseOrder.some((o) => o.slug === c.slug && o.locales.includes(locale))).sort((a, b) => order(a.slug) - order(b.slug)).map((c) => ({ ...c, href: hasCase(c.slug) ? `${T.base}${c.slug}/` : undefined }));
 
 const n = cases.length;
 const center = (n - 1) / 2;
@@ -81,15 +82,10 @@ const ld = {
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="work">
     <a class="skip" href="#main">{T.skip}</a>
-    <header class="nav">
-      <a class="mark" href={pl ? '/pl/' : '/'} aria-label={T.mark}>
-        <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" poster="/logo3d/logo-nav-poster.webp">
-          <source src="/logo3d/logo-nav.mp4" type="video/mp4;codecs=hvc1" />
-          <source src="/logo3d/logo-nav.webm" type="video/webm" />
-        </video>
-      </a>
-      <SiteMenu locale={locale} alternatePath={T.alt} compact />
-    </header>
+    <!-- Nagłówek jak w case'ach (21.10): wspólny CaseLockup, bez części „× klient”. Lockup jest fixed,
+         więc .nav zostaje pustym miejscem 104 px w układzie i kompozycja pierwszego ekranu się nie rusza. -->
+    <CaseLockup locale={locale} alternatePath={T.alt} tone="light" />
+    <div class="nav" aria-hidden="true"></div>
 
     <main id="main" class="stage">
       <header class="hero">
@@ -270,8 +266,7 @@ const ld = {
   .work ::selection { background: var(--brand); }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--brand); color: var(--ink); transform: translateY(-200%); }
   .skip:focus { transform: none; }
-  .nav { height: 104px; box-sizing: border-box; padding: 24px var(--gutter); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 90; }
-  .mark video { width: clamp(155px, 18vw, 220px); height: auto; display: block; filter: drop-shadow(0 5px 10px rgb(0 0 0 / .26)); }
+  .nav { height: 104px; }
 
   /* Jeden ekran: wachlarz stoi na dole i schodzi pod krawędź, nagłówek zajmuje resztę. Wolne miejsce
      (wysokie okna) dzieli się po równo nad nagłówkiem i pod podtytułem, zamiast zbierać się w jednym pasie.

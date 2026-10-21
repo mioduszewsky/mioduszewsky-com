@@ -14,7 +14,7 @@ import { nextCase } from '../../../content/realizacje-kolejnosc';
 
 // bez ?service=: formularz zna tylko usługi z listy w contact.astro, „Strona internetowa” przepadała po cichu
 const contact = '/pl/kontakt/#ctForm';
-// Następna realizacja z pętli wspólnej dla czterech case'ów (src/content/realizacje-kolejnosc.ts) (tekst linku opisuje GlassStone, więc cel sprawdzaj z tekstem)
+// Następna realizacja z pętli wspólnej (src/content/realizacje-kolejnosc.ts), nazwa w linku z pętli jak w EN
 const next = nextCase('igor-grabowski', 'pl');
 // Opinia pojawia się dopiero po akceptacji Igora (docs/case-studies/OPINIE-ROZMOWA.md).
 const quote: { text: string; name: string; role: string } | null = null;
@@ -204,7 +204,7 @@ const posts = [
           <div>
             <p>Opisz mi ją w&nbsp;15 minut. Powiem, jak mogłaby wyglądać jej strona i&nbsp;co trzeba przygotować.</p>
             <a class="btn" href={contact}>Umów 15 minut</a>
-            <p class="more"><a href={next.href}>Druga realizacja: szkic z&nbsp;pomiaru zamienia się w&nbsp;rysunek na produkcję</a></p>
+            <p class="more"><a href={next.href}>Następna realizacja: {next.name}</a></p>
           </div>
         </div>
       </section>

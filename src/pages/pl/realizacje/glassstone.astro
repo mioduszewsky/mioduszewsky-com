@@ -168,10 +168,11 @@ const steps = [
 <VariantLayout
   title="Narzędzie pomiarowe dla GlassStone: szkic zamienia się w rysunek produkcyjny · mioduszewsky"
   description="Pomiarowiec GlassStone rysuje blat długopisem. Zbudowałem narzędzie, które robi z tego rysunek DXF i PDF na produkcję. Człowiek sprawdza i podpisuje. Jak do tego doszliśmy."
-  bg="#f8f9f2" fg="#000000" switcher={false} robots="index, follow, max-image-preview:large" locale="pl">
+  bg="#f8f9f2" fg="#000000" switcher={false} robots="noindex, follow" locale="pl">
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <div class="case">
     <a class="skip" href="#main">Przejdź do treści</a>
+    <!-- Do przebudowy (Kacper 21.10): poza kartami i pętlą realizacji, noindex; po przebudowie robots wraca na index. -->
     <!-- Case tylko po polsku: bez hreflang do EN (strona główna nie jest jego odpowiednikiem), przełącznik języka prowadzi na /work/. -->
     <!-- Bez belki (Kacper 20.10): nad kremowym otwarciem unosi się wspólne logo „mioduszewsky × GlassStone” z menu.
          Otwarcie trzyma pod nie dawne 104 px belki, więc kompozycja pierwszego ekranu się nie rusza. -->
