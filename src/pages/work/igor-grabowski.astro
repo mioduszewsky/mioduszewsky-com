@@ -7,7 +7,8 @@ import CaseLockup from '../../components/realizacje/CaseLockup.astro';
 import BrandFooter from '../../components/BrandFooter.astro';
 import { nextCase } from '../../content/realizacje-kolejnosc';
 
-const contact = '/contact/?service=' + encodeURIComponent('Website') + '#ctForm';
+// bez ?service=: formularz zna tylko usługi z listy w contact.astro, „Website” przepadało po cichu
+const contact = '/contact/#ctForm';
 // Następna realizacja z pętli wspólnej dla czterech case'ów (src/content/realizacje-kolejnosc.ts)
 const next = nextCase('igor-grabowski', 'en');
 // Opinia pojawia się dopiero po akceptacji Igora (docs/case-studies/OPINIE-ROZMOWA.md).
@@ -71,7 +72,7 @@ const posts = [
             ))}
           </div>
 
-          <div class="wrap live"><a href="https://www.igorgrabowski.com/" target="_blank" rel="noopener">See the live site<span aria-hidden="true"> ↗</span></a></div>
+          <div class="wrap live"><a href="https://www.igorgrabowski.com/?lang=en" target="_blank" rel="noopener">See the live site<span aria-hidden="true"> ↗</span></a></div>
         </header>
 
         <section class="paper">
