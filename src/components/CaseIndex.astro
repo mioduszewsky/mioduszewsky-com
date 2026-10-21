@@ -270,6 +270,7 @@ const ld = {
     const go = now.querySelector<HTMLElement>('.pill-go')!;
     const bars = [...now.querySelectorAll<HTMLElement>('.m-bars i')];
     let mid = -1, t = false;
+    const dist: number[] = [];
     const upd = () => {
       t = false; if (!phone.matches) return;
       const c = track.scrollLeft + track.clientWidth / 2;
@@ -277,6 +278,7 @@ const ld = {
       let best = 0, bd = 1e9;
       cs.forEach((card, i) => {
         const d = Math.max(-1.5, Math.min(1.5, (card.offsetLeft + card.offsetWidth / 2 - c) / w));
+        dist[i] = Math.abs(d);
         card.style.setProperty('--d', d.toFixed(3)); card.style.setProperty('--a', Math.abs(d).toFixed(3));
         card.style.setProperty('z-index', String(10 - Math.round(Math.abs(d) * 4)), 'important'); // lista telefonu ma z-index auto !important
         if (Math.abs(d) < bd) { bd = Math.abs(d); best = i; }
@@ -293,7 +295,9 @@ const ld = {
     track.addEventListener('scroll', req, { passive: true });
     addEventListener('resize', req, { passive: true });
     const center = (i: number) => track.scrollTo({ left: cs[i].offsetLeft + cs[i].offsetWidth / 2 - track.clientWidth / 2, behavior: calm.matches ? 'auto' : 'smooth' });
-    cs.forEach((card, i) => card.addEventListener('click', (e) => { if (phone.matches && i !== mid) { e.preventDefault(); center(i); } }));
+    // dotyk otwiera case tylko przy karcie stojącej na środku (karta w drodze na środek najpierw dojeżdża);
+    // Enter z klawiatury (detail 0) otwiera zawsze (recenzja Codexa)
+    cs.forEach((card, i) => card.addEventListener('click', (e) => { if (phone.matches && e.detail !== 0 && (dist[i] ?? 1) > .08) { e.preventDefault(); center(i); } }));
     bars.forEach((b, i) => b.addEventListener('click', () => center(i)));
     // klawiatura: karta z fokusem jedzie na środek. Tylko fokus z klawiatury: WebKit daje fokus także przy stuknięciu,
     // a drugie płynne przewinięcie naraz z tym z kliknięcia zatrzymywało pas w pół drogi.
