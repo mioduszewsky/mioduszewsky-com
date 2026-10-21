@@ -21,7 +21,9 @@ import CaseLockup from './realizacje/CaseLockup.astro';
 import BrandFooter from './BrandFooter.astro';
 import heroGlassstone from '../assets/realizacje/hero-glassstone.webp';
 import heroEskapizm from '../assets/realizacje/hero-eskapizm.webp';
-import heroIgor from '../assets/realizacje/hero-igor.webp';
+// Igor (D5, 21.10): strona „O kolekcji” zamiast strony głównej. Treść strony głównej leży w lewej połowie, a w wachlarzu
+// karta z prawej pokazuje tylko prawą połowę, więc była prawie biała; „O kolekcji” ma niebieskie tło i hasła z prawej.
+import heroIgor from '../assets/realizacje/hero-igor-kolekcja.webp';
 import heroCannversity from '../assets/realizacje/hero-cannversity.webp';
 
 interface Props { locale: 'pl' | 'en' }
@@ -57,7 +59,7 @@ const order = (slug: string) => caseOrder.findIndex((c) => c.slug === slug);
 const cases = [
   { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: pl ? 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' : "GlassStone homepage hero, in Polish: we don't sell stone, we create interiors you want to live in." },
   { slug: 'eskapizm', name: T.nameEskapizm, img: heroEskapizm, alt: pl ? 'Hero strony eskapizm: Kolejny wieczór na planowaniu podróży do Azji? Laptop na biurku w złotej godzinie.' : 'eskapizm homepage hero, in Polish: another evening spent planning a trip to Asia? A laptop on a desk at golden hour.' },
-  { slug: 'igor-grabowski', name: 'Igor Grabowski', img: heroIgor, alt: pl ? 'Pierwszy ekran strony kolekcji Igora Grabowskiego: po najechaniu na Prace pojawia się praca z kolekcji.' : "First screen of Igor Grabowski's collection site: hovering Works brings up a piece from the collection." },
+  { slug: 'igor-grabowski', name: 'Igor Grabowski', img: heroIgor, alt: pl ? 'Strona „O kolekcji” Igora Grabowskiego: nagłówek „Jak to się zaczęło.”, z prawej „Inżynier → IT” i „Od 2020”.' : "The About the collection page on Igor Grabowski's site, in Polish: the heading reads \"How it started\", with \"Engineer → IT\" and \"Since 2020\" on the right." },
   { slug: 'cannversity', name: 'Cannversity', img: heroCannversity, alt: pl ? 'Hero strony Cannversity: Od pomysłu do produktu. W branży konopnej.' : 'Cannversity homepage hero, in Polish: from idea to product, in the cannabis industry.' },
 ].filter((c) => caseOrder.some((o) => o.slug === c.slug && o.locales.includes(locale))).sort((a, b) => order(a.slug) - order(b.slug)).map((c) => ({ ...c, href: hasCase(c.slug) ? `${T.base}${c.slug}/` : undefined }));
 
