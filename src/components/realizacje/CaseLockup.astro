@@ -22,8 +22,8 @@ import { routes, type Locale } from '../../i18n/site';
 type Fit = { h: number; base: number };
 interface Props {
   locale: Locale;
-  /** slug klienta = nazwa pliku SVG w logo-klientow */
-  client: string;
+  /** slug klienta = nazwa pliku SVG w logo-klientow; bez niego samo logo mioduszewsky (strona zbiorcza realizacji) */
+  client?: string;
   /** nazwa klienta dla czytników ekranu i zastępczo, gdy nie ma pliku SVG */
   clientName?: string;
   alternatePath?: string;
@@ -37,7 +37,7 @@ interface Props {
 const { locale, client, alternatePath, tone = 'light', logo = '3d', fit } = Astro.props;
 const pl = locale === 'pl';
 const NAMES: Record<string, string> = { eskapizm: 'eskapizm', cannversity: 'Cannversity', glassstone: 'GlassStone', 'igor-grabowski': 'Igor Grabowski' };
-const name = Astro.props.clientName ?? NAMES[client] ?? client;
+const name = Astro.props.clientName ?? (client ? NAMES[client] ?? client : '');
 
 // Geometria wideo logo-nav (800x222, czarne 600x166, te same proporcje), zmierzona z kanału alfa plakatu:
 // litery od 5,9% do 94,1% szerokości, linia bazowa na 67-67,5% wysokości (sprawdzone zrzutem 3x), góra wydłużeń (d, k) na 18%, x-height od 34,2%.
@@ -45,7 +45,7 @@ const BOX = 222 / 800, PAD = 47 / 800, BASE = .675;
 // Dopasowania logo klientów. eskapizm: viewBox 3918x916, linia bazowa y=700, x-height 252-700, czyli x-height
 // równa x-height mioduszewsky (0,325 wysokości wideo). Domyślnie: wysokość wersalików = wysokość wydłużeń mioduszewsky.
 const FITS: Record<string, Fit> = { eskapizm: { h: .665, base: 700 / 916 } };
-const f: Fit = { h: .487, base: 1, ...FITS[client], ...fit };
+const f: Fit = { h: .487, base: 1, ...(client ? FITS[client] : {}), ...fit };
 
 const files = import.meta.glob<string>('../../assets/realizacje/logo-klientow/*.svg', { query: '?raw', import: 'default', eager: true });
 const raw = files[`../../assets/realizacje/logo-klientow/${client}.svg`];
@@ -57,7 +57,9 @@ const svg = raw && raw.replace(/<svg\b([^>]*)>/, (_, a: string) => `<svg${a.repl
 // Szerokość lockupu w jednostkach szerokości wideo: litery + × z oddechem + klient. Z tego skala, która mieści
 // lockup obok przycisku Menu i przełącznika języka (rezerwa 136 px) w każdej szerokości od 320 px, bez łamania.
 const X = .3 * BOX, GAP = .075;
-const k = (1 - 2 * PAD) + X + 2 * GAP + (aspect ? aspect * f.h * BOX : .9);
+// Bez klienta (strona zbiorcza) skala liczona tak, jakby obok stał klient szerokości eskapizmu (.79), więc logo
+// mioduszewsky ma tę samą wielkość co w case'ach, także na telefonie (390 px: 112 px zamiast 190).
+const k = (1 - 2 * PAD) + X + 2 * GAP + (client ? (aspect ? aspect * f.h * BOX : .9) : .79);
 const vars = `--lk-k:${k.toFixed(3)};--lk-ct:${(BASE - f.h * f.base).toFixed(4)};--lk-ch:${f.h.toFixed(4)}`;
 const home = routes[locale].home;
 ---
@@ -75,11 +77,13 @@ const home = routes[locale].home;
         </video>
       </span>
     </a>
-    <svg class="lk-x" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1 1 9 9M9 1 1 9" /></svg>
-    <span class="lk-client">
-      {svg ? <Fragment set:html={svg} /> : <span class="lk-name" aria-hidden="true">{name}</span>}
-      <span class="lk-sr">{pl ? `, realizacja: ${name}` : `, project: ${name}`}</span>
-    </span>
+    {client && <>
+      <svg class="lk-x" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1 1 9 9M9 1 1 9" /></svg>
+      <span class="lk-client">
+        {svg ? <Fragment set:html={svg} /> : <span class="lk-name" aria-hidden="true">{name}</span>}
+        <span class="lk-sr">{pl ? `, realizacja: ${name}` : `, project: ${name}`}</span>
+      </span>
+    </>}
   </div>
   <SiteMenu locale={locale} alternatePath={alternatePath} compact />
 </header>
