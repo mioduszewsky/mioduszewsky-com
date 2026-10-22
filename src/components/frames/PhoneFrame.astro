@@ -18,12 +18,9 @@ interface Props {
   screenbg?: string;
   fallbackText?: string;
   fallbackLinkText?: string;
-  /** żywa strona w oknie Safari (pasek adresu u góry, pasek narzędzi u dołu) z tą domeną w pasku adresu.
-      Strona dostaje wtedy okno 393x~660 jak na prawdziwym iPhonie z paskami Safari, a nie wyższe 393x780 */
-  safari?: string;
 }
 import type { ImageMetadata } from 'astro';
-const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '#fff', fallbackText = 'the live site is being shy', fallbackLinkText = 'open it in a new tab ↗', safari } = Astro.props;
+const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '#fff', fallbackText = 'the live site is being shy', fallbackLinkText = 'open it in a new tab ↗' } = Astro.props;
 ---
 
 <figure class:list={['phone-frame', cls]}>
@@ -42,28 +39,8 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
       </span>
     </div>
     {url ? (
-      <div class:list={['phone-screen phone-live', { 'phone-safari': safari }]} style={safari ? undefined : `background:${screenbg}`} data-top={safari ? 98 : undefined} data-bottom={safari ? 68 : undefined}>
+      <div class="phone-screen phone-live" style={`background:${screenbg}`}>
         <iframe data-src={url} title={alt} referrerpolicy="strict-origin-when-cross-origin"></iframe>
-        {safari && (
-          <Fragment>
-            {/* Safari na iOS z paskiem adresu u góry (Ustawienia > Safari > Pojedyncza karta): wymiary w punktach iPhone'a (--l = 1/393 szerokości ekranu) */}
-            <span class="sf-top" aria-hidden="true">
-              <span class="sf-pill">
-                <span class="sf-aa">a<span>A</span></span>
-                <span class="sf-url">{safari}</span>
-                <svg viewBox="0 0 16 16" class="sf-reload"><path d="M13.2 8.6A5.3 5.3 0 1 1 11.6 4.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12.4 1.6v3.4H9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </span>
-            <span class="sf-bot" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M15 4 7 12l8 8" /></svg>
-              <svg viewBox="0 0 24 24" class="sf-off"><path d="m9 4 8 8-8 8" /></svg>
-              <svg viewBox="0 0 24 24"><path d="M12 15V2.5M7.5 7 12 2.5 16.5 7M8 10H5.5v11.5h13V10H16" /></svg>
-              <svg viewBox="0 0 24 24"><path d="M12 6.5c-2.2-1.6-5-2.3-8.5-2.3v14c3.5 0 6.3.7 8.5 2.3m0-14c2.2-1.6 5-2.3 8.5-2.3v14c-3.5 0-6.3.7-8.5 2.3m0-14v14" /></svg>
-              <svg viewBox="0 0 24 24"><rect x="3" y="7" width="14" height="14" rx="2.5" /><path d="M7 3.5h11a2.5 2.5 0 0 1 2.5 2.5v11" /></svg>
-              <i class="sf-home"></i>
-            </span>
-          </Fragment>
-        )}
         <!-- Fallback: żywa strona nie wstała (sieć/awaria) → link zamiast pustego ekranu -->
         <a class="live-fail" href={url} target="_blank" rel="noopener">
           <span>{fallbackText}</span>
@@ -88,17 +65,14 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
   // i jest skalowana transformem do faktycznej szerokości ekranu ramki.
   const LOGICAL_W = 393;
   const TOPBAR = 44; // strip pod paskiem statusu - treść startuje pod nim jak na iPhone
-  // Okno Safari (data-top/data-bottom): pod paskiem statusu pasek adresu, u dołu pasek narzędzi
   document.querySelectorAll<HTMLElement>('.phone-live').forEach((screen) => {
     const frame = screen.querySelector<HTMLIFrameElement>('iframe');
     if (!frame) return;
-    const top = Number(screen.dataset.top || TOPBAR);
-    const bottom = Number(screen.dataset.bottom || 0);
     const fit = () => {
       const s = screen.clientWidth / LOGICAL_W;
       frame.style.transform = `scale(${s})`;
-      frame.style.height = `${Math.round(screen.clientHeight / s - top - bottom)}px`;
-      frame.style.top = `${Math.round(top * s)}px`;
+      frame.style.height = `${Math.round((screen.clientHeight - TOPBAR * s) / s)}px`;
+      frame.style.top = `${Math.round(TOPBAR * s)}px`;
     };
     fit();
     new ResizeObserver(fit).observe(screen);
@@ -255,26 +229,6 @@ const { src, url, alt, label, href, class: cls, statusbar = 'dark', screenbg = '
     transform-origin: 0 0;
     background: transparent;
   }
-  /* Safari: jasne paski jak w iOS 18, ikony w systemowym niebieskim */
-  .phone-safari { background: #f6f6f8; container-type: inline-size; }
-  .sf-top, .sf-bot { --l: calc(100cqw / 393); position: absolute; left: 0; right: 0; z-index: 3; background: rgba(246, 246, 248, .96); pointer-events: none; }
-  .sf-top { top: calc(44 * var(--l)); height: calc(54 * var(--l)); display: flex; align-items: center; padding: 0 calc(14 * var(--l)); box-shadow: 0 .5px 0 rgba(0, 0, 0, .14); }
-  .sf-pill {
-    flex: 1; height: calc(38 * var(--l)); border-radius: calc(12 * var(--l)); background: #e3e3e8;
-    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 calc(13 * var(--l));
-    color: #000; font: 500 calc(16 * var(--l)) / 1 -apple-system, 'SF Pro Text', system-ui, sans-serif; letter-spacing: -.01em;
-  }
-  .sf-aa { font-size: calc(13 * var(--l)); font-weight: 600; }
-  .sf-aa span { font-size: calc(17 * var(--l)); }
-  .sf-reload { justify-self: end; width: calc(15 * var(--l)); height: calc(15 * var(--l)); }
-  .sf-bot {
-    bottom: 0; height: calc(68 * var(--l)); box-shadow: 0 -.5px 0 rgba(0, 0, 0, .14);
-    display: flex; justify-content: space-between; align-items: flex-start; padding: calc(9 * var(--l)) calc(22 * var(--l)) 0;
-  }
-  .sf-bot svg { width: calc(24 * var(--l)); height: calc(24 * var(--l)); fill: none; stroke: #007aff; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-  .sf-bot .sf-off { stroke: #c4c4c8; }
-  .sf-home { position: absolute; left: 50%; bottom: calc(7 * var(--l)); width: calc(134 * var(--l)); height: calc(5 * var(--l)); margin-left: calc(-67 * var(--l)); border-radius: 3px; background: #000; }
-
   /* fallback awarii żywej strony - widoczny tylko z klasą .live-failed */
   .live-fail {
     display: none; position: absolute; inset: 0; z-index: 6;
