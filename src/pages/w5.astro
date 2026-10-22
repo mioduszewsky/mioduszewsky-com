@@ -252,7 +252,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
         </div>
         <div class="proj-f" data-parallax>
           <div class="phone-hold">
-            <PhoneFrame url={isPl ? 'https://eskapizm.com' : 'https://eskapizm.com/en'} alt={p?.work.eskapizmAlt || 'eskapizm.com - scroll it'} screenbg="#fbfff7" fallbackText={isPl ? 'strona chwilowo się nie ładuje' : undefined} fallbackLinkText={isPl ? 'otwórz w nowej karcie ↗' : undefined} />
+            <PhoneFrame url={isPl ? 'https://eskapizm.com' : 'https://eskapizm.com/en'} alt={p?.work.eskapizmAlt || 'eskapizm.com - scroll it'} safari="eskapizm.com" fallbackText={isPl ? 'strona chwilowo się nie ładuje' : undefined} fallbackLinkText={isPl ? 'otwórz w nowej karcie ↗' : undefined} />
             <div class="spray-note" aria-hidden="true">
               <svg viewBox="0 0 160 90"><path d="M8 76 C 50 66, 96 44, 138 18 M 116 20 L 140 16 L 136 40" /></svg>
               <span class="tag">{isPl ? <Fragment>psst, działa.<br />przewiń</Fragment> : <Fragment>psst, it's live.<br />scroll it!</Fragment>}</span>
