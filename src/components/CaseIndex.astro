@@ -116,9 +116,10 @@ const ld = {
           );
         })}
       </ul>
-      <div class="m-now" aria-hidden="true">
-        <span class="m-pill"><span class="m-name">{cases[mid0].name}</span><svg class="pill-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
-        <span class="m-bars">{cases.map((_, i) => <i class:list={[{ on: i === mid0 }]} />)}</span>
+      <noscript><style is:global>.m-now { display: none !important; }</style></noscript>
+      <div class="m-now">
+        <a class="m-pill" href={cases[mid0].href}><span class="m-name">{cases[mid0].name}</span><svg class="pill-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></a>
+        <span class="m-bars" aria-hidden="true">{cases.map((_, i) => <i class:list={[{ on: i === mid0 }]} />)}</span>
       </div>
       <div class="pill" aria-hidden="true"><span class="pill-name"></span><svg class="pill-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></div>
     </main>
@@ -268,6 +269,7 @@ const ld = {
   if (track && now) {
     const cs = [...track.querySelectorAll<HTMLElement>('.card')];
     const name = now.querySelector<HTMLElement>('.m-name')!;
+    const mobileLink = now.querySelector<HTMLAnchorElement>('.m-pill')!;
     const go = now.querySelector<HTMLElement>('.pill-go')!;
     const bars = [...now.querySelectorAll<HTMLElement>('.m-bars i')];
     let mid = -1, t = false;
@@ -287,6 +289,9 @@ const ld = {
       if (best !== mid) {
         mid = best;
         name.textContent = cs[best].dataset.name || '';
+        const href = cs[best].querySelector<HTMLAnchorElement>('a.sheet')?.getAttribute('href');
+        if (href) mobileLink.setAttribute('href', href);
+        else mobileLink.removeAttribute('href');
         go.style.display = cs[best].dataset.link ? 'block' : 'none';
         bars.forEach((b, i) => b.classList.toggle('on', i === best));
         cs.forEach((card, i) => card.classList.toggle('is-mid', i === best));
@@ -489,7 +494,8 @@ const ld = {
     /* cień mieści się w zapasie pasa (u góry 28 px, u dołu 52 px), inaczej pas ucina go prostą krawędzią */
     .card.is-mid .sheet::before { box-shadow: 0 16px 28px -12px rgb(0 0 0 / .34), 0 6px 12px -6px rgb(0 0 0 / .2); }
     .m-now { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 0 var(--gutter) 40px; }
-    .m-pill { display: inline-flex; align-items: center; gap: 8px; padding: 12px 16px 12px 18px; border-radius: 999px; background: var(--ink); color: var(--ivory); font-size: 16px; font-weight: 500; line-height: 1; }
+    .m-pill { display: inline-flex; align-items: center; gap: 8px; padding: 12px 16px 12px 18px; border-radius: 999px; background: var(--ink); color: var(--ivory); font-size: 16px; font-weight: 500; line-height: 1; text-decoration: none; }
+    .m-pill:not([href]) { visibility: hidden; }
     .m-pill .pill-go { display: block; }
     /* kreska ma 3 px, pole stuknięcia 24 px wysokości */
     .m-bars { display: flex; margin-block: -10px; }
