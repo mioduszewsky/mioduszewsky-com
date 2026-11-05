@@ -17,6 +17,11 @@
   ],
   "redirects": [
     {
+      "source": "/admin",
+      "destination": "https://panel.mioduszewsky.com/",
+      "permanent": false
+    },
+    {
       "source": "/ig",
       "destination": "/pl/?utm_campaign=organic-outbound&utm_source=instagram&utm_medium=bio",
       "permanent": false
