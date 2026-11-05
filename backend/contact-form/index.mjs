@@ -9,11 +9,11 @@
 //   TO_ADDR   = kacper@mioduszewsky.com
 //   FROM_ADDR = formularz@mioduszewsky.com
 //   ALLOWED_ORIGINS = "https://mioduszewsky.com,https://www.mioduszewsky.com,https://mioduszewsky-com.vercel.app,http://localhost:4321"
+//   CRM_TABLE = autofirma-crm-dev            (od 05.11.2026, TAK Kacpra: zgłoszenie trafia też do CRM)
+//   CRM_WRITE_ENABLED = true                 ("false" = wyłącznik awaryjny zapisu do CRM; mail działa dalej)
 
-import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 import { splitLeadSource } from './lead-source.mjs';
-
-const ses = new SESv2Client({ region: process.env.AWS_REGION || 'eu-central-1' });
+import { createCrmClient, recordLead } from './crm.mjs';
 
 const TO_ADDR = process.env.TO_ADDR || 'kacper@mioduszewsky.com';
 const FROM_ADDR = process.env.FROM_ADDR || 'formularz@mioduszewsky.com';
@@ -38,67 +38,96 @@ function cors(origin) {
 
 const reply = (status, body, origin) => ({ statusCode: status, headers: cors(origin), body: JSON.stringify(body) });
 
-export const handler = async (event) => {
-  const origin = event?.headers?.origin || event?.headers?.Origin || '';
-  const method = event?.requestContext?.http?.method || event?.httpMethod || 'POST';
+export function createHandler({ ses, crm }) {
+  return async (event) => {
+    const origin = event?.headers?.origin || event?.headers?.Origin || '';
+    const method = event?.requestContext?.http?.method || event?.httpMethod || 'POST';
 
-  if (method === 'OPTIONS') return reply(204, {}, origin);
-  if (method !== 'POST') return reply(405, { error: 'method_not_allowed' }, origin);
+    if (method === 'OPTIONS') return reply(204, {}, origin);
+    if (method !== 'POST') return reply(405, { error: 'method_not_allowed' }, origin);
 
-  let data;
-  try {
-    data = JSON.parse(event.body || '{}');
-  } catch {
-    return reply(400, { error: 'bad_json' }, origin);
-  }
+    let data;
+    try {
+      data = JSON.parse(event.body || '{}');
+    } catch {
+      return reply(400, { error: 'bad_json' }, origin);
+    }
 
-  // Honeypot - boty wypełniają ukryte pole "hp", ludzie nie.
-  if (data.hp) return reply(200, { ok: true }, origin);
+    // Honeypot - boty wypełniają ukryte pole "hp", ludzie nie.
+    if (data.hp) return reply(200, { ok: true }, origin);
 
-  const name = clip(data.name, 120).trim();
-  const email = clip(data.email, 200).trim();
-  const { message, sourceLine } = splitLeadSource(clip(data.message, 4000).trim());
-  const consent = data.consent === true || data.consent === 'true' || data.consent === 'on';
+    const name = clip(data.name, 120).trim();
+    const email = clip(data.email, 200).trim();
+    const { message, sourceLine } = splitLeadSource(clip(data.message, 4000).trim());
+    const consent = data.consent === true || data.consent === 'true' || data.consent === 'on';
 
-  if (!name || !email || !message) return reply(400, { error: 'missing_fields' }, origin);
-  if (!EMAIL_RE.test(email)) return reply(400, { error: 'bad_email' }, origin);
-  if (!consent) return reply(400, { error: 'no_consent' }, origin);
+    if (!name || !email || !message) return reply(400, { error: 'missing_fields' }, origin);
+    if (!EMAIL_RE.test(email)) return reply(400, { error: 'bad_email' }, origin);
+    if (!consent) return reply(400, { error: 'no_consent' }, origin);
 
-  const subject = `Nowy kontakt ze strony - ${name}`;
-  // Linia Źródło idzie pierwsza: Mail Processor czyta źródło z początku treści.
-  const text =
-    (sourceLine ? `${sourceLine}\n` : '') +
-    `Imię:  ${name}\n` +
-    `Mail:  ${email}\n` +
-    `Zgoda RODO: tak\n\n` +
-    `Wiadomość:\n${message}\n`;
-  const html =
-    `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:#111">` +
-    (sourceLine ? `<p>${esc(sourceLine)}</p>` : '') +
-    `<p><strong>Imię:</strong> ${esc(name)}<br>` +
-    `<strong>Mail:</strong> <a href="mailto:${esc(email)}">${esc(email)}</a><br>` +
-    `<strong>Zgoda RODO:</strong> tak</p>` +
-    `<p><strong>Wiadomość:</strong></p>` +
-    `<p style="white-space:pre-wrap;border-left:3px solid #0522ff;padding-left:12px">${esc(message)}</p>` +
-    `</div>`;
+    const subject = `Nowy kontakt ze strony - ${name}`;
+    // Linia Źródło idzie pierwsza: Mail Processor czyta źródło z początku treści.
+    const text =
+      (sourceLine ? `${sourceLine}\n` : '') +
+      `Imię:  ${name}\n` +
+      `Mail:  ${email}\n` +
+      `Zgoda RODO: tak\n\n` +
+      `Wiadomość:\n${message}\n`;
+    const html =
+      `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:#111">` +
+      (sourceLine ? `<p>${esc(sourceLine)}</p>` : '') +
+      `<p><strong>Imię:</strong> ${esc(name)}<br>` +
+      `<strong>Mail:</strong> <a href="mailto:${esc(email)}">${esc(email)}</a><br>` +
+      `<strong>Zgoda RODO:</strong> tak</p>` +
+      `<p><strong>Wiadomość:</strong></p>` +
+      `<p style="white-space:pre-wrap;border-left:3px solid #0522ff;padding-left:12px">${esc(message)}</p>` +
+      `</div>`;
 
-  try {
-    await ses.send(new SendEmailCommand({
-      FromEmailAddress: `Formularz mioduszewsky <${FROM_ADDR}>`,
-      Destination: { ToAddresses: [TO_ADDR] },
-      ReplyToAddresses: [email],
-      Content: { Simple: {
-        Subject: { Data: subject, Charset: 'UTF-8' },
-        Body: {
-          Text: { Data: text, Charset: 'UTF-8' },
-          Html: { Data: html, Charset: 'UTF-8' },
-        },
-      } },
-    }));
-    return reply(200, { ok: true }, origin);
-  } catch (err) {
-    // Nie logujemy treści wiadomości ani maila (PII). Tylko typ błędu.
-    console.error('SES send failed:', err?.name || 'unknown');
-    return reply(502, { error: 'send_failed' }, origin);
-  }
+    try {
+      await ses.send({
+        FromEmailAddress: `Formularz mioduszewsky <${FROM_ADDR}>`,
+        Destination: { ToAddresses: [TO_ADDR] },
+        ReplyToAddresses: [email],
+        Content: { Simple: {
+          Subject: { Data: subject, Charset: 'UTF-8' },
+          Body: {
+            Text: { Data: text, Charset: 'UTF-8' },
+            Html: { Data: html, Charset: 'UTF-8' },
+          },
+        } },
+      });
+    } catch (err) {
+      // Nie logujemy treści wiadomości ani maila (PII). Tylko typ błędu.
+      console.error('SES send failed:', err?.name || 'unknown');
+      return reply(502, { error: 'send_failed' }, origin);
+    }
+
+    // CRM po mailu: błąd zapisu nie może zabrać człowiekowi potwierdzenia ani maila.
+    let crmOk = false;
+    if (crm) {
+      try {
+        await recordLead(crm, { name, email, message, utm: sourceLine });
+        crmOk = true;
+      } catch (err) {
+        console.error('CRM write failed:', err?.name || 'unknown');
+      }
+    }
+    return reply(200, { ok: true, crm: crmOk }, origin);
+  };
+}
+
+const ENV_CRM = process.env.CRM_TABLE && process.env.CRM_WRITE_ENABLED !== 'false'
+  ? createCrmClient(process.env.CRM_TABLE) : null;
+// SES ładowany leniwie przy pierwszym wywołaniu (w Lambdzie SDK jest wbudowany; testy wstrzykują atrapę).
+const ENV_SES = {
+  client: null,
+  async send(params) {
+    if (!this.client) {
+      const { SESv2Client, SendEmailCommand } = await import('@aws-sdk/client-sesv2');
+      const c = new SESv2Client({ region: process.env.AWS_REGION || 'eu-central-1' });
+      this.client = { send: (p) => c.send(new SendEmailCommand(p)) };
+    }
+    return this.client.send(params);
+  },
 };
+export const handler = createHandler({ ses: ENV_SES, crm: ENV_CRM });
