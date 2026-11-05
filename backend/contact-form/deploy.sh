@@ -23,7 +23,7 @@ API_LOG_GROUP="/aws/apigateway/mioduszewsky-contact"
 echo "==> Pakowanie kodu"
 cd "$DIR"
 rm -f function.zip
-zip -q function.zip index.mjs lead-source.mjs
+zip -q function.zip index.mjs lead-source.mjs crm.mjs
 
 echo "==> IAM role (least privilege)"
 if ! aws iam get-role --role-name "$ROLE" >/dev/null 2>&1; then
@@ -39,10 +39,16 @@ fi
 aws iam put-role-policy --role-name "$ROLE" --policy-name ses-send-scoped \
   --policy-document "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"ses:SendEmail\"],\"Resource\":\"${IDENTITY_ARN}\"}]}" >/dev/null
 
+# CRM (05.11.2026, TAK Kacpra): zapis zgłoszenia do tabeli CRM Autofirmy. Tylko ta tabela i jej indeks,
+# tylko to, czego używa crm.mjs (Query po indeksie, GetItem, PutItem). Zero Scan, zero DeleteItem.
+CRM_TABLE_ARN="arn:aws:dynamodb:${REGION}:${ACCOUNT}:table/autofirma-crm-dev"
+aws iam put-role-policy --role-name "$ROLE" --policy-name crm-zapis-zgloszen \
+  --policy-document "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"dynamodb:GetItem\",\"dynamodb:PutItem\",\"dynamodb:Query\"],\"Resource\":[\"${CRM_TABLE_ARN}\",\"${CRM_TABLE_ARN}/index/GSI1\"]}]}" >/dev/null
+
 ROLE_ARN="arn:aws:iam::${ACCOUNT}:role/${ROLE}"
 
 echo "==> Lambda"
-ENV="Variables={TO_ADDR=kacper@mioduszewsky.com,FROM_ADDR=formularz@mioduszewsky.com,ALLOWED_ORIGINS='https://mioduszewsky.com,https://www.mioduszewsky.com,https://mioduszewsky-com.vercel.app,http://localhost:4321'}"
+ENV="Variables={TO_ADDR=kacper@mioduszewsky.com,FROM_ADDR=formularz@mioduszewsky.com,ALLOWED_ORIGINS='https://mioduszewsky.com,https://www.mioduszewsky.com,https://mioduszewsky-com.vercel.app,http://localhost:4321',CRM_TABLE=autofirma-crm-dev,CRM_WRITE_ENABLED=true}"
 if aws lambda get-function --function-name "$FN" --region "$REGION" >/dev/null 2>&1; then
   aws lambda update-function-code --function-name "$FN" --zip-file fileb://function.zip --region "$REGION" >/dev/null
   aws lambda wait function-updated --function-name "$FN" --region "$REGION"
