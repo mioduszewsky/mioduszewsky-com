@@ -22,6 +22,9 @@ const ALLOWED = (process.env.ALLOWED_ORIGINS ||
 ).split(',').map((s) => s.trim());
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CRM_TIMEOUT_MS = 4000;
+// Do logu trafia wylacznie nazwa klasy bledu z liter (nigdy tresc, nigdy dane z formularza).
+const safeName = (err) => (String(err?.name || 'unknown').match(/^[A-Za-z]{1,40}/) || ['unknown'])[0];
 const clip = (s, n) => String(s || '').slice(0, n);
 const esc = (s) => String(s || '').replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
 
@@ -98,18 +101,25 @@ export function createHandler({ ses, crm }) {
       });
     } catch (err) {
       // Nie logujemy treści wiadomości ani maila (PII). Tylko typ błędu.
-      console.error('SES send failed:', err?.name || 'unknown');
+      console.error('SES send failed:', safeName(err));
       return reply(502, { error: 'send_failed' }, origin);
     }
 
     // CRM po mailu: błąd zapisu nie może zabrać człowiekowi potwierdzenia ani maila.
+    // Limit czasu na CRM (4 s z 10 s Lambdy): zawieszona baza nie moze zabrac czlowiekowi odpowiedzi 200.
     let crmOk = false;
     if (crm) {
+      let timer;
       try {
-        await recordLead(crm, { name, email, message, utm: sourceLine });
+        await Promise.race([
+          recordLead(crm, { name, email, message, utm: sourceLine }),
+          new Promise((_, rej) => { timer = setTimeout(() => rej(new Error('CrmTimeout')), CRM_TIMEOUT_MS); }),
+        ]);
         crmOk = true;
       } catch (err) {
-        console.error('CRM write failed:', err?.name || 'unknown');
+        console.error('CRM write failed:', safeName(err));
+      } finally {
+        clearTimeout(timer);
       }
     }
     return reply(200, { ok: true, crm: crmOk }, origin);

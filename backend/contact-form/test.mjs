@@ -94,3 +94,14 @@ test('handler: mail idzie, CRM wylaczony flaga -> crm:false; wlaczony -> crm:tru
   assert.equal(r.statusCode, 200);
   assert.deepEqual(JSON.parse(r.body), { ok: true, crm: false });
 });
+
+test('CRM wiszacy: odpowiedz 200 z crm:false po limicie czasu', async () => {
+  const { createHandler } = await import('./index.mjs');
+  const ses = { send: async () => ({}) };
+  const wisi = { send: () => new Promise(() => {}) };
+  const h = createHandler({ ses, crm: mk(wisi) });
+  const t0 = Date.now();
+  const r = await h({ requestContext: { http: { method: 'POST' } }, headers: {}, body: JSON.stringify({ name: 'T', email: 't@x.pl', message: 'm', consent: true }) });
+  assert.deepEqual(JSON.parse(r.body), { ok: true, crm: false });
+  assert.ok(Date.now() - t0 < 6000);
+});

@@ -3,6 +3,9 @@
 // sprawa (CASE#) i zdarzenie (EVENT#). Mail przez SES zostaje drogą główną; błąd zapisu w CRM
 // nigdy nie przerywa odpowiedzi dla człowieka (wynik: { crm: false }).
 // Logi: tylko typ błędu, zero imion, maili i treści.
+// Przyjęte świadomie przy jednym formularzu i kilku zgłoszeniach w miesiącu (recenzja Codexa 05.11.2026):
+// kontrola duplikatów przez indeks GSI1 (ostatecznie spójny), cztery osobne zapisy bez transakcji,
+// odświeżenie META pełnym PutItem. Przy wzroście ruchu: TransactWriteItems i UpdateItem na polach.
 
 // SDK ładowany leniwie: w Lambdzie jest wbudowany, lokalnie testy podstawiają własnego klienta i komendy.
 async function cmdsOf(crm) {
@@ -64,10 +67,11 @@ export async function recordLead(crm, { name, email, message, utm }) {
   if (!partyId) {
     const base = `person-${slug(name)}`;
     partyId = base;
-    for (let n = 2; n < 50; n++) {
+    for (let n = 2; ; n++) {
       const exists = await doc.send(C.get({ TableName: table, Key: { PK: `PARTY#${partyId}`, SK: 'META' } }));
       if (!exists.Item) break;
-      partyId = `${base}-${n}`;
+      // Po 10 kolizjach nazwy losowy przyrostek: zawsze jest wolny identyfikator.
+      partyId = n <= 10 ? `${base}-${n}` : `${base}-${Math.random().toString(16).slice(2, 8)}`;
     }
     const meta = {
       PK: `PARTY#${partyId}`, SK: 'META', GSI1PK: 'PARTY', GSI1SK: ts,
