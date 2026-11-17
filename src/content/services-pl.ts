@@ -27,32 +27,30 @@ export const services: Service[] = [
           "Informacje z zapytania mogą trafiać do właściwego narzędzia. Odpowiedź może powstawać na podstawie ustalonych materiałów i czekać na Twoją akceptację. Dane do raportu mogą zbierać się z kilku źródeł. Wybieramy zastosowanie, które odpowiada na konkretną potrzebę Twojej firmy."
         ]
       },
+      /* Teksty: cmo-oferta TEKSTY.md (końcowe 17.11.2026). */
       {
-        /* ROBOCZE (slawek-strona 17.11.2026): cztery nazwane kroki z REKOMENDACJA.md.
-           Ostateczne brzmienie podmienia cmo-oferta z TEKSTY.md. */
-        "title": "1. Mapa procesu",
+        "title": "Zaczynamy od jednej czynności",
         "paragraphs": [
-          "Zaczynamy od jednej czynności. Pokażesz mi, jak wykonujecie ją dzisiaj. Sprawdzę dostępne narzędzia i połączenia, a potem ustalimy zakres, koszt wdrożenia i koszty jego działania. Przed rozpoczęciem pracy wiesz, co ma powstać i jak sprawdzimy wynik."
+          "Pokażesz mi, jak wykonujecie ją dzisiaj. Robię mapę procesu: liczę czas i sprawdzam narzędzia oraz połączenia. Potem ustalamy zakres, koszt wdrożenia i koszty jego działania. Przed rozpoczęciem pracy wiesz, co ma powstać i jak sprawdzimy wynik."
         ]
       },
       {
-        "title": "2. Budowa na Twoich narzędziach",
+        "title": "Ustalamy też, gdzie potrzebna jest Twoja decyzja",
         "paragraphs": [
-          "Możemy pracować nad samym procesem. Możliwość połączenia z obecnymi narzędziami sprawdzam przy ustalaniu zakresu.",
           "Wysyłka odpowiedzi, zmiana danych czy zatwierdzenie dokumentu mogą wymagać sprawdzenia przez człowieka. Określamy to przed budową, razem z zasadami dostępu do informacji i obsługi błędów."
         ]
       },
       {
-        "title": "3. Uruchomienie z pomiarem przed i po",
+        "title": "Uruchamiamy na prawdziwych sprawach",
         "paragraphs": [
-          "Przed startem zapisujemy, ile czasu ta praca zajmuje dzisiaj. Po uruchomieniu mierzymy to samo, więc różnicę widzisz w liczbach."
+          "Sprawdzamy system na sprawach z bieżącej pracy. Zespół dostaje krótką instrukcję, a my porównujemy czas przed i po. Przez 30 dni poprawiam to, co nie działa tak, jak ustaliliśmy. Potem możemy umówić opiekę miesięczną albo kolejny proces."
         ]
       },
       {
-        "title": "4. 30 dni poprawek, potem opieka",
+        "title": "Masz już stronę i swoje narzędzia?",
         "paragraphs": [
-          "Przez 30 dni po uruchomieniu poprawiam to, co nie działa tak, jak ustaliliśmy. Potem możesz zostać przy opiece miesięcznej. Jej zakres i cenę ustalamy w ofercie.",
-          "Automatyzacja procesów z AI od 4 500 zł za pierwszy proces. Finalna wycena zależy od uzgodnionej pracy."
+          "Możemy pracować nad samym procesem. Możliwość połączenia z obecnymi narzędziami sprawdzam przy ustalaniu zakresu.",
+          "Automatyzacja pierwszego procesu od 4 500 zł. Finalna wycena zależy od uzgodnionej pracy."
         ]
       }
     ]
@@ -117,27 +115,27 @@ export const services: Service[] = [
       {
         "title": "Co dostajesz",
         "paragraphs": [
-          "Treść i strukturę strony, projekt przygotowany pod Twój biznes, wersję mobilną, formularze i potrzebne integracje, podpięcie domeny i SSL oraz podstawowy pomiar od dnia publikacji.",
-          "Nie musisz wiedzieć, ile ma być podstron ani na czym to ma być zbudowane. Od tego jest pierwsza rozmowa: mówisz, co robi Twoja firma, a ja mówię, co trzeba zbudować i ile to kosztuje."
+          "Treść i strukturę strony, projekt przygotowany pod Twój biznes, wersję mobilną, formularze i potrzebne integracje, podpięcie domeny i SSL, podstawowy pomiar od dnia publikacji oraz 30 dni poprawek po starcie."
         ]
       },
       {
-        "title": "Czy AI może zbudować stronę za mnie?",
+        "title": "Jak pracujemy",
         "paragraphs": [
-          "Może wygenerować tekst, layout i kod. Sam też korzystam z AI. Trudniejsza część to decyzje: co zostawić, co wyrzucić i czy całość faktycznie pasuje do biznesu."
+          "Nie musisz wiedzieć, ile ma być podstron ani na czym to ma być zbudowane. Od tego jest pierwsza rozmowa: mówisz, co robi Twoja firma, a ja mówię, co trzeba zbudować i ile to kosztuje. Od pierwszej rozmowy do publikacji rozmawiasz z tą samą osobą."
         ]
       },
       {
-        "title": "Czy muszę mieć gotowe teksty?",
+        "title": "30 dni poprawek",
         "paragraphs": [
-          "Nie. Mogę je stworzyć w ramach projektu, ale potrzebuję od Ciebie prawdziwych informacji o ofercie, klientach i biznesie. Nie wymyślam wyników ani opinii."
+          "Przez 30 dni po publikacji bez dodatkowej opłaty naprawiam rzeczy z uzgodnionego zakresu, które nie działają tak, jak ustaliliśmy. Nowe elementy i zmiany wyceniam osobno."
         ]
       },
       {
-        "title": "30 dni poprawek po starcie",
+        "title": "Pytania o strony",
         "paragraphs": [
-          "Przez 30 dni po publikacji bez dodatkowej opłaty naprawiam rzeczy z uzgodnionego zakresu, które nie działają tak, jak ustaliliśmy. Nowe elementy i zmiany wyceniam osobno.",
-          "Kompletna strona internetowa od 3 500 zł. Zakres i cena są znane przed startem. Jeśli po rozmowie uznam, że strona nie jest teraz właściwym ruchem, też Ci to powiem."
+          "Czy AI może zbudować stronę za mnie? Może wygenerować tekst, layout i kod. Sam też korzystam z AI. Trudniejsza część to decyzje: co zostawić, co wyrzucić i czy całość pasuje do biznesu.",
+          "Czy muszę mieć gotowe teksty? Nie. Mogę je stworzyć w ramach projektu, ale potrzebuję od Ciebie prawdziwych informacji o ofercie, klientach i biznesie. Nie wymyślam wyników ani opinii.",
+          "Kompletna strona internetowa od 3 500 zł. Zakres i cena są znane przed startem."
         ]
       }
     ]

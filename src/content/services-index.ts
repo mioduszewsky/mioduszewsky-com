@@ -13,7 +13,7 @@
 export const servicesIndex = {
   pl: {
     title: 'Usługi · mioduszewsky',
-    description: 'Automatyzacja procesów z AI, aplikacje i systemy, strony internetowe oraz stała współpraca przy projekcie. Każdy zakres wyceniany osobno.',
+    description: 'Automatyzacja procesów z AI, aplikacje i systemy, kompletna strona internetowa oraz stała współpraca przy projekcie. Każdy zakres wyceniany osobno.',
     h1: 'Co robię',
     lead: 'Każdy z tych zakresów wyceniam osobno. Nie wiesz, który jest Twój? Umów 15 minut, powiem Ci wprost.',
     webName: 'Kompletna strona internetowa',
@@ -25,7 +25,7 @@ export const servicesIndex = {
     // Krotkie leady pisane pod liste. Meta `description` z services-pl.ts jest pisana pod
     // wyszukiwarke (dluzsza, u Cofoundera konczy sie nazwiskiem) i na liscie czyta sie zle.
     leads: {
-      'wdrozenie-ai': 'Konkretny proces zabiera za dużo ręcznej pracy. Rozpisuję go i buduję automatyzację, agenta albo integrację.',
+      'wdrozenie-ai': 'Jedna powtarzalna praca zabiera biuru za dużo czasu. Rozpisuję ją i buduję system na narzędziach, których już używacie.',
       'aplikacje-i-systemy': 'Pierwsza działająca wersja produktu, aplikacji, dashboardu albo systemu dla firmy.',
       'strona-internetowa': 'Treść, projekt, technologia i publikacja po jednej stronie. Ustalamy, czego potrzebuje Twój biznes, a resztę biorę na siebie.',
       'cofounder-as-a-service': 'Stała współpraca przy Twoim projekcie: kierunek biznesowy, organizacja pracy i technologia.',

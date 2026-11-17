@@ -3,8 +3,8 @@ export const homePl = {
      Teksty: cmo-oferta (zadania/2026-11-17-oferta-ciezar-na-ai/TEKSTY-PL.md), układ: slawek-strona.
      Dawna treść o stronach jest na /pl/uslugi/strona-internetowa/ (services-pl.ts). */
   meta: {
-    title: 'mioduszewsky · automatyzacja procesów z AI, aplikacje i strony',
-    description: 'Automatyzuję powtarzalną pracę biura z AI: mapa procesu, system na narzędziach, których już używasz, pomiar przed i po. Buduję też aplikacje i strony internetowe.',
+    title: 'mioduszewsky · automatyzacja z AI, aplikacje i strony',
+    description: 'Automatyzuję z AI powtarzalną pracę biura: mapa procesu, system na narzędziach, których już używasz, pomiar przed i po. Buduję też aplikacje i strony internetowe.',
   },
   nav: { cta: 'Umów 15 minut', sticky: 'Umów 15 minut', stickyAria: 'Umów 15 minut - rozmowa wideo', services: 'Usługi', cannabis: 'Branża konopna' },
   hero: {
@@ -13,7 +13,7 @@ export const homePl = {
     line1: 'Ręczną pracę',
     em: 'przejmuje',
     line3: 'system',
-    sub: 'Automatyzuję procesy z AI pod to, jak pracuje Twoja firma, na narzędziach, których już używacie. Robię też aplikacje i strony internetowe.',
+    sub: 'Automatyzuję z AI powtarzalną pracę biura, na narzędziach, których już używacie. Buduję też aplikacje i strony internetowe.',
   },
   problem: {
     label: '( Problem )',
@@ -29,10 +29,10 @@ export const homePl = {
   },
   work: {
     label: '( Realizacje )',
-    h1: 'To nie są obietnice.',
+    h1: 'To nie są zrzuty ekranu.',
     h2: 'To *działające systemy*.',
-    intro: 'Systemy pokazuję w trzech krokach: co wchodzi, co robi system, co wychodzi. Strony możesz przewinąć tutaj, bez otwierania nowej karty.',
-    eskapizm: 'Firma zajmująca się planowaniem podróży po Azji. Strona, proces sprzedaży, płatności, aplikacja klienta, CMS i narzędzia do obsługi. Całość zbudowana od zera jako jeden system.',
+    intro: 'Strony możesz przewinąć tutaj. Na przykładzie eskapizmu pokazuję też, co system robi z zamówieniem, kiedy nikt go nie dotyka.',
+    eskapizm: 'Firma planująca podróże po Azji, którą współprowadzę. Strona, płatności, faktury, aplikacja klienta i narzędzia do obsługi. Całość działa jako jeden system.',
     eskapizmAlt: 'eskapizm.com. Przewiń działającą stronę.',
     /* Przebieg zamiast zrzutu (decyzja slawek-strona + cmo-oferta, 17.11.2026): automatyzacji
        nie widać, więc pokazujemy jedną sprawę od wejścia do wyjścia, jak status przesyłki.
@@ -40,8 +40,9 @@ export const homePl = {
     flowLabel: '( Jedno zamówienie, zero kliknięć )',
     flow: [
       ['Wchodzi', 'Klient płaci online za plan podróży.'],
-      ['System robi', 'Bramka płatności potwierdza wpłatę, system wystawia fakturę w KSeF.'],
-      ['Wychodzi', 'Klient dostaje fakturę mailem. Nikt w firmie tego nie dotyka.'],
+      ['System robi', 'Zakłada konto, wystawia fakturę i wysyła ją do KSeF. Co 15 minut sprawdza, czy KSeF nadał numer.'],
+      /* Bez CRM (decyzja Fincha 17.11.2026): krok jest w kodzie, ale nie przeszedł jeszcze na prawdziwym zamówieniu. */
+      ['Wychodzi', 'Klient dostaje fakturę PDF mailem. Nikt w firmie tego nie dotyka.'],
     ],
     liveNote: 'psst, działa.\nprzewiń',
     aigor: 'Strona kolekcji sztuki. Prace, artyści, historia pozyskania dzieł, newsletter i dwie wersje językowe. Całość ułożona tak, żeby prowadzić przez historię kolekcji.',
@@ -49,35 +50,35 @@ export const homePl = {
     aigorNote: 'to one pager.\ntu klikasz',
     more: 'Więcej realizacji',
     /* Bez nazwy firmy (decyzja Kacpra 17.11.2026). Tylko to, co działa: FAKTY-DO-CV sekcja 9a. */
-    fleetName: 'Agent floty',
-    fleet: 'Firma transportowa, pięć zestawów ciężarowych. Agent prowadzi rejestr floty z dowodów rejestracyjnych, sprawdza w CEPiK terminy przeglądów i OC i wpisuje przypomnienia do kalendarza 14 i 7 dni przed terminem.',
+    fleetName: 'Agent floty, firma transportowa',
+    fleet: 'Rejestr pięciu zestawów ciężarowych. Agent sprawdza terminy przeglądów i OC w CEPiK, państwowej ewidencji pojazdów, a przypomnienia wpisuje do kalendarza 14 i 7 dni przed terminem.',
     /* Tylko funkcje potwierdzone w użyciu (FAKTY-DO-CV sekcja 3). Bez DXF, iPada i kalendarza. */
-    glassstone: 'Strona i panel dla firmy, która sprzedaje i montuje blaty. Zapytanie z formularza zakłada zlecenie w CRM i wysyła maila do biura. Zespół prowadzi w panelu prawdziwe zlecenia i ma zamknięcie miesiąca, o które sam poprosił.',
+    glassstone: 'Firma od blatów kamiennych i szkła. Zapytanie z formularza zakłada zlecenie w CRM i trafia mailem do biura. Zlecenia mają w panelu etapy i kalendarz. Zamknięcie miesiąca dorobiłem cztery dni po prośbie zespołu.',
     cannversity: 'Landing page dla doradztwa w branży konopnej. Złożona oferta ułożona w prostą strukturę, którą da się szybko zrozumieć.',
     decksName: 'Prezentacje projektowe',
     decks: 'Interaktywne prezentacje i modele finansowe, które zderzają pomysł z realnymi ograniczeniami i decyzją biznesową.',
-    disclaimer: 'Te przykłady pokazują, co zbudowałem i co działa. Nie są obietnicą oszczędności ani przychodu.',
+    disclaimer: 'Te realizacje pokazują, co zbudowałem i co działa. Nie są obietnicą oszczędności, przychodu ani konwersji.',
   },
   manifest: {
     line1: 'Nie chodzi o kolejny program.',
     cross: 'kolejny program',
     line2: 'Chodzi o *mniej przepisywania*.',
     line3: 'System robi swoje.',
-    sub: 'Zapytanie trafia tam, gdzie trzeba. Faktura wychodzi po płatności. Przypomnienie przychodzi przed terminem. Ty zatwierdzasz tylko to, co wymaga decyzji.',
+    sub: 'Zapytanie z formularza samo zakłada zlecenie. Faktura wychodzi po płatności. Przypomnienie przychodzi przed terminem. Ty zatwierdzasz tylko to, co wymaga decyzji.',
   },
   how: {
     label: '( Jak pracuję )',
     h1: 'Płacisz za jeden proces.',
     h2: 'Masz go z głowy.',
     oldTitle: 'Typowe wdrożenie',
-    oldList: ['Kupujesz narzędzie.', 'Szkolisz zespół.', 'Ktoś je konfiguruje.', 'Nie łączy się z resztą.', 'Ty spinasz resztę.'],
+    oldList: ['Kupujesz kolejny program.', 'Ktoś go konfiguruje.', 'Szkolisz zespół.', 'Z resztą się nie łączy.', 'Ty spinasz całość.'],
     oldOut: '',
     newTitle: 'U mnie',
-    newList: ['Patrzę, jak pracujecie dziś.', 'Liczę, ile to zajmuje.', 'Buduję na Waszych narzędziach.', 'Sprawdzamy na prawdziwych sprawach.', 'Mierzymy przed i po.'],
+    newList: ['Patrzę, jak pracujecie dziś.', 'Liczę, ile to zajmuje.', 'Buduję na Waszych narzędziach.', 'Testujemy na żywych sprawach.', 'Mierzymy przed i po.'],
     newOut: 'Od pierwszej rozmowy do działającego systemu rozmawiasz z *tą samą osobą*.',
     /* why1-why3 w PL są złożone w w5.astro (podglądy zdjęć na słowach), tu zostaje źródło tekstu. */
-    why1: 'Siemka, tu Kacper. Jestem od biznesu i operacji, nie od programowania. Pracowałem przy prowadzeniu projektów i startupów, sprzedawałem B2B, prowadziłem firmę transportową.',
-    why2: 'Systemy buduję z Claude Code i Codexem. Kod pisze AI pod moim kierunkiem. Ja rozumiem, jak sprawa przechodzi przez firmę, decyduję, co zbudować, i odpowiadam za to, żeby działało.',
+    why1: 'Siemka, tu Kacper. Zanim zacząłem budować systemy, pracowałem przy prowadzeniu projektów i startupów: sprzedawałem B2B, układałem pracę zespołów i odpowiadałem za to, żeby firma działała na co dzień.',
+    why2: 'Systemy buduję z Claude Code i Codexem, narzędziami AI, które piszą kod pod moim kierunkiem. Ja ustalam, jak sprawa przechodzi przez firmę i co trzeba zbudować, i odpowiadam za to, żeby działało.',
     why3: 'eskapizm to spółka, którą współprowadzę. Płatności, faktury i obsługa klienta działają tam na systemach, które zbudowałem.',
   },
   offer: {
@@ -85,7 +86,7 @@ export const homePl = {
     badge: '30 dni poprawek',
     h1: 'Automatyzacja',
     h2: 'procesów z AI',
-    price: 'od *4 500 zł* za pierwszy proces',
+    price: 'od *4 500 zł*',
     say: 'Bierzemy jedną powtarzalną pracę, która dziś zjada godziny Twojemu biuru. Rozpisuję ją, buduję system na narzędziach, których już używacie, i uruchamiam go na prawdziwych sprawach.',
     say2: 'Nie musisz wiedzieć, czy to ma być agent, integracja czy panel. Od tego jest pierwsza rozmowa: pokazujesz, jak pracujecie, a ja mówię, co da się oddać systemowi i ile to kosztuje.',
     assure: 'Cena pierwszego procesu jest znana przed startem. Jeśli z mapy procesu wyjdzie, że automatyzacja się nie opłaci, powiem Ci to.',
@@ -93,11 +94,11 @@ export const homePl = {
     includes: [
       'Mapę procesu z policzonym czasem',
       'System zbudowany na Waszych narzędziach',
-      'Akceptację człowieka tam, gdzie sprawa wychodzi do klienta',
-      'Uruchomienie na prawdziwych sprawach',
+      'Akceptację człowieka przed wysyłką do klienta',
+      'Uruchomienie z pomiarem przed i po',
       'Krótką instrukcję dla zespołu',
-      'Pomiar przed i po',
       '30 dni poprawek po starcie',
+      'Opiekę miesięczną na życzenie, płatną osobno',
     ],
     forWhom: 'Dla firm od 10 do 50 osób, w których biuro przepisuje dane między mailem, arkuszem i fakturami.',
     other: 'Co jeszcze robię',
@@ -107,7 +108,7 @@ export const homePl = {
       { nr: '03', n: 'Strona internetowa', p: 'od 3 500 zł', d: 'Treść, projekt, technologia i publikacja w jednych rękach. Ustalamy, czego potrzebuje Twój biznes, a resztę biorę na siebie.' },
       { nr: '04', n: 'Cofounder as a Service', p: 'Porozmawiajmy o współpracy', d: 'Stała współpraca przy Twoim projekcie: kierunek biznesowy, organizacja pracy i technologia.' },
     ],
-    fine: 'Po uruchomieniu możemy umówić opiekę miesięczną. Wyceniam ją wtedy, bo zależy od skali i tego, ile się w systemie dzieje.',
+    fine: 'Cena dotyczy pierwszego procesu. Opiekę miesięczną wyceniam po uruchomieniu, bo zależy od skali i tego, ile się w systemie dzieje.',
   },
   process: {
     label: '( Proces )',
@@ -115,29 +116,31 @@ export const homePl = {
     h2: 'do działającego systemu.',
     steps: [
       ['Najpierw rozmawiamy', 'Pokazujesz mi jedną pracę, która zabiera za dużo czasu. Zaczynamy od 15 minut.'],
-      ['Mapa procesu', 'Patrzę, jak robicie to dziś, i liczę, ile to zajmuje. Wiesz, co zbuduję, czego nie, ile to kosztuje i jak sprawdzimy wynik.'],
-      ['Rezerwujesz termin', 'Po akceptacji zakresu opłacasz projekt i rezerwuję termin. Mniejsze realizacje są płatne w całości z góry, większe dzielimy na etapy opłacane przed startem każdego z nich.'],
-      ['Budowa', 'Buduję na Waszej poczcie, arkuszach, CRM albo systemie faktur. Tam, gdzie sprawa wychodzi do klienta, decyduje człowiek.'],
-      ['Uruchomienie', 'Sprawdzamy system na prawdziwych sprawach. Zespół dostaje krótką instrukcję, a my porównujemy czas przed i po.'],
+      ['Mapa procesu', 'Patrzę, jak robicie to dziś, i liczę, ile to zajmuje. Wiesz, co zbuduję, ile to kosztuje i jak sprawdzimy wynik.'],
+      ['Rezerwujesz termin', 'Po akceptacji zakresu opłacasz projekt i rezerwuję termin. Mniejsze realizacje płacisz z góry, większe dzielimy na etapy płatne przed startem.'],
+      ['Buduję na Waszych narzędziach', 'Poczta, arkusze, CRM albo system faktur. Tam, gdzie sprawa wychodzi do klienta, decyduje człowiek.'],
+      ['Uruchamiamy i mierzymy', 'Sprawdzamy system na prawdziwych sprawach. Zespół dostaje krótką instrukcję, a my porównujemy czas przed i po.'],
       ['Potem zależy od skali', 'Masz 30 dni poprawek. Dalej opieka miesięczna albo kolejny proces.'],
     ],
   },
   faq: {
     label: '( Pytania przed startem )',
     items: [
-      ['Co z naszymi danymi?', 'Przed budową ustalamy, do jakich danych system ma dostęp i gdzie działa. Pracuję na kontach i narzędziach Twojej firmy, nie na swoich.'],
-      ['Czy zespół musi się uczyć nowego programu?', 'Zwykle nie. Buduję na tym, czego już używacie: poczcie, arkuszach, CRM, systemie faktur. Zespół dostaje krótką instrukcję.'],
-      ['Co, jeśli AI się pomyli?', 'Dlatego przed budową ustalamy, gdzie decyduje człowiek. Wszystko, co wychodzi do klienta, może czekać na akceptację. Przez 30 dni poprawiam to, co nie działa tak, jak ustaliliśmy.'],
-      ['Mamy ChatGPT. Po co nam to?', 'Czat odpowiada, kiedy ktoś go zapyta. Nie wie, że w skrzynce czeka nowe zapytanie, i sam nie wpisze faktury do systemu. Buduję to, co jest wpięte w Twój proces.'],
-      ['Ile kosztuje utrzymanie?', 'To zależy od skali i tego, ile się w systemie dzieje. Opiekę wyceniam po uruchomieniu. Koszty narzędzi i AI znasz przed startem.'],
-      ['Czy gwarantujesz wyniki?', 'Nie obiecuję liczby godzin, zanim nie zmierzę procesu. Odpowiadam za to, co buduję i co ustaliliśmy w zakresie. Pomiar przed i po pokaże, ile realnie zyskaliście.'],
-      ['Czy dalej robisz strony?', 'Tak. Strona internetowa to osobna usługa, od 3 500 zł. Szczegóły są na jej podstronie.'],
+      /* DO POTWIERDZENIA PRZEZ KACPRA: wersja ogólna. Pełna (Anthropic/OpenAI nie trenują na danych z API)
+         wchodzi dopiero, gdy Kacper potwierdzi, że wdrożenia łączą się z modelem bezpośrednio przez ich API.
+         Źródła: privacy.claude.com/en/articles/7996868, developers.openai.com/api/docs/guides/your-data */
+      ['Co z naszymi danymi?', 'Buduję na kontach i narzędziach Twojej firmy, a dostępy zostają u Ciebie. Przed budową ustalamy, jakie dane trafiają do modelu AI i na jakich warunkach dostawcy.'],
+      ['Co, jeśli AI się pomyli?', 'Zdarza się, dlatego przed budową ustalamy, gdzie decyduje człowiek. Wszystko, co wychodzi do klienta, może czekać na akceptację. Przez 30 dni poprawiam to, co nie działa tak, jak ustaliliśmy.'],
+      ['Mamy już swoje programy. Trzeba je zmieniać?', 'Zwykle nie. Buduję na tym, czego już używacie: poczcie, arkuszach, CRM, systemie faktur. Możliwość połączenia sprawdzam, zanim podam cenę.'],
+      ['Mamy ChatGPT. Po co nam to?', 'Czat odpowiada, kiedy ktoś go zapyta. Nie wie, że w skrzynce czeka nowe zapytanie, i sam nie wpisze faktury do systemu. Ja buduję system, który sam odbiera to zapytanie i prowadzi je dalej na Waszych narzędziach.'],
+      ['Ile kosztuje utrzymanie?', 'Opiekę wyceniam po uruchomieniu, bo zależy od skali i tego, ile się w systemie dzieje. Koszty działania narzędzi i AI znasz przed startem.'],
+      ['Ile godzin zaoszczędzimy?', 'Nie obiecuję liczby godzin, zanim nie zmierzę procesu. Odpowiadam za to, co buduję i co ustaliliśmy w zakresie. Pomiar przed i po pokaże, ile realnie zyskaliście.'],
     ],
   },
   footer: {
     label: '( Pogadajmy )',
-    h1: 'Masz proces, który zabiera',
-    h2: 'za dużo *czasu*?',
+    h1: 'Biuro robi coś ręcznie.',
+    h2: 'Sprawdźmy, czy *musi*.',
     sub: 'Pokaż mi jedną pracę, którą Twoje biuro robi ręcznie. Powiem Ci, czy da się ją oddać systemowi i od czego bym zaczął.',
     write: 'albo po prostu napisz',
     contact: 'Kontakt',
