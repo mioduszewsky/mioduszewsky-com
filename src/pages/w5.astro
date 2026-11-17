@@ -8,6 +8,7 @@ import SiteMenu from '../components/SiteMenu.astro';
 import BrandFooter from '../components/BrandFooter.astro';
 import PhoneFrame from '../components/frames/PhoneFrame.astro';
 import { homePl } from '../content/home-pl';
+import { stronaPl } from '../content/strona-internetowa-pl';
 import { services, servicePath } from '../content/services-pl';
 import { servicesEn, serviceEnPath } from '../content/services-en';
 import { routes, type Locale } from '../i18n/site';
@@ -20,14 +21,19 @@ import logoPosterSrc from '../assets/logo3d/logo-poster.webp';
 import logoNavPosterSrc from '../assets/logo3d/logo-nav-poster.webp';
 
 // Tryb prod (index): bez przełącznika wariantów, z indeksowaniem i meta description.
-interface Props { prod?: boolean; title?: string; locale?: Locale; }
-const { prod = false, title: titleProp, locale = 'en' } = Astro.props;
+interface Props { prod?: boolean; title?: string; locale?: Locale; page?: 'home' | 'strona-internetowa'; }
+const { prod = false, title: titleProp, locale = 'en', page = 'home' } = Astro.props;
 const isPl = locale === 'pl';
+/* 17.11.2026 (decyzja Kacpra): dawna główna PL o stronach internetowych żyje w całości na
+   /pl/uslugi/strona-internetowa/ (treść: content/strona-internetowa-pl.ts, 1:1 z produkcji).
+   Główna PL niesie automatyzację (content/home-pl.ts). Bloki tylko jednej z nich: aiHome / strony. */
+const strony = isPl && page === 'strona-internetowa';
+const aiHome = isPl && !strony;
 /* Polskie teksty to zwykle stringi, wiec zakreslacz nie mial jak w nich zaistniec
    (w wersji EN siedzi wprost w JSX). Gwiazdki w tresci znacza fraze do podkreslenia.
    Wstrzykujemy wlasny, statyczny tekst z content/, nie dane z zewnatrz. */
 const mark = (s: string) => s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-const p = isPl ? homePl : undefined;
+const p = isPl ? (strony ? stronaPl : homePl) : undefined;
 /* Nav (22.09.2026, decyzja Kacpra): wspólne kompaktowe SiteMenu na obu szerokościach.
    Trigger pozostaje poza dawnym .nav-actions, który znikał po zjechaniu z hero.
    Wejście konopne jest filtrem, nie piątą usługą, i prowadzi wprost na cannversity.com
@@ -51,7 +57,12 @@ const beyondEn = [
   { nr: '03', n: 'Cofounder as a Service', p: "Let's talk about it", d: 'A business partner on your project, on terms agreed up front: direction, how the work runs and the technology behind it. We set the priorities together and split the delivery.', href: serviceEnPath(servicesEn[2]) },
 ];
 // PL od 17.11.2026: karta flagowa = automatyzacja (services[0]), tu 02-04 w kolejności z services-pl.ts.
-const beyond = isPl
+// Podstrona stron internetowych: karty jak na dawnej głównej (01 automatyzacja, 02 aplikacja, 03 Cofounder).
+const beyond = strony ? [
+  { ...stronaPl.offer.beyond[0], nr: '01', href: servicePath(services[0]) },
+  { ...stronaPl.offer.beyond[1], nr: '02', href: servicePath(services[1]) },
+  { nr: '03', n: 'Cofounder as a Service', p: 'Porozmawiajmy o współpracy', d: 'Stała współpraca przy Twoim projekcie: od kierunku biznesowego i organizacji pracy po technologię. Wspólnie ustalamy priorytety i kolejne działania.', href: '/pl/uslugi/cofounder-as-a-service/' },
+] : isPl
   ? homePl.offer.beyond.map((b, i) => ({ ...b, href: servicePath(services[i + 1]) }))
   : beyondEn;
 /* Manifest: spray przekresla fraze z pierwszej linii. Tekst zostaje jednym stringiem
@@ -262,11 +273,11 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
 
       {/* Przebieg automatyzacji (17.11.2026): ten sam wiersz 01/02/03 co w sekcji Problem.
           Telefon wyżej pokazuje front, przebieg pokazuje to, czego na ekranie nie widać. */}
-      {isPl && (
+      {aiHome && (
         <div class="flow">
-          <p class="label rv">{p!.work.flowLabel}</p>
+          <p class="label rv">{homePl.work.flowLabel}</p>
           <div class="lead-rows">
-            {p!.work.flow.map(([h, d], i) => (
+            {homePl.work.flow.map(([h, d], i) => (
               <div class="lrow rv">
                 <span class="idx">0{i + 1}</span>
                 <h3>{h}</h3>
@@ -297,10 +308,10 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
 
       <div class="more">
         <p class="label rv">{p?.work.more || 'More work'}</p>
-        {isPl && (
+        {aiHome && (
           <div class="mrow mrow-static rv">
-            <span class="mname">{p!.work.fleetName}</span>
-            <span class="mdesc">{p!.work.fleet}</span>
+            <span class="mname">{homePl.work.fleetName}</span>
+            <span class="mdesc">{homePl.work.fleet}</span>
           </div>
         )}
         <a class="mrow rv" href="https://glassstone.pl" target="_blank" rel="noopener" data-thumb={thumbGlassstone.src}>
@@ -363,7 +374,13 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
         </div>
       </div>
       <div class="how-why">
-        {isPl ? (
+        {strony ? (
+          <>
+            <p class="how-why-t rv how-why-full how-me">Siemka, tu <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>. Zanim zacząłem robić strony, pracowałem przy prowadzeniu projektów i startupów. Designu i developmentu nauczyłem się później, bo chciałem sam zamieniać pomysły w działające produkty.</p>
+            <p class="how-why-t rv">Biorę to, co masz w głowie i w biznesie, i przekładam na <span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">działającą stronę</span>. Patrzę na cały ciąg: <em>decyzja, oferta, treść, design, wdrożenie i publikacja</em>.</p>
+            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> to spółka, którą współprowadzę. <span class="dim2"><span class="lp" data-tap data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span> powstało, kiedy wchodziłem głębiej w branżę konopną.</span> Oba nauczyły mnie patrzeć na stronę przez pryzmat tego, co ma zrobić dla firmy.</p>
+          </>
+        ) : isPl ? (
           <>
             {/* Tekst: home-pl.ts how.why1-why3 (cmo-oferta 17.11.2026); tu tylko podglądy zdjęć na słowach. */}
             <p class="how-why-t rv how-why-full how-me">Siemka, tu <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>. Zanim zacząłem budować systemy, pracowałem przy prowadzeniu projektów i startupów: sprzedawałem B2B, układałem pracę zespołów i odpowiadałem za to, żeby firma działała na co dzień.</p>
@@ -391,7 +408,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
         <div class="deal-top">
           <div class="deal-main">
             <span class="deal-badge rv">{p?.offer.badge || '30-day launch warranty'}</span>
-            <h2 class="deal-h">
+            <h2 class:list={['deal-h', { 'deal-h-ai': aiHome }]}>
               <span class="ln"><span class="ln-in deal-h1">{p?.offer.h1 || 'Complete website'}</span></span>
               <span class="ln"><span class="ln-in deal-h2">{p?.offer.h2 || 'build'}<span class="spray-dot deal-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="16" /></svg></span><svg class="deal-strike" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M8 17 C 82 9, 214 22, 292 12" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M8 17 C 82 9, 214 22, 292 12" /><path class="draw" d="M12 23 C 90 15, 206 25, 288 17" /></g></svg></span></span>
             </h2>
@@ -399,7 +416,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
             <p class="deal-say rv">{p?.offer.say || 'A website that makes your offer clear and looks professional enough to put in front of customers, partners or investors. On our first call I tell you whether you need a landing page or a full company site, so you do not have to figure that out yourself.'}</p>
             {/* say2 zdjete 24.08: powtarzalo obietnice z „assure" i robilo z oferty scianke tekstu */}
             <div class="deal-cta-wrap rv">
-              <a class="deal-cta mag" href={`${r.contact}?service=${encodeURIComponent(isPl ? services[0].name : 'Complete website build')}`}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span><i aria-hidden="true">→</i></a>
+              <a class="deal-cta mag" href={`${r.contact}?service=${encodeURIComponent(strony ? 'Strona internetowa' : isPl ? services[0].name : 'Complete website build')}`}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span><i aria-hidden="true">→</i></a>
             </div>
             <p class="deal-assure rv">{p?.offer.assure || 'Scope and price are agreed before I build. If a website is not the right move, I will tell you, and you still leave the call with a clear next step.'}</p>
           </div>
@@ -453,7 +470,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
         <article class="pstep rv">
           <span class="pn">01</span>
           <h3>{p?.process.steps[0][0] || 'We talk about the business'}</h3>
-          <p>{isPl ? <Fragment>Pokazujesz mi jedną pracę, która zabiera za dużo czasu. Zaczynamy od <a class="ilink" href={r.contact}>15 minut</a>.</Fragment> : <Fragment>What exists today, what needs to change, starting with a <a class="ilink" href={r.contact}>15-min call</a>.</Fragment>}</p>
+          <p>{strony ? <Fragment>Pokazujesz mi, co masz dziś, czego potrzebujesz i po co ma powstać nowa strona. Zaczynamy od <a class="ilink" href={r.contact}>15 minut</a>.</Fragment> : isPl ? <Fragment>Pokazujesz mi jedną pracę, która zabiera za dużo czasu. Zaczynamy od <a class="ilink" href={r.contact}>15 minut</a>.</Fragment> : <Fragment>What exists today, what needs to change, starting with a <a class="ilink" href={r.contact}>15-min call</a>.</Fragment>}</p>
         </article>
         <article class="pstep rv">
           <span class="pn">02</span>
@@ -2251,7 +2268,8 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
     .deal-badge { letter-spacing: 0.14em; padding: 0.5em 0.9em; white-space: nowrap; }
     /* „Automatyzacja” (17.11.2026) to najdłuższe słowo karty: na 320 px rozpychało ją o 38 px.
        Od ~330 px w górę rozmiar bez zmian. */
-    .deal-h { line-height: 1.02; font-size: min(2.3rem, 9.6vw); }
+    .deal-h { line-height: 1.02; }
+    .deal-h-ai { font-size: min(2.3rem, 9.6vw); }
     .deal-h2 { font-size: 1em; }
     .deal-dot { display: none; }
     .deal-strike { bottom: -0.22em; }
