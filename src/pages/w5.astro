@@ -2249,7 +2249,9 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
        wiersza, a spray-podkreslenie kotwiczone do dolu tej linii ladowalo przez to
        kilkadziesiat pikseli pod tekstem. Na waskim ekranie roznicuje sama waga. */
     .deal-badge { letter-spacing: 0.14em; padding: 0.5em 0.9em; white-space: nowrap; }
-    .deal-h { line-height: 1.02; }
+    /* „Automatyzacja” (17.11.2026) to najdłuższe słowo karty: na 320 px rozpychało ją o 38 px.
+       Od ~330 px w górę rozmiar bez zmian. */
+    .deal-h { line-height: 1.02; font-size: min(2.3rem, 9.6vw); }
     .deal-h2 { font-size: 1em; }
     .deal-dot { display: none; }
     .deal-strike { bottom: -0.22em; }
