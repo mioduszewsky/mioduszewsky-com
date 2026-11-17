@@ -22,7 +22,9 @@ const others = (isPl ? services : servicesEn)
   .filter((s) => !s.consultation && s.slug !== current)
   .map((s) => ({ name: s.name, href: isPl ? servicePath(s) : serviceEnPath(s) }));
 
-const items = [{ name: t.flag, href: r.services }, ...others, { name: t.all, href: r.services }];
+// 17.11.2026: w PL flagowa usługa (automatyzacja) jest pierwsza na liście usług, a strona
+// internetowa ma własną podstronę, więc osobna pozycja flagowa zostaje tylko w EN.
+const items = [...(isPl ? [] : [{ name: t.flag, href: r.services }]), ...others, { name: t.all, href: r.services }];
 ---
 <nav class="xlinks" aria-label={t.label}>
   <p class="xlinks-label">( {t.label} )</p>

@@ -24,8 +24,10 @@ const alternatePath = isPl ? '/services/' : '/pl/uslugi/';
 // komunikatu. Flagowosci broni strona glowna, ta lista ma byc mapa, nie kolejnym pitchem.
 // Strona internetowa zostaje pierwsza, bo jest najczestszym punktem wejscia - ale ta sama
 // waga wizualna co pozostale trzy.
+// 17.11.2026: w PL strona internetowa ma własną podstronę (usługa 03), a na czele jest
+// automatyzacja. Pozycja „strona z głównej” zostaje tylko w EN, gdzie główna nadal sprzedaje www.
 const items = [
-  { name: t.webName, lead: t.webLead, price: t.webPrice, href: `${r.home}#oferta` },
+  ...(isPl ? [] : [{ name: t.webName, lead: t.webLead, price: t.webPrice, href: `${r.home}#oferta` }]),
   ...(isPl ? services : servicesEn)
     .filter((s) => !s.consultation)
     .map((s) => ({

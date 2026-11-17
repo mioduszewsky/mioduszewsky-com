@@ -11,8 +11,8 @@ export const services: Service[] = [
   {
     "slug": "wdrozenie-ai",
     "altSlug": "ai-implementation",
-    "name": "Wdrożenie AI",
-    "label": "Wdrożenie AI i automatyzacje",
+    "name": "Automatyzacja procesów z AI",
+    "label": "Automatyzacja procesów z AI",
     "title": "Zautomatyzuj powtarzalną pracę w swojej firmie.",
     "accent": "powtarzalną pracę",
     "lead": "Przepisujesz dane między narzędziami, przygotowujesz podobne odpowiedzi albo ręcznie składasz raporty? Ustalimy, które czynności może przejąć system. Zbuduję potrzebne automatyzacje i narzędzia AI, żeby Twój zespół miał mniej ręcznej pracy przy obsłudze tych spraw.",
@@ -28,22 +28,31 @@ export const services: Service[] = [
         ]
       },
       {
-        "title": "Zaczynamy od jednej czynności",
+        /* ROBOCZE (slawek-strona 17.11.2026): cztery nazwane kroki z REKOMENDACJA.md.
+           Ostateczne brzmienie podmienia cmo-oferta z TEKSTY.md. */
+        "title": "1. Mapa procesu",
         "paragraphs": [
-          "Pokażesz mi, jak wykonujecie ją dzisiaj. Sprawdzę dostępne narzędzia i połączenia, a potem ustalimy zakres, koszt wdrożenia i koszty jego działania. Przed rozpoczęciem pracy wiesz, co ma powstać i jak sprawdzimy wynik."
+          "Zaczynamy od jednej czynności. Pokażesz mi, jak wykonujecie ją dzisiaj. Sprawdzę dostępne narzędzia i połączenia, a potem ustalimy zakres, koszt wdrożenia i koszty jego działania. Przed rozpoczęciem pracy wiesz, co ma powstać i jak sprawdzimy wynik."
         ]
       },
       {
-        "title": "Ustalamy też, gdzie potrzebna jest Twoja decyzja",
+        "title": "2. Budowa na Twoich narzędziach",
         "paragraphs": [
+          "Możemy pracować nad samym procesem. Możliwość połączenia z obecnymi narzędziami sprawdzam przy ustalaniu zakresu.",
           "Wysyłka odpowiedzi, zmiana danych czy zatwierdzenie dokumentu mogą wymagać sprawdzenia przez człowieka. Określamy to przed budową, razem z zasadami dostępu do informacji i obsługi błędów."
         ]
       },
       {
-        "title": "Masz już stronę i swoje narzędzia?",
+        "title": "3. Uruchomienie z pomiarem przed i po",
         "paragraphs": [
-          "Możemy pracować nad samym procesem. Możliwość połączenia z obecnymi narzędziami sprawdzam przy ustalaniu zakresu.",
-          "Wdrożenie AI od 4 500 zł. Finalna wycena zależy od uzgodnionej pracy."
+          "Przed startem zapisujemy, ile czasu ta praca zajmuje dzisiaj. Po uruchomieniu mierzymy to samo, więc różnicę widzisz w liczbach."
+        ]
+      },
+      {
+        "title": "4. 30 dni poprawek, potem opieka",
+        "paragraphs": [
+          "Przez 30 dni po uruchomieniu poprawiam to, co nie działa tak, jak ustaliliśmy. Potem możesz zostać przy opiece miesięcznej. Jej zakres i cenę ustalamy w ofercie.",
+          "Automatyzacja procesów z AI od 4 500 zł za pierwszy proces. Finalna wycena zależy od uzgodnionej pracy."
         ]
       }
     ]
@@ -86,6 +95,49 @@ export const services: Service[] = [
         "title": "Ile kosztuje aplikacja?",
         "paragraphs": [
           "Od 11 000 zł. Cena zależy od funkcji, integracji i uzgodnionego zakresu. Opisz pomysł, a ustalimy, czego potrzebuje pierwsza wersja i czy mieści się w Twoim budżecie."
+        ]
+      }
+    ]
+  },
+  {
+    /* Usługa 03 od 17.11.2026 (ciężar strony głównej przeszedł na automatyzację).
+       Treść przeniesiona ze strony głównej (home-pl.ts: hero, offer, process, faq),
+       bez nowych obietnic. Brak altSlug: wersja EN strony głównej nadal jest ofertą www. */
+    "slug": "strona-internetowa",
+    "name": "Strona internetowa",
+    "label": "Kompletna strona internetowa",
+    "title": "Dobra strona mówi za Ciebie.",
+    "accent": "mówi",
+    "lead": "Nie przychodzisz do mnie po sam design albo samo wdrożenie. Ustalamy, czego potrzebuje Twój biznes, a potem biorę na siebie treść, projekt, technologię i publikację.",
+    "cta": "Porozmawiajmy o Twojej stronie",
+    "price": "od 3 500 zł",
+    "consultation": false,
+    "description": "Kompletna strona internetowa od 3 500 zł. Treść, projekt, technologia i publikacja po jednej stronie, 30 dni poprawek po starcie.",
+    "sections": [
+      {
+        "title": "Co dostajesz",
+        "paragraphs": [
+          "Treść i strukturę strony, projekt przygotowany pod Twój biznes, wersję mobilną, formularze i potrzebne integracje, podpięcie domeny i SSL oraz podstawowy pomiar od dnia publikacji.",
+          "Nie musisz wiedzieć, ile ma być podstron ani na czym to ma być zbudowane. Od tego jest pierwsza rozmowa: mówisz, co robi Twoja firma, a ja mówię, co trzeba zbudować i ile to kosztuje."
+        ]
+      },
+      {
+        "title": "Czy AI może zbudować stronę za mnie?",
+        "paragraphs": [
+          "Może wygenerować tekst, layout i kod. Sam też korzystam z AI. Trudniejsza część to decyzje: co zostawić, co wyrzucić i czy całość faktycznie pasuje do biznesu."
+        ]
+      },
+      {
+        "title": "Czy muszę mieć gotowe teksty?",
+        "paragraphs": [
+          "Nie. Mogę je stworzyć w ramach projektu, ale potrzebuję od Ciebie prawdziwych informacji o ofercie, klientach i biznesie. Nie wymyślam wyników ani opinii."
+        ]
+      },
+      {
+        "title": "30 dni poprawek po starcie",
+        "paragraphs": [
+          "Przez 30 dni po publikacji bez dodatkowej opłaty naprawiam rzeczy z uzgodnionego zakresu, które nie działają tak, jak ustaliliśmy. Nowe elementy i zmiany wyceniam osobno.",
+          "Kompletna strona internetowa od 3 500 zł. Zakres i cena są znane przed startem. Jeśli po rozmowie uznam, że strona nie jest teraz właściwym ruchem, też Ci to powiem."
         ]
       }
     ]

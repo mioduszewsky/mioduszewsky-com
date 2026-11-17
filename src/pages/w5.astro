@@ -50,11 +50,10 @@ const beyondEn = [
   { nr: '02', n: 'Application or system', p: 'from $3,000', d: 'A first working version of a product, application, dashboard or business system. Something that works for the business from day one.', href: serviceEnPath(servicesEn[1]) },
   { nr: '03', n: 'Cofounder as a Service', p: "Let's talk about it", d: 'A business partner on your project, on terms agreed up front: direction, how the work runs and the technology behind it. We set the priorities together and split the delivery.', href: serviceEnPath(servicesEn[2]) },
 ];
-const beyond = isPl ? [
-  { ...homePl.offer.beyond[0], nr: '01', href: servicePath(services[0]) },
-  { ...homePl.offer.beyond[1], nr: '02', href: servicePath(services[1]) },
-  { nr: '03', n: 'Cofounder as a Service', p: 'Porozmawiajmy o współpracy', d: 'Stała współpraca przy Twoim projekcie: od kierunku biznesowego i organizacji pracy po technologię. Wspólnie ustalamy priorytety i kolejne działania.', href: '/pl/uslugi/cofounder-as-a-service/' },
-] : beyondEn;
+// PL od 17.11.2026: karta flagowa = automatyzacja (services[0]), tu 02-04 w kolejności z services-pl.ts.
+const beyond = isPl
+  ? homePl.offer.beyond.map((b, i) => ({ ...b, href: servicePath(services[i + 1]) }))
+  : beyondEn;
 /* Manifest: spray przekresla fraze z pierwszej linii. Tekst zostaje jednym stringiem
    w tresci, a tutaj dzielimy go na trzy czesci - inaczej kazdy jezyk musialby trzymac
    zdanie w kawalkach i latwo bylo je rozjechac przy redakcji. */
@@ -261,6 +260,23 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
         </div>
       </article>
 
+      {/* Przebieg automatyzacji (17.11.2026): ten sam wiersz 01/02/03 co w sekcji Problem.
+          Telefon wyżej pokazuje front, przebieg pokazuje to, czego na ekranie nie widać. */}
+      {isPl && (
+        <div class="flow">
+          <p class="label rv">{p!.work.flowLabel}</p>
+          <div class="lead-rows">
+            {p!.work.flow.map(([h, d], i) => (
+              <div class="lrow rv">
+                <span class="idx">0{i + 1}</span>
+                <h3>{h}</h3>
+                <p>{d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <article class="proj flip">
         <div class="proj-t">
           <span class="ln"><span class="ln-in idx">№ 02</span></span>
@@ -281,6 +297,12 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
 
       <div class="more">
         <p class="label rv">{p?.work.more || 'More work'}</p>
+        {isPl && (
+          <div class="mrow mrow-static rv">
+            <span class="mname">{p!.work.fleetName}</span>
+            <span class="mdesc">{p!.work.fleet}</span>
+          </div>
+        )}
         <a class="mrow rv" href="https://glassstone.pl" target="_blank" rel="noopener" data-thumb={thumbGlassstone.src}>
           <span class="mname">GlassStone</span>
           <span class="mdesc">{p?.work.glassstone || 'Company website with a portfolio gallery, publishing tools and an admin panel. A system the business keeps using after launch.'}</span>
@@ -343,9 +365,10 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       <div class="how-why">
         {isPl ? (
           <>
-            <p class="how-why-t rv how-why-full how-me">Siemka, tu <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>. Zanim zacząłem robić strony, pracowałem przy prowadzeniu projektów i startupów. Designu i developmentu nauczyłem się później, bo chciałem sam zamieniać pomysły w działające produkty.</p>
-            <p class="how-why-t rv">Biorę to, co masz w głowie i w biznesie, i przekładam na <span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">działającą stronę</span>. Patrzę na cały ciąg: <em>decyzja, oferta, treść, design, wdrożenie i publikacja</em>.</p>
-            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> to spółka, którą współprowadzę. <span class="dim2"><span class="lp" data-tap data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span> powstało, kiedy wchodziłem głębiej w branżę konopną.</span> Oba nauczyły mnie patrzeć na stronę przez pryzmat tego, co ma zrobić dla firmy.</p>
+            {/* Tekst: home-pl.ts how.why1-why3 (cmo-oferta 17.11.2026); tu tylko podglądy zdjęć na słowach. */}
+            <p class="how-why-t rv how-why-full how-me">Siemka, tu <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>. Jestem od biznesu i operacji, nie od programowania. Pracowałem przy prowadzeniu projektów i startupów, sprzedawałem B2B, prowadziłem firmę transportową.</p>
+            <p class="how-why-t rv"><span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">Systemy buduję</span> z Claude Code i Codexem. Kod pisze AI pod moim kierunkiem. Ja rozumiem, <em>jak sprawa przechodzi przez firmę</em>, decyduję, co zbudować, i odpowiadam za to, żeby działało.</p>
+            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> to spółka, którą współprowadzę. <span class="dim2">Płatności, faktury i obsługa klienta działają tam na systemach, które zbudowałem.</span></p>
           </>
         ) : (
           <>
@@ -376,7 +399,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
             <p class="deal-say rv">{p?.offer.say || 'A website that makes your offer clear and looks professional enough to put in front of customers, partners or investors. On our first call I tell you whether you need a landing page or a full company site, so you do not have to figure that out yourself.'}</p>
             {/* say2 zdjete 24.08: powtarzalo obietnice z „assure" i robilo z oferty scianke tekstu */}
             <div class="deal-cta-wrap rv">
-              <a class="deal-cta mag" href={`${r.contact}?service=${encodeURIComponent(isPl ? 'Kompletna strona internetowa' : 'Complete website build')}`}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span><i aria-hidden="true">→</i></a>
+              <a class="deal-cta mag" href={`${r.contact}?service=${encodeURIComponent(isPl ? services[0].name : 'Complete website build')}`}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span><i aria-hidden="true">→</i></a>
             </div>
             <p class="deal-assure rv">{p?.offer.assure || 'Scope and price are agreed before I build. If a website is not the right move, I will tell you, and you still leave the call with a clear next step.'}</p>
           </div>
@@ -430,7 +453,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
         <article class="pstep rv">
           <span class="pn">01</span>
           <h3>{p?.process.steps[0][0] || 'We talk about the business'}</h3>
-          <p>{isPl ? <Fragment>Pokazujesz mi, co masz dziś, czego potrzebujesz i po co ma powstać nowa strona. Zaczynamy od <a class="ilink" href={r.contact}>15 minut</a>.</Fragment> : <Fragment>What exists today, what needs to change, starting with a <a class="ilink" href={r.contact}>15-min call</a>.</Fragment>}</p>
+          <p>{isPl ? <Fragment>Pokazujesz mi jedną pracę, która zabiera za dużo czasu. Zaczynamy od <a class="ilink" href={r.contact}>15 minut</a>.</Fragment> : <Fragment>What exists today, what needs to change, starting with a <a class="ilink" href={r.contact}>15-min call</a>.</Fragment>}</p>
         </article>
         <article class="pstep rv">
           <span class="pn">02</span>
@@ -1614,6 +1637,10 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
   .tlink:hover i { translate: 4px -4px; }
   .proj-f { display: flex; justify-content: center; }
 
+  /* PRZEBIEG (17.11.2026): należy do eskapizmu, więc stoi bliżej niego niż następny projekt */
+  .flow { margin: -8vh 0 16vh; }
+  .flow .lead-rows { margin-top: 2.5vh; }
+
   /* MORE WORK - kompaktowa lista pod żywymi makietami */
   .more { margin-top: -4vh; }
   .mrow {
@@ -2248,6 +2275,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
     .spray-note-r { right: 10%; left: auto; }
     .spray-note-r .tag { margin-left: 0; margin-right: 6%; }
     .proj { grid-template-columns: minmax(0, 1fr); gap: 6vh; margin-bottom: 12vh; }
+    .flow { margin: -4vh 0 12vh; }
     .proj.flip .proj-t { order: 0; }
     .more { margin-top: 0; }
     .mrow { grid-template-columns: 1fr 30px; grid-template-rows: auto auto; row-gap: 8px; padding: 20px 2px; }
