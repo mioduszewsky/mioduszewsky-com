@@ -74,7 +74,7 @@ export const homePl = {
     oldOut: '',
     newTitle: 'U mnie',
     newList: ['Patrzę, jak pracujecie dziś.', 'Liczę, ile to zajmuje.', 'Buduję na Waszych narzędziach.', 'Sprawdzamy na prawdziwych sprawach.', 'Mierzymy przed i po.'],
-    newOut: 'Od pierwszej rozmowy do działającego systemu rozmawiasz z *tą samą osobą*. Maksymalnie trzy projekty naraz.',
+    newOut: 'Od pierwszej rozmowy do działającego systemu rozmawiasz z *tą samą osobą*.',
     /* why1-why3 w PL są złożone w w5.astro (podglądy zdjęć na słowach), tu zostaje źródło tekstu. */
     why1: 'Siemka, tu Kacper. Jestem od biznesu i operacji, nie od programowania. Pracowałem przy prowadzeniu projektów i startupów, sprzedawałem B2B, prowadziłem firmę transportową.',
     why2: 'Systemy buduję z Claude Code i Codexem. Kod pisze AI pod moim kierunkiem. Ja rozumiem, jak sprawa przechodzi przez firmę, decyduję, co zbudować, i odpowiadam za to, żeby działało.',
