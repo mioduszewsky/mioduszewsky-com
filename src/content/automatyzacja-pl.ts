@@ -1,6 +1,6 @@
 // Landing /pl/uslugi/wdrozenie-ai/ „Automatyzacja procesów z AI” (19.11.2026, slawek-strona).
 // Koncepcja: zadania/2026-11-17-oferta-ciezar-na-ai/KONCEPCJA-AI-LANDING.md (v2 po recenzji Codexa).
-// Teksty końcowe: TEKSTY-AI-LANDING.md (cmo-oferta, 19.11 08:43). Odstępstwa od pliku CMO, po recenzji
+// Teksty końcowe: TEKSTY-AI-LANDING.md (cmo-oferta, 19.11 08:43, poprawki 10:10 wg ODPOWIEDZI-KACPRA-2026-11-19). Odstępstwa od pliku CMO, po recenzji
 // Codexa (runda 2): offer.steps[1] i faq[1] bez obietnicy, której mapa przeczy (faktura idzie sama);
 // tor człowieka na mapie rozpisany na ścieżkę wyjątkową (map.humanFlow).
 // Limity w liniach na 390 px: hero.line1 i em+line3 do 351 px, offer.h1/h2 do 12 znaków.
@@ -36,7 +36,8 @@ export const autoPl = {
     label: '( Mapa procesu )',
     h1: 'Po płatności',
     h2: 'faktura *wychodzi sama*.',
-    intro: 'Tak wygląda mapa procesu, od której zaczyna się każde wdrożenie. Przykład pochodzi z eskapizmu, spółki, którą współprowadzę.',
+    intro: 'Tak wygląda mapa procesu, od której zaczyna się każde wdrożenie. Przykład z eskapizmu, spółki, którą współprowadzę. Działa tak od pierwszego zamówienia.',
+    /* Bez skreśleń: faktury w eskapizmie nigdy nie były ręczne (Kacper 19.11). */
     sheet: 'Faktura po płatności · eskapizm',
     laneSystem: 'System',
     laneHuman: 'Człowiek',
@@ -69,7 +70,7 @@ export const autoPl = {
     h2: 'na start',
     price: 'od *4 500 zł*',
     say: 'Mapa procesu z policzonym czasem, system na Waszych narzędziach, uruchomienie na prawdziwych sprawach, krótka instrukcja dla zespołu i 30 dni poprawek.',
-    assure: 'Dokładną cenę i koszty działania narzędzi znasz po mapie procesu, przed budową. Jeśli automatyzacja się nie opłaci, powiem Ci to.',
+    assure: 'Dokładną cenę, czas i koszty działania narzędzi znasz po mapie procesu, przed budową. Jeśli automatyzacja się nie opłaci, powiem Ci to.',
     stepsLabel: 'Jak to przebiega',
     steps: [
       ['Mapa procesu', 'Pokazujesz, jak robicie to dziś. Liczę czas i sprawdzam, czego używacie i co da się połączyć.'],
@@ -91,16 +92,16 @@ export const autoPl = {
     rules: [
       ['Człowiek przed klientem', 'Wszystko, co wychodzi do klienta, może czekać na akceptację. Ustalamy to przed budową.'],
       ['Ktoś wie o błędzie', 'Przed budową ustalamy, kto dostaje alert, gdy coś nie przejdzie.'],
-      /* DO POTWIERDZENIA PRZEZ KACPRA: wersja ogólna (zdanie o trenowaniu modeli czeka). */
-      ['Dane i dostępy u Ciebie', 'Buduję na kontach Twojej firmy. Przed budową ustalamy, jakie dane trafiają do modelu AI.'],
+      /* Kacper 19.11: model i dostęp dobierane pod firmę, automatyzacja działa bez człowieka; bez zdania o trenowaniu modeli. */
+      ['Dane i dostępy u Ciebie', 'Model AI dobieram pod firmę. Buduję na Waszych kontach, więc system działa dalej beze mnie.'],
     ],
   },
   faq: {
     label: '( Pytania przed startem )',
     items: [
       ['Nasza firma działa po swojemu. Da się to zautomatyzować?', 'Dlatego zaczynam od mapy procesu, a nie od gotowego narzędzia. Liczę czas i sprawdzam, czego używacie. Jeśli z mapy wyjdzie, że automatyzacja się nie opłaci, powiem Ci to, zanim cokolwiek zbudujemy.'],
+      ['Co z naszymi danymi? Jakiego AI użyjesz?', 'Model i sposób dostępu dobieram pod Waszą firmę: zwykła subskrypcja, API dostawcy, OpenRouter (jedno konto i jedna płatność za wiele modeli) albo AWS. Buduję na kontach Twojej firmy, dostępy zostają u Ciebie. Przed budową ustalamy, jakie dane trafiają do modelu.'],
       ['Mamy ChatGPT. Po co nam to?', 'Czat odpowiada, kiedy ktoś go zapyta. Bez połączenia z Waszymi programami nie wie, że w skrzynce czeka nowe zapytanie, i nie wpisze faktury do systemu. Buduję system, który sam odbiera to zapytanie i prowadzi je dalej na Waszych narzędziach.'],
-      ['Mamy już swoje programy. Trzeba je zmieniać?', 'Zwykle nie. Buduję na tym, czego już używacie: poczcie, arkuszach, CRM, systemie faktur. Możliwość połączenia sprawdzam, zanim podam cenę.'],
       ['Ile kosztuje utrzymanie?', 'Opiekę wyceniam po uruchomieniu, bo zależy od tego, ile się w systemie dzieje. Koszty działania narzędzi i AI znasz przed budową.'],
       ['Ile godzin zaoszczędzimy?', 'Nie obiecuję liczby godzin, zanim nie zmierzę procesu. Pomiar przed i po pokaże, ile realnie zyskaliście.'],
     ],
