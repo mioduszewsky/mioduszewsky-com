@@ -2638,7 +2638,10 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
   .hp-foot { min-height: 72vh; }
   .hp-foot .foot-sub { margin-top: 0; max-width: 42ch; font-size: clamp(1.15rem, 1.7vw, 1.55rem); line-height: 1.5; color: var(--ink); }
   @media (min-width: 861px) {
-    .hp-hero { min-height: 100svh; justify-content: center; padding-bottom: 8vh; }
+    /* Runda 2 (Kacper 19.11): pierwszy ekran niższy, na 1470x840 pod przyciskiem widać już etykietę
+       „( Usługi )” i górną krawędź kart, żeby od razu było widać, że usługi są. */
+    .hp-hero { min-height: 0; justify-content: flex-start; padding-top: calc(12vh + 74px); padding-bottom: 0; }
+    .hp-serv { padding-top: 7vh; }
     .hp-hero .hero-top { min-height: 0; }
     .hp-hero .hero-b { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-start; gap: 0; margin-top: 4vh; }
     .hp-hero .hero-b > .hero-sub { margin: 0 0 4vh; }

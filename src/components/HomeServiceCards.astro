@@ -2,7 +2,8 @@
 /** Karty usług na stronie głównej (podgląd 19.11.2026). Te same kremowe karty z przechyłem co na
  *  /pl/uslugi/ (ServicesIndex.astro, ostatnia warstwa stylów i skrypt Motiq Holo Card, MIT), ale bez cen:
  *  cena żyje na podstronie usługi. ServicesIndex celowo nie jest ruszany (produkcja).
- *  Dane: nazwa i adres z services-pl.ts, jedno zdanie z treści strony głównej. */
+ *  Dane: nazwa i adres z services-pl.ts, jedno zdanie z treści strony głównej.
+ *  Bez animacji wejścia (.rv): górna krawędź kart ma być widoczna w pierwszym ekranie od razu (runda 2). */
 import { services, servicePath } from '../content/services-pl';
 interface Props { items: readonly { slug: string; lead: string }[]; button: string }
 const { items, button } = Astro.props;
@@ -14,7 +15,7 @@ const cards = items.map((it, i) => {
 ---
 <ul class="home-cards">
   {cards.map((c) => (
-    <li class="hc-row rv">
+    <li class="hc-row">
       <a class="hc-link" href={c.href}>
         <span class="hc-foil" aria-hidden="true"></span>
         <span class="hc-glare" aria-hidden="true"></span>
