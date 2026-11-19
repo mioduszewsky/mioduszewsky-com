@@ -183,6 +183,8 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
           historycznych wersji). NIE przerabiac trasy bez jego decyzji - kazda proba
           „ulepszenia" konczyla sie odrzuceniem. Zasieg i punkt koncowy steruje kotwica
           w JS, nie ta sciezka. */}
+      {/* Strona główna (19.11): sama czerwona kropka, bez nitki; przy zdaniu w nagłówku nitka wchodziła na tekst. */}
+      {!parasol && (
       <div class="thread t-wide" data-start="560,13" data-end-y="774" data-max-w="900" aria-hidden="true">
         <svg viewBox="0 0 600 820" fill="none">
           {/* Wariant EN ma PLYTSZY wymach w lewo (403 zamiast 348). Powod: angielski
@@ -194,13 +196,14 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
             : "M560 13 C 606 84, 470 126, 380 154 C 290 182, 250 231, 300 287 C 350 340, 470 350, 452 406 C 446 452, 428 468, 421 518 C 413 572, 448 606, 452 658 C 458 714, 414 732, 424 774 L 394 748 L 424 774 L 454 748"} />
         </svg>
       </div>
+      )}
     <!-- HERO -->
-    <section class="hero">
+    <section class:list={['hero', { 'hp-hero': parasol }]}>
       <div class="hero-top">
       <p class="label rv">{p?.hero.label || '( Websites · AI · Apps )'}</p>
-      {parasol && parasolPl.hero.placeholder ? (
-        <h1 class="h1-pl hp-placeholder" aria-label={parasolPl.hero.aria}>
-          <span class="ln"><span class="ln-in"><span class="hero-end">{parasolPl.hero.line1}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" /></svg></span></span></span></span>
+      {parasol ? (
+        <h1 class="h1-pl hp-h1" aria-label={parasolPl.hero.aria}>
+          <span class="ln"><span class="ln-in">{parasolPl.hero.before}<em>{parasolPl.hero.em}</em>{parasolPl.hero.after}<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" /></svg></span></span></span>
         </h1>
       ) : isPl ? (
         <h1 class="h1-pl" aria-label={p!.hero.aria}>
@@ -213,12 +216,6 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
           <span class="ln"><span class="ln-in">you can <em>finally</em></span></span>
           <span class="ln"><span class="ln-in">send people <span class="hero-end">to<span class="spray-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="15" /></svg></span></span></span></span>
         </h1>
-      )}
-      {parasol && parasolPl.hero.versions.length > 1 && (
-        <p class="promise-switch" data-versions={JSON.stringify(parasolPl.hero.versions)}>
-          <span>Podgląd · wersja obietnicy:</span>
-          {parasolPl.hero.versions.map((_, i) => <button type="button" data-v={i} aria-pressed={i === 0 ? 'true' : 'false'}>{String.fromCharCode(65 + i)}</button>)}
-        </p>
       )}
       </div>
       <div class="hero-b">
@@ -233,6 +230,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
     </section>
 
     <!-- LEAD: problem, który biorę na siebie -->
+    {!parasol && (
     <section class="lead">
       <p class="label rv">{p?.problem.label || '( The problem )'}</p>
       <h2 class="sec-h">
@@ -259,6 +257,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       </div>
       {!(p && !p.problem.close) && <p class="lead-close rv">{p?.problem.close ? <Fragment set:html={mark(p.problem.close)} /> : <Fragment>So the problem is rarely another tool. It is knowing what to build, and whether the result is ready to meet customers. <em>That is the part I take off your plate.</em></Fragment>}</p>}
     </section>
+    )}
     </div>
 
     {ai ? (
@@ -385,27 +384,30 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
     </>
     ) : parasol ? (
     <>
-    {/* STRONA GŁÓWNA (podgląd 19.11): usługi jako karty prowadzące na podstrony, potem o mnie. */}
-    <section class="aex hp-serv">
+    {/* STRONA GŁÓWNA (ZLECENIE-HOME-BUDOWA.md): usługi, kto to buduje, działa dziś. Nad sekcjami tylko etykiety. */}
+    <section class="aex hp-serv" id="uslugi">
       <p class="label rv">{parasolPl.services.label}</p>
-      <h2 class="sec-h">
-        <span class="ln"><span class="ln-in">{parasolPl.services.h1}</span></span>
-        <span class="ln"><span class="ln-in"><Fragment set:html={mark(parasolPl.services.h2)} /></span></span>
-      </h2>
       <HomeServiceCards items={parasolPl.services.items} button={parasolPl.services.button} />
     </section>
-    <section class="how awho">
+    <section class="how awho hp-who" id="kto">
       <p class="label rv">{parasolPl.who.label}</p>
-      <h2 class="sec-h">
-        <span class="ln"><span class="ln-in">{parasolPl.who.h1}</span></span>
-        <span class="ln"><span class="ln-in"><Fragment set:html={mark(parasolPl.who.h2)} /></span></span>
-      </h2>
       <div class="awho-me">
         <figure class="awho-photo rv"><img src="/about/me-portrait.jpg" alt={parasolPl.who.photoAlt} width="675" height="900" loading="lazy" decoding="async" /></figure>
         <div class="awho-txt">
-          <p class="how-why-t rv how-me">{parasolPl.who.why1}</p>
-          <p class="how-why-t rv">{parasolPl.who.why2}</p>
+          <p class="how-why-t rv how-me">{parasolPl.who.text}</p>
         </div>
+      </div>
+    </section>
+    <section class="aex hp-facts" id="dziala">
+      <p class="label rv">{parasolPl.facts.label}</p>
+      <div class="lead-rows">
+        {parasolPl.facts.rows.map(([t, d], i) => (
+          <div class="lrow rv">
+            <span class="idx">0{i + 1}</span>
+            <h3>{t}</h3>
+            <p>{d}</p>
+          </div>
+        ))}
       </div>
     </section>
     </>
@@ -697,13 +699,13 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
     )}
 
     <!-- FOOTER -->
-    <footer class="foot">
+    <footer class:list={['foot', { 'hp-foot': parasol }]} id="kontakt">
       <div class="foot-lead">
         <p class="foot-eyebrow rv">{p?.footer.label || "( Let's talk )"}</p>
-        <a class="foot-h" href={r.contact}>
+        {!parasol && <a class="foot-h" href={r.contact}>
           <span class="ln"><span class="ln-in">{p?.footer.h1 || "Let's build the website"}</span></span>
           <span class="ln"><span class="ln-in">{p?.footer.h2 ? <Fragment set:html={mark(p.footer.h2)} /> : <Fragment>your business <em>actually needs</em>.</Fragment>}</span></span>
-        </a>
+        </a>}
         <p class="foot-sub rv">{p?.footer.sub || 'Tell me what you have now, even if it is nothing yet. I will tell you whether the project is a fit and what I would build first.'}</p>
         <div class="foot-b rv">
           <a class="btn mag big" href={r.contact}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span></a>
@@ -2622,12 +2624,26 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
   .amap-note { white-space: normal; }
 
   .awho-rl { margin-top: 7vh; }
-  /* Podgląd strony głównej: przełącznik wersji obietnicy (tylko w podglądzie) */
-  .promise-switch { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 2.4vh; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
-  .promise-switch button { font: inherit; letter-spacing: 0.1em; min-width: 34px; min-height: 34px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent); background: transparent; color: var(--ink); cursor: pointer; }
-  .promise-switch button[aria-pressed='true'] { background: var(--ink); color: var(--ivory); border-color: var(--ink); }
+  /* STRONA GŁÓWNA (19.11.2026, ZLECENIE-HOME-BUDOWA.md). Nagłówek to zwykłe zdanie (91 znaków), więc stopień
+     mniejszy niż hasło landingów, proporcja jak pierwszy ekran Masona. Na laptopie 1470x840 nagłówek, zdanie
+     pod nim i przycisk stoją w pierwszym ekranie: hero-top bez min-height do zagięcia, hero-b w pionie. */
+  .hero h1.hp-h1 { font-size: clamp(2.3rem, 4.1vw, 4.3rem); line-height: 1.08; letter-spacing: -0.022em; max-width: 25ch; }
+  .hp-hero .hero-sub { max-width: 60ch; }
   .hp-serv { padding-bottom: 6vh; }
-  .hp-placeholder { color: var(--dim); font-weight: 460; }
+  .hp-who .awho-me { margin-top: 3vh; }
+  .hp-who .awho-txt .how-why-t { max-width: 52ch; }
+  .hp-facts .lead-rows { margin-top: 3vh; }
+  /* Kontakt bez dużego nagłówka: zdanie niesie sekcję, więc stopień tekstu ciągłego i kolor tuszu */
+  .hp-foot .foot-sub { margin-top: 0; max-width: 42ch; font-size: clamp(1.15rem, 1.7vw, 1.55rem); line-height: 1.5; color: var(--ink); }
+  @media (min-width: 861px) {
+    .hp-hero { min-height: 100svh; justify-content: center; padding-bottom: 8vh; }
+    .hp-hero .hero-top { min-height: 0; }
+    .hp-hero .hero-b { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-start; gap: 0; margin-top: 4vh; }
+    .hp-hero .hero-b > .hero-sub { margin: 0 0 4vh; }
+  }
+  @media (max-width: 860px) {
+    .hero h1.hp-h1 { font-size: clamp(1.9rem, 8.4vw, 2.7rem); line-height: 1.1; }
+  }
   .awho .lead-rows { margin-top: 2.5vh; }
 
   @media (max-width: 860px) {
@@ -2670,27 +2686,3 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
   }
 </style>
 
-<script>
-  /* Podgląd strony głównej (19.11.2026): przełącznik wersji obietnicy. Podmienia tekst nagłówka
-     hero i każe nitce przeliczyć kotwicę (kropka zmienia położenie). */
-  const sw = document.querySelector<HTMLElement>('.promise-switch');
-  if (sw) {
-    const versions: string[][] = JSON.parse(sw.dataset.versions || '[]');
-    const h1 = document.querySelector<HTMLElement>('.hero h1');
-    sw.querySelectorAll<HTMLButtonElement>('button').forEach((b) => b.addEventListener('click', () => {
-      const v = versions[Number(b.dataset.v)];
-      if (!v || !h1) return;
-      const lines = h1.querySelectorAll<HTMLElement>('.ln-in');
-      lines[0].textContent = v[0];
-      const pre = lines[1].querySelector('.hero-pre');
-      const em = lines[1].querySelector('em');
-      const end = lines[1].querySelector('.hero-end');
-      if (pre) pre.textContent = v[1];
-      if (em) em.textContent = v[2];
-      if (end && end.firstChild) end.firstChild.textContent = v[3];
-      h1.setAttribute('aria-label', `${v[0]} ${v[1]}${v[2]} ${v[3]}.`);
-      sw.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-      dispatchEvent(new Event('resize'));
-    }));
-  }
-</script>
