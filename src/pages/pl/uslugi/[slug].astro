@@ -2,8 +2,8 @@
 import ServiceLanding from '../../../components/ServiceLanding.astro';
 import { services } from '../../../content/services-pl';
 // Consultation stays in source until its sales terms are settled; never build its public route.
-// Strona internetowa ma własną trasę (strona-internetowa.astro, dawna główna w całości), więc nie z tego szablonu.
-export const getStaticPaths = () => services.filter((service) => !service.consultation && service.slug !== 'strona-internetowa').map((service) => ({ params: { slug: service.slug }, props: { service } }));
+// Strona internetowa i automatyzacja mają własne trasy (strona-internetowa.astro, wdrozenie-ai.astro), więc nie z tego szablonu.
+export const getStaticPaths = () => services.filter((service) => !service.consultation && service.slug !== 'strona-internetowa' && service.slug !== 'wdrozenie-ai').map((service) => ({ params: { slug: service.slug }, props: { service } }));
 const { service } = Astro.props;
 ---
 <ServiceLanding service={service} />

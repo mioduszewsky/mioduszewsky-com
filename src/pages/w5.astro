@@ -9,6 +9,7 @@ import BrandFooter from '../components/BrandFooter.astro';
 import PhoneFrame from '../components/frames/PhoneFrame.astro';
 import { homePl } from '../content/home-pl';
 import { stronaPl } from '../content/strona-internetowa-pl';
+import { autoPl } from '../content/automatyzacja-pl';
 import { services, servicePath } from '../content/services-pl';
 import { servicesEn, serviceEnPath } from '../content/services-en';
 import { routes, type Locale } from '../i18n/site';
@@ -21,19 +22,22 @@ import logoPosterSrc from '../assets/logo3d/logo-poster.webp';
 import logoNavPosterSrc from '../assets/logo3d/logo-nav-poster.webp';
 
 // Tryb prod (index): bez przełącznika wariantów, z indeksowaniem i meta description.
-interface Props { prod?: boolean; title?: string; locale?: Locale; page?: 'home' | 'strona-internetowa'; }
+interface Props { prod?: boolean; title?: string; locale?: Locale; page?: 'home' | 'strona-internetowa' | 'automatyzacja'; }
 const { prod = false, title: titleProp, locale = 'en', page = 'home' } = Astro.props;
 const isPl = locale === 'pl';
 /* 17.11.2026 (decyzja Kacpra): dawna główna PL o stronach internetowych żyje w całości na
    /pl/uslugi/strona-internetowa/ (treść: content/strona-internetowa-pl.ts, 1:1 z produkcji).
    Główna PL niesie automatyzację (content/home-pl.ts). Bloki tylko jednej z nich: aiHome / strony. */
 const strony = isPl && page === 'strona-internetowa';
-const aiHome = isPl && !strony;
+/* 19.11.2026: landing usługi „Automatyzacja procesów z AI” (/pl/uslugi/wdrozenie-ai/), sekcje od nowa
+   (koncepcja v2 po recenzji Codexa); wspólne z resztą zostają hero, problem, FAQ i stopka. */
+const ai = isPl && page === 'automatyzacja';
+const aiHome = isPl && !strony && !ai;
 /* Polskie teksty to zwykle stringi, wiec zakreslacz nie mial jak w nich zaistniec
    (w wersji EN siedzi wprost w JSX). Gwiazdki w tresci znacza fraze do podkreslenia.
    Wstrzykujemy wlasny, statyczny tekst z content/, nie dane z zewnatrz. */
 const mark = (s: string) => s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-const p = isPl ? (strony ? stronaPl : homePl) : undefined;
+const p = isPl ? (ai ? autoPl : strony ? stronaPl : homePl) : undefined;
 /* Nav (22.09.2026, decyzja Kacpra): wspólne kompaktowe SiteMenu na obu szerokościach.
    Trigger pozostaje poza dawnym .nav-actions, który znikał po zjechaniu z hero.
    Wejście konopne jest filtrem, nie piątą usługą, i prowadzi wprost na cannversity.com
@@ -41,6 +45,7 @@ const p = isPl ? (strony ? stronaPl : homePl) : undefined;
 const cann = cannabisCopy[locale];
 const r = routes[locale];
 const alt = routes[isPl ? 'en' : 'pl'];
+const altPath = ai ? serviceEnPath(servicesEn[0]) : alt.home;
 const title = titleProp || p?.meta.title || 'W5 - ATELIER · mioduszewsky';
 
 // Copy EN wg docs/strategy/LANDING_COPY_DRAFT.md (decyzja Kacpra 16.07.2026:
@@ -68,8 +73,8 @@ const beyond = strony ? [
 /* Manifest: spray przekresla fraze z pierwszej linii. Tekst zostaje jednym stringiem
    w tresci, a tutaj dzielimy go na trzy czesci - inaczej kazdy jezyk musialby trzymac
    zdanie w kawalkach i latwo bylo je rozjechac przy redakcji. */
-const manifLine1 = p?.manifest.line1 || 'The goal is not another step.';
-const manifCross = p?.manifest.cross || 'another step';
+const manifLine1 = p?.manifest?.line1 || 'The goal is not another step.';
+const manifCross = p?.manifest?.cross || 'another step';
 const crossAt = manifLine1.indexOf(manifCross);
 const manifPre = crossAt >= 0 ? manifLine1.slice(0, crossAt) : manifLine1;
 const manifHit = crossAt >= 0 ? manifCross : '';
@@ -87,7 +92,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
   robots={prod ? 'index, follow, max-image-preview:large' : undefined}
   description={prod ? (p?.meta.description || 'Landing pages, company websites, AI implementations and web apps. One person from idea to launch: strategy, copy, design and build.') : undefined}
   locale={locale}
-  alternatePath={alt.home}
+  alternatePath={altPath}
 >
   <Fragment slot="head">
     <link rel="preload" href="/fonts/Nohemi-Variable.woff2" as="font" type="font/woff2" crossorigin />
@@ -147,7 +152,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
           <source src="/logo3d/logo-nav.webm" type="video/webm" />
         </video>
       </a>
-<SiteMenu locale={locale} alternatePath={alt.home} />
+<SiteMenu locale={locale} alternatePath={altPath} />
     </header>
 
     <!-- Sticky CTA (pojawia się po zjechaniu z hero). Wrapper trzyma slide-in/centrowanie
@@ -204,6 +209,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       <div class="hero-b">
         <div class="hero-cta rv">
           <a class="btn mag big" href={r.contact}><span class="btn-in">{p?.nav.sticky || 'Book a 15-min call'}</span></a>
+          {ai && <p class="hero-note">{autoPl.hero.ctaNote}</p>}
         </div>
         <p class="hero-sub rv">
           {p?.hero.sub ? <Fragment set:html={mark(p.hero.sub)} /> : <Fragment>I plan, write, design and build your website, start to finish.</Fragment>}
@@ -240,7 +246,124 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
     </section>
     </div>
 
-    <!-- REALIZACJE -->
+    {ai ? (
+    <>
+    {/* AI LANDING (19.11.2026): mapa procesu = dowód bez danych klientów i próbka kroku 1 usługi.
+        Czerwona linia to droga sprawy przez firmę. Każdy odcinek siedzi w pasie kółek,
+        więc nie wchodzi na tekst (rozjazdy z 17.11). */}
+    <section class="amap">
+      <p class="label rv">{autoPl.map.label}</p>
+      <h2 class="sec-h">
+        <span class="ln"><span class="ln-in">{autoPl.map.h1}</span></span>
+        <span class="ln"><span class="ln-in"><Fragment set:html={mark(autoPl.map.h2)} /></span></span>
+      </h2>
+      <p class="lead-intro rv">{autoPl.map.intro}</p>
+      <figure class="amap-sheet rv">
+        <figcaption class="amap-title">{autoPl.map.sheet}</figcaption>
+        <div class="amap-lane">
+          <span class="amap-lane-l">{autoPl.map.laneSystem}</span>
+          <ol class="amap-st">
+            {autoPl.map.stations.map(([t, d], i) => (
+              <li>
+                <span class="amap-node" aria-hidden="true"></span>
+                {i < autoPl.map.stations.length - 1 && <Fragment><svg class="aseg aseg-h" viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M0 11 C 22 5, 38 15, 54 9 S 84 6, 100 11" /></svg> <svg class="aseg aseg-v" viewBox="0 0 20 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M10 0 C 5 22, 15 38, 9 54 S 6 84, 10 100" /></svg></Fragment>}
+                <span class="amap-n">0{i + 1}</span>
+                <h3>{t}</h3>
+                <p>{d}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <div class="amap-lane amap-hum">
+          <span class="amap-lane-l">{autoPl.map.laneHuman}</span>
+          <p class="amap-hum-t">{autoPl.map.human} <span class="tag amap-note">{autoPl.map.humanNote}</span></p>
+        </div>
+      </figure>
+      <p class="amap-cap">{autoPl.map.caption}</p>
+    </section>
+
+    <section class="aex">
+      <p class="label rv">{autoPl.examples.label}</p>
+      <h2 class="sec-h">
+        <span class="ln"><span class="ln-in">{autoPl.examples.h1}</span></span>
+        <span class="ln"><span class="ln-in"><Fragment set:html={mark(autoPl.examples.h2)} /></span></span>
+      </h2>
+      <div class="aex-rows">
+        {autoPl.examples.rows.map(([n, d, h]) => (
+          <div class="aex-row rv">
+            <h3 class="aex-n">{n}</h3>
+            <p class="aex-d">{d}</p>
+            <p class="aex-h">{h}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="serv" id="oferta">
+      <p class="label rv">{autoPl.offer.label}</p>
+      <div class="deal">
+        <span class="deal-grain" aria-hidden="true"></span>
+        <div class="deal-top">
+          <div class="deal-main">
+            <span class="deal-badge rv">{autoPl.offer.badge}</span>
+            <h2 class="deal-h">
+              <span class="ln"><span class="ln-in deal-h1">{autoPl.offer.h1}</span></span>
+              <span class="ln"><span class="ln-in deal-h2">{autoPl.offer.h2}<span class="spray-dot deal-dot" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="16" /></svg></span><svg class="deal-strike" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><g class="strike-mist" filter="url(#sprayMist)"><path d="M8 17 C 82 9, 214 22, 292 12" /></g><g class="strike-ink" filter="url(#sprayF)"><path class="draw" d="M8 17 C 82 9, 214 22, 292 12" /><path class="draw" d="M12 23 C 90 15, 206 25, 288 17" /></g></svg></span></span>
+            </h2>
+            <p class="deal-price rv"><Fragment set:html={mark(autoPl.offer.price)} /></p>
+            <p class="deal-say rv">{autoPl.offer.say}</p>
+            <div class="deal-cta-wrap rv">
+              <a class="deal-cta mag" href={`${r.contact}?service=${encodeURIComponent(services[0].name)}`}><span class="btn-in">{autoPl.nav.sticky}</span><i aria-hidden="true">→</i></a>
+            </div>
+            <p class="deal-assure rv">{autoPl.offer.assure}</p>
+          </div>
+          <div class="deal-inc rv">
+            <p class="deal-inc-label">{autoPl.offer.stepsLabel}</p>
+            <ol class="asteps">
+              {autoPl.offer.steps.map(([t, d], i) => (
+                <li>
+                  <span class="asteps-n">0{i + 1}</span>
+                  {i < autoPl.offer.steps.length - 1 && <Fragment><svg class="aseg aseg-v" viewBox="0 0 20 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M10 0 C 5 22, 15 38, 9 54 S 6 84, 10 100" /></svg></Fragment>}
+                  <h3>{t}</h3>
+                  <p>{d}</p>
+                </li>
+              ))}
+            </ol>
+            <p class="tag asteps-care">{autoPl.offer.care}</p>
+          </div>
+        </div>
+        <p class="deal-fine rv">{autoPl.offer.fine}</p>
+      </div>
+    </section>
+
+    {/* Kto buduje: zdjęcie i wstawka Kacpra jak na landingu stron (uwaga Kacpra 19.11).
+        Tekst roboczy, końcowy pisze cmo-oferta; tu tylko podglądy zdjęć na słowach. */}
+    <section class="how awho">
+      <p class="label rv">{autoPl.who.label}</p>
+      <h2 class="sec-h">
+        <span class="ln"><span class="ln-in">{autoPl.who.h1}</span></span>
+        <span class="ln"><span class="ln-in"><Fragment set:html={mark(autoPl.who.h2)} /></span></span>
+      </h2>
+      <div class="how-why">
+        <p class="how-why-t rv how-why-full how-me">Siemka, tu <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>. Zanim zacząłem budować systemy, pracowałem przy prowadzeniu projektów i startupów: sprzedawałem B2B i układałem pracę zespołów.</p>
+        <p class="how-why-t rv"><span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">Systemy buduję</span> z Claude Code i Codexem. Ja ustalam, <em>jak sprawa ma przejść przez firmę</em>, i prowadzę to od mapy do uruchomienia.</p>
+        <p class="how-why-t rv">Sam pracuję na swoim asystencie: pilnuje zadań i kalendarza, a maile przygotowuje jako szkice do mojej akceptacji. <span class="dim2">W <span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizmie</span> faktury idą bez udziału człowieka.</span></p>
+      </div>
+      <p class="label rv awho-rl">{autoPl.who.rulesLabel}</p>
+      <div class="lead-rows">
+        {autoPl.who.rules.map(([t, d], i) => (
+          <div class="lrow rv">
+            <span class="idx">0{i + 1}</span>
+            <h3>{t}</h3>
+            <p>{d}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+    </>
+    ) : (
+    <>
+    {/* REALIZACJE */}
     <section class="work">
       {/* Ten sam wzorzec co PROBLEM: szara etykieta w nawiasie, tytuł z treścią,
           zdanie wstępu (decyzja Kacpra 14.09.2026). */}
@@ -326,7 +449,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
           <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
           <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbCannversity.src} alt="" loading="lazy" decoding="async" /><span class="mpeek-cta">{isPl ? 'Otwórz stronę' : 'Open the website'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span></span>
         </a>
-        <!-- Wewnętrzny dokument, nie strona publiczna: bez linku, tylko podgląd na hover -->
+        {/* Wewnętrzny dokument, nie strona publiczna: bez linku, tylko podgląd na hover */}
         <div class="mrow mrow-static rv" data-thumb={thumbWoodspot.src}>
           <span class="mname">{p?.work.decksName || 'Internal project decks'}</span>
           <span class="mdesc">{p?.work.decks || 'Interactive presentations and financial models connecting an idea to real limits and a business decision.'}</span>
@@ -336,7 +459,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       </div>
     </section>
 
-    <!-- MANIFEST: czarny panel rozrasta się do pełnej szerokości na scrollu -->
+    {/* MANIFEST: czarny panel rozrasta się do pełnej szerokości na scrollu */}
     <section class="manif">
       <div class="manif-in">
         <p class="manif-t">
@@ -348,7 +471,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       </div>
     </section>
 
-    <!-- JAK PRACUJĘ (OLD vs NEW + WHY ME z draftu) -->
+    {/* JAK PRACUJĘ (OLD vs NEW + WHY ME z draftu) */}
     <section class="how">
       <p class="label rv">{p?.how.label || '( How I work )'}</p>
       <h2 class="sec-h">
@@ -398,7 +521,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       </div>
     </section>
 
-    <!-- OFERTA: flagowy „Complete website build" (2 poziomy) + dodatki -->
+    {/* OFERTA: flagowy „Complete website build" (2 poziomy) + dodatki */}
     <section class="serv" id="oferta">
       <p class="label rv">{p?.offer.label || '( The offer )'}</p>
 
@@ -459,7 +582,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       {!isPl && <p class="serv-note rv">Long-term advertising, ongoing SEO and guaranteed sales results are not part of the scope.</p>}
     </section>
 
-    <!-- PROCES -->
+    {/* PROCES */}
     <section class="proc">
       <p class="label rv">{p?.process.label || '( Process )'}</p>
       <h2 class="sec-h">
@@ -499,6 +622,9 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
         </article>
       </div>
     </section>
+
+    </>
+    )}
 
     <!-- FAQ (+ „czego nie obiecuję" z draftu) -->
     <section class="faq">
@@ -823,9 +949,20 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       }
       /* Manifest: czarna plama (jak psiknięcie sprayem) rozlewa się na pełny
          ekran w rytmie scrolla - pełny bleed, zero pasków po bokach */
-      gsap.fromTo('.manif-in', { clipPath: 'circle(9% at 50% 52%)' }, {
+      if (document.querySelector('.manif')) gsap.fromTo('.manif-in', { clipPath: 'circle(9% at 50% 52%)' }, {
         clipPath: 'circle(125% at 50% 52%)', ease: 'none',
         scrollTrigger: { trigger: '.manif', start: 'top 78%', end: 'top 12%', scrub: 0.5 },
+      });
+      /* Landing automatyzacji: czerwona linia mapy procesu i kroków oferty rysuje się odcinkami,
+         stacja po stacji, gdy lista wjedzie w kadr. Bez JS linie stoją narysowane. */
+      ([['.amap-st', '.amap-st .aseg path'], ['.asteps', '.asteps .aseg path']] as const).forEach(([trigger, sel]) => {
+        const segs = gsap.utils.toArray<SVGPathElement>(sel);
+        if (!segs.length) return;
+        segs.forEach((path) => { path.style.strokeDasharray = '1'; path.style.strokeDashoffset = '1'; });
+        ScrollTrigger.create({
+          trigger, start: 'top 72%', once: true,
+          onEnter: () => gsap.to(segs, { strokeDashoffset: 0, duration: 0.4, ease: 'power1.inOut', stagger: 0.28 }),
+        });
       });
       /* Spray przekreslajacy fraze w manifescie: ten sam gest co w hero, ale wlasny
          moment. Sciezki celowo NIE maja klasy `.draw` - ta jest zbierana globalnie do
@@ -1209,7 +1346,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       /* Pozycja, nie przecięcie: skok do #oferta, klawisz End albo przywrócenie
          scrolla na dole przeskakują sekcje bez przecięcia kadru. Liczy się tylko,
          czy górna krawędź .manif jest już nad dołem ekranu. */
-      const manif = document.querySelector<HTMLElement>('.manif');
+      const manif = document.querySelector<HTMLElement>('.manif') || document.querySelector<HTMLElement>('.serv');
       if (!manif) reveal();
       else {
         const check = () => {
@@ -2368,6 +2505,74 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
     .nav-arr svg { width: 12px; height: 12px; }
     .mark video { height: 34px; }
     .hero { padding-top: max(calc(3vh + 44px), 106px); }
+  }
+
+  /* ===== LANDING AUTOMATYZACJI (19.11.2026) ===== */
+  .hero-note { max-width: 30ch; font-size: 12.5px; line-height: 1.5; color: var(--dim); }
+  .amap, .aex { padding: 10vh 3vw 4vh; }
+  .amap-sheet {
+    margin: 6vh 0 0; padding: clamp(1.4rem, 3vw, 2.6rem); background: #fffffb;
+    border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent); border-radius: 8px;
+    box-shadow: 0 30px 60px -44px rgba(0, 0, 0, 0.45);
+  }
+  .amap-title { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--dim); padding-bottom: 1.2rem; border-bottom: 1px dashed color-mix(in srgb, var(--ink) 16%, transparent); }
+  .amap-lane { display: grid; grid-template-columns: 96px 1fr; gap: 2vw; padding-top: 2.4rem; }
+  .amap-lane-l { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dim); padding-top: 13px; }
+  .amap-st { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 1.6vw; }
+  .amap-st li { position: relative; padding-right: 0.4rem; }
+  .amap-node { display: block; width: 36px; height: 36px; border-radius: 50%; border: 2.5px solid var(--ink); background: #fffffb; position: relative; z-index: 1; }
+  .amap-n { display: block; margin-top: 1rem; font-size: 11px; letter-spacing: 0.24em; color: var(--dim); }
+  .amap-st h3 { margin: 0.35rem 0 0.4rem; font-family: 'NohemiV', 'NohemiV Fallback', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.05rem, 1.35vw, 1.3rem); letter-spacing: -0.01em; }
+  .amap-st p { margin: 0; font-size: 14px; line-height: 1.55; color: #4c483c; }
+  /* Odcinek linii: od środka kółka do środka następnego, POD kółkami (one mają tło), więc linia
+     wygląda na ciągłą. Bez filtra spray: na rozciągniętej ścieżce dawał szum, charakter daje fala. */
+  .aseg { position: absolute; overflow: visible; pointer-events: none; }
+  .aseg path { fill: none; stroke: var(--spray); stroke-width: 5; stroke-linecap: round; }
+  /* bez vector-effect: non-scaling-stroke psuł rysowanie kreską (pathLength) i linia stawała w 3/4 */
+  .amap-st .aseg-h { left: 18px; top: 8px; width: calc(100% + 1.6vw); height: 20px; }
+  .amap-st .aseg-v { display: none; }
+  .amap-hum { margin-top: 2.2rem; padding-top: 1.6rem; border-top: 1px dashed color-mix(in srgb, var(--ink) 16%, transparent); }
+  .amap-hum-t { margin: 0; padding-top: 10px; font-size: 15px; line-height: 1.6; color: var(--ink); }
+  .amap-note { display: inline-block; margin-left: 0.6rem; rotate: -3deg; font-size: 16px; color: var(--spray); }
+  .amap-cap { margin-top: 1.6rem; font-size: 12.5px; line-height: 1.5; color: var(--dim); }
+
+  .aex-rows { margin-top: 5vh; }
+  .aex-row {
+    display: grid; grid-template-columns: 1fr 1.7fr 1fr; gap: 3vw; align-items: baseline;
+    padding: 26px 6px; border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  }
+  .aex-row:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .aex-n { margin: 0; font-family: 'NohemiV', 'NohemiV Fallback', 'ClashV', sans-serif; font-weight: 540; font-size: clamp(1.2rem, 2vw, 1.7rem); letter-spacing: -0.015em; }
+  .aex-d { margin: 0; font-size: 15px; line-height: 1.6; color: #4c483c; max-width: 60ch; }
+  .aex-h { margin: 0; position: relative; padding-left: 1.4em; font-size: 14px; line-height: 1.55; color: var(--ink); }
+  .aex-h::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 0.8em; height: 3px; border-radius: 2px; background: var(--spray); }
+
+  /* Kroki w ciemnej karcie: numer + pionowy odcinek do następnego numeru */
+  .asteps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.6rem; }
+  .asteps li { position: relative; padding-left: 3.1rem; }
+  .asteps-n { position: absolute; left: 0; top: 0; width: 2.1rem; height: 2.1rem; display: grid; place-items: center; border: 1.5px solid rgba(248, 249, 242, 0.55); border-radius: 50%; font-size: 11px; letter-spacing: 0.08em; color: var(--ivory); background: #0c0b0a; z-index: 1; }
+  .asteps .aseg-v { left: calc(1.05rem - 10px); top: 1.05rem; width: 20px; height: calc(100% + 1.6rem); }
+  .asteps h3 { margin: 0.3rem 0 0.35rem; font-family: 'NohemiV', 'NohemiV Fallback', 'ClashV', sans-serif; font-weight: 540; font-size: 1.12rem; letter-spacing: -0.01em; color: var(--ivory); }
+  .asteps p { margin: 0; font-size: 14px; line-height: 1.5; color: rgba(248, 249, 242, 0.72); }
+  .asteps-care { margin-top: 2rem; font-size: 17px; color: var(--brand); rotate: -2deg; white-space: normal; }
+  .amap-note { white-space: normal; }
+
+  .awho-rl { margin-top: 7vh; }
+  .awho .lead-rows { margin-top: 2.5vh; }
+
+  @media (max-width: 860px) {
+    .amap, .aex { padding: 8vh 5vw 2vh; }
+    .amap-lane { grid-template-columns: 1fr; gap: 0.8rem; padding-top: 1.6rem; }
+    .amap-lane-l { padding-top: 0; }
+    .amap-st { grid-template-columns: 1fr; row-gap: 1.8rem; }
+    .amap-st li { display: grid; grid-template-columns: 36px 1fr; column-gap: 16px; padding-right: 0; }
+    .amap-node { grid-row: 1 / span 3; }
+    .amap-n { grid-column: 2; margin-top: 0; }
+    .amap-st h3 { grid-column: 2; margin-top: 0.2rem; }
+    .amap-st p { grid-column: 2; }
+    .amap-st .aseg-h { display: none; }
+    .amap-st .aseg-v { display: block; left: 8px; top: 18px; width: 20px; height: calc(100% + 1.8rem); }
+    .aex-row { grid-template-columns: 1fr; row-gap: 10px; padding: 22px 2px; }
   }
 </style>
 
