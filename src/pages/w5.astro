@@ -2631,9 +2631,11 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
   .hp-hero .hero-sub { max-width: 60ch; }
   .hp-serv { padding-bottom: 6vh; }
   .hp-who .awho-me { margin-top: 3vh; }
-  .hp-who .awho-txt .how-why-t { max-width: 52ch; }
+  /* Recenzja Codexa 19.11: akapit lżejszy i z większą interlinią, żeby nie był ścianą */
+  .hp-who .awho-txt .how-why-t { max-width: 52ch; font-weight: 420; line-height: 1.45; font-size: clamp(1.1rem, 1.5vw, 1.4rem); }
   .hp-facts .lead-rows { margin-top: 3vh; }
   /* Kontakt bez dużego nagłówka: zdanie niesie sekcję, więc stopień tekstu ciągłego i kolor tuszu */
+  .hp-foot { min-height: 72vh; }
   .hp-foot .foot-sub { margin-top: 0; max-width: 42ch; font-size: clamp(1.15rem, 1.7vw, 1.55rem); line-height: 1.5; color: var(--ink); }
   @media (min-width: 861px) {
     .hp-hero { min-height: 100svh; justify-content: center; padding-bottom: 8vh; }
@@ -2643,6 +2645,8 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
   }
   @media (max-width: 860px) {
     .hero h1.hp-h1 { font-size: clamp(1.9rem, 8.4vw, 2.7rem); line-height: 1.1; }
+    /* Recenzja Codexa: zdanie-nagłówek jest wysokie, więc pauza pod nim mniejsza niż w hero landingów */
+    .hp-hero::after { max-height: 9vh; }
   }
   .awho .lead-rows { margin-top: 2.5vh; }
 
