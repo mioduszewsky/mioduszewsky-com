@@ -1,0 +1,106 @@
+---
+/** Karty usług na stronie głównej (podgląd 19.11.2026). Te same kremowe karty z przechyłem co na
+ *  /pl/uslugi/ (ServicesIndex.astro, ostatnia warstwa stylów i skrypt Motiq Holo Card, MIT), ale bez cen:
+ *  cena żyje na podstronie usługi. ServicesIndex celowo nie jest ruszany (produkcja).
+ *  Dane: nazwa i adres z services-pl.ts, jedno zdanie z treści strony głównej. */
+import { services, servicePath } from '../content/services-pl';
+interface Props { items: readonly { slug: string; lead: string }[]; button: string }
+const { items, button } = Astro.props;
+const cards = items.map((it, i) => {
+  const s = services.find((x) => x.slug === it.slug);
+  if (!s) throw new Error(`HomeServiceCards: brak usługi ${it.slug} w services-pl.ts`);
+  return { nr: String(i + 1).padStart(2, '0'), name: s.name, lead: it.lead, href: servicePath(s) };
+});
+---
+<ul class="home-cards">
+  {cards.map((c) => (
+    <li class="hc-row rv">
+      <a class="hc-link" href={c.href}>
+        <span class="hc-foil" aria-hidden="true"></span>
+        <span class="hc-glare" aria-hidden="true"></span>
+        <span class="hc-body">
+          <span class="hc-nr">{c.nr}</span>
+          <span class="hc-name">{c.name}</span>
+          <span class="hc-lead">{c.lead}</span>
+        </span>
+        <span class="hc-bottom"><span class="hc-button"><span class="btn-in">{button}</span></span></span>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .home-cards { list-style: none; margin: 5vh 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+  .hc-row { min-width: 0; perspective: 1100px; }
+  .hc-link {
+    position: relative; isolation: isolate; overflow: hidden; box-sizing: border-box; height: 100%;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 40px; min-height: 300px;
+    padding: clamp(24px, 3vw, 44px); border-radius: 12px; background: #f8f9f2; color: #000; text-decoration: none;
+    border: 1px solid #00000024; box-shadow: 0 1px 2px #00000004, 0 12px 30px -22px #00000038; touch-action: pan-y;
+    transition: border-color 150ms;
+  }
+  .hc-link:hover { border-color: #000; }
+  .hc-link:focus-visible { outline: 2px solid #0522ff; outline-offset: 4px; }
+  .hc-body, .hc-bottom { position: relative; z-index: 2; }
+  .hc-nr { display: block; font-size: 12px; letter-spacing: 0.24em; color: #777265; margin-bottom: 14px; }
+  .hc-name { display: block; font-family: 'NohemiV', 'NohemiV Fallback', 'ClashV', sans-serif; font-weight: 530; font-size: clamp(26px, 2.5vw, 36px); line-height: 1.15; letter-spacing: -0.01em; max-width: 21ch; text-wrap: balance; }
+  .hc-lead { display: block; margin-top: 14px; max-width: 46ch; font-size: 16px; line-height: 1.6; color: #4c483c; text-wrap: pretty; }
+  .hc-bottom { margin-top: auto; }
+  .hc-button { display: inline-block; border: 1px solid #000; border-radius: 999px; padding: 14px 24px; background: #000; color: #f8f9f2; font-size: 12px; line-height: 1.45; letter-spacing: 0.1em; text-transform: uppercase; transition: color 150ms, background-color 150ms, border-color 150ms; }
+  .hc-link:hover .hc-button, .hc-link:focus-visible .hc-button { background: #0522ff; border-color: #0522ff; }
+  .hc-foil, .hc-glare { position: absolute; pointer-events: none; z-index: 0; }
+  .hc-foil { inset: -50%; background: linear-gradient(115deg, transparent 30%, #ffffff30 48%, transparent 66%); opacity: 0.5; }
+  .hc-glare { width: 440px; height: 440px; left: 0; top: 0; background: radial-gradient(circle, #ffffff40, transparent 65%); opacity: 0; }
+  @media (max-width: 700px) {
+    .home-cards { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .hc-link { min-height: 0; padding: 28px 24px; gap: 32px; }
+    .hc-name { font-size: 27px; }
+  }
+  @media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+    .hc-link { transform: none !important; }
+    .hc-glare { display: none; }
+  }
+  @media (forced-colors: active) { .hc-foil, .hc-glare { display: none; } .hc-link { border: 1px solid CanvasText; } }
+</style>
+
+<script>
+  // Przechył jak na /pl/uslugi/ (Motiq Holo Card, MIT): sprężyna, bez pętli w spoczynku.
+  const motion = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 701px) and (prefers-reduced-motion: no-preference)');
+  document.querySelectorAll<HTMLElement>('.home-cards .hc-row').forEach((row) => {
+    const card = row.querySelector<HTMLElement>('.hc-link')!;
+    const foil = row.querySelector<HTMLElement>('.hc-foil')!;
+    const glare = row.querySelector<HTMLElement>('.hc-glare')!;
+    let rx = 0, ry = 0, vx = 0, vy = 0, tx = 0, ty = 0, frame = 0, last = 0;
+    const stop = () => {
+      cancelAnimationFrame(frame); frame = 0; last = 0;
+      rx = ry = vx = vy = tx = ty = 0;
+      card.style.transform = ''; foil.style.transform = ''; glare.style.opacity = '0';
+    };
+    const tick = (now: number) => {
+      const dt = Math.min((now - (last || now - 16)) / 1000, 0.032); last = now;
+      vx += (120 * (tx - rx) - 10 * vx) * dt;
+      vy += (120 * (ty - ry) - 10 * vy) * dt;
+      rx += vx * dt; ry += vy * dt;
+      card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+      foil.style.transform = `translate3d(${ry * 3}px, ${rx * 3}px, 0) rotate(${ry * 2}deg)`;
+      if (Math.abs(tx - rx) + Math.abs(ty - ry) + Math.abs(vx) + Math.abs(vy) > 0.015) frame = requestAnimationFrame(tick);
+      else { frame = 0; last = 0; }
+    };
+    const start = () => { if (!frame) frame = requestAnimationFrame(tick); };
+    row.addEventListener('pointermove', (event) => {
+      if (!motion.matches || event.pointerType !== 'mouse' || card.matches(':focus-visible')) return;
+      const b = row.getBoundingClientRect();
+      const x = Math.max(0, Math.min(1, (event.clientX - b.left) / b.width));
+      const y = Math.max(0, Math.min(1, (event.clientY - b.top) / b.height));
+      tx = -(y - 0.5) * 8; ty = (x - 0.5) * 10;
+      glare.style.transform = `translate3d(${x * b.width - 220}px, ${y * b.height - 220}px, 0)`;
+      glare.style.opacity = '1'; start();
+    });
+    const release = () => { tx = ty = 0; glare.style.opacity = '0'; if (motion.matches) start(); else stop(); };
+    row.addEventListener('pointerleave', release);
+    row.addEventListener('pointercancel', release);
+    card.addEventListener('focus', stop);
+    motion.addEventListener('change', stop);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
+  });
+</script>
