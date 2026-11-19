@@ -6,6 +6,7 @@ import '@fontsource-variable/shantell-sans';
 import VariantLayout from '../layouts/VariantLayout.astro';
 import SiteMenu from '../components/SiteMenu.astro';
 import BrandFooter from '../components/BrandFooter.astro';
+import ServiceCrosslinks from '../components/ServiceCrosslinks.astro';
 import PhoneFrame from '../components/frames/PhoneFrame.astro';
 import { homePl } from '../content/home-pl';
 import { stronaPl } from '../content/strona-internetowa-pl';
@@ -228,21 +229,21 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       <div class="lead-rows">
         <div class="lrow rv">
           <span class="idx">01</span>
-          <h3>{p?.problem.rows[0][0] || 'You do not know where to start'}</h3>
+          <h3>{ai && <span class="lrow-k">{autoPl.problem.rows[0][2]}</span>}{p?.problem.rows[0][0] || 'You do not know where to start'}</h3>
           <p>{p?.problem.rows[0][1] || 'A developer, a designer, a copywriter, or all three? So the idea stays an idea.'}</p>
         </div>
         <div class="lrow rv">
           <span class="idx">02</span>
-          <h3>{p?.problem.rows[1][0] || 'The website stayed behind'}</h3>
+          <h3>{ai && <span class="lrow-k">{autoPl.problem.rows[1][2]}</span>}{p?.problem.rows[1][0] || 'The website stayed behind'}</h3>
           <p>{p?.problem.rows[1][1] || 'Your business grew, the website did not.'}</p>
         </div>
         <div class="lrow rv">
           <span class="idx">03</span>
-          <h3>{p?.problem.rows[2][0] || 'You tried AI'}</h3>
+          <h3>{ai && <span class="lrow-k">{autoPl.problem.rows[2][2]}</span>}{p?.problem.rows[2][0] || 'You tried AI'}</h3>
           <p>{p?.problem.rows[2][1] || 'It gave you a page fast, but the offer stayed unclear.'}</p>
         </div>
       </div>
-      <p class="lead-close rv">{p?.problem.close ? <Fragment set:html={mark(p.problem.close)} /> : <Fragment>So the problem is rarely another tool. It is knowing what to build, and whether the result is ready to meet customers. <em>That is the part I take off your plate.</em></Fragment>}</p>
+      {!(ai && !autoPl.problem.close) && <p class="lead-close rv">{p?.problem.close ? <Fragment set:html={mark(p.problem.close)} /> : <Fragment>So the problem is rarely another tool. It is knowing what to build, and whether the result is ready to meet customers. <em>That is the part I take off your plate.</em></Fragment>}</p>}
     </section>
     </div>
 
@@ -276,7 +277,10 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
         </div>
         <div class="amap-lane amap-hum">
           <span class="amap-lane-l">{autoPl.map.laneHuman}</span>
-          <p class="amap-hum-t">{autoPl.map.human} <span class="tag amap-note">{autoPl.map.humanNote}</span></p>
+          <div class="amap-hum-t">
+            <span class="tag amap-note">{autoPl.map.humanNote}</span>
+            <ol class="amap-hum-flow">{autoPl.map.humanFlow.map((x) => <li><span>{x}</span></li>)}</ol>
+          </div>
         </div>
       </figure>
       <p class="amap-cap">{autoPl.map.caption}</p>
@@ -332,7 +336,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
             <p class="tag asteps-care">{autoPl.offer.care}</p>
           </div>
         </div>
-        <p class="deal-fine rv">{autoPl.offer.fine}</p>
+        {autoPl.offer.fine && <p class="deal-fine rv">{autoPl.offer.fine}</p>}
       </div>
     </section>
 
@@ -344,10 +348,14 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
         <span class="ln"><span class="ln-in">{autoPl.who.h1}</span></span>
         <span class="ln"><span class="ln-in"><Fragment set:html={mark(autoPl.who.h2)} /></span></span>
       </h2>
-      <div class="how-why">
-        <p class="how-why-t rv how-why-full how-me">Siemka, tu <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>. Zanim zacząłem budować systemy, pracowałem przy prowadzeniu projektów i startupów: sprzedawałem B2B i układałem pracę zespołów.</p>
-        <p class="how-why-t rv"><span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">Systemy buduję</span> z Claude Code i Codexem. Ja ustalam, <em>jak sprawa ma przejść przez firmę</em>, i prowadzę to od mapy do uruchomienia.</p>
-        <p class="how-why-t rv">Sam pracuję na swoim asystencie: pilnuje zadań i kalendarza, a maile przygotowuje jako szkice do mojej akceptacji. <span class="dim2">W <span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizmie</span> faktury idą bez udziału człowieka.</span></p>
+      {/* Zdjęcie stoi na stałe (uwaga Fincha 19.11): podgląd na słowie „Kacper” na dotyku wyskakiwał
+          dopiero przy przewijaniu, pusty do wczytania obrazu, i zasłaniał nagłówek. Ta sama ramka co karta podglądu. */}
+      <div class="awho-me">
+        <figure class="awho-photo rv"><img src="/about/me-portrait.jpg" alt={autoPl.who.photoAlt} width="675" height="900" loading="lazy" decoding="async" /></figure>
+        <div class="awho-txt">
+          <p class="how-why-t rv how-me">{autoPl.who.why1}</p>
+          <p class="how-why-t rv">{autoPl.who.why2}</p>
+        </div>
       </div>
       <p class="label rv awho-rl">{autoPl.who.rulesLabel}</p>
       <div class="lead-rows">
@@ -660,6 +668,7 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
           <a class="foot-write" href={`${r.contact}#ctForm`}>{p?.footer.write || 'or just write to me'}</a>
         </div>
       </div>
+      {ai && <div class="foot-x"><ServiceCrosslinks locale="pl" current="wdrozenie-ai" /></div>}
       <BrandFooter locale={locale} as="div" />
     </footer>
   </main>
@@ -2532,8 +2541,21 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
   .amap-st .aseg-h { left: 18px; top: 8px; width: calc(100% + 1.6vw); height: 20px; }
   .amap-st .aseg-v { display: none; }
   .amap-hum { margin-top: 2.2rem; padding-top: 1.6rem; border-top: 1px dashed color-mix(in srgb, var(--ink) 16%, transparent); }
-  .amap-hum-t { margin: 0; padding-top: 10px; font-size: 15px; line-height: 1.6; color: var(--ink); }
-  .amap-note { display: inline-block; margin-left: 0.6rem; rotate: -3deg; font-size: 16px; color: var(--spray); }
+  .amap-hum-t { padding-top: 6px; }
+  .amap-note { display: inline-block; rotate: -3deg; font-size: 16px; color: var(--spray); margin-bottom: 0.9rem; }
+  /* Ścieżka wyjątkowa: przerywana ramka = to się dzieje tylko przy błędzie */
+  .amap-hum-flow { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 0.4rem; }
+  .amap-hum-flow li { display: flex; align-items: center; }
+  .amap-hum-flow li span { padding: 0.5rem 0.9rem; border: 1.5px dashed color-mix(in srgb, var(--spray) 70%, transparent); border-radius: 999px; font-size: 14.5px; line-height: 1.35; color: var(--ink); }
+  .amap-hum-flow li + li::before { content: "→"; margin-right: 0.5rem; color: var(--spray); font-size: 18px; }
+  .lrow-k { display: block; margin-bottom: 0.35rem; font-family: inherit; font-size: 11px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dim); }
+  /* Kto to buduje: zdjęcie w ramce karty podglądu, obok wstawka */
+  .awho-me { margin-top: 6vh; display: grid; grid-template-columns: minmax(180px, 260px) 1fr; gap: 4vw; align-items: center; border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); padding-top: 5vh; }
+  .awho-photo { margin: 0; padding: 6px; background: var(--ivory); border-radius: 10px; rotate: -3deg; box-shadow: 0 22px 46px -16px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.16); }
+  .awho-photo img { display: block; width: 100%; height: auto; border-radius: 6px; }
+  .awho-txt { display: grid; gap: 1.6rem; }
+  .awho-txt .how-why-t { max-width: 46ch; }
+  .foot-x { margin-top: 8vh; }
   .amap-cap { margin-top: 1.6rem; font-size: 12.5px; line-height: 1.5; color: var(--dim); }
 
   .aex-rows { margin-top: 5vh; }
@@ -2573,6 +2595,12 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
     .amap-st .aseg-h { display: none; }
     .amap-st .aseg-v { display: block; left: 8px; top: 18px; width: 20px; height: calc(100% + 1.8rem); }
     .aex-row { grid-template-columns: 1fr; row-gap: 10px; padding: 22px 2px; }
+    .asteps li { padding-left: 2.7rem; }
+    .amap-hum-flow { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+    .amap-hum-flow li { flex-direction: column; align-items: flex-start; }
+    .amap-hum-flow li + li::before { content: "↓"; margin: 0 0 0.25rem 1.1rem; }
+    .awho-me { grid-template-columns: 1fr; gap: 2.4rem; }
+    .awho-photo { width: min(200px, 56vw); }
   }
 </style>
 
