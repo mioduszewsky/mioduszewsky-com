@@ -60,7 +60,7 @@ export const autoPl = {
     h2: '*inny* proces.',
     rows: [
       ['Transport', 'Agent prowadzi rejestr pięciu zestawów ciężarowych, sprawdza przeglądy i OC w CEPiK i przypomina 14 i 7 dni przed terminem. Koszty bierze z programu księgowego.', 'Człowiek: przypomnienie trafia do kalendarza, a przegląd umawia właściciel.'],
-      ['Sprzedaż i montaż blatów', 'Zapytanie z formularza na stronie samo zakłada zlecenie w panelu i przychodzi mailem do firmy. Zamknięcie miesiąca dorobiłem cztery dni po prośbie zespołu.', 'Człowiek: zespół prowadzi zlecenie dalej w panelu.'],
+      ['Sprzedaż i montaż blatów', 'Zapytanie z formularza na stronie samo zakłada zlecenie w panelu i przychodzi mailem do firmy. Zamknięcie miesiąca dorobiłem na prośbę zespołu.', 'Człowiek: zespół prowadzi zlecenie dalej w panelu.'],
     ],
   },
   offer: {
