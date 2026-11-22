@@ -1,0 +1,377 @@
+---
+// Case study GlassStone, wersja 2026-11 (zlecenie Fincha 22.11.2026). Zastępuje case „szkic ze zdjęcia → rysunek” (odrzucony przez Kacpra).
+// Ta sama rodzina co eskapizm, Cannversity i Igor: rama mioduszewsky (lockup, menu, stopka), w środku kolor i krój klienta.
+// GlassStone: biel, czerń i kobalt #1F3BFF z glassstone.pl, krój Geist (OFL, plik z repo klienta), nazwa wersalikami jak „KAMIEŃ I SZKŁO” na ich stronie.
+// Treść: docs/case-studies/glassstone/zadania/2026-11-22-nowy-case/COPY.md (Drive), każde zdanie ze źródłem w FAKTY.md obok.
+// Ujęcia panelu: podgląd deweloperski z main klienta na danych przykładowych (zero zapytań do ich bazy), nazwa zleceniodawcy
+// zamieniona na „Zleceniodawca”, logo i stopka zleceniodawcy na protokole zasłonięte. Skrypty: ~/zrzuty-agentow/2026-11-22-case-glassstone/skrypty.
+// Telefon: każde narzędzie pokazane pełnym ekranem z telefonu, od krawędzi do krawędzi; rysunek (narzędzie na iPada) ujęciami z iPada na całą szerokość.
+import VariantLayout from '../../../layouts/VariantLayout.astro';
+import CaseLockup from '../../../components/realizacje/CaseLockup.astro';
+import BrandFooter from '../../../components/BrandFooter.astro';
+import ExtArrow from '../../../components/realizacje/ExtArrow.astro';
+import { nextCase } from '../../../content/realizacje-kolejnosc';
+
+const live = 'https://glassstone.pl/?utm_source=mioduszewsky&utm_medium=realizacje&utm_campaign=case-glassstone';
+const contact = '/pl/kontakt/?utm_source=realizacje&utm_content=glassstone#ctForm';
+const next = nextCase('glassstone', 'pl');
+const url = 'https://mioduszewsky.com/pl/realizacje/glassstone/';
+const dir = '/case/glassstone';
+const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;');
+
+const wiersze: [string, string][] = [
+  ['Strona', 'Kamień i szkło po równo, dwie wyceny od pierwszego ekranu'],
+  ['Panel', 'Zlecenia, kalendarz i dokumenty z podpisem klienta'],
+  ['W testach', 'Rysunek na iPadzie w formacie AutoCAD-a'],
+];
+
+const kroki = [
+  { f: 'kalendarz', etykieta: 'Kalendarz', tytul: 'Dzień zaczyna się w Kalendarzu',
+    tekst: 'Panel otwiera się na dzisiejszych pomiarach i montażach. Kalendarz jest spięty z Kalendarzem Google, którego ekipa już używa: wpis dodany w Google pojawia się w panelu zwykle po kilku sekundach, a termin zmieniony w karcie wraca do Google.',
+    podpis: 'Kalendarz, widok Dziś. Dane przykładowe.',
+    alt: 'Kalendarz w panelu GlassStone, widok Dziś: wpisy z Kalendarza Google do przypisania, czwartek 29 października z trzema montażami i jednym pomiarem, miesiąc obok. Dane przykładowe.' },
+  { f: 'zlecenia', etykieta: 'Zlecenia', tytul: 'Każde zlecenie na jednej tablicy',
+    tekst: 'Etapy ekipa ustawia sama, każdy z własnym alarmem, gdy zlecenie stoi. Plakietka na kafelku mówi, czy to sprzedaż GlassStone, czy montaż dla zleceniodawcy. Zapytanie ze strony ląduje w „Nowe”.',
+    podpis: 'Zlecenia w etapach: na iPadzie tablica, w telefonie lista. Dane przykładowe.',
+    alt: 'Zlecenia w panelu GlassStone pogrupowane w etapy Nowe, Wycena, Zamówione i W realizacji, w Nowe zapytanie ze strony, przy zleceniach materiał, miejscowość, termin i kwota. Dane przykładowe.' },
+  { f: 'karta', etykieta: 'Dokumenty', tytul: 'Dokumenty podpisane na iPadzie',
+    tekst: 'Wzory zleceniodawcy wyglądają jak na papierze. Dane zlecenia Filip wpisuje raz i trafiają w pola wszystkich dokumentów, a klient podpisuje palcem albo rysikiem. Komplet wysyła z karty przyciskiem „Wyślij komplet”. Kolejny zleceniodawca to jego PDF-y i mapa pól, bez programowania.',
+    podpis: 'Karta zlecenia. Dane przykładowe.',
+    alt: 'Karta zlecenia w panelu GlassStone: klient, etapy, montaż dziś, przyciski Zadzwoń, Nawiguj, Nowy dokument, Nowy rysunek i Notatka, dokumenty z przyciskiem Wyślij komplet. Dane przykładowe.' },
+];
+
+const naCoDzien: [string, string][] = [
+  ['Zgłoś Grubemu', 'Na każdym ekranie panelu jest cichy przycisk. Dotknięcie robi zrzut ekranu, zbiera ostatnie kroki i wysyła mi mail.'],
+  ['Zmiany', 'Każdą zmianę sprawdzam na koncie testowym z zablokowanymi zapisami. Na produkcję idzie po mojej decyzji, z planem wycofania.'],
+  ['Bez zasięgu', 'Ekipa pracuje na iPadzie, często u klienta bez zasięgu. Zmiany zapisują się na urządzeniu i wysyłają same, gdy wróci sieć.'],
+  ['Konta', 'Baza, kalendarz i poczta stoją na kontach GlassStone.'],
+];
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Article', headline: 'GlassStone: strona i panel zleceń na iPadzie', inLanguage: 'pl',
+      about: 'Nowa strona glassstone.pl i panel GlassStone: zlecenia, kalendarz spięty z Kalendarzem Google, dokumenty podpisywane na iPadzie, rysunek w formacie AutoCAD-a w testach',
+      author: { '@type': 'Person', name: 'Kacper Mioduszewski', url: 'https://mioduszewsky.com/pl/' },
+      image: `https://mioduszewsky.com${dir}/strona-1440.webp`, mainEntityOfPage: url },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'mioduszewsky', item: 'https://mioduszewsky.com/pl/' },
+      { '@type': 'ListItem', position: 2, name: 'GlassStone', item: url } ] },
+  ],
+};
+---
+<VariantLayout
+  title="GlassStone: strona i panel zleceń · mioduszewsky"
+  description="Przebudowałem stronę glassstone.pl i panel, w którym ekipa prowadzi zlecenie od zapytania ze strony do podpisu klienta na iPadzie."
+  bg="#ffffff" fg="#0d0d0d" switcher={false} robots="index, follow, max-image-preview:large" locale="pl">
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <div class="case">
+    <a class="skip" href="#main">Przejdź do treści</a>
+    <!-- Case tylko po polsku: bez hreflang do EN, przełącznik języka prowadzi na /work/ (jak w poprzedniej wersji). -->
+    <CaseLockup locale="pl" client="glassstone" alternatePath="/work/" tone="light" fit={{ h: .487, base: 381 / 385 }} />
+
+    <main id="main">
+      <article>
+        <!-- 1. Otwarcie: nazwa wersalikami Geist na całą szerokość (jak „KAMIEŃ I SZKŁO” na glassstone.pl), pod kreską
+             zdanie i trzy wiersze, obok pierwszy ekran nowej strony. -->
+        <header class="open">
+          <div class="wrap">
+            <p class="metka">Kamień i szkło na wymiar, Wrocław</p>
+            <h1 class="name"><span class="name-in" aria-hidden="true">GLASSSTONE</span><span class="sr">GlassStone: strona i iPad, na którym ekipa prowadzi zlecenie od zapytania do podpisu.</span></h1>
+            <div class="rule" aria-hidden="true"></div>
+          </div>
+          <div class="wrap open-body">
+            <div class="open-txt">
+              <p class="zdanie" aria-hidden="true" set:html={P('Strona i iPad, na którym ekipa prowadzi zlecenie od zapytania do podpisu.')} />
+              <dl class="rows">
+                {wiersze.map(([k, v]) => <div><dt>{k}</dt><dd set:html={P(v)} /></div>)}
+              </dl>
+              <a class="live" href={live} target="_blank" rel="noopener">Zobacz glassstone.pl<ExtArrow weight={600} /></a>
+            </div>
+            <figure class="open-shot">
+              <img src={`${dir}/strona-1440.webp`} width="2560" height="1440" fetchpriority="high" decoding="async"
+                alt="Pierwszy ekran glassstone.pl: napis „Kamień i szkło”, zdjęcie łazienki z kamieniem i dwie wyceny, kamienia i szkła." />
+            </figure>
+          </div>
+        </header>
+
+        <!-- 2. Strona: kobalt glassstone.pl, komputer obok telefonu (na telefonie jedno pod drugim, od krawędzi do krawędzi). -->
+        <section class="cobalt site" data-tone="dark" aria-labelledby="s2-h">
+          <div class="wrap head">
+            <p class="kicker">Strona</p>
+            <h2 id="s2-h" set:html={P('Kamień i szkło dostały tyle samo miejsca.')} />
+            <p class="lead" set:html={P('Od pierwszego ekranu są dwie osobne wyceny, kamienia i szkła. Przy kontakcie stoją Filip od kamienia i Marcin od szkła.')} />
+            <p class="lead" set:html={P('Realizacje da się przefiltrować: kamień, szkło, kuchnie, łazienki, lokale.')} />
+            <p class="lead" set:html={P('Zapytanie z formularza zakłada zlecenie w panelu i wysyła mail na biuro@glassstone.pl z przyciskiem do karty klienta.')} />
+          </div>
+          <div class="wrap duo">
+            <figure class="desk">
+              <img src={`${dir}/realizacje-1440.webp`} width="2880" height="1800" loading="lazy" decoding="async"
+                alt="Strona Realizacje na glassstone.pl: filtry Wszystkie, Kamień, Szkło, Kuchnie, Łazienki i Lokale, pod nimi zdjęcia realizacji z miejscowością i liczbą zdjęć." />
+              <figcaption>Realizacje z filtrami, na komputerze.</figcaption>
+            </figure>
+            <figure class="phone">
+              <img src={`${dir}/strona-390.webp`} width="780" height="1688" loading="lazy" decoding="async"
+                alt="glassstone.pl w telefonie: osobno Kamień z telefonem do Filipa i Szkło z telefonem do Marcina, każde z przyciskiem Wycena." />
+              <figcaption>Pierwszy ekran w telefonie.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <!-- 3. Rozmowa: dane z bazy i rozmowa z Filipem, zanim powstał nowy panel. Menu panelu jako cztery pozycje. -->
+        <section class="paper talk" aria-labelledby="s3-h">
+          <div class="wrap talk-in">
+            <div class="talk-h">
+              <p class="kicker kicker-c">Zanim cokolwiek przebudowałem</p>
+              <h2 id="s3-h" set:html={P('Najpierw dane i rozmowa, potem panel.')} />
+            </div>
+            <div class="talk-txt">
+              <p set:html={P('Sprawdziłem w bazie, z czego ekipa korzysta: dziewięć pozycji menu, przy każdej liczba wpisów i data ostatniego.')} />
+              <p set:html={P('Potem rozmowa z Filipem o dniu pracy. Dokumenty od firmy, dla której montują, przychodziły jako PDF bez pól, a Filip wypełniał je ręcznie u klienta.')} />
+              <p set:html={P('W menu zostało to, czego używają w pracy: Zlecenia, Kalendarz i Rysunki. Reszta jest pod „Więcej”.')} />
+              <ul class="menu" aria-label="Menu panelu GlassStone">
+                <li>Zlecenia</li><li>Kalendarz</li><li>Rysunki</li><li class="more">Więcej</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. Narzędzia: trzy bloki, tekst z lewej, pełny ekran iPada z prawej; na telefonie pełny ekran z telefonu. -->
+        <section class="paper tools" aria-label="Narzędzia w panelu">
+          <div class="wrap">
+            <ol class="steps">
+              {kroki.map((k, i) => (
+                <li>
+                  <div class="step-txt">
+                    <p class="num" aria-hidden="true">0{i + 1}</p>
+                    <p class="label">{k.etykieta}</p>
+                    <h3 set:html={P(k.tytul)} />
+                    <p set:html={P(k.tekst)} />
+                  </div>
+                  <div class="step-media">
+                    <figure class="shot" data-tone="light">
+                      <picture>
+                        <source media="(max-width: 700px)" srcset={`${dir}/${k.f}-tel.webp`} width="1170" height="2532" />
+                        <img src={`${dir}/${k.f}-ipad.webp`} width="2360" height="1640" loading="lazy" decoding="async" alt={k.alt} />
+                      </picture>
+                      <figcaption set:html={P(k.podpis)} />
+                    </figure>
+                    {k.f === 'karta' && (
+                      <figure class="shot doc" data-tone="light">
+                        <img src={`${dir}/dokument.webp`} width="1024" height="1447" loading="lazy" decoding="async"
+                          alt="Protokół odbioru montażu otwarty w panelu: wzór zleceniodawcy jak na papierze, pola do wypełnienia podświetlone, miejsca na podpis montera i zamawiającego. Dane przykładowe." />
+                        <figcaption set:html={P('Protokół odbioru w edytorze. Dane przykładowe, logo i stopka zleceniodawcy zasłonięte.')} />
+                      </figure>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <!-- 5. Rysunek: ciemny pas, bo to osobna sprawa i jest w testach. Ujęcia z iPada (na telefonie rysunku się nie zakłada). -->
+        <section class="ink draw" data-tone="dark" aria-labelledby="s5-h">
+          <div class="wrap draw-head">
+            <div>
+              <p class="kicker kicker-c">W testach</p>
+              <h2 id="s5-h" set:html={P('Rysunek na iPadzie, w formacie AutoCAD-a.')} />
+            </div>
+            <div class="draw-txt">
+              <p set:html={P('Filip wybiera kształt blatu i wpisuje wymiary z miary albo rysuje rysikiem na kartce, a „Zrób z tego rysunek” zamienia kartkę w rysunek. Z każdego rysunku wychodzi PDF i DXF, czyli plik, który otwiera AutoCAD. Działa też bez zasięgu.')} />
+              <p set:html={P('Cel jest jeden: żeby chłopaki rysowali sami, bez drogiej licencji AutoCAD-a. Narzędzie jest w testach. Zanim zastąpi AutoCAD-a, Filip sprawdzi je na swoim iPadzie, a zleceniodawca musi przyjąć plik bez poprawek.')} />
+            </div>
+          </div>
+          <div class="wrap draw-shots">
+            <figure>
+              <img src={`${dir}/rysunek-l.webp`} width="2360" height="1640" loading="lazy" decoding="async"
+                alt="Edytor rysunku na iPadzie: blat w kształcie L z wymiarami 1500, 1300, 600, 900, 700 i 600, na dole pole „Płyta P1: długość frontu” z przyciskiem Dalej." />
+              <figcaption>Nowy rysunek: blat L, wymiary wpisywane po kolei.</figcaption>
+            </figure>
+            <figure>
+              <img src={`${dir}/kartka.webp`} width="2360" height="1640" loading="lazy" decoding="async"
+                alt="Kartka na iPadzie: odręczny obrys blatu L z wymiarami 1800 i 2600 i przycisk „Zrób z tego rysunek”." />
+              <figcaption>Kartka: rysik jak na papierze.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <!-- 6. Na co dzień: cztery wiersze, jak tabelka w otwarciu. -->
+        <section class="paper daily" aria-labelledby="s6-h">
+          <div class="wrap daily-in">
+            <h2 id="s6-h" set:html={P('Jak to prowadzimy na co dzień.')} />
+            <dl class="rows rows-big">
+              {naCoDzien.map(([k, v]) => <div><dt>{k}</dt><dd set:html={P(v)} /></div>)}
+            </dl>
+          </div>
+        </section>
+      </article>
+
+      <!-- 7. Wyjście: kobaltowy blok, pod kreską następna realizacja z pętli. -->
+      <section class="end cobalt" data-tone="dark" aria-labelledby="end-h">
+        <div class="wrap end-in">
+          <h2 id="end-h" set:html={P('Ekipa pracuje u klientów, a papiery wypełnia ręcznie?')} />
+          <div class="end-txt">
+            <p set:html={P('Napisz, jak wygląda Wasz dzień od zapytania do montażu. Odpiszę, co z tego da się przenieść na iPada.')} />
+            <div class="end-act">
+              <a class="btn" href={contact}>Napisz do mnie</a>
+              <a class="live" href={live} target="_blank" rel="noopener">Zobacz glassstone.pl<ExtArrow weight={600} /></a>
+            </div>
+          </div>
+        </div>
+        <a class="next" href={next.href}>
+          <span class="wrap next-in"><span class="next-k">Następna realizacja</span><span class="next-n">{next.name}<span aria-hidden="true"> →</span></span></span>
+        </a>
+      </section>
+    </main>
+    <div class="foot"><BrandFooter locale="pl" full /></div>
+  </div>
+</VariantLayout>
+
+<style>
+  .case {
+    /* Kolory glassstone.pl: kobalt #1F3BFF (akcent strony i panelu), czerń, biel, szarość tła panelu. */
+    --cob: #1F3BFF; --ink: #0d0d0d; --white: #fff; --grey: #f2f3f5; --mute: #5b6068;
+    --line: 1.5px;
+    --gutter: clamp(20px, 3.4vw, 56px); --max: 1440px;
+    --footer-pad: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
+    --cols: repeat(12, minmax(0, 1fr)); --cgap: clamp(16px, 2.6vw, 40px);
+    font-family: 'GeistCase', system-ui, sans-serif; background: var(--white); color: var(--ink); overflow-x: clip;
+  }
+  /* Geist z repo GlassStone (licencja OFL w public/fonts/glassstone/Geist-OFL.txt), hostowany lokalnie. */
+  @font-face { font-family: 'GeistCase'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/glassstone/geist-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'GeistCase'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/glassstone/geist-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  .case :is(h1,h2,h3,p,figure,dl,dd,ol,ul) { margin: 0; }
+  .case :is(h1,h2,h3) { text-wrap: balance; }
+  .case p { text-wrap: pretty; }
+  .case :is(a,button):focus-visible { outline: 3px solid var(--cob); outline-offset: 4px; }
+  .case :is(.cobalt, .ink) :is(a,button):focus-visible { outline-color: var(--white); }
+  .case ::selection { background: var(--cob); color: var(--white); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--ink); color: var(--white); transform: translateY(-200%); }
+  .skip:focus { transform: none; }
+  .wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
+  figure img { display: block; width: 100%; height: auto; }
+  figcaption { font-size: 14px; line-height: 1.45; color: var(--mute); padding-top: 10px; }
+
+  /* 1. Otwarcie */
+  .open { padding-top: calc(104px + clamp(8px, 1.6vw, 24px)); padding-bottom: clamp(56px, 7vw, 104px); }
+  .metka { font-size: clamp(11px, .95vw, 14px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  /* „GLASSSTONE” w Geist 800 z ciasnym rozstawem: 6,36 em szerokości (zmierzone w przeglądarce), więc nazwa wypełnia kolumnę. */
+  .name { margin-top: clamp(4px, .6vw, 10px) !important; font-weight: 800; letter-spacing: -.045em; line-height: .86; white-space: nowrap;
+    font-size: calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 6.4); }
+  .rule { margin-top: clamp(14px, 2vw, 30px); height: clamp(3px, .28vw, 5px); background: var(--ink); }
+  .open-body { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; padding-top: clamp(28px, 4vw, 56px); }
+  .open-txt { grid-column: 1 / span 5; display: grid; gap: clamp(18px, 3vh, 32px); }
+  .open-shot { grid-column: 6 / -1; border: var(--line) solid var(--ink); border-radius: 14px; overflow: hidden; }
+  .zdanie { font-weight: 700; font-size: clamp(28px, 2.9vw, 46px); line-height: 1.05; letter-spacing: -.035em; }
+  .rows { border-top: var(--line) solid var(--ink); }
+  .rows > div { display: grid; grid-template-columns: minmax(0, 8.5em) minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: var(--line) solid var(--ink); }
+  .rows dt { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding-top: 4px; }
+  .rows dd { font-size: clamp(16px, 1.2vw, 18px); font-weight: 650; line-height: 1.35; }
+  .live { justify-self: start; color: inherit; font-weight: 600; font-size: 16px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+
+  h2 { font-weight: 750; font-size: clamp(34px, 4.4vw, 68px); line-height: 1.02; letter-spacing: -.04em; max-width: 14em; }
+  .kicker { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .kicker-c { color: var(--cob); }
+  .lead { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 32em; }
+
+  /* 2. Strona na kobalcie */
+  .cobalt { background: var(--cob); color: var(--white); }
+  .cobalt figcaption { color: rgb(255 255 255 / .82); }
+  .site { padding: clamp(64px, 8vw, 128px) 0 clamp(72px, 9vw, 140px); }
+  .site .head { display: grid; row-gap: 16px; }
+  .site .lead { color: rgb(255 255 255 / .9); }
+  .duo { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
+  .duo .desk { grid-column: 1 / span 9; }
+  .duo .phone { grid-column: 10 / -1; }
+  .duo img { border-radius: 12px; background: var(--white); }
+
+  /* 3. Rozmowa */
+  .paper { background: var(--white); }
+  .talk { padding: clamp(72px, 9vw, 140px) 0 clamp(40px, 5vw, 72px); }
+  .talk-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
+  .talk-h { grid-column: 1 / span 6; display: grid; gap: 16px; }
+  .talk-txt { grid-column: 7 / -1; display: grid; gap: 18px; padding-top: 6px; }
+  .talk-txt p { font-size: clamp(17px, 1.35vw, 20px); line-height: 1.6; max-width: 32em; }
+  .menu { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px !important; }
+  .menu li { padding: 10px 18px; border-radius: 999px; background: var(--grey); font-weight: 600; font-size: 15px; }
+  .menu li:first-child { background: #e8ecff; color: var(--cob); }
+  .menu .more { background: none; border: var(--line) dashed #b9bec6; color: var(--mute); }
+
+  /* 4. Narzędzia */
+  .tools { padding-bottom: clamp(72px, 9vw, 140px); }
+  .steps { list-style: none; padding: 0; border-top: var(--line) solid var(--ink); }
+  .steps > li { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); padding: clamp(32px, 4vw, 60px) 0; border-bottom: var(--line) solid var(--ink); align-items: start; }
+  .step-txt { grid-column: 1 / span 4; display: grid; gap: 10px; align-content: start; position: sticky; top: 112px; }
+  .step-media { grid-column: 5 / -1; display: grid; gap: clamp(28px, 3vw, 44px); }
+  .num { font-weight: 800; font-size: clamp(44px, 5vw, 80px); line-height: 1; letter-spacing: -.05em; color: var(--cob); }
+  .label { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .steps h3 { font-weight: 750; font-size: clamp(22px, 1.9vw, 28px); line-height: 1.15; letter-spacing: -.02em; }
+  .step-txt > p:last-child { font-size: clamp(16px, 1.25vw, 19px); line-height: 1.6; max-width: 28em; }
+  .shot img { border: var(--line) solid #d5d8dd; border-radius: 12px; }
+  .doc { max-width: 560px; }
+  .doc img { background: var(--white); }
+
+  /* 5. Rysunek */
+  .ink { background: var(--ink); color: var(--white); }
+  .ink figcaption { color: rgb(255 255 255 / .7); }
+  .ink .kicker-c { color: #8fa0ff; }
+  .draw { padding: clamp(72px, 9vw, 140px) 0; }
+  .draw-head { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
+  .draw-head > div:first-child { grid-column: 1 / span 6; display: grid; gap: 16px; }
+  .draw-txt { grid-column: 7 / -1; display: grid; gap: 18px; padding-top: 6px; }
+  .draw-txt p { font-size: clamp(17px, 1.35vw, 20px); line-height: 1.6; color: rgb(255 255 255 / .88); max-width: 32em; }
+  .draw-shots { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--cgap); }
+  .draw-shots img { border-radius: 12px; }
+
+  /* 6. Na co dzień */
+  .daily { padding: clamp(72px, 9vw, 140px) 0; }
+  .daily-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
+  .daily h2 { grid-column: 1 / span 5; }
+  .rows-big { grid-column: 6 / -1; }
+  .rows-big > div { grid-template-columns: minmax(0, 11em) minmax(0, 1fr); padding: 18px 0; }
+  .rows-big dt { font-size: 12px; }
+  .rows-big dd { font-weight: 500; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.55; }
+
+  /* 7. Wyjście */
+  .end { padding-top: clamp(72px, 9vw, 140px); }
+  .end-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: end; padding-bottom: clamp(56px, 7vw, 104px); }
+  .end h2 { max-width: 12em; grid-column: 1 / span 7; }
+  .end-txt { display: grid; gap: 24px; grid-column: 8 / -1; }
+  .end-txt p { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 26em; }
+  .end-act { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+  .btn { display: inline-block; padding: 18px 30px; border-radius: 999px; background: var(--white); color: var(--cob); text-decoration: none; font-size: 16px; font-weight: 700; }
+  .btn:hover { background: #e8ecff; }
+  .next { display: block; color: var(--white); text-decoration: none; }
+  .next-in { position: relative; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: clamp(28px, 4vw, 56px); }
+  .next-in::before { content: ''; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); height: var(--line); background: var(--white); }
+  .next-k { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .next-n { font-weight: 750; font-size: clamp(36px, 6vw, 96px); line-height: 1; letter-spacing: -.04em; }
+  .next:hover .next-n { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 10px; }
+  .foot { background: #f8f9f2; }
+
+  @media (max-width: 900px) {
+    .open-body, .duo, .talk-in, .steps > li, .draw-head, .daily-in, .end-in { grid-template-columns: minmax(0, 1fr); }
+    .open-body > *, .duo > *, .talk-in > *, .steps > li > *, .draw-head > *, .draw-head > div:first-child, .daily-in > *, .end-in > *, .end h2, .daily h2, .rows-big { grid-column: 1 / -1; }
+    .step-txt { position: static; }
+    .duo .phone { width: 62%; justify-self: center; }
+    .draw-shots { grid-template-columns: minmax(0, 1fr); }
+  }
+  /* Telefon: ujęcia narzędzi pełnym ekranem i od krawędzi do krawędzi (bez marginesów, bez zaokrągleń); podpisy wracają na krawędź tekstu. */
+  @media (max-width: 700px) {
+    .case :is(.open-shot, .duo .desk, .duo .phone, .shot, .draw-shots figure) { margin-inline: calc(var(--gutter) * -1); }
+    .open-shot { border: 0; border-radius: 0; border-block: var(--line) solid var(--ink); }
+    .duo .phone { width: auto; justify-self: stretch; }
+    .duo img, .shot img, .draw-shots img { border-radius: 0; border-inline: 0; }
+    figcaption { padding-inline: var(--gutter); }
+    .doc { max-width: none; }
+    .rows > div, .rows-big > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
+    .zdanie { font-size: clamp(26px, 7.8vw, 34px); }
+  }
+  @media (max-width: 480px) {
+    .open { padding-top: calc(82px + clamp(8px, 1.6vw, 24px)); }
+    .metka { font-size: 12px; }
+    .name { margin-top: 12px !important; }
+  }
+</style>

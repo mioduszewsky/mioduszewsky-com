@@ -1,8 +1,7 @@
 // Pętla „Następna realizacja” (decyzja Kacpra 20.10.2026), jedno źródło dla wszystkich czterech case'ów.
 // PL i EN: eskapizm → Cannversity → Igor Grabowski → eskapizm.
-// GlassStone zdjęty z pętli i z kart do czasu przebudowy jego strony i systemu (Kacper, 21.10.2026); strona case'u zostaje
-// pod swoim adresem z noindex, a jej „Następna realizacja” prowadzi na pierwszy case z listy. Powrót = jeden wiersz niżej.
-// Przy publikacji 21.10 strona GlassStone jest poza buildem (plik _glassstone.astro); powrót = zmiana nazwy bez podkreślnika.
+// GlassStone wraca 22.11.2026 z nowym case'em (nowa strona i panel), tylko po polsku: w EN nie ma karty ani miejsca w pętli.
+// PL: eskapizm → Cannversity → Igor Grabowski → GlassStone → eskapizm.
 // Ta sama kolejność kart na stronie zbiorczej (CaseIndex czyta caseOrder).
 import type { Locale } from '../i18n/site';
 
@@ -12,6 +11,7 @@ export const caseOrder: Case[] = [
   { slug: 'eskapizm', name: 'eskapizm', locales: ['pl', 'en'] },
   { slug: 'cannversity', name: 'Cannversity', locales: ['pl', 'en'] },
   { slug: 'igor-grabowski', name: 'Igor Grabowski', locales: ['pl', 'en'] },
+  { slug: 'glassstone', name: 'GlassStone', locales: ['pl'] },
 ];
 
 export const caseHref = (slug: string, locale: Locale) => (locale === 'pl' ? `/pl/realizacje/${slug}/` : `/work/${slug}/`);
