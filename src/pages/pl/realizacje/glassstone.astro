@@ -17,7 +17,8 @@ const contact = '/pl/kontakt/?utm_source=realizacje&utm_content=glassstone#ctFor
 const next = nextCase('glassstone', 'pl');
 const url = 'https://mioduszewsky.com/pl/realizacje/glassstone/';
 const dir = '/case/glassstone';
-const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;');
+// „AutoCAD-a” i odmiany nie łamią się na łączniku (na 390 px zostawało samo „a” w nowej linii, uwaga Fincha 22.11)
+const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;').replace(/AutoCAD-(\p{L}+)/gu, '<span class="nw">AutoCAD-$1</span>');
 
 const wiersze: [string, string][] = [
   ['Strona', 'Kamień i szkło po równo, dwie wyceny od pierwszego ekranu'],
@@ -310,6 +311,7 @@ const ld = {
   .case :is(a,button):focus-visible { outline: 3px solid var(--cob); outline-offset: 4px; }
   .case :is(.cobalt, .ink) :is(a,button):focus-visible { outline-color: var(--white); }
   .case ::selection { background: var(--cob); color: var(--white); }
+  .case :global(.nw) { white-space: nowrap; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--ink); color: var(--white); transform: translateY(-200%); }
   .skip:focus { transform: none; }
