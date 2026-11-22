@@ -40,6 +40,25 @@ const kroki = [
     alt: 'Karta zlecenia w panelu GlassStone: klient, etapy, montaż dziś, przyciski Zadzwoń, Nawiguj, Nowy dokument, Nowy rysunek i Notatka, dokumenty z przyciskiem Wyślij komplet. Dane przykładowe.' },
 ];
 
+// Menu panelu przed przebudową: odczyt z bazy 22.10.2026 (discovery-2026-10-22/2-PANEL.md, FAKTY G32), bez ocen, same liczby.
+const menuPrzed: [string, string][] = [
+  ['Montaże', '1 termin w historii, ostatni 16.05'],
+  ['CRM', '9 zleceń, ostatnia zmiana 07.07'],
+  ['Wiadomości', '0 zapytań'],
+  ['Analityka', '0 wyników miesięcy'],
+  ['Rysunki', '4 pomiary, ruch do 21.10'],
+  ['Blog', '4 wpisy, ostatni 23.03'],
+  ['Portfolio', '18 realizacji, 16.03'],
+  ['Materiały', '6 pozycji, 23.03'],
+  ['Opinie', '5 pozycji, 16.03'],
+];
+const menuPo: [string, string][] = [
+  ['Zlecenia', 'od zapytania ze strony do podpisu'],
+  ['Kalendarz', 'ekran startowy, spięty z Google'],
+  ['Rysunki', 'w testach'],
+  ['Więcej', 'realizacje, analityka, etapy, zgłoszenia'],
+];
+
 const naCoDzien: [string, string][] = [
   ['Zgłoś Grubemu', 'Na każdym ekranie panelu jest cichy przycisk. Dotknięcie robi zrzut ekranu, zbiera ostatnie kroki i wysyła mi mail.'],
   ['Zmiany', 'Każdą zmianę sprawdzam na koncie testowym z zablokowanymi zapisami. Na produkcję idzie po mojej decyzji, z planem wycofania.'],
@@ -77,7 +96,7 @@ const ld = {
         <header class="open">
           <div class="wrap">
             <p class="metka">Kamień i szkło na wymiar, Wrocław</p>
-            <h1 class="name"><span class="name-in" aria-hidden="true">GLASSSTONE</span><span class="sr">GlassStone: strona i iPad, na którym ekipa prowadzi zlecenie od zapytania do podpisu.</span></h1>
+            <h1 class="name"><span class="name-in" aria-hidden="true"><span class="glass">GLASS</span>STONE</span><span class="sr">GlassStone: strona i iPad, na którym ekipa prowadzi zlecenie od zapytania do podpisu.</span></h1>
             <div class="rule" aria-hidden="true"></div>
           </div>
           <div class="wrap open-body">
@@ -89,8 +108,11 @@ const ld = {
               <a class="live" href={live} target="_blank" rel="noopener">Zobacz glassstone.pl<ExtArrow weight={600} /></a>
             </div>
             <figure class="open-shot">
-              <img src={`${dir}/strona-1440.webp`} width="2560" height="1440" fetchpriority="high" decoding="async"
-                alt="Pierwszy ekran glassstone.pl: napis „Kamień i szkło”, zdjęcie łazienki z kamieniem i dwie wyceny, kamienia i szkła." />
+              <div class="loop" data-loop data-d={`${dir}/strona.mp4`} data-m={`${dir}/strona-m.mp4`} style="aspect-ratio: 1920 / 1200">
+                <img src={`${dir}/strona-poster.webp`} width="1920" height="1200" fetchpriority="high" decoding="async"
+                  alt="Nagranie glassstone.pl: pierwszy ekran „Kamień i szkło” z dwiema wycenami, przewijanie do oferty, potem strona Realizacje i filtr Szkło." />
+                <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+              </div>
             </figure>
           </div>
         </header>
@@ -129,10 +151,17 @@ const ld = {
               <p set:html={P('Sprawdziłem w bazie, z czego ekipa korzysta: dziewięć pozycji menu, przy każdej liczba wpisów i data ostatniego.')} />
               <p set:html={P('Potem rozmowa z Filipem o dniu pracy. Dokumenty od firmy, dla której montują, przychodziły jako PDF bez pól, a Filip wypełniał je ręcznie u klienta.')} />
               <p set:html={P('W menu zostało to, czego używają w pracy: Zlecenia, Kalendarz i Rysunki. Reszta jest pod „Więcej”.')} />
-              <ul class="menu" aria-label="Menu panelu GlassStone">
-                <li>Zlecenia</li><li>Kalendarz</li><li>Rysunki</li><li class="more">Więcej</li>
-              </ul>
             </div>
+          </div>
+          <div class="wrap pp">
+            <figure class="pp-col pp-przed">
+              <figcaption class="pp-h"><b>Przed</b> menu panelu, 9 pozycji. Odczyt z bazy 22.10.2026.</figcaption>
+              <ol>{menuPrzed.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
+            </figure>
+            <figure class="pp-col pp-po">
+              <figcaption class="pp-h"><b>Po</b> menu panelu dziś.</figcaption>
+              <ol>{menuPo.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
+            </figure>
           </div>
         </section>
 
@@ -149,7 +178,17 @@ const ld = {
                     <p set:html={P(k.tekst)} />
                   </div>
                   <div class="step-media">
-                    <figure class="shot" data-tone="light">
+                    {k.f === 'karta' && (
+                      <figure class="shot" data-tone="light">
+                        <div class="loop" data-loop data-d={`${dir}/podpis.mp4`} data-m={`${dir}/podpis-m.mp4`} style="aspect-ratio: 1600 / 1112">
+                          <img src={`${dir}/podpis-poster.webp`} width="1600" height="1112" loading="lazy" decoding="async"
+                            alt="Nagranie: klient podpisuje się palcem na linii „zamawiający” protokołu odbioru, potem na karcie zlecenia dotknięcie przycisku Wyślij komplet. Dane przykładowe." />
+                          <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+                        </div>
+                        <figcaption set:html={P('Podpis klienta palcem na protokole, potem „Wyślij komplet” na karcie. Dane przykładowe, stopka zleceniodawcy zasłonięta.')} />
+                      </figure>
+                    )}
+                    <figure class:list={['shot', k.f === 'karta' && 'm-only']} data-tone="light">
                       <picture>
                         <source media="(max-width: 700px)" srcset={`${dir}/${k.f}-tel.webp`} width="1170" height="2532" />
                         <img src={`${dir}/${k.f}-ipad.webp`} width="2360" height="1640" loading="lazy" decoding="async" alt={k.alt} />
@@ -158,9 +197,9 @@ const ld = {
                     </figure>
                     {k.f === 'karta' && (
                       <figure class="shot doc" data-tone="light">
-                        <img src={`${dir}/dokument.webp`} width="1024" height="1447" loading="lazy" decoding="async"
-                          alt="Protokół odbioru montażu otwarty w panelu: wzór zleceniodawcy jak na papierze, pola do wypełnienia podświetlone, miejsca na podpis montera i zamawiającego. Dane przykładowe." />
-                        <figcaption set:html={P('Protokół odbioru w edytorze. Dane przykładowe, logo i stopka zleceniodawcy zasłonięte.')} />
+                        <img src={`${dir}/dokument.webp`} width="700" height="806" loading="lazy" decoding="async"
+                          alt="Protokół odbioru montażu po podpisie: zamawiający, data i numer zamówienia wpisane z danych zlecenia, lista punktów do zaznaczenia i podpis klienta nad słowem zamawiający. Dane przykładowe." />
+                        <figcaption set:html={P('Protokół po podpisie: zamawiający, data i numer z danych zlecenia, podpis klienta. Dane przykładowe.')} />
                       </figure>
                     )}
                   </div>
@@ -184,14 +223,12 @@ const ld = {
           </div>
           <div class="wrap draw-shots">
             <figure>
-              <img src={`${dir}/rysunek-l.webp`} width="2360" height="1640" loading="lazy" decoding="async"
-                alt="Edytor rysunku na iPadzie: blat w kształcie L z wymiarami 1500, 1300, 600, 900, 700 i 600, na dole pole „Płyta P1: długość frontu” z przyciskiem Dalej." />
-              <figcaption>Nowy rysunek: blat L, wymiary wpisywane po kolei.</figcaption>
-            </figure>
-            <figure>
-              <img src={`${dir}/kartka.webp`} width="2360" height="1640" loading="lazy" decoding="async"
-                alt="Kartka na iPadzie: odręczny obrys blatu L z wymiarami 1800 i 2600 i przycisk „Zrób z tego rysunek”." />
-              <figcaption>Kartka: rysik jak na papierze.</figcaption>
+              <div class="loop" data-loop data-d={`${dir}/kartka.mp4`} data-m={`${dir}/kartka-m.mp4`} style="aspect-ratio: 1600 / 1112">
+                <img src={`${dir}/kartka-poster.webp`} width="1600" height="1112" loading="lazy" decoding="async"
+                  alt="Nagranie z iPada: odręczny obrys blatu L rysikiem na Kartce z wymiarami 1800 i 2600, potem blat L w edytorze i wymiary wpisywane po kolei, na końcu gotowa płyta z wymiarami." />
+                <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+              </div>
+              <figcaption>Kartka rysikiem, potem blat L w edytorze: wymiary wpisywane po kolei.</figcaption>
             </figure>
           </div>
         </section>
@@ -228,6 +265,32 @@ const ld = {
   </div>
 </VariantLayout>
 
+<script>
+  // Pętle (jak w eskapizmie, Loop.astro): plakat jako obraz od razu, wideo bez src. Źródło (komputer albo lżejszy plik na telefon)
+  // wstawiane ok. ekran przed sekcją, gra tylko w widoku. Przy prefers-reduced-motion wideo nie ładuje się wcale, zostaje plakat.
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const narrow = matchMedia('(max-width: 767px)');
+  const loops = [...document.querySelectorAll<HTMLElement>('.case [data-loop]')];
+  // WebKit potrafi odrzucić play() tuż po wczytaniu mimo muted i playsinline: kilka ponowień, póki pętla jest w widoku
+  const play = (el: HTMLElement, v: HTMLVideoElement, n = 0) => v.play().catch(() => { if (n < 4) setTimeout(() => { if (el.dataset.inview && !still.matches && v.paused) play(el, v, n + 1); }, 700); });
+  const load = (el: HTMLElement) => {
+    if (el.dataset.loaded) return;
+    const v = el.querySelector('video'); if (!v) return;
+    const s = document.createElement('source'); s.src = (narrow.matches ? el.dataset.m : el.dataset.d) || ''; s.type = 'video/mp4';
+    v.poster = el.querySelector('img')?.currentSrc || '';
+    v.append(s); v.preload = 'auto'; v.load(); el.dataset.loaded = '1';
+    v.addEventListener('canplay', () => { if (el.dataset.inview && !still.matches && v.paused) play(el, v); });
+  };
+  const near = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && !still.matches) { load(e.target as HTMLElement); near.unobserve(e.target); } }), { rootMargin: '100% 0px' });
+  const seen = new IntersectionObserver((es) => es.forEach((e) => {
+    const el = e.target as HTMLElement, v = el.querySelector('video'); if (!v) return;
+    el.dataset.inview = e.isIntersecting ? '1' : '';
+    if (e.isIntersecting && !still.matches && el.dataset.loaded) play(el, v); else v.pause();
+  }), { threshold: .15 });
+  loops.forEach((el) => { near.observe(el); seen.observe(el); });
+  still.addEventListener('change', () => loops.forEach((el) => { const v = el.querySelector('video'); if (still.matches) v?.pause(); else { near.observe(el); if (el.dataset.inview && el.dataset.loaded && v) play(el, v); } }));
+</script>
+
 <style>
   .case {
     /* Kolory glassstone.pl: kobalt #1F3BFF (akcent strony i panelu), czerń, biel, szarość tła panelu. */
@@ -260,10 +323,19 @@ const ld = {
   /* „GLASSSTONE” w Geist 800 z ciasnym rozstawem: 6,36 em szerokości (zmierzone w przeglądarce), więc nazwa wypełnia kolumnę. */
   .name { margin-top: clamp(4px, .6vw, 10px) !important; font-weight: 800; letter-spacing: -.045em; line-height: .86; white-space: nowrap;
     font-size: calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 6.4); }
+  /* Szkło konturem (przezroczyste jak szkło), kamień pełny: jeden gest z języka GlassStone, bez ozdobników. */
+  .name .glass { color: transparent; -webkit-text-stroke: max(2px, .012em) var(--cob); }
   .rule { margin-top: clamp(14px, 2vw, 30px); height: clamp(3px, .28vw, 5px); background: var(--ink); }
   .open-body { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; padding-top: clamp(28px, 4vw, 56px); }
   .open-txt { grid-column: 1 / span 5; display: grid; gap: clamp(18px, 3vh, 32px); }
   .open-shot { grid-column: 6 / -1; border: var(--line) solid var(--ink); border-radius: 14px; overflow: hidden; }
+  .loop { position: relative; overflow: hidden; background: var(--grey); }
+  .loop img, .loop video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+  .loop video { position: absolute; inset: 0; }
+  .loop video::-webkit-media-controls-start-playback-button, .loop video::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
+  .shot .loop { border: var(--line) solid #d5d8dd; border-radius: 12px; }
+  .draw-shots .loop { border-radius: 12px; }
+  .m-only { display: none; }
   .zdanie { font-weight: 700; font-size: clamp(28px, 2.9vw, 46px); line-height: 1.05; letter-spacing: -.035em; }
   .rows { border-top: var(--line) solid var(--ink); }
   .rows > div { display: grid; grid-template-columns: minmax(0, 8.5em) minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: var(--line) solid var(--ink); }
@@ -294,6 +366,21 @@ const ld = {
   .talk-h { grid-column: 1 / span 6; display: grid; gap: 16px; }
   .talk-txt { grid-column: 7 / -1; display: grid; gap: 18px; padding-top: 6px; }
   .talk-txt p { font-size: clamp(17px, 1.35vw, 20px); line-height: 1.6; max-width: 32em; }
+  /* Przed i po: dziewięć pozycji z liczbami z bazy obok czterech dzisiejszych. */
+  .pp { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); margin-top: clamp(40px, 5vw, 72px); }
+  .pp-col { margin: 0; }
+  .pp-przed { grid-column: 1 / span 7; }
+  .pp-po { grid-column: 8 / -1; }
+  .pp-h { padding: 0 0 12px; font-size: 14px; color: var(--mute); border-bottom: var(--line) solid var(--ink); }
+  .pp-h b { display: block; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); margin-bottom: 4px; }
+  .pp ol { list-style: none; padding: 0; margin: 0; }
+  .pp li { display: grid; grid-template-columns: minmax(0, 9em) minmax(0, 1fr); gap: 12px; padding: 11px 0; border-bottom: 1px solid #dfe2e6; align-items: baseline; }
+  .pp li span { font-weight: 650; font-size: clamp(16px, 1.25vw, 18px); }
+  .pp li em { font-style: normal; font-size: 15px; color: var(--mute); font-variant-numeric: tabular-nums; }
+  .pp-przed li span { color: #8c9299; }
+  .pp-po li { padding: 16px 0; }
+  .pp-po li span { font-size: clamp(20px, 1.8vw, 26px); color: var(--cob); }
+  .pp-po li:last-child span { color: var(--mute); }
   .menu { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px !important; }
   .menu li { padding: 10px 18px; border-radius: 999px; background: var(--grey); font-weight: 600; font-size: 15px; }
   .menu li:first-child { background: #e8ecff; color: var(--cob); }
@@ -355,6 +442,8 @@ const ld = {
     .open-body, .duo, .talk-in, .steps > li, .draw-head, .daily-in, .end-in { grid-template-columns: minmax(0, 1fr); }
     .open-body > *, .duo > *, .talk-in > *, .steps > li > *, .draw-head > *, .draw-head > div:first-child, .daily-in > *, .end-in > *, .end h2, .daily h2, .rows-big { grid-column: 1 / -1; }
     .step-txt { position: static; }
+    .pp { grid-template-columns: minmax(0, 1fr); }
+    .pp-przed, .pp-po { grid-column: 1 / -1; }
     .duo .phone { width: 62%; justify-self: center; }
     .draw-shots { grid-template-columns: minmax(0, 1fr); }
   }
@@ -366,6 +455,9 @@ const ld = {
     .duo img, .shot img, .draw-shots img { border-radius: 0; border-inline: 0; }
     figcaption { padding-inline: var(--gutter); }
     .doc { max-width: none; }
+    .m-only { display: block; }
+    .shot .loop, .draw-shots .loop { border-radius: 0; border-inline: 0; }
+    .pp li { grid-template-columns: minmax(0, 7.5em) minmax(0, 1fr); }
     .rows > div, .rows-big > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
     .zdanie { font-size: clamp(26px, 7.8vw, 34px); }
   }
