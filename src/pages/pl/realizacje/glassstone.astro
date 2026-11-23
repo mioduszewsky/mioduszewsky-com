@@ -38,7 +38,7 @@ const kroki = [
   { f: 'karta', etykieta: 'Dokumenty', tytul: 'Dokumenty podpisane na iPadzie',
     tekst: 'Wzory zleceniodawcy wyglądają jak na papierze. Dane zlecenia Filip wpisuje raz i trafiają w pola wszystkich dokumentów, a klient podpisuje palcem albo rysikiem. Komplet wysyła z karty przyciskiem „Wyślij komplet”. Kolejny zleceniodawca to jego PDF-y i mapa pól, bez programowania.',
     podpis: 'Karta zlecenia. Dane przykładowe.',
-    alt: 'Karta zlecenia w panelu GlassStone: klient, etapy, montaż dziś, przyciski Zadzwoń, Nawiguj, Nowy dokument, Nowy rysunek i Notatka, dokumenty z przyciskiem Wyślij komplet. Dane przykładowe.' },
+    alt: 'Karta zlecenia w panelu GlassStone w telefonie: klient, wartość zlecenia, etap W realizacji, montaż dziś, przyciski Zadzwoń, Nawiguj, Dokument, Rysunek i Notatka, pod nimi dane klienta i montażu. Dane przykładowe.' },
 ];
 
 // Menu panelu przed przebudową: odczyt z bazy 22.10.2026 (discovery-2026-10-22/2-PANEL.md, FAKTY G32), bez ocen, same liczby.
@@ -221,7 +221,7 @@ const ld = {
             <div class="draw-txt">
               <p class="kicker kicker-c">W testach</p>
               <h2 id="s5-h" set:html={P('Rysunek na iPadzie, w formacie AutoCAD-a.')} />
-              <p set:html={P('Filip wybiera kształt blatu i wpisuje wymiary z miary albo rysuje rysikiem na kartce, a „Zrób z tego rysunek” zamienia kartkę w rysunek. Z każdego rysunku wychodzi PDF i DXF, czyli plik, który otwiera AutoCAD. Działa też bez zasięgu.')} />
+              <p set:html={P('Filip wybiera kształt blatu i wpisuje wymiary z miary albo rysuje rysikiem na kartce, a „Zrób z tego rysunek” zamienia kartkę w rysunek. Z każdego rysunku wychodzi PDF i DXF, czyli plik, który otwiera AutoCAD. Rysunek i pliki działają też bez zasięgu, a kartka zamienia się w rysunek, gdy wróci sieć.')} />
               <p set:html={P('Cel jest jeden: żeby chłopaki rysowali sami, bez licencji AutoCAD-a, która kosztuje 9&nbsp;933&nbsp;zł rocznie za stanowisko (cennik Autodesk z 23.11.2026). Narzędzie jest w testach. Zanim zastąpi AutoCAD-a, Filip sprawdzi je na swoim iPadzie, a zleceniodawca musi przyjąć plik bez poprawek.')} />
             </div>
             <figure class="draw-shot">
@@ -277,14 +277,16 @@ const ld = {
   type St = { v: HTMLVideoElement; b: HTMLButtonElement; inview: boolean; user: boolean; tries: number; timer?: number };
   const loops = [...document.querySelectorAll<HTMLElement>('.case [data-loop]')];
   const st = new Map<HTMLElement, St>();
-  const label = (s: St) => { s.b.setAttribute('aria-pressed', String(s.user)); s.b.setAttribute('aria-label', s.user ? 'Wznów nagranie' : 'Zatrzymaj nagranie'); };
+  // stała nazwa i aria-pressed (wciśnięty = nagranie zatrzymane), bez zmieniania nazwy, żeby czytnik nie mówił „Wznów, wciśnięty”
+  const label = (s: St) => { s.b.setAttribute('aria-pressed', String(s.user)); s.b.setAttribute('aria-label', 'Zatrzymaj nagranie'); };
   // WebKit potrafi odrzucić play() tuż po wczytaniu mimo muted i playsinline: kilka ponowień, póki pętla ma grać
   const sync = (el: HTMLElement) => {
     const s = st.get(el); if (!s) return;
     clearTimeout(s.timer);
     if (s.inview && !s.user && !still.matches && el.dataset.loaded) {
-      if (s.v.paused) s.v.play().then(() => { s.tries = 0; }).catch(() => { if (s.tries++ < 4) s.timer = window.setTimeout(() => sync(el), 700); });
-    } else s.v.pause();
+      // AbortError = play() przerwane przez pause() albo nowe źródło: to nie błąd odtwarzania, nie zużywa ponowień
+      if (s.v.paused) s.v.play().then(() => { s.tries = 0; }).catch((e) => { if (e?.name !== 'AbortError' && s.tries++ < 4) s.timer = window.setTimeout(() => sync(el), 700); });
+    } else { s.tries = 0; s.v.pause(); }
   };
   const load = (el: HTMLElement) => {
     const s = st.get(el); if (!s || el.dataset.loaded || still.matches) return;
@@ -363,6 +365,8 @@ const ld = {
   .case :global(.lp)::before { content: ''; box-sizing: border-box; width: 10px; height: 12px; border-inline: 3px solid currentColor; }
   .case :global(.lp[aria-pressed="true"])::before { width: 0; height: 0; margin-left: 3px; border-inline: 0; border-block: 7px solid transparent; border-left: 11px solid currentColor; }
   .case :global(.lp):hover { background: rgb(13 13 13 / .8); }
+  /* przycisk powstaje w skrypcie, więc nie łapie ogólnej reguły :focus-visible z zakresem Astro; obwódka biała z kobaltem, widoczna na każdym kadrze */
+  .case :global(.lp:focus-visible) { outline: 3px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 6px var(--cob); }
   .loop video::-webkit-media-controls-start-playback-button, .loop video::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
   .shot .loop { border: var(--line) solid #d5d8dd; border-radius: 12px; }
   .m-only { display: none; }
