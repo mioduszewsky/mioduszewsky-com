@@ -30,7 +30,7 @@ const kroki = [
   { f: 'kalendarz', etykieta: 'Kalendarz', tytul: 'Dzień zaczyna się w Kalendarzu',
     tekst: 'Panel otwiera się na dzisiejszych pomiarach i montażach. Kalendarz jest spięty z Kalendarzem Google, którego ekipa już używa: wpis dodany w Google pojawia się w panelu zwykle po kilku sekundach, a termin zmieniony w karcie wraca do Google.',
     podpis: 'Kalendarz, widok Dziś. Dane przykładowe.',
-    alt: 'Kalendarz w panelu GlassStone, widok Dziś: wpisy z Kalendarza Google do przypisania, czwartek 29 października z trzema montażami i jednym pomiarem, miesiąc obok. Dane przykładowe.' },
+    alt: 'Kalendarz w panelu GlassStone, widok Dziś: wpisy z Kalendarza Google do przypisania, czwartek 29 października z trzema montażami i jednym pomiarem. Dane przykładowe.' },
   { f: 'zlecenia', etykieta: 'Zlecenia', tytul: 'Każde zlecenie na jednej tablicy',
     tekst: 'Etapy ekipa ustawia sama, każdy z własnym alarmem, gdy zlecenie stoi. Plakietka na kafelku mówi, czy to sprzedaż GlassStone, czy montaż dla zleceniodawcy. Zapytanie ze strony ląduje w „Nowe”.',
     podpis: 'Zlecenia w etapach: na iPadzie tablica, w telefonie lista. Dane przykładowe.',
@@ -160,19 +160,20 @@ const ld = {
           </div>
           <div class="wrap pp">
             <figure class="pp-col pp-przed">
-              <figcaption class="pp-h"><b>Przed</b> menu panelu, 9 pozycji. Odczyt z bazy 22.10.2026.</figcaption>
+              <figcaption class="pp-h"><b>Przed</b> Menu panelu, 9 pozycji. Odczyt z bazy 22.10.2026.</figcaption>
               <ol>{menuPrzed.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
             </figure>
             <figure class="pp-col pp-po">
-              <figcaption class="pp-h"><b>Po</b> menu panelu dziś.</figcaption>
+              <figcaption class="pp-h"><b>Po</b> Menu panelu dziś.</figcaption>
               <ol>{menuPo.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
             </figure>
           </div>
         </section>
 
         <!-- 4. Narzędzia: trzy bloki, tekst z lewej, pełny ekran iPada z prawej; na telefonie pełny ekran z telefonu. -->
-        <section class="paper tools" aria-label="Narzędzia w panelu">
+        <section class="paper tools" aria-labelledby="s4-h">
           <div class="wrap">
+            <h2 id="s4-h" class="sr">Narzędzia w panelu</h2>
             <ol class="steps">
               {kroki.map((k, i) => (
                 <li>
@@ -268,28 +269,48 @@ const ld = {
 
 <script>
   // Pętle (jak w eskapizmie, Loop.astro): plakat jako obraz od razu, wideo bez src. Źródło (komputer albo lżejszy plik na telefon)
-  // wstawiane ok. ekran przed sekcją, gra tylko w widoku. Przy prefers-reduced-motion wideo nie ładuje się wcale, zostaje plakat.
+  // wstawiane ok. ekran przed sekcją, gra tylko, gdy widać co najmniej 15% pętli. Przy prefers-reduced-motion wideo nie ładuje się
+  // wcale, a włączone w trakcie zwalnia źródło i zostawia plakat. Przycisk pauzy na każdej pętli (WCAG 2.2.2); wybór zostaje po przewinięciu.
+  // Jeden stan i jeden licznik ponowień na pętlę (recenzja Codexa 23.11: canplay i obserwator nie odpalają już dwóch łańcuchów play()).
   const still = matchMedia('(prefers-reduced-motion: reduce)');
   const narrow = matchMedia('(max-width: 767px)');
+  type St = { v: HTMLVideoElement; b: HTMLButtonElement; inview: boolean; user: boolean; tries: number; timer?: number };
   const loops = [...document.querySelectorAll<HTMLElement>('.case [data-loop]')];
-  // WebKit potrafi odrzucić play() tuż po wczytaniu mimo muted i playsinline: kilka ponowień, póki pętla jest w widoku
-  const play = (el: HTMLElement, v: HTMLVideoElement, n = 0) => v.play().catch(() => { if (n < 4) setTimeout(() => { if (el.dataset.inview && !still.matches && v.paused) play(el, v, n + 1); }, 700); });
+  const st = new Map<HTMLElement, St>();
+  const label = (s: St) => { s.b.setAttribute('aria-pressed', String(s.user)); s.b.setAttribute('aria-label', s.user ? 'Wznów nagranie' : 'Zatrzymaj nagranie'); };
+  // WebKit potrafi odrzucić play() tuż po wczytaniu mimo muted i playsinline: kilka ponowień, póki pętla ma grać
+  const sync = (el: HTMLElement) => {
+    const s = st.get(el); if (!s) return;
+    clearTimeout(s.timer);
+    if (s.inview && !s.user && !still.matches && el.dataset.loaded) {
+      if (s.v.paused) s.v.play().then(() => { s.tries = 0; }).catch(() => { if (s.tries++ < 4) s.timer = window.setTimeout(() => sync(el), 700); });
+    } else s.v.pause();
+  };
   const load = (el: HTMLElement) => {
-    if (el.dataset.loaded) return;
-    const v = el.querySelector('video'); if (!v) return;
-    const s = document.createElement('source'); s.src = (narrow.matches ? el.dataset.m : el.dataset.d) || ''; s.type = 'video/mp4';
-    v.poster = el.querySelector('img')?.currentSrc || '';
-    v.append(s); v.preload = 'auto'; v.load(); el.dataset.loaded = '1';
-    v.addEventListener('canplay', () => { if (el.dataset.inview && !still.matches && v.paused) play(el, v); });
+    const s = st.get(el); if (!s || el.dataset.loaded || still.matches) return;
+    const src = document.createElement('source'); src.src = (narrow.matches ? el.dataset.m : el.dataset.d) || ''; src.type = 'video/mp4';
+    s.v.poster = el.querySelector('img')?.currentSrc || '';
+    s.v.append(src); s.v.preload = 'auto'; s.v.load(); el.dataset.loaded = '1'; s.b.hidden = false;
+  };
+  const unload = (el: HTMLElement) => {
+    const s = st.get(el); if (!s || !el.dataset.loaded) return;
+    clearTimeout(s.timer); s.v.pause(); s.v.querySelectorAll('source').forEach((x) => x.remove()); s.v.preload = 'none'; s.v.load();
+    delete el.dataset.loaded; s.b.hidden = true;
   };
   const near = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && !still.matches) { load(e.target as HTMLElement); near.unobserve(e.target); } }), { rootMargin: '100% 0px' });
   const seen = new IntersectionObserver((es) => es.forEach((e) => {
-    const el = e.target as HTMLElement, v = el.querySelector('video'); if (!v) return;
-    el.dataset.inview = e.isIntersecting ? '1' : '';
-    if (e.isIntersecting && !still.matches && el.dataset.loaded) play(el, v); else v.pause();
-  }), { threshold: .15 });
-  loops.forEach((el) => { near.observe(el); seen.observe(el); });
-  still.addEventListener('change', () => loops.forEach((el) => { const v = el.querySelector('video'); if (still.matches) v?.pause(); else { near.observe(el); if (el.dataset.inview && el.dataset.loaded && v) play(el, v); } }));
+    const el = e.target as HTMLElement, s = st.get(el); if (!s) return;
+    s.inview = e.isIntersecting && e.intersectionRatio >= .15; sync(el);
+  }), { threshold: [0, .15] });
+  loops.forEach((el) => {
+    const v = el.querySelector('video'); if (!v) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'lp'; b.hidden = true; el.append(b);
+    const s: St = { v, b, inview: false, user: false, tries: 0 }; st.set(el, s); label(s);
+    b.addEventListener('click', () => { s.user = !s.user; label(s); sync(el); });
+    v.addEventListener('canplay', () => sync(el));
+    near.observe(el); seen.observe(el);
+  });
+  still.addEventListener('change', () => loops.forEach((el) => { if (still.matches) unload(el); else near.observe(el); }));
 </script>
 
 <style>
@@ -336,6 +357,12 @@ const ld = {
   .loop { position: relative; overflow: hidden; background: var(--grey); }
   .loop img, .loop video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
   .loop video { position: absolute; inset: 0; }
+  /* Pauza pętli: mały okrągły przycisk w rogu, pałki pauzy albo trójkąt odtwarzania. */
+  .case :global(.lp) { position: absolute; left: 12px; bottom: 12px; z-index: 2; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: rgb(13 13 13 / .6); color: #fff; display: grid; place-items: center; cursor: pointer; }
+  .case :global(.lp[hidden]) { display: none; }
+  .case :global(.lp)::before { content: ''; box-sizing: border-box; width: 10px; height: 12px; border-inline: 3px solid currentColor; }
+  .case :global(.lp[aria-pressed="true"])::before { width: 0; height: 0; margin-left: 3px; border-inline: 0; border-block: 7px solid transparent; border-left: 11px solid currentColor; }
+  .case :global(.lp):hover { background: rgb(13 13 13 / .8); }
   .loop video::-webkit-media-controls-start-playback-button, .loop video::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
   .shot .loop { border: var(--line) solid #d5d8dd; border-radius: 12px; }
   .m-only { display: none; }
@@ -384,14 +411,10 @@ const ld = {
   .pp li { display: grid; grid-template-columns: minmax(0, 9em) minmax(0, 1fr); gap: 12px; padding: 11px 0; border-bottom: 1px solid #dfe2e6; align-items: baseline; }
   .pp li span { font-weight: 650; font-size: clamp(16px, 1.25vw, 18px); }
   .pp li em { font-style: normal; font-size: 15px; color: var(--mute); font-variant-numeric: tabular-nums; }
-  .pp-przed li span { color: #8c9299; }
+  .pp-przed li span { color: #6b7178; } /* szary „przed” z kontrastem 4,5:1 na bieli (recenzja Codexa 23.11) */
   .pp-po li { padding: 16px 0; align-content: center; }
   .pp-po li span { font-size: clamp(20px, 1.8vw, 26px); color: var(--cob); }
   .pp-po li:last-child span { color: var(--mute); }
-  .menu { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px !important; }
-  .menu li { padding: 10px 18px; border-radius: 999px; background: var(--grey); font-weight: 600; font-size: 15px; }
-  .menu li:first-child { background: #e8ecff; color: var(--cob); }
-  .menu .more { background: none; border: var(--line) dashed #b9bec6; color: var(--mute); }
 
   /* 4. Narzędzia */
   .tools { padding-bottom: var(--sec); }

@@ -8,7 +8,8 @@
           "osoba": "klient:glassstone",
           "elementy": [
             "NAZWA_FIRMY",
-            "IMIE"
+            "IMIE",
+            "WYNIK_LICZBOWY"
           ]
         }
       ]
