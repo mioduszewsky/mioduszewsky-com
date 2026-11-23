@@ -17,8 +17,21 @@ const contact = '/pl/kontakt/?utm_source=realizacje&utm_content=glassstone#ctFor
 const next = nextCase('glassstone', 'pl');
 const url = 'https://mioduszewsky.com/pl/realizacje/glassstone/';
 const dir = '/case/glassstone';
-// „AutoCAD-a” i odmiany nie łamią się na łączniku (na 390 px zostawało samo „a” w nowej linii, uwaga Fincha 22.11)
-const P = (t: string) => t.replace(/(^|[\s(„])([wziouaWZIOUA]) /g, '$1$2&nbsp;').replace(/AutoCAD-(\p{L}+)/gu, '<span class="nw">AutoCAD-$1</span>');
+// Łamanie tekstu (runda 5, uwaga Kacpra 23.11: dziury w pierwszych liniach nagłówków, sieroty).
+// „AutoCAD-a” i odmiany nie łamią się na łączniku (na 390 px zostawało samo „a” w nowej linii, uwaga Fincha 22.11).
+const NW = (t: string) => t.replace(/AutoCAD-(\p{L}+)/gu, '<span class="nw">AutoCAD-$1</span>');
+// Tekst ciągły: krótkie spójniki i przyimki przyklejone do następnego słowa (bez „a”, „i”, „w”, „u”, „na” na końcu linii),
+// dwa ostatnie słowa razem (bez sieroty w ostatniej linii).
+const KROTKIE = /(^|[\s(„;])(a|i|o|u|w|z|na|do|od|po|za|ze|we|A|I|O|U|W|Z|Na|Do|Od|Po|Za|Ze|We) /g;
+const P = (t: string) => {
+  let x = t.replace(KROTKIE, '$1$2&nbsp;').replace(KROTKIE, '$1$2&nbsp;');
+  const i = x.lastIndexOf(' '); if (i > 0) x = x.slice(0, i) + '&nbsp;' + x.slice(i + 1);
+  return NW(x);
+};
+// Nagłówki: linie ustawione ręcznie (najdłuższa u góry albo równe), każda bez łamania w środku; „¦” = dodatkowe łamanie
+// tylko na telefonie. Rozmiar: zwykły, ale nie większy, niż mieści najdłuższa linia w kolumnie (--fd komputer, --fm telefon,
+// szerokości linii w em zmierzone w przeglądarce, skrypt r5-em.cjs), więc linie nigdy nie łamią się same.
+const H = (linie: string[]) => linie.map((l) => `<span class="ln">${l.split('¦').map((c) => `<span class="sb">${NW(c.trim())}</span>`).join(' ')}</span>`).join(' ');
 
 const wiersze: [string, string][] = [
   ['Strona', 'Kamień i szkło po równo, dwie wyceny od pierwszego ekranu'],
@@ -27,15 +40,15 @@ const wiersze: [string, string][] = [
 ];
 
 const kroki = [
-  { f: 'kalendarz', etykieta: 'Kalendarz', tytul: 'Dzień zaczyna się w Kalendarzu',
+  { f: 'kalendarz', etykieta: 'Kalendarz', tytul: 'Dzień zaczyna się w Kalendarzu', linie: 'Dzień zaczyna się¦w Kalendarzu', em: [15.4, 8.7],
     tekst: 'Panel otwiera się na dzisiejszych pomiarach i montażach. Kalendarz jest spięty z Kalendarzem Google, którego ekipa już używa: wpis dodany w Google pojawia się w panelu zwykle po kilku sekundach, a termin zmieniony w karcie wraca do Google.',
     podpis: 'Kalendarz, widok Dziś. Dane przykładowe.',
     alt: 'Kalendarz w panelu GlassStone, widok Dziś: wpisy z Kalendarza Google do przypisania, czwartek 29 października z trzema montażami i jednym pomiarem. Dane przykładowe.' },
-  { f: 'zlecenia', etykieta: 'Zlecenia', tytul: 'Każde zlecenie na jednej tablicy',
+  { f: 'zlecenia', etykieta: 'Zlecenia', tytul: 'Każde zlecenie na jednej tablicy', linie: 'Każde zlecenie¦na jednej tablicy', em: [15.6, 8.1],
     tekst: 'Etapy ekipa ustawia sama, każdy z własnym alarmem, gdy zlecenie stoi. Plakietka na kafelku mówi, czy to sprzedaż GlassStone, czy montaż dla zleceniodawcy. Zapytanie ze strony ląduje w „Nowe”.',
     podpis: 'Zlecenia w etapach: na iPadzie tablica, w telefonie lista. Dane przykładowe.',
     alt: 'Zlecenia w panelu GlassStone pogrupowane w etapy Nowe, Wycena, Zamówione i W realizacji, w Nowe zapytanie ze strony, przy zleceniach materiał, miejscowość, termin i kwota. Dane przykładowe.' },
-  { f: 'karta', etykieta: 'Dokumenty', tytul: 'Dokumenty podpisane na iPadzie',
+  { f: 'karta', etykieta: 'Dokumenty', tytul: 'Dokumenty podpisane na iPadzie', linie: 'Dokumenty podpisane¦na iPadzie', em: [16.1, 11],
     tekst: 'Wzory zleceniodawcy wyglądają jak na papierze. Dane zlecenia Filip wpisuje raz i trafiają w pola wszystkich dokumentów, a klient podpisuje palcem albo rysikiem. Komplet wysyła z karty przyciskiem „Wyślij komplet”. Kolejny zleceniodawca to jego PDF-y i mapa pól, bez programowania.',
     podpis: 'Karta zlecenia. Dane przykładowe.',
     alt: 'Karta zlecenia w panelu GlassStone w telefonie: klient, wartość zlecenia, etap W realizacji, montaż dziś, przyciski Zadzwoń, Nawiguj, Dokument, Rysunek i Notatka, pod nimi dane klienta i montażu. Dane przykładowe.' },
@@ -102,7 +115,7 @@ const ld = {
           </div>
           <div class="wrap open-body">
             <div class="open-txt">
-              <p class="zdanie" aria-hidden="true" set:html={P('Strona i iPad, na którym ekipa prowadzi zlecenie od zapytania do podpisu.')} />
+              <p class="zdanie fit" aria-hidden="true" style="--fd: 11.6; --fm: 11.6" set:html={H(['Strona i iPad, na którym', 'ekipa prowadzi zlecenie', 'od zapytania do podpisu.'])} />
               <dl class="rows">
                 {wiersze.map(([k, v]) => <div><dt>{k}</dt><dd set:html={P(v)} /></div>)}
               </dl>
@@ -123,7 +136,7 @@ const ld = {
           <div class="wrap head">
             <div class="head-h">
               <p class="kicker">Strona</p>
-              <h2 id="s2-h" set:html={P('Kamień i szkło dostały tyle samo miejsca.')} />
+              <h2 id="s2-h" class="fit" style="--fd: 10.5; --fm: 10.5" set:html={H(['Kamień i szkło dostały', 'tyle samo miejsca.'])} />
             </div>
             <div class="head-txt">
               <p class="lead" set:html={P('Od pierwszego ekranu są dwie osobne wyceny, kamienia i szkła. Przy kontakcie stoją Filip od kamienia i Marcin od szkła.')} />
@@ -135,12 +148,12 @@ const ld = {
             <figure class="desk">
               <img src={`${dir}/realizacje-1440.webp`} width="2880" height="1800" loading="lazy" decoding="async"
                 alt="Strona Realizacje na glassstone.pl: filtry Wszystkie, Kamień, Szkło, Kuchnie, Łazienki i Lokale, pod nimi zdjęcia realizacji z miejscowością i liczbą zdjęć." />
-              <figcaption>Realizacje z filtrami, na komputerze.</figcaption>
+              <figcaption set:html={P('Realizacje z filtrami, na komputerze.')} />
             </figure>
             <figure class="phone">
               <img src={`${dir}/strona-390.webp`} width="780" height="1688" loading="lazy" decoding="async"
                 alt="glassstone.pl w telefonie: osobno Kamień z telefonem do Filipa i Szkło z telefonem do Marcina, każde z przyciskiem Wycena." />
-              <figcaption>Pierwszy ekran w telefonie.</figcaption>
+              <figcaption set:html={P('Pierwszy ekran w telefonie.')} />
             </figure>
           </div>
         </section>
@@ -150,7 +163,7 @@ const ld = {
           <div class="wrap talk-in">
             <div class="talk-h">
               <p class="kicker kicker-c">Zanim cokolwiek przebudowałem</p>
-              <h2 id="s3-h" set:html={P('Najpierw dane i rozmowa, potem panel.')} />
+              <h2 id="s3-h" class="fit" style="--fd: 11.9; --fm: 11.9" set:html={H(['Najpierw dane i rozmowa,', 'potem panel.'])} />
             </div>
             <div class="talk-txt">
               <p set:html={P('Sprawdziłem w bazie, z czego ekipa korzysta: dziewięć pozycji menu, przy każdej liczba wpisów i data ostatniego.')} />
@@ -160,17 +173,18 @@ const ld = {
           </div>
           <div class="wrap pp">
             <figure class="pp-col pp-przed">
-              <figcaption class="pp-h"><b>Przed</b> Menu panelu, 9 pozycji. Odczyt z bazy 22.10.2026.</figcaption>
+              <figcaption class="pp-h"><b>Przed</b> <span set:html={P('Menu panelu, 9 pozycji. Odczyt z bazy 22.10.2026.')} /></figcaption>
               <ol>{menuPrzed.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
             </figure>
             <figure class="pp-col pp-po">
-              <figcaption class="pp-h"><b>Po</b> Menu panelu dziś.</figcaption>
+              <figcaption class="pp-h"><b>Po</b> <span set:html={P('Menu panelu dziś.')} /></figcaption>
               <ol>{menuPo.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
             </figure>
           </div>
         </section>
 
-        <!-- 4. Narzędzia: trzy bloki, tekst z lewej, pełny ekran iPada z prawej; na telefonie pełny ekran z telefonu. -->
+        <!-- 4. Narzędzia: trzy bloki jednego modułu, tekst z lewej (5 kolumn), ujęcie iPada z prawej (7 kolumn, ta sama skala w 01-03);
+             w 03 pętla podpisu na całe pole, protokół po podpisie leży na niej jak kartka. Na telefonie pełne ekrany z telefonu. -->
         <section class="paper tools" aria-labelledby="s4-h">
           <div class="wrap">
             <h2 id="s4-h" class="sr">Narzędzia w panelu</h2>
@@ -180,7 +194,7 @@ const ld = {
                   <div class="step-txt">
                     <p class="num" aria-hidden="true">0{i + 1}</p>
                     <p class="label">{k.etykieta}</p>
-                    <h3 set:html={P(k.tytul)} />
+                    <h3 class="fit" style={`--fd: ${k.em[0]}; --fm: ${k.em[1]}`} set:html={H([k.linie])} />
                     <p set:html={P(k.tekst)} />
                   </div>
                   <div class:list={['step-media', k.f === 'karta' && 'pair']}>
@@ -191,7 +205,7 @@ const ld = {
                             alt="Nagranie: klient podpisuje się palcem na linii „zamawiający” protokołu odbioru, potem na karcie zlecenia dotknięcie przycisku Wyślij komplet. Dane przykładowe." />
                           <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
                         </div>
-                        <figcaption set:html={P('Podpis klienta palcem na protokole, potem „Wyślij komplet” na karcie. Dane przykładowe, stopka zleceniodawcy zasłonięta.')} />
+                        <figcaption><span set:html={P('Podpis klienta palcem na protokole, potem „Wyślij komplet” na karcie. Dane przykładowe, stopka zleceniodawcy zasłonięta.')} /><span class="d-only"> <span set:html={P('Protokół po podpisie: zamawiający, data i numer z danych zlecenia, podpis klienta. Dane przykładowe.')} /></span></figcaption>
                       </figure>
                     )}
                     <figure class:list={['shot', k.f === 'karta' && 'm-only']} data-tone="light">
@@ -205,7 +219,7 @@ const ld = {
                       <figure class="shot doc" data-tone="light">
                         <img src={`${dir}/dokument.webp`} width="700" height="806" loading="lazy" decoding="async"
                           alt="Protokół odbioru montażu po podpisie: zamawiający, data i numer zamówienia wpisane z danych zlecenia, lista punktów do zaznaczenia i podpis klienta nad słowem zamawiający. Dane przykładowe." />
-                        <figcaption set:html={P('Protokół po podpisie: zamawiający, data i numer z danych zlecenia, podpis klienta. Dane przykładowe.')} />
+                        <figcaption class="m-cap" set:html={P('Protokół po podpisie: zamawiający, data i numer z danych zlecenia, podpis klienta. Dane przykładowe.')} />
                       </figure>
                     )}
                   </div>
@@ -220,7 +234,7 @@ const ld = {
           <div class="wrap draw-in">
             <div class="draw-txt">
               <p class="kicker kicker-c">W testach</p>
-              <h2 id="s5-h" set:html={P('Rysunek na iPadzie, w formacie AutoCAD-a.')} />
+              <h2 id="s5-h" class="fit" style="--fd: 9.25; --fm: 9.25" set:html={H(['Rysunek na iPadzie,', 'w formacie', 'AutoCAD-a.'])} />
               <p set:html={P('Filip wybiera kształt blatu i wpisuje wymiary z miary albo rysuje rysikiem na kartce, a „Zrób z tego rysunek” zamienia kartkę w rysunek. Z każdego rysunku wychodzi PDF i DXF, czyli plik, który otwiera AutoCAD. Rysunek i pliki działają też bez zasięgu, a kartka zamienia się w rysunek, gdy wróci sieć.')} />
               <p set:html={P('Cel jest jeden: żeby chłopaki rysowali sami, bez licencji AutoCAD-a, która kosztuje 9&nbsp;933&nbsp;zł rocznie za stanowisko (cennik Autodesk z 23.11.2026). Narzędzie jest w testach. Zanim zastąpi AutoCAD-a, Filip sprawdzi je na swoim iPadzie, a zleceniodawca musi przyjąć plik bez poprawek.')} />
             </div>
@@ -230,15 +244,15 @@ const ld = {
                   alt="Nagranie z iPada: odręczny obrys blatu L rysikiem na Kartce z wymiarami 1800 i 2600, potem blat L w edytorze i wymiary wpisywane po kolei, na końcu gotowa płyta z wymiarami." />
                 <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
               </div>
-              <figcaption>Kartka rysikiem, potem blat L w edytorze: wymiary wpisywane po kolei.</figcaption>
+              <figcaption set:html={P('Kartka rysikiem, potem blat L w edytorze: wymiary wpisywane po kolei.')} />
             </figure>
           </div>
         </section>
 
-        <!-- 6. Na co dzień: nagłówek obok czterech pozycji w dwóch kolumnach (runda 3: bez pustej połowy pod krótkim nagłówkiem). -->
+        <!-- 6. Na co dzień: nagłówek w jednej linii nad czterema pozycjami (runda 5: nagłówek obok w wąskiej kolumnie łamał się „Jak to / prowadzimy”). -->
         <section class="paper daily" aria-labelledby="s6-h">
           <div class="wrap daily-in">
-            <h2 id="s6-h" set:html={P('Jak to prowadzimy na co dzień.')} />
+            <h2 id="s6-h" class="fit" style="--fd: 14.6; --fm: 8.9" set:html={H(['Jak to prowadzimy¦na co dzień.'])} />
             <dl class="rows rows-big">
               {naCoDzien.map(([k, v]) => <div><dt>{k}</dt><dd set:html={P(v)} /></div>)}
             </dl>
@@ -249,7 +263,7 @@ const ld = {
       <!-- 7. Wyjście: kobaltowy blok, pod kreską następna realizacja z pętli. -->
       <section class="end cobalt" data-tone="dark" aria-labelledby="end-h">
         <div class="wrap end-in">
-          <h2 id="end-h" set:html={P('Ekipa pracuje u klientów, a papiery wypełnia ręcznie?')} />
+          <div class="end-h"><h2 id="end-h" class="fit" style="--fd: 11.5; --fm: 11.5" set:html={H(['Ekipa pracuje u klientów,', 'a papiery wypełnia', 'ręcznie?'])} /></div>
           <div class="end-txt">
             <p set:html={P('Napisz, jak wygląda Wasz dzień od zapytania do montażu. Odpiszę, co z tego da się przenieść na iPada.')} />
             <div class="end-act">
@@ -370,14 +384,19 @@ const ld = {
   .loop video::-webkit-media-controls-start-playback-button, .loop video::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
   .shot .loop { border: var(--line) solid #d5d8dd; border-radius: 12px; }
   .m-only { display: none; }
-  .zdanie { font-weight: 700; font-size: clamp(28px, 2.9vw, 46px); line-height: 1.05; letter-spacing: -.035em; }
+  .zdanie { --fs: clamp(28px, 2.9vw, 46px); font-weight: 700; font-size: var(--fs); line-height: 1.05; letter-spacing: -.035em; }
   .rows { border-top: var(--line) solid var(--ink); }
   .rows > div { display: grid; grid-template-columns: minmax(0, 8.5em) minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: var(--line) solid var(--ink); }
   .rows dt { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding-top: 4px; }
   .rows dd { font-size: clamp(16px, 1.2vw, 18px); font-weight: 650; line-height: 1.35; }
   .live { justify-self: start; color: inherit; font-weight: 600; font-size: 16px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
 
-  h2 { font-weight: 750; font-size: clamp(34px, 4.4vw, 68px); line-height: 1.02; letter-spacing: -.04em; max-width: 14em; }
+  h2 { --fs: clamp(30px, 4.4vw, 68px); font-weight: 750; font-size: var(--fs); line-height: 1.02; letter-spacing: -.04em; max-width: 14em; }
+  /* Nagłówki z liniami ustawionymi ręcznie (H() we frontmatterze): każda linia bez łamania, „¦” łamie dopiero na telefonie.
+     Rozmiar = zwykły rozmiar nagłówka, chyba że najdłuższa linia (--fd / --fm, w em) nie mieści się w kolumnie: wtedy tyle, ile się mieści. */
+  .open-txt, .head-h, .talk-h, .step-txt, .draw-txt, .daily-in, .end-h { container-type: inline-size; }
+  .case .fit { font-size: min(var(--fs), 100cqi / var(--fd)); max-width: none; text-wrap: nowrap; }
+  .case :global(.ln) { display: block; white-space: nowrap; }
   .kicker { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
   .kicker-c { color: var(--cob); }
   .lead { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 32em; }
@@ -399,8 +418,9 @@ const ld = {
   .paper { background: var(--white); }
   .talk { padding: var(--sec) 0; }
   .talk-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
-  .talk-h { grid-column: 1 / span 6; display: grid; gap: 16px; }
-  .talk-txt { grid-column: 7 / -1; display: grid; gap: 18px; padding-top: 6px; }
+  /* nagłówek 7 kolumn: „Najpierw dane i rozmowa,” mieści się w jednej linii w zwykłym rozmiarze */
+  .talk-h { grid-column: 1 / span 7; display: grid; gap: 16px; }
+  .talk-txt { grid-column: 8 / -1; display: grid; gap: 18px; padding-top: 6px; }
   .talk-txt p { font-size: clamp(17px, 1.35vw, 20px); line-height: 1.6; max-width: 32em; }
   /* Przed i po: dziewięć pozycji z liczbami z bazy obok czterech dzisiejszych. */
   .pp { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); margin-top: var(--in); }
@@ -427,11 +447,17 @@ const ld = {
   /* Runda 3: tekst kroku na środku wysokości ujęcia (było przyklejone u góry, pod nim zostawała pusta ćwiartka ekranu). */
   .step-txt { grid-column: 1 / span 5; display: grid; gap: 10px; align-content: start; align-self: center; }
   .step-media { grid-column: 6 / -1; display: grid; gap: var(--in); }
-  /* Dokumenty: pętla podpisu obok protokołu, kolumny w proporcji obrazów (1600/1112 i 700/806), więc oba mają tę samą wysokość. */
-  .step-media.pair { grid-template-columns: minmax(0, 1.439fr) minmax(0, .8685fr); column-gap: var(--cgap); align-items: start; }
+  /* Dokumenty (runda 5, Kacper: 03 „ściśnięta” obok 01 i 02): pętla podpisu na całe pole jak ujęcia w 01 i 02 (ta sama proporcja 1,44
+     i ta sama skala), protokół po podpisie leży na niej jak kartka w prawym dolnym rogu. Kartka zaczyna się pod ramką podpisu
+     (63% wysokości pętli; ramka kończy się na ok. 60%) i wystaje pod pole na wysokość podpisu, który ma wtedy 64% szerokości. */
+  .step-media.pair { display: block; position: relative; }
+  .pair .doc { position: absolute; top: 0; right: 3%; width: 27%; margin-top: calc(100% / 1.4388 * .63); z-index: 3; }
+  .pair .doc img { border: var(--line) solid #c9cdd3; border-radius: 8px; box-shadow: 0 18px 40px rgb(13 13 13 / .18), 0 2px 6px rgb(13 13 13 / .08); }
+  .pair .shot:first-child figcaption { max-width: 64%; }
+  .case .m-cap { display: none; }
   .num { font-weight: 800; font-size: clamp(44px, 5vw, 80px); line-height: 1; letter-spacing: -.05em; color: var(--cob); }
   .label { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-  .steps h3 { font-weight: 750; font-size: clamp(22px, 2.1vw, 36px); line-height: 1.15; letter-spacing: -.02em; }
+  .steps h3 { --fs: clamp(22px, 2.1vw, 36px); font-weight: 750; font-size: var(--fs); line-height: 1.15; letter-spacing: -.02em; }
   .step-txt > p:last-child { font-size: clamp(16px, 1.3vw, 21px); line-height: 1.6; max-width: 30em; }
   .shot img { border: var(--line) solid #d5d8dd; border-radius: 12px; }
   .doc { max-width: none; }
@@ -444,7 +470,7 @@ const ld = {
   .draw { padding: var(--sec) 0; }
   .draw-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: center; }
   .draw-txt { grid-column: 1 / span 5; display: grid; gap: 18px; }
-  .draw-txt h2 { font-size: clamp(32px, 3.6vw, 60px); margin-bottom: 6px; }
+  .draw-txt h2 { --fs: clamp(30px, 3.6vw, 60px); margin-bottom: 6px; }
   .draw-shot { grid-column: 6 / -1; }
   .draw-txt p { font-size: clamp(17px, 1.35vw, 20px); line-height: 1.6; color: rgb(255 255 255 / .88); max-width: 32em; }
   .draw-shot .loop { border-radius: 12px; }
@@ -452,8 +478,9 @@ const ld = {
   /* 6. Na co dzień */
   .daily { padding: var(--sec) 0; }
   .daily-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
-  .daily h2 { grid-column: 1 / span 4; }
-  .rows-big { grid-column: 5 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--cgap); border-top: 0; }
+  .daily-in { row-gap: var(--in); }
+  .daily h2 { grid-column: 1 / -1; }
+  .rows-big { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--cgap); border-top: 0; }
   .rows-big > div { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 16px 0 20px; border-top: var(--line) solid var(--ink); border-bottom: 0; align-content: start; }
   .rows-big dt { font-size: 12px; padding-top: 0; }
   .rows-big dd { font-weight: 500; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.55; }
@@ -461,7 +488,7 @@ const ld = {
   /* 7. Wyjście */
   .end { padding-top: var(--sec); }
   .end-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: end; padding-bottom: var(--sec); }
-  .end h2 { max-width: 12em; grid-column: 1 / span 7; }
+  .end-h { grid-column: 1 / span 7; }
   .end-txt { display: grid; gap: 24px; grid-column: 8 / -1; }
   .end-txt p { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 26em; }
   .end-act { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
@@ -476,10 +503,17 @@ const ld = {
   .foot { background: #f8f9f2; }
 
   /* Na co dzień do 1100 px: nagłówek nad czterema pozycjami, żeby pod krótkim nagłówkiem nie zostawała pusta kolumna. */
-  @media (max-width: 1100px) { .daily h2, .rows-big { grid-column: 1 / -1; } .daily-in { row-gap: var(--in); } }
+  @media (max-width: 1100px) { .rows-big { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 900px) {
     .open-body, .duo, .site .head, .talk-in, .steps > li, .step-media.pair, .draw-in, .daily-in, .end-in { grid-template-columns: minmax(0, 1fr); }
-    .open-body > *, .duo > *, .site .head > *, .talk-in > *, .steps > li > *, .draw-in > *, .daily-in > *, .end-in > *, .end h2, .daily h2, .rows-big { grid-column: 1 / -1; }
+    .open-body > *, .duo > *, .site .head > *, .talk-in > *, .steps > li > *, .draw-in > *, .daily-in > *, .end-in > *, .end-h, .daily h2, .rows-big { grid-column: 1 / -1; }
+    /* bez kartki na pętli: protokół pod pętlą z własnym podpisem, jak przed rundą 5 */
+    .step-media.pair { display: grid; }
+    .pair .doc { position: static; width: auto; margin-top: 0; }
+    .pair .doc img { box-shadow: none; border-color: #d5d8dd; border-radius: 12px; }
+    .pair .shot:first-child figcaption { max-width: none; }
+    .case .m-cap { display: block; }
+    .case .d-only { display: none; }
     .site .head { row-gap: 18px; }
     .rows-big { grid-template-columns: minmax(0, 1fr); }
     .step-txt { align-self: start; }
@@ -500,11 +534,15 @@ const ld = {
     .pp li { grid-template-columns: minmax(0, 7.5em) minmax(0, 1fr); }
     .rows > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
     .rows-big > div { grid-template-columns: minmax(0, 1fr); }
-    .zdanie { font-size: clamp(26px, 7.8vw, 34px); }
+    .zdanie { --fs: clamp(26px, 7.8vw, 34px); }
+    .case .fit { font-size: min(var(--fs), 100cqi / var(--fm)); }
+    .case :global(.ln .sb) { display: block; }
   }
   @media (max-width: 480px) {
     .open { padding-top: calc(82px + clamp(8px, 1.6vw, 24px)); }
     .metka { font-size: 12px; }
     .name { margin-top: 12px !important; }
+    /* wiersze otwarcia: etykieta nad tekstem, bo obok niej zostawało 153 px i związane słowa („od pierwszego ekranu”) nie mieściły się */
+    .rows > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   }
 </style>
