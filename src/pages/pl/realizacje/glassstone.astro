@@ -18,8 +18,8 @@ const next = nextCase('glassstone', 'pl');
 const url = 'https://mioduszewsky.com/pl/realizacje/glassstone/';
 const dir = '/case/glassstone';
 // Łamanie tekstu (runda 5, uwaga Kacpra 23.11: dziury w pierwszych liniach nagłówków, sieroty).
-// „AutoCAD-a” i odmiany nie łamią się na łączniku (na 390 px zostawało samo „a” w nowej linii, uwaga Fincha 22.11).
-const NW = (t: string) => t.replace(/AutoCAD-(\p{L}+)/gu, '<span class="nw">AutoCAD-$1</span>');
+// Słowa z łącznikiem („AutoCAD-a”, „PDF-y”) nie łamią się na łączniku (uwagi Fincha 22.11 i 23.11: „AutoCAD-” / „a”, „PDF-” / „y”).
+const NW = (t: string) => t.replace(/(\p{L}+)-(\p{L}+)/gu, '<span class="nw">$1-$2</span>');
 // Tekst ciągły: krótkie spójniki i przyimki przyklejone do następnego słowa (bez „a”, „i”, „w”, „u”, „na” na końcu linii),
 // dwa ostatnie słowa razem (bez sieroty w ostatniej linii).
 const KROTKIE = /(^|[\s(„;])(a|i|o|u|w|z|na|do|od|po|za|ze|we|A|I|O|U|W|Z|Na|Do|Od|Po|Za|Ze|We) /g;
@@ -452,12 +452,13 @@ const ld = {
   .step-txt { grid-column: 1 / span 5; display: grid; gap: 10px; align-content: start; align-self: center; }
   .step-media { grid-column: 6 / -1; display: grid; gap: var(--in); }
   /* Dokumenty (runda 5, Kacper: 03 „ściśnięta” obok 01 i 02): pętla podpisu na całe pole jak ujęcia w 01 i 02 (ta sama proporcja 1,44
-     i ta sama skala), protokół po podpisie leży na niej jak kartka w prawym dolnym rogu. Kartka zaczyna się pod ramką podpisu
-     (63% wysokości pętli; ramka kończy się na ok. 60%) i wystaje pod pole na wysokość podpisu, który ma wtedy 64% szerokości. */
+     i ta sama skala), protokół po podpisie leży na niej jak kartka w prawym dolnym rogu, cała w obrębie pola (uwaga Fincha 23.11:
+     wystająca kartka ściskała podpis). Szerokość 22%, dół 3% nad krawędzią pola, więc góra kartki wypada na ok. 61% wysokości,
+     tuż pod ramką podpisu (ramka kończy się na ok. 60%, a sam podpis na 65% szerokości, kartka zaczyna się od 75%).
+     margin-top w % liczy się od szerokości: wysokość pola (100% / 1,4388) minus wysokość kartki (22% × 806/700) minus 3% wysokości pola. */
   .step-media.pair { display: block; position: relative; }
-  .pair .doc { position: absolute; top: 0; right: 3%; width: 27%; margin-top: calc(100% / 1.4388 * .63); z-index: 3; }
+  .pair .doc { position: absolute; top: 0; right: 3%; width: 22%; margin-top: calc(100% / 1.4388 * .97 - 22% * 806 / 700); z-index: 3; }
   .pair .doc img { border: var(--line) solid #c9cdd3; border-radius: 8px; box-shadow: 0 18px 40px rgb(13 13 13 / .18), 0 2px 6px rgb(13 13 13 / .08); }
-  .pair .shot:first-child figcaption { max-width: 64%; }
   .case .m-cap { display: none; }
   .num { font-weight: 800; font-size: clamp(44px, 5vw, 80px); line-height: 1; letter-spacing: -.05em; color: var(--cob); }
   .label { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
@@ -515,7 +516,6 @@ const ld = {
     .step-media.pair { display: grid; }
     .pair .doc { position: static; width: auto; margin-top: 0; }
     .pair .doc img { box-shadow: none; border-color: #d5d8dd; border-radius: 12px; }
-    .pair .shot:first-child figcaption { max-width: none; }
     .case .m-cap { display: block; }
     .case .d-only { display: none; }
     .site .head { row-gap: 18px; }
