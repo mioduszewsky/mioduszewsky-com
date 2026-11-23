@@ -173,8 +173,9 @@ const ld = {
             <h2 id="s3-h" class="fit fill" style="--fd: 18.1; --fm: 11.9" set:html={H(['Najpierw dane i rozmowa,¦potem panel.'])} />
           </div>
           <div class="wrap cmp">
-            <!-- korekta Kacpra 23.11: jeden ciągły tekst na całą szerokość; runda 11: historia od poprzedniej wersji (Lovable, marzec) do decyzji o menu -->
-            <p class="wide-lead cmp-lead" set:html={P('GlassStone miało już stronę i panel do niej, wygenerowane w marcu 2026 w Lovable, narzędziu, które składa aplikację z opisu. Zanim cokolwiek zmieniłem, sprawdziłem w bazie tego panelu, z czego ekipa naprawdę korzysta: przy każdej z dziewięciu pozycji menu liczbę wpisów i datę ostatniego. Osiem z dziewięciu stało od miesięcy albo było pustych, a kalendarz montaży miał jeden termin w całej historii. Potem rozmowa z Filipem o dniu pracy: dokumenty od firmy, dla której montują, przychodziły jako PDF bez pól, a Filip wypełniał je ręcznie u klienta. W menu zostało to, czego używają w pracy: Zlecenia, Kalendarz i Rysunki, a reszta poszła pod „Więcej”.')} />
+            <!-- korekta Kacpra 23.11: jeden ciągły tekst na całą szerokość; runda 11: historia od poprzedniej wersji do decyzji o menu (korekta rundy 12: bez wstawki o narzędziu pierwszej wersji);
+                 runda 12: zdanie o iPadzie (wybór Filipa) przeniesione tu z siatki „Po”, jako koniec historii -->
+            <p class="wide-lead cmp-lead" set:html={P('GlassStone miało już stronę i panel do niej. Zanim cokolwiek zmieniłem, sprawdziłem w bazie tego panelu, z czego ekipa naprawdę korzysta: przy każdej z dziewięciu pozycji menu liczbę wpisów i datę ostatniego. Osiem z dziewięciu stało od miesięcy albo było pustych, a kalendarz montaży miał jeden termin w całej historii. Potem rozmowa z Filipem o dniu pracy: dokumenty od firmy, dla której montują, przychodziły jako PDF bez pól, a Filip wypełniał je ręcznie u klienta. W menu zostało to, czego używają w pracy: Zlecenia, Kalendarz i Rysunki, a reszta poszła pod „Więcej”. Dokumenty i rysunek zrobiłem pod iPada, bo Filip go miał i chciał na nim pracować, a u innej ekipy zacząłbym od tego, na czym ona pracuje.')} />
             <!-- runda 9 (Sławek): 9 i 4 jako bohater porównania, w geście otwarcia (GLASS konturem, STONE pełne): „9” konturem, „4” pełne
                  kobaltem. Pozycje obu menu w tej samej siatce kafelków 3 kolumn, więc „Po” jest krótsze o rząd, nie o pustą płachtę. -->
             <div class="cmp-col cmp-c1">
@@ -190,8 +191,6 @@ const ld = {
                 <p class="cmp-h" id="pp-po"><b>Po</b> <span set:html={P('Menu panelu dziś.')} /></p>
               </div>
               <ol class="cmp-l cmp-po" role="list" aria-labelledby="pp-po">{menuPo.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
-              <!-- runda 8: dopasowanie do ekipy (iPad to wybór Filipa) w wolnych kafelkach ostatniego rzędu „Po”, nie w zakończeniu -->
-              <p class="cmp-note" set:html={P('Dokumenty i rysunek zrobiłem pod iPada, bo Filip go miał i chciał na nim pracować, a u innej ekipy zacząłbym od tego, na czym ona pracuje.')} />
             </div>
           </div>
         </section>
@@ -467,8 +466,9 @@ const ld = {
   .cmp-przed li span { color: #6b7178; } /* szary „przed” z kontrastem 4,9:1 na bieli (recenzja Codexa 23.11) */
   .cmp-po li span { font-weight: 750; color: var(--cob); }
   .cmp-po li:last-of-type span { color: var(--ink); }
-  /* zdanie o dopasowaniu w dwóch wolnych kafelkach ostatniego rzędu „Po”, tym samym stopniem co nazwy pozycji */
-  .cmp-note { grid-column: span 2; padding-top: 12px; border-top: 1px solid #dfe2e6; font-size: clamp(15px, 1.1vw, 17px); line-height: 1.5; color: var(--ink); }
+  /* runda 12: zdanie o iPadzie przeszło do tekstu głównego; „Więcej” (zbiera resztę menu) bierze cały ostatni rząd „Po”,
+     więc w siatce nie zostają dwa puste kafelki */
+  .cmp-po li:last-of-type { grid-column: 1 / -1; }
 
   /* 4. Narzędzia */
   .tools { padding-bottom: var(--sec); }
@@ -566,7 +566,7 @@ const ld = {
     .m-only { display: block; }
     .shot .loop, .draw-shot .loop { border-radius: 0; border-inline: 0; }
     .cmp-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .cmp-note { grid-column: 1 / -1; }
+    .cmp-po li:last-of-type { grid-column: auto; }
     .rows > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
     .rows-big > div { grid-template-columns: minmax(0, 1fr); }
     .zdanie { --fs: clamp(26px, 7.8vw, 34px); }
