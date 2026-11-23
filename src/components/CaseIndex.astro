@@ -58,7 +58,7 @@ const hasCase = (slug: string) => `../pages/${pl ? 'pl/realizacje' : 'work'}/${s
 // Karta jest tylko dla case'u z tej listy w danym języku (GlassStone zdjęty do przebudowy, Kacper 21.10).
 const order = (slug: string) => caseOrder.findIndex((c) => c.slug === slug);
 const cases = [
-  { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: pl ? 'Hero strony GlassStone: Nie sprzedajemy kamienia. Tworzymy wnętrza, w których chce się żyć.' : "GlassStone homepage hero, in Polish: we don't sell stone, we create interiors you want to live in." },
+  { slug: 'glassstone', name: 'GlassStone', img: heroGlassstone, alt: pl ? 'Pierwszy ekran glassstone.pl: napis „Kamień i szkło”, zdjęcie łazienki z kamieniem i dwie wyceny, kamienia i szkła.' : 'First screen of glassstone.pl, in Polish: “Stone and glass”, a stone bathroom photo and two quote buttons, stone and glass.' },
   { slug: 'eskapizm', name: T.nameEskapizm, img: heroEskapizm, alt: pl ? 'Hero strony eskapizm: Kolejny wieczór na planowaniu podróży do Azji? Laptop na biurku w złotej godzinie.' : 'eskapizm homepage hero, in Polish: another evening spent planning a trip to Asia? A laptop on a desk at golden hour.' },
   { slug: 'igor-grabowski', name: 'Igor Grabowski', heroLeft: true, img: heroIgor, alt: pl ? 'Pierwszy ekran strony kolekcji Igora Grabowskiego: po najechaniu na Prace pojawia się praca z kolekcji.' : "First screen of Igor Grabowski's collection site: hovering Works brings up a piece from the collection." },
   { slug: 'cannversity', name: 'Cannversity', img: heroCannversity, alt: pl ? 'Hero strony Cannversity: Od pomysłu do produktu. W branży konopnej.' : 'Cannversity homepage hero, in Polish: from idea to product, in the cannabis industry.' },

@@ -192,4 +192,10 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/igor-grabowski/" />
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://mioduszewsky.com/pl/realizacje/glassstone/</loc>
+    <lastmod>2026-11-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/glassstone/" />
+    <priority>0.7</priority>
+  </url>
 </urlset>
