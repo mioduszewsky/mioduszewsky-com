@@ -121,11 +121,15 @@ const ld = {
         <!-- 2. Strona: kobalt glassstone.pl, komputer obok telefonu (na telefonie jedno pod drugim, od krawędzi do krawędzi). -->
         <section class="cobalt site" data-tone="dark" aria-labelledby="s2-h">
           <div class="wrap head">
-            <p class="kicker">Strona</p>
-            <h2 id="s2-h" set:html={P('Kamień i szkło dostały tyle samo miejsca.')} />
-            <p class="lead" set:html={P('Od pierwszego ekranu są dwie osobne wyceny, kamienia i szkła. Przy kontakcie stoją Filip od kamienia i Marcin od szkła.')} />
-            <p class="lead" set:html={P('Realizacje da się przefiltrować: kamień, szkło, kuchnie, łazienki, lokale.')} />
-            <p class="lead" set:html={P('Zapytanie z formularza zakłada zlecenie w panelu i wysyła mail na biuro@glassstone.pl z przyciskiem do karty klienta.')} />
+            <div class="head-h">
+              <p class="kicker">Strona</p>
+              <h2 id="s2-h" set:html={P('Kamień i szkło dostały tyle samo miejsca.')} />
+            </div>
+            <div class="head-txt">
+              <p class="lead" set:html={P('Od pierwszego ekranu są dwie osobne wyceny, kamienia i szkła. Przy kontakcie stoją Filip od kamienia i Marcin od szkła.')} />
+              <p class="lead" set:html={P('Realizacje da się przefiltrować: kamień, szkło, kuchnie, łazienki, lokale.')} />
+              <p class="lead" set:html={P('Zapytanie z formularza zakłada zlecenie w panelu i wysyła mail na biuro@glassstone.pl z przyciskiem do karty klienta.')} />
+            </div>
           </div>
           <div class="wrap duo">
             <figure class="desk">
@@ -178,7 +182,7 @@ const ld = {
                     <h3 set:html={P(k.tytul)} />
                     <p set:html={P(k.tekst)} />
                   </div>
-                  <div class="step-media">
+                  <div class:list={['step-media', k.f === 'karta' && 'pair']}>
                     {k.f === 'karta' && (
                       <figure class="shot" data-tone="light">
                         <div class="loop" data-loop data-d={`${dir}/podpis.mp4`} data-m={`${dir}/podpis-m.mp4`} style="aspect-ratio: 1600 / 1112">
@@ -210,20 +214,16 @@ const ld = {
           </div>
         </section>
 
-        <!-- 5. Rysunek: ciemny pas, bo to osobna sprawa i jest w testach. Ujęcia z iPada (na telefonie rysunku się nie zakłada). -->
+        <!-- 5. Rysunek: ciemny pas, bo to osobna sprawa i jest w testach. Tekst obok pętli z iPada (na telefonie rysunku się nie zakłada). -->
         <section class="ink draw" data-tone="dark" aria-labelledby="s5-h">
-          <div class="wrap draw-head">
-            <div>
+          <div class="wrap draw-in">
+            <div class="draw-txt">
               <p class="kicker kicker-c">W testach</p>
               <h2 id="s5-h" set:html={P('Rysunek na iPadzie, w formacie AutoCAD-a.')} />
-            </div>
-            <div class="draw-txt">
               <p set:html={P('Filip wybiera kształt blatu i wpisuje wymiary z miary albo rysuje rysikiem na kartce, a „Zrób z tego rysunek” zamienia kartkę w rysunek. Z każdego rysunku wychodzi PDF i DXF, czyli plik, który otwiera AutoCAD. Działa też bez zasięgu.')} />
               <p set:html={P('Cel jest jeden: żeby chłopaki rysowali sami, bez drogiej licencji AutoCAD-a. Narzędzie jest w testach. Zanim zastąpi AutoCAD-a, Filip sprawdzi je na swoim iPadzie, a zleceniodawca musi przyjąć plik bez poprawek.')} />
             </div>
-          </div>
-          <div class="wrap draw-shots">
-            <figure>
+            <figure class="draw-shot">
               <div class="loop" data-loop data-d={`${dir}/kartka.mp4`} data-m={`${dir}/kartka-m.mp4`} style="aspect-ratio: 1600 / 1112">
                 <img src={`${dir}/kartka-poster.webp`} width="1600" height="1112" loading="lazy" decoding="async"
                   alt="Nagranie z iPada: odręczny obrys blatu L rysikiem na Kartce z wymiarami 1800 i 2600, potem blat L w edytorze i wymiary wpisywane po kolei, na końcu gotowa płyta z wymiarami." />
@@ -234,7 +234,7 @@ const ld = {
           </div>
         </section>
 
-        <!-- 6. Na co dzień: cztery wiersze, jak tabelka w otwarciu. -->
+        <!-- 6. Na co dzień: nagłówek obok czterech pozycji w dwóch kolumnach (runda 3: bez pustej połowy pod krótkim nagłówkiem). -->
         <section class="paper daily" aria-labelledby="s6-h">
           <div class="wrap daily-in">
             <h2 id="s6-h" set:html={P('Jak to prowadzimy na co dzień.')} />
@@ -297,7 +297,9 @@ const ld = {
     /* Kolory glassstone.pl: kobalt #1F3BFF (akcent strony i panelu), czerń, biel, szarość tła panelu. */
     --cob: #1F3BFF; --ink: #0d0d0d; --white: #fff; --grey: #f2f3f5; --mute: #5b6068;
     --line: 1.5px;
-    --gutter: clamp(20px, 3.4vw, 56px); --max: 1440px;
+    --gutter: clamp(20px, 3.4vw, 56px); --max: 1680px;
+    /* Runda 3 (uwaga Kacpra 23.11: za dużo pustego): jeden odstęp między sekcjami i jeden wewnątrz, w całym case'ie. Siatka do 1680 px, żeby na 2000 px nie zostawały szerokie pasy po bokach. */
+    --sec: clamp(48px, 5.2vw, 88px); --in: clamp(24px, 2.6vw, 44px);
     --footer-pad: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
     --cols: repeat(12, minmax(0, 1fr)); --cgap: clamp(16px, 2.6vw, 40px);
     font-family: 'GeistCase', system-ui, sans-serif; background: var(--white); color: var(--ink); overflow-x: clip;
@@ -320,7 +322,7 @@ const ld = {
   figcaption { font-size: 14px; line-height: 1.45; color: var(--mute); padding-top: 10px; }
 
   /* 1. Otwarcie */
-  .open { padding-top: calc(104px + clamp(8px, 1.6vw, 24px)); padding-bottom: clamp(56px, 7vw, 104px); }
+  .open { padding-top: calc(104px + clamp(8px, 1.6vw, 24px)); padding-bottom: var(--sec); }
   .metka { font-size: clamp(11px, .95vw, 14px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
   /* „GLASSSTONE” w Geist 800 z ciasnym rozstawem: 6,36 em szerokości (zmierzone w przeglądarce), więc nazwa wypełnia kolumnę. */
   .name { margin-top: clamp(4px, .6vw, 10px) !important; font-weight: 800; letter-spacing: -.045em; line-height: .86; white-space: nowrap;
@@ -328,15 +330,14 @@ const ld = {
   /* Szkło konturem (przezroczyste jak szkło), kamień pełny: jeden gest z języka GlassStone, bez ozdobników. */
   .name .glass { color: transparent; -webkit-text-stroke: max(2px, .012em) var(--cob); }
   .rule { margin-top: clamp(14px, 2vw, 30px); height: clamp(3px, .28vw, 5px); background: var(--ink); }
-  .open-body { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; padding-top: clamp(28px, 4vw, 56px); }
-  .open-txt { grid-column: 1 / span 5; display: grid; gap: clamp(18px, 3vh, 32px); }
+  .open-body { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: center; padding-top: var(--in); }
+  .open-txt { grid-column: 1 / span 5; align-self: center; display: grid; gap: clamp(18px, 3vh, 32px); }
   .open-shot { grid-column: 6 / -1; border: var(--line) solid var(--ink); border-radius: 14px; overflow: hidden; }
   .loop { position: relative; overflow: hidden; background: var(--grey); }
   .loop img, .loop video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
   .loop video { position: absolute; inset: 0; }
   .loop video::-webkit-media-controls-start-playback-button, .loop video::-webkit-media-controls { display: none !important; -webkit-appearance: none; }
   .shot .loop { border: var(--line) solid #d5d8dd; border-radius: 12px; }
-  .draw-shots .loop { border-radius: 12px; }
   .m-only { display: none; }
   .zdanie { font-weight: 700; font-size: clamp(28px, 2.9vw, 46px); line-height: 1.05; letter-spacing: -.035em; }
   .rows { border-top: var(--line) solid var(--ink); }
@@ -353,24 +354,28 @@ const ld = {
   /* 2. Strona na kobalcie */
   .cobalt { background: var(--cob); color: var(--white); }
   .cobalt figcaption { color: rgb(255 255 255 / .82); }
-  .site { padding: clamp(64px, 8vw, 128px) 0 clamp(72px, 9vw, 140px); }
-  .site .head { display: grid; row-gap: 16px; }
+  .site { padding: var(--sec) 0; }
+  .site .head { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: end; }
+  .site .head-h { grid-column: 1 / span 6; display: grid; gap: 16px; }
+  .site .head-txt { grid-column: 7 / -1; display: grid; gap: 14px; }
   .site .lead { color: rgb(255 255 255 / .9); }
-  .duo { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
+  .duo { margin-top: var(--in); display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: end; }
   .duo .desk { grid-column: 1 / span 9; }
   .duo .phone { grid-column: 10 / -1; }
   .duo img { border-radius: 12px; background: var(--white); }
 
   /* 3. Rozmowa */
   .paper { background: var(--white); }
-  .talk { padding: clamp(72px, 9vw, 140px) 0 clamp(40px, 5vw, 72px); }
+  .talk { padding: var(--sec) 0; }
   .talk-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
   .talk-h { grid-column: 1 / span 6; display: grid; gap: 16px; }
   .talk-txt { grid-column: 7 / -1; display: grid; gap: 18px; padding-top: 6px; }
   .talk-txt p { font-size: clamp(17px, 1.35vw, 20px); line-height: 1.6; max-width: 32em; }
   /* Przed i po: dziewięć pozycji z liczbami z bazy obok czterech dzisiejszych. */
-  .pp { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); margin-top: clamp(40px, 5vw, 72px); }
-  .pp-col { margin: 0; }
+  .pp { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); margin-top: var(--in); }
+  .pp-col { margin: 0; display: grid; grid-template-rows: auto 1fr; }
+  /* „Po” ma 4 pozycje, „Przed” 9: wiersze „Po” rozciągnięte na wysokość „Przed”, bez pustej połaci pod listą. */
+  .pp-po ol { display: grid; grid-auto-rows: 1fr; }
   .pp-przed { grid-column: 1 / span 7; }
   .pp-po { grid-column: 8 / -1; }
   .pp-h { padding: 0 0 12px; font-size: 14px; color: var(--mute); border-bottom: var(--line) solid var(--ink); }
@@ -380,7 +385,7 @@ const ld = {
   .pp li span { font-weight: 650; font-size: clamp(16px, 1.25vw, 18px); }
   .pp li em { font-style: normal; font-size: 15px; color: var(--mute); font-variant-numeric: tabular-nums; }
   .pp-przed li span { color: #8c9299; }
-  .pp-po li { padding: 16px 0; }
+  .pp-po li { padding: 16px 0; align-content: center; }
   .pp-po li span { font-size: clamp(20px, 1.8vw, 26px); color: var(--cob); }
   .pp-po li:last-child span { color: var(--mute); }
   .menu { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px !important; }
@@ -389,43 +394,46 @@ const ld = {
   .menu .more { background: none; border: var(--line) dashed #b9bec6; color: var(--mute); }
 
   /* 4. Narzędzia */
-  .tools { padding-bottom: clamp(72px, 9vw, 140px); }
+  .tools { padding-bottom: var(--sec); }
   .steps { list-style: none; padding: 0; border-top: var(--line) solid var(--ink); }
-  .steps > li { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); padding: clamp(32px, 4vw, 60px) 0; border-bottom: var(--line) solid var(--ink); align-items: start; }
-  .step-txt { grid-column: 1 / span 4; display: grid; gap: 10px; align-content: start; position: sticky; top: 112px; }
-  .step-media { grid-column: 5 / -1; display: grid; gap: clamp(28px, 3vw, 44px); }
+  .steps > li { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); padding: var(--in) 0; border-bottom: var(--line) solid var(--ink); align-items: start; }
+  /* Runda 3: tekst kroku na środku wysokości ujęcia (było przyklejone u góry, pod nim zostawała pusta ćwiartka ekranu). */
+  .step-txt { grid-column: 1 / span 5; display: grid; gap: 10px; align-content: start; align-self: center; }
+  .step-media { grid-column: 6 / -1; display: grid; gap: var(--in); }
+  /* Dokumenty: pętla podpisu obok protokołu, kolumny w proporcji obrazów (1600/1112 i 700/806), więc oba mają tę samą wysokość. */
+  .step-media.pair { grid-template-columns: minmax(0, 1.439fr) minmax(0, .8685fr); column-gap: var(--cgap); align-items: start; }
   .num { font-weight: 800; font-size: clamp(44px, 5vw, 80px); line-height: 1; letter-spacing: -.05em; color: var(--cob); }
   .label { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-  .steps h3 { font-weight: 750; font-size: clamp(22px, 1.9vw, 28px); line-height: 1.15; letter-spacing: -.02em; }
-  .step-txt > p:last-child { font-size: clamp(16px, 1.25vw, 19px); line-height: 1.6; max-width: 28em; }
+  .steps h3 { font-weight: 750; font-size: clamp(22px, 2.1vw, 36px); line-height: 1.15; letter-spacing: -.02em; }
+  .step-txt > p:last-child { font-size: clamp(16px, 1.3vw, 21px); line-height: 1.6; max-width: 30em; }
   .shot img { border: var(--line) solid #d5d8dd; border-radius: 12px; }
-  .doc { max-width: 560px; }
+  .doc { max-width: none; }
   .doc img { background: var(--white); }
 
   /* 5. Rysunek */
   .ink { background: var(--ink); color: var(--white); }
   .ink figcaption { color: rgb(255 255 255 / .7); }
   .ink .kicker-c { color: #8fa0ff; }
-  .draw { padding: clamp(72px, 9vw, 140px) 0; }
-  .draw-head { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
-  .draw-head > div:first-child { grid-column: 1 / span 6; display: grid; gap: 16px; }
-  .draw-txt { grid-column: 7 / -1; display: grid; gap: 18px; padding-top: 6px; }
+  .draw { padding: var(--sec) 0; }
+  .draw-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: center; }
+  .draw-txt { grid-column: 1 / span 5; display: grid; gap: 18px; }
+  .draw-txt h2 { font-size: clamp(32px, 3.6vw, 60px); margin-bottom: 6px; }
+  .draw-shot { grid-column: 6 / -1; }
   .draw-txt p { font-size: clamp(17px, 1.35vw, 20px); line-height: 1.6; color: rgb(255 255 255 / .88); max-width: 32em; }
-  .draw-shots { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--cgap); }
-  .draw-shots img { border-radius: 12px; }
+  .draw-shot .loop { border-radius: 12px; }
 
   /* 6. Na co dzień */
-  .daily { padding: clamp(72px, 9vw, 140px) 0; }
+  .daily { padding: var(--sec) 0; }
   .daily-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
-  .daily h2 { grid-column: 1 / span 5; }
-  .rows-big { grid-column: 6 / -1; }
-  .rows-big > div { grid-template-columns: minmax(0, 11em) minmax(0, 1fr); padding: 18px 0; }
-  .rows-big dt { font-size: 12px; }
+  .daily h2 { grid-column: 1 / span 4; }
+  .rows-big { grid-column: 5 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--cgap); border-top: 0; }
+  .rows-big > div { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 16px 0 20px; border-top: var(--line) solid var(--ink); border-bottom: 0; align-content: start; }
+  .rows-big dt { font-size: 12px; padding-top: 0; }
   .rows-big dd { font-weight: 500; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.55; }
 
   /* 7. Wyjście */
-  .end { padding-top: clamp(72px, 9vw, 140px); }
-  .end-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: end; padding-bottom: clamp(56px, 7vw, 104px); }
+  .end { padding-top: var(--sec); }
+  .end-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: end; padding-bottom: var(--sec); }
   .end h2 { max-width: 12em; grid-column: 1 / span 7; }
   .end-txt { display: grid; gap: 24px; grid-column: 8 / -1; }
   .end-txt p { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 26em; }
@@ -433,34 +441,38 @@ const ld = {
   .btn { display: inline-block; padding: 18px 30px; border-radius: 999px; background: var(--white); color: var(--cob); text-decoration: none; font-size: 16px; font-weight: 700; }
   .btn:hover { background: #e8ecff; }
   .next { display: block; color: var(--white); text-decoration: none; }
-  .next-in { position: relative; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: clamp(28px, 4vw, 56px); }
+  .next-in { position: relative; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: var(--in); }
   .next-in::before { content: ''; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); height: var(--line); background: var(--white); }
   .next-k { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
   .next-n { font-weight: 750; font-size: clamp(36px, 6vw, 96px); line-height: 1; letter-spacing: -.04em; }
   .next:hover .next-n { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 10px; }
   .foot { background: #f8f9f2; }
 
+  /* Na co dzień do 1100 px: nagłówek nad czterema pozycjami, żeby pod krótkim nagłówkiem nie zostawała pusta kolumna. */
+  @media (max-width: 1100px) { .daily h2, .rows-big { grid-column: 1 / -1; } .daily-in { row-gap: var(--in); } }
   @media (max-width: 900px) {
-    .open-body, .duo, .talk-in, .steps > li, .draw-head, .daily-in, .end-in { grid-template-columns: minmax(0, 1fr); }
-    .open-body > *, .duo > *, .talk-in > *, .steps > li > *, .draw-head > *, .draw-head > div:first-child, .daily-in > *, .end-in > *, .end h2, .daily h2, .rows-big { grid-column: 1 / -1; }
-    .step-txt { position: static; }
+    .open-body, .duo, .site .head, .talk-in, .steps > li, .step-media.pair, .draw-in, .daily-in, .end-in { grid-template-columns: minmax(0, 1fr); }
+    .open-body > *, .duo > *, .site .head > *, .talk-in > *, .steps > li > *, .draw-in > *, .daily-in > *, .end-in > *, .end h2, .daily h2, .rows-big { grid-column: 1 / -1; }
+    .site .head { row-gap: 18px; }
+    .rows-big { grid-template-columns: minmax(0, 1fr); }
+    .step-txt { align-self: start; }
     .pp { grid-template-columns: minmax(0, 1fr); }
     .pp-przed, .pp-po { grid-column: 1 / -1; }
     .duo .phone { width: 62%; justify-self: center; }
-    .draw-shots { grid-template-columns: minmax(0, 1fr); }
   }
   /* Telefon: ujęcia narzędzi pełnym ekranem i od krawędzi do krawędzi (bez marginesów, bez zaokrągleń); podpisy wracają na krawędź tekstu. */
   @media (max-width: 700px) {
-    .case :is(.open-shot, .duo .desk, .duo .phone, .shot, .draw-shots figure) { margin-inline: calc(var(--gutter) * -1); }
+    .case :is(.open-shot, .duo .desk, .duo .phone, .shot, .draw-shot) { margin-inline: calc(var(--gutter) * -1); }
     .open-shot { border: 0; border-radius: 0; border-block: var(--line) solid var(--ink); }
     .duo .phone { width: auto; justify-self: stretch; }
-    .duo img, .shot img, .draw-shots img { border-radius: 0; border-inline: 0; }
+    .duo img, .shot img { border-radius: 0; border-inline: 0; }
     figcaption { padding-inline: var(--gutter); }
     .doc { max-width: none; }
     .m-only { display: block; }
-    .shot .loop, .draw-shots .loop { border-radius: 0; border-inline: 0; }
+    .shot .loop, .draw-shot .loop { border-radius: 0; border-inline: 0; }
     .pp li { grid-template-columns: minmax(0, 7.5em) minmax(0, 1fr); }
-    .rows > div, .rows-big > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
+    .rows > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
+    .rows-big > div { grid-template-columns: minmax(0, 1fr); }
     .zdanie { font-size: clamp(26px, 7.8vw, 34px); }
   }
   @media (max-width: 480px) {
