@@ -296,7 +296,7 @@ const ld = {
   };
   const unload = (el: HTMLElement) => {
     const s = st.get(el); if (!s || !el.dataset.loaded) return;
-    clearTimeout(s.timer); s.v.pause(); s.v.querySelectorAll('source').forEach((x) => x.remove()); s.v.preload = 'none'; s.v.load();
+    clearTimeout(s.timer); s.tries = 0; s.v.pause(); s.v.querySelectorAll('source').forEach((x) => x.remove()); s.v.preload = 'none'; s.v.load();
     delete el.dataset.loaded; s.b.hidden = true;
   };
   const near = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && !still.matches) { load(e.target as HTMLElement); near.unobserve(e.target); } }), { rootMargin: '100% 0px' });
