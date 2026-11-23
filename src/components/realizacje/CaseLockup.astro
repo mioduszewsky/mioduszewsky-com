@@ -134,6 +134,7 @@ const home = routes[locale].home;
   [data-lk-tone='dark'] :is(.lk-x, .lk-client) { filter: drop-shadow(0 1px 6px rgb(0 0 0 / .45)); }
   .lk-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   .case-lockup { transition: color .3s ease, transform .25s ease; }
+  .case-lockup[data-lk-snap] { transition: color .3s ease; }
   .lk-x, .lk-client { transition: color .3s ease, filter .3s ease; }
   /* Schowany lockup znika całkiem: logo klienta z sygnetem wystaje pod pudełko o kilka px i po translateY(-100%)
      zostawało u góry ekranu kreskami (Cannversity, zrzut Kacpra 20.10). Zjazd o 24 px dalej niż pudełko; bez visibility,
@@ -204,34 +205,62 @@ const home = routes[locale].home;
     const menuOpen = () => { try { return !!panel?.matches(':popover-open'); } catch { return false; } };
     let lastY = scrollY;
     let tick = false;
-    // Omijanie treści (data-lk-avoid): czy logo albo Menu w pozycji pokazanej leżałyby na tekście, obrazie albo wideo.
-    // Próbki co 20 px w prostokątach logo i przycisków; pod każdą najwyższy element spoza lockupu; dla mediów jego prostokąt,
-    // dla reszty prostokąty linii tekstu (Range). Prostokąty logo i przycisków z zapasem 8 px.
+    // Omijanie treści (data-lk-avoid; GlassStone, uwagi Fincha i recenzja Codexa 23.11): mapa przeszkód w układzie dokumentu,
+    // liczona raz (wczytanie, fonty, resize, zmiana wysokości treści): prostokąty linii tekstu, mediów i pasy sekcji z tonem.
+    // W każdej klatce tylko porównanie prostokątów logo i przycisków (pozycja pokazana, zapas 8 px) z mapą przesuniętą o scrollY.
+    // Kolizja = linia tekstu, medium albo kreska pod znakiem, albo pod znakiem leżą sekcje o różnych tonach (granica jasna/ciemna).
     const avoid = lk.hasAttribute('data-lk-avoid');
-    const MEDIA = /^(IMG|VIDEO|PICTURE|CANVAS|IFRAME|SVG)$/i;
-    const pieces = () => {
+    type R = { l: number; t: number; r: number; b: number };
+    let obst: R[] = [], bands: (R & { tone: string })[] = [], mapDirty = true, pcs: R[] = [];
+    const buildMap = () => {
+      const sy = scrollY, out: R[] = [];
+      const add = (b: DOMRect) => { if (b.width > 1 && b.height > 1) out.push({ l: b.left, t: b.top + sy, r: b.right, b: b.bottom + sy }); };
+      const root = document.querySelector('main') ?? document.body;
+      const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const g = document.createRange();
+      for (let n = tw.nextNode(); n; n = tw.nextNode()) {
+        if (!n.nodeValue?.trim()) continue;
+        const pe = (n as Text).parentElement;
+        if (!pe || pe.closest('.sr, .hsr, [aria-hidden="true"] video') || !pe.offsetParent) continue;
+        g.selectNodeContents(n); for (const b of g.getClientRects()) add(b);
+      }
+      root.querySelectorAll<HTMLElement>('img, video, picture, .loop, canvas, iframe').forEach((e) => { if (e.offsetParent) add(e.getBoundingClientRect()); });
+      // kreski (obramowania górne i dolne, np. między krokami): przez znak wyglądałyby jak przekreślenie
+      root.querySelectorAll<HTMLElement>('*').forEach((e) => {
+        const cs = getComputedStyle(e); if (cs.display === 'none' || cs.display === 'contents') return;
+        const b = e.getBoundingClientRect(); if (b.width < 40) return;
+        const bt = parseFloat(cs.borderTopWidth), bb = parseFloat(cs.borderBottomWidth);
+        if (bt > 0 && cs.borderTopStyle !== 'none') add(new DOMRect(b.left, b.top, b.width, Math.max(2, bt)));
+        if (bb > 0 && cs.borderBottomStyle !== 'none') add(new DOMRect(b.left, b.bottom - Math.max(2, bb), b.width, Math.max(2, bb)));
+      });
+      obst = out;
+      bands = [...document.querySelectorAll<HTMLElement>('main > *, article > *, footer, .foot, .brand-footer')]
+        .filter((e) => e.offsetParent && e.tagName !== 'ARTICLE')
+        .map((e) => { const b = e.getBoundingClientRect(); return { l: 0, t: b.top + sy, r: innerWidth, b: b.bottom + sy, tone: toneOf(e) ?? 'light' }; });
+      // prostokąty znaku w pozycji pokazanej (bez przesunięcia chowania)
       const base = lk.getBoundingClientRect().top;
-      return [mark, ...lk.querySelectorAll<HTMLElement>('.site-menu > :not([popover])')]
+      pcs = [mark, ...lk.querySelectorAll<HTMLElement>('.site-menu > :not([popover])')]
         .map((e) => e.getBoundingClientRect()).filter((b) => b.width && b.height)
-        .map((b) => new DOMRect(b.left - 8, b.top - base - 8, b.width + 16, b.height + 16));
+        .map((b) => ({ l: b.left - 8, t: b.top - base - 8, r: b.right + 8, b: b.bottom - base + 8 }));
+      mapDirty = false;
     };
-    const hits = (a: DOMRect, b: DOMRect) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
-    const collides = () => {
-      const ps = pieces(), seen = new Set<Element>(), tones = new Set<string | null>();
-      for (const p of ps) for (let x = p.left + 4; x < p.right; x += 20) for (let y = p.top + 4; y < p.bottom; y += 20) {
-        const el = document.elementsFromPoint(x, Math.max(1, y)).find((e) => !lk.contains(e));
-        if (el && el !== document.documentElement && el !== document.body) seen.add(el);
-        tones.add(toneOf(el ?? null));
+    const collides = (y: number) => {
+      const ps = pcs.map((p) => ({ l: p.l, r: p.r, t: p.t + y, b: p.b + y }));
+      const hit = (a: R, b: R) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
+      for (const p of ps) {
+        const tones = new Set(bands.filter((s) => hit(p, s)).map((s) => s.tone));
+        if (tones.size > 1) return true;
       }
-      // granica jasnej i ciemnej sekcji pod logo albo Menu: część znaku znika na tle tego samego koloru
-      if (tones.size > 1) return true;
-      for (const el of seen) {
-        const media = MEDIA.test(el.tagName) || el.closest('.loop, picture');
-        const rects = media ? [el.getBoundingClientRect()] : (() => { const g = document.createRange(); g.selectNodeContents(el); return [...g.getClientRects()]; })();
-        if (rects.some((b) => b.width > 1 && b.height > 1 && ps.some((p) => hits(p, b)))) return true;
-      }
-      return false;
+      return obst.some((o) => ps.some((p) => hit(p, o)));
     };
+    if (avoid) {
+      const remap = () => { mapDirty = true; req(); };
+      new ResizeObserver(remap).observe(document.querySelector('main') ?? document.body);
+      addEventListener('resize', remap, { passive: true });
+      addEventListener('load', remap);
+      document.fonts?.ready.then(remap);
+    }
+    let dirHidden = lk.hasAttribute('data-lk-hidden');
     const upd = () => {
       tick = false;
       // najpierw wszystkie odczyty...
@@ -239,14 +268,16 @@ const home = routes[locale].home;
       const y = Math.max(0, scrollY);
       const hold = y <= 80 || lk.matches(':focus-within') || menuOpen();
       const { t, l } = measure();
-      let hide = lk.hasAttribute('data-lk-hidden');
-      if (hold) { hide = false; lastY = y; }
-      else if (y - lastY > 6) { hide = true; lastY = y; }
-      else if (lastY - y > 6) { hide = false; lastY = y; }
-      // w strefie pierwszych 80 px też (tekst otwarcia wjeżdża pod pasek), poza fokusem i otwartym Menu
-      if (avoid && !hide && !lk.matches(':focus-within') && !menuOpen() && y > 0 && collides()) { lk.toggleAttribute('data-lk-hidden', true); }
-      // ...potem zapisy
-      else lk.toggleAttribute('data-lk-hidden', hide);
+      // kierunek przewijania i kolizja to osobne stany: pasek wraca, gdy oba pozwalają (przewijanie w górę i wolne miejsce)
+      if (hold) { dirHidden = false; lastY = y; }
+      else if (y - lastY > 6) { dirHidden = true; lastY = y; }
+      else if (lastY - y > 6) { dirHidden = false; lastY = y; }
+      const user = lk.matches(':focus-within') || menuOpen();
+      if (avoid && mapDirty) buildMap();
+      const col = avoid && !user && y > 0 && collides(y);
+      // ...potem zapisy; przy kolizji chowanie bez animacji, żeby znak nie przejeżdżał po treści
+      lk.toggleAttribute('data-lk-snap', col);
+      lk.toggleAttribute('data-lk-hidden', user ? false : (dirHidden || col));
       if (lk.dataset.lkTone !== t) lk.dataset.lkTone = t;
       if (lk.dataset.lkLogo === l) return;
       lk.dataset.lkLogo = l;
@@ -265,6 +296,7 @@ const home = routes[locale].home;
     addEventListener('load', regeo);
     addEventListener('pageshow', req);
     lk.addEventListener('focusin', req);
+    lk.addEventListener('focusout', req);
     panel?.addEventListener('toggle', req);
     upd();
   }
