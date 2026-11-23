@@ -33,8 +33,11 @@ interface Props {
   logo?: '3d' | 'flat';
   /** dopasowanie logo klienta: h = wysokość pudełka SVG jako ułamek wysokości wideo, base = linia bazowa jako ułamek wysokości SVG */
   fit?: Partial<Fit>;
+  /** omijanie treści (GlassStone, uwaga Fincha 23.11): po zjechaniu z pierwszego ekranu lockup pokazuje się tylko tam,
+   *  gdzie pod logo i Menu nie ma tekstu ani obrazu/wideo; domyślnie wyłączone, więc inne strony działają jak dotąd */
+  avoid?: boolean;
 }
-const { locale, client, alternatePath, tone = 'light', logo = '3d', fit } = Astro.props;
+const { locale, client, alternatePath, tone = 'light', logo = '3d', fit, avoid = false } = Astro.props;
 const pl = locale === 'pl';
 const NAMES: Record<string, string> = { eskapizm: 'eskapizm', cannversity: 'Cannversity', glassstone: 'GlassStone', 'igor-grabowski': 'Igor Grabowski' };
 const name = Astro.props.clientName ?? (client ? NAMES[client] ?? client : '');
@@ -63,7 +66,7 @@ const k = (1 - 2 * PAD) + X + 2 * GAP + (client ? (aspect ? aspect * f.h * BOX :
 const vars = `--lk-k:${k.toFixed(3)};--lk-ct:${(BASE - f.h * f.base).toFixed(4)};--lk-ch:${f.h.toFixed(4)}`;
 const home = routes[locale].home;
 ---
-<header class="case-lockup" data-case-lockup data-lk-tone={tone} data-lk-logo={logo} style={vars}>
+<header class="case-lockup" data-case-lockup data-lk-tone={tone} data-lk-logo={logo} data-lk-avoid={avoid ? '' : undefined} style={vars}>
   <div class="lk">
     <a class="lk-home" href={home} aria-label={pl ? 'mioduszewsky. Strona główna.' : 'mioduszewsky. Home page.'}>
       <span class="lk-vid" aria-hidden="true">
@@ -201,6 +204,34 @@ const home = routes[locale].home;
     const menuOpen = () => { try { return !!panel?.matches(':popover-open'); } catch { return false; } };
     let lastY = scrollY;
     let tick = false;
+    // Omijanie treści (data-lk-avoid): czy logo albo Menu w pozycji pokazanej leżałyby na tekście, obrazie albo wideo.
+    // Próbki co 20 px w prostokątach logo i przycisków; pod każdą najwyższy element spoza lockupu; dla mediów jego prostokąt,
+    // dla reszty prostokąty linii tekstu (Range). Prostokąty logo i przycisków z zapasem 8 px.
+    const avoid = lk.hasAttribute('data-lk-avoid');
+    const MEDIA = /^(IMG|VIDEO|PICTURE|CANVAS|IFRAME|SVG)$/i;
+    const pieces = () => {
+      const base = lk.getBoundingClientRect().top;
+      return [mark, ...lk.querySelectorAll<HTMLElement>('.site-menu > :not([popover])')]
+        .map((e) => e.getBoundingClientRect()).filter((b) => b.width && b.height)
+        .map((b) => new DOMRect(b.left - 8, b.top - base - 8, b.width + 16, b.height + 16));
+    };
+    const hits = (a: DOMRect, b: DOMRect) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+    const collides = () => {
+      const ps = pieces(), seen = new Set<Element>(), tones = new Set<string | null>();
+      for (const p of ps) for (let x = p.left + 4; x < p.right; x += 20) for (let y = p.top + 4; y < p.bottom; y += 20) {
+        const el = document.elementsFromPoint(x, Math.max(1, y)).find((e) => !lk.contains(e));
+        if (el && el !== document.documentElement && el !== document.body) seen.add(el);
+        tones.add(toneOf(el ?? null));
+      }
+      // granica jasnej i ciemnej sekcji pod logo albo Menu: część znaku znika na tle tego samego koloru
+      if (tones.size > 1) return true;
+      for (const el of seen) {
+        const media = MEDIA.test(el.tagName) || el.closest('.loop, picture');
+        const rects = media ? [el.getBoundingClientRect()] : (() => { const g = document.createRange(); g.selectNodeContents(el); return [...g.getClientRects()]; })();
+        if (rects.some((b) => b.width > 1 && b.height > 1 && ps.some((p) => hits(p, b)))) return true;
+      }
+      return false;
+    };
     const upd = () => {
       tick = false;
       // najpierw wszystkie odczyty...
@@ -212,8 +243,10 @@ const home = routes[locale].home;
       if (hold) { hide = false; lastY = y; }
       else if (y - lastY > 6) { hide = true; lastY = y; }
       else if (lastY - y > 6) { hide = false; lastY = y; }
+      // w strefie pierwszych 80 px też (tekst otwarcia wjeżdża pod pasek), poza fokusem i otwartym Menu
+      if (avoid && !hide && !lk.matches(':focus-within') && !menuOpen() && y > 0 && collides()) { lk.toggleAttribute('data-lk-hidden', true); }
       // ...potem zapisy
-      lk.toggleAttribute('data-lk-hidden', hide);
+      else lk.toggleAttribute('data-lk-hidden', hide);
       if (lk.dataset.lkTone !== t) lk.dataset.lkTone = t;
       if (lk.dataset.lkLogo === l) return;
       lk.dataset.lkLogo = l;

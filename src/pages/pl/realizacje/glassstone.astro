@@ -105,7 +105,7 @@ const ld = {
   <div class="case">
     <a class="skip" href="#main">Przejdź do treści</a>
     <!-- Case tylko po polsku: bez hreflang do EN, przełącznik języka prowadzi na /work/ (jak w poprzedniej wersji). -->
-    <CaseLockup locale="pl" client="glassstone" alternatePath="/work/" tone="light" fit={{ h: .487, base: 381 / 385 }} />
+    <CaseLockup locale="pl" client="glassstone" alternatePath="/work/" tone="light" fit={{ h: .487, base: 381 / 385 }} avoid />
 
     <main id="main">
       <article>
@@ -473,6 +473,8 @@ const ld = {
   .steps { list-style: none; padding: 0; border-top: var(--line) solid var(--ink); }
   .steps > li { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); padding: var(--in) 0; border-bottom: var(--line) solid var(--ink); align-items: start; }
   /* Runda 3: tekst kroku na środku wysokości ujęcia (było przyklejone u góry, pod nim zostawała pusta ćwiartka ekranu). */
+  /* runda 10: numer kroku w skali 9 i 4, tekst większy, cały blok na środku wysokości ujęcia: przy kroku 02 (najkrótszy tekst
+     obok tablicy) zostaje ok. 75 px nad i pod blokiem zamiast 115-165 px; numer u góry i tekst u dołu robiły pole w środku */
   .step-txt { grid-column: 1 / span 5; display: grid; gap: 10px; align-content: start; align-self: center; }
   .step-media { grid-column: 6 / -1; display: grid; gap: var(--in); }
   /* Dokumenty (runda 5, Kacper: 03 „ściśnięta” obok 01 i 02): pętla podpisu na całe pole jak ujęcia w 01 i 02 (ta sama proporcja 1,44
@@ -484,11 +486,12 @@ const ld = {
   .pair .doc { position: absolute; top: 0; right: 3%; width: 22%; margin-top: calc(100% / 1.4388 * .97 - 22% * 806 / 700); z-index: 3; }
   .pair .doc img { border: var(--line) solid #c9cdd3; border-radius: 8px; box-shadow: 0 18px 40px rgb(13 13 13 / .18), 0 2px 6px rgb(13 13 13 / .08); }
   .case .m-cap { display: none; }
-  .num { font-weight: 800; font-size: clamp(44px, 5vw, 80px); line-height: 1; letter-spacing: -.05em; color: var(--cob); }
+  /* numer kroku w skali cyfr 9 i 4 z sekcji wyżej (runda 10: wypełnia wysokość obok ujęcia, bez pustego pola przy kroku 02) */
+  .num { font-weight: 800; font-size: clamp(64px, 11vw, 200px); line-height: .78; letter-spacing: -.06em; color: var(--cob); margin-bottom: 12px !important; }
   .label { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
   .steps h3 { --fs: clamp(22px, 2.4vw, 40px); font-weight: 750; font-size: var(--fs); line-height: 1.15; letter-spacing: -.02em; }
   /* runda 7: tekst kroku większy (jak lead), żeby kolumna tekstu wypełniała wysokość obok ujęcia, bez pustego pola nad i pod nim */
-  .step-txt > p:last-child { font-size: clamp(17px, 1.6vw, 25px); line-height: 1.55; }
+  .step-txt > p:last-child { font-size: clamp(17px, 1.7vw, 27px); line-height: 1.55; }
   .shot img { border: var(--line) solid #d5d8dd; border-radius: 12px; }
   .doc { max-width: none; }
   .doc img { background: var(--white); }
