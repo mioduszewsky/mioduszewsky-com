@@ -265,7 +265,9 @@ const ld = {
         <div class="wrap end-in">
           <div class="end-h"><h2 id="end-h" class="fit" style="--fd: 11.5; --fm: 11.5" set:html={H(['Ekipa pracuje u klientów,', 'a papiery wypełnia', 'ręcznie?'])} /></div>
           <div class="end-txt">
-            <p set:html={P('Napisz, jak wygląda Wasz dzień od zapytania do montażu. Odpiszę, co z tego da się przenieść na iPada.')} />
+            <!-- runda 6 (Kacper 23.11): iPad to wybór Filipa, nie oferta dla każdej ekipy; obietnica = narzędzie pod to, jak i na czym ekipa już pracuje -->
+            <p set:html={P('U GlassStone zacząłem od danych z panelu i rozmowy z Filipem o dniu pracy. Kalendarz Google został, bo ekipa już go używała. Dokumenty i rysunek zrobiłem pod iPada, bo Filip go miał i chciał na nim pracować.')} />
+            <p set:html={P('Napisz, jak wygląda Wasz dzień od zapytania do montażu i na czym pracujecie: telefon, komputer, tablet czy papier. Odpiszę, co bym zbudował, a czego bym nie ruszał.')} />
             <div class="end-act">
               <a class="btn" href={contact}>Napisz do mnie</a>
               <a class="live" href={live} target="_blank" rel="noopener">Zobacz glassstone.pl<ExtArrow weight={600} /></a>
@@ -494,7 +496,8 @@ const ld = {
   .end { padding-top: var(--sec); }
   .end-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: end; padding-bottom: var(--sec); }
   .end-h { grid-column: 1 / span 7; }
-  .end-txt { display: grid; gap: 24px; grid-column: 8 / -1; }
+  .end-txt { display: grid; gap: 16px; grid-column: 8 / -1; }
+  .end-act { margin-top: 8px; }
   .end-txt p { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 26em; }
   .end-act { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
   .btn { display: inline-block; padding: 18px 30px; border-radius: 999px; background: var(--white); color: var(--cob); text-decoration: none; font-size: 16px; font-weight: 700; }
