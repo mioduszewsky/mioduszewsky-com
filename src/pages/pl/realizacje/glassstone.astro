@@ -24,7 +24,7 @@ const NW = (t: string) => t.replace(/AutoCAD-(\p{L}+)/gu, '<span class="nw">Auto
 // dwa ostatnie słowa razem (bez sieroty w ostatniej linii).
 const KROTKIE = /(^|[\s(„;])(a|i|o|u|w|z|na|do|od|po|za|ze|we|A|I|O|U|W|Z|Na|Do|Od|Po|Za|Ze|We) /g;
 const P = (t: string) => {
-  let x = t.replace(KROTKIE, '$1$2&nbsp;').replace(KROTKIE, '$1$2&nbsp;');
+  let x = t.trim().replace(KROTKIE, '$1$2&nbsp;').replace(KROTKIE, '$1$2&nbsp;');
   const i = x.lastIndexOf(' '); if (i > 0) x = x.slice(0, i) + '&nbsp;' + x.slice(i + 1);
   return NW(x);
 };
@@ -205,7 +205,7 @@ const ld = {
                             alt="Nagranie: klient podpisuje się palcem na linii „zamawiający” protokołu odbioru, potem na karcie zlecenia dotknięcie przycisku Wyślij komplet. Dane przykładowe." />
                           <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
                         </div>
-                        <figcaption><span set:html={P('Podpis klienta palcem na protokole, potem „Wyślij komplet” na karcie. Dane przykładowe, stopka zleceniodawcy zasłonięta.')} /><span class="d-only"> <span set:html={P('Protokół po podpisie: zamawiający, data i numer z danych zlecenia, podpis klienta. Dane przykładowe.')} /></span></figcaption>
+                        <figcaption><span set:html={P('Podpis klienta palcem na protokole, potem „Wyślij komplet” na karcie. Dane przykładowe, stopka zleceniodawcy zasłonięta.')} /><span class="d-only" aria-hidden="true"> <span set:html={P('Protokół po podpisie: zamawiający, data i numer z danych zlecenia, podpis klienta. Dane przykładowe.')} /></span></figcaption>
                       </figure>
                     )}
                     <figure class:list={['shot', k.f === 'karta' && 'm-only']} data-tone="light">
@@ -395,8 +395,12 @@ const ld = {
   /* Nagłówki z liniami ustawionymi ręcznie (H() we frontmatterze): każda linia bez łamania, „¦” łamie dopiero na telefonie.
      Rozmiar = zwykły rozmiar nagłówka, chyba że najdłuższa linia (--fd / --fm, w em) nie mieści się w kolumnie: wtedy tyle, ile się mieści. */
   .open-txt, .head-h, .talk-h, .step-txt, .draw-txt, .daily-in, .end-h { container-type: inline-size; }
-  .case .fit { font-size: min(var(--fs), 100cqi / var(--fd)); max-width: none; text-wrap: nowrap; }
-  .case :global(.ln) { display: block; white-space: nowrap; }
+  .case :global(.ln) { display: block; }
+  /* bez jednostek cqi (Safari < 16) nagłówki łamią się zwykle, linie zostają jako bloki */
+  @supports (width: 1cqi) {
+    .case .fit { font-size: min(var(--fs), 100cqi / var(--fd)); max-width: none; text-wrap: nowrap; }
+    .case :global(.ln) { white-space: nowrap; }
+  }
   .kicker { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
   .kicker-c { color: var(--cob); }
   .lead { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 32em; }
@@ -535,7 +539,7 @@ const ld = {
     .rows > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
     .rows-big > div { grid-template-columns: minmax(0, 1fr); }
     .zdanie { --fs: clamp(26px, 7.8vw, 34px); }
-    .case .fit { font-size: min(var(--fs), 100cqi / var(--fm)); }
+    @supports (width: 1cqi) { .case .fit { font-size: min(var(--fs), 100cqi / var(--fm)); } }
     .case :global(.ln .sb) { display: block; }
   }
   @media (max-width: 480px) {
