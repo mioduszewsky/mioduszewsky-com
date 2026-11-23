@@ -232,7 +232,7 @@ const home = routes[locale].home;
         const cs = getComputedStyle(e); if (cs.display === 'none' || cs.display === 'contents') return;
         // kreska rysowana pseudo-elementem (np. nad „Następna realizacja”): cienki ::before z tłem
         const pb = getComputedStyle(e, '::before');
-        if (pb.content !== 'none' && parseFloat(pb.height) > 0 && parseFloat(pb.height) <= 6 && !/rgba\(0, 0, 0, 0\)|transparent/.test(pb.backgroundColor)) { const eb = e.getBoundingClientRect(); add(new DOMRect(eb.left, eb.top + (parseFloat(pb.top) || 0), eb.width, Math.max(2, parseFloat(pb.height)))); }
+        if (pb.content !== 'none' && parseFloat(pb.height) > 0 && parseFloat(pb.height) <= 6 && !/rgba\(0, 0, 0, 0\)|transparent/.test(pb.backgroundColor)) { const eb = e.getBoundingClientRect(); const pl = parseFloat(pb.left) || 0, pw = parseFloat(pb.width) || eb.width; add(new DOMRect(eb.left + pl, eb.top + (parseFloat(pb.top) || 0), pw, Math.max(2, parseFloat(pb.height)))); }
         const b = e.getBoundingClientRect(); if (b.width < 40) return;
         const bt = parseFloat(cs.borderTopWidth), bb = parseFloat(cs.borderBottomWidth);
         if (bt > 0 && cs.borderTopStyle !== 'none') add(new DOMRect(b.left, b.top, b.width, Math.max(2, bt)));
@@ -249,9 +249,10 @@ const home = routes[locale].home;
         .map((b) => ({ l: b.left - 8, t: b.top - base - 8, r: b.right + 8, b: b.bottom - base + 8 }));
       mapDirty = false;
     };
-    const collides = (y: number) => {
-      // od górnej krawędzi okna do dołu znaku: przy wjeździe (0,25 s) znak przejeżdża przez pas nad swoim miejscem
-      const ps = pcs.map((p) => ({ l: p.l, r: p.r, t: y, b: p.b + y }));
+    const collides = (y: number, sweep: boolean) => {
+      // przy wjeździe (pasek schowany) od górnej krawędzi okna do dołu znaku: znak przejeżdża przez pas nad swoim miejscem;
+      // gdy pasek już stoi, tylko jego własne prostokąty
+      const ps = pcs.map((p) => ({ l: p.l, r: p.r, t: sweep ? y : p.t + y, b: p.b + y }));
       const hit = (a: R, b: R) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
       for (const p of ps) {
         const tones = new Set(bands.filter((s) => hit(p, s)).map((s) => s.tone));
@@ -281,7 +282,7 @@ const home = routes[locale].home;
       else if (lastY - y > 6) { dirHidden = false; lastY = y; }
       const user = lk.matches(':focus-within') || menuOpen();
       if (avoid && mapDirty) buildMap();
-      const col = avoid && !user && y > 0 && collides(y);
+      const col = avoid && !user && y > 0 && collides(y, lk.hasAttribute('data-lk-hidden'));
       // ...potem zapisy; przy kolizji chowanie bez animacji, żeby znak nie przejeżdżał po treści
       lk.toggleAttribute('data-lk-snap', col);
       lk.toggleAttribute('data-lk-hidden', user ? false : (dirHidden || col));
