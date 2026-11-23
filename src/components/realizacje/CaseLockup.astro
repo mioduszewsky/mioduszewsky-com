@@ -215,26 +215,31 @@ const home = routes[locale].home;
     const buildMap = () => {
       const sy = scrollY, out: R[] = [];
       const add = (b: DOMRect) => { if (b.width > 1 && b.height > 1) out.push({ l: b.left, t: b.top + sy, r: b.right, b: b.bottom + sy }); };
-      const root = document.querySelector('main') ?? document.body;
+      // cała strona poza samym lockupem (treść, stopka), nie tylko main (recenzja Codexa 23.11)
+      const root = lk.parentElement ?? document.body;
       const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
       const g = document.createRange();
       for (let n = tw.nextNode(); n; n = tw.nextNode()) {
         if (!n.nodeValue?.trim()) continue;
         const pe = (n as Text).parentElement;
-        if (!pe || pe.closest('.sr, .hsr, [aria-hidden="true"] video') || !pe.offsetParent) continue;
+        if (!pe || lk.contains(pe) || pe.closest('.sr, .hsr, .lk-sr, .sr-only, [popover]') || !pe.offsetParent) continue;
         g.selectNodeContents(n); for (const b of g.getClientRects()) add(b);
       }
-      root.querySelectorAll<HTMLElement>('img, video, picture, .loop, canvas, iframe').forEach((e) => { if (e.offsetParent) add(e.getBoundingClientRect()); });
+      root.querySelectorAll<HTMLElement>('img, video, picture, .loop, canvas, iframe, svg').forEach((e) => { if (!lk.contains(e) && !e.closest('[popover]') && (e.offsetParent || e.tagName.toLowerCase() === 'svg')) add(e.getBoundingClientRect()); });
       // kreski (obramowania górne i dolne, np. między krokami): przez znak wyglądałyby jak przekreślenie
       root.querySelectorAll<HTMLElement>('*').forEach((e) => {
+        if (lk.contains(e) || e.closest('[popover]')) return;
         const cs = getComputedStyle(e); if (cs.display === 'none' || cs.display === 'contents') return;
+        // kreska rysowana pseudo-elementem (np. nad „Następna realizacja”): cienki ::before z tłem
+        const pb = getComputedStyle(e, '::before');
+        if (pb.content !== 'none' && parseFloat(pb.height) > 0 && parseFloat(pb.height) <= 6 && !/rgba\(0, 0, 0, 0\)|transparent/.test(pb.backgroundColor)) { const eb = e.getBoundingClientRect(); add(new DOMRect(eb.left, eb.top + (parseFloat(pb.top) || 0), eb.width, Math.max(2, parseFloat(pb.height)))); }
         const b = e.getBoundingClientRect(); if (b.width < 40) return;
         const bt = parseFloat(cs.borderTopWidth), bb = parseFloat(cs.borderBottomWidth);
         if (bt > 0 && cs.borderTopStyle !== 'none') add(new DOMRect(b.left, b.top, b.width, Math.max(2, bt)));
         if (bb > 0 && cs.borderBottomStyle !== 'none') add(new DOMRect(b.left, b.bottom - Math.max(2, bb), b.width, Math.max(2, bb)));
       });
       obst = out;
-      bands = [...document.querySelectorAll<HTMLElement>('main > *, article > *, footer, .foot, .brand-footer')]
+      bands = [...document.querySelectorAll<HTMLElement>('main > *, article > *, footer, .foot, .brand-footer')].filter((e) => !lk.contains(e))
         .filter((e) => e.offsetParent && e.tagName !== 'ARTICLE')
         .map((e) => { const b = e.getBoundingClientRect(); return { l: 0, t: b.top + sy, r: innerWidth, b: b.bottom + sy, tone: toneOf(e) ?? 'light' }; });
       // prostokąty znaku w pozycji pokazanej (bez przesunięcia chowania)
@@ -245,7 +250,8 @@ const home = routes[locale].home;
       mapDirty = false;
     };
     const collides = (y: number) => {
-      const ps = pcs.map((p) => ({ l: p.l, r: p.r, t: p.t + y, b: p.b + y }));
+      // od górnej krawędzi okna do dołu znaku: przy wjeździe (0,25 s) znak przejeżdża przez pas nad swoim miejscem
+      const ps = pcs.map((p) => ({ l: p.l, r: p.r, t: y, b: p.b + y }));
       const hit = (a: R, b: R) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
       for (const p of ps) {
         const tones = new Set(bands.filter((s) => hit(p, s)).map((s) => s.tone));
@@ -255,7 +261,8 @@ const home = routes[locale].home;
     };
     if (avoid) {
       const remap = () => { mapDirty = true; req(); };
-      new ResizeObserver(remap).observe(document.querySelector('main') ?? document.body);
+      new ResizeObserver(remap).observe(lk.parentElement ?? document.body);
+      document.fonts?.addEventListener?.('loadingdone', remap);
       addEventListener('resize', remap, { passive: true });
       addEventListener('load', remap);
       document.fonts?.ready.then(remap);

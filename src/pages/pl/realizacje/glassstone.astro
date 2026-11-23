@@ -143,6 +143,7 @@ const ld = {
               <h2 id="s2-h" class="fit" style="--fd: 10.5; --fm: 10.5" set:html={H(['Kamień i szkło dostały', 'tyle samo miejsca.'])} />
             </div>
             <div class="head-txt">
+              <p class="lead" set:html={P('Na poprzedniej stronie wszystko było o kamieniu i blatach, a o szkle nic.')} />
               <p class="lead" set:html={P('Od pierwszego ekranu są dwie osobne wyceny, kamienia i szkła. Przy kontakcie stoją Filip od kamienia i Marcin od szkła.')} />
               <p class="lead" set:html={P('Realizacje da się przefiltrować: kamień, szkło, kuchnie, łazienki, lokale.')} />
               <p class="lead" set:html={P('Zapytanie z formularza zakłada zlecenie w panelu i wysyła mail na biuro@glassstone.pl z przyciskiem do karty klienta.')} />
@@ -171,14 +172,14 @@ const ld = {
             <h2 id="s3-h" class="fit fill" style="--fd: 18.1; --fm: 11.9" set:html={H(['Najpierw dane i rozmowa,¦potem panel.'])} />
           </div>
           <div class="wrap cmp">
-            <!-- korekta Kacpra 23.11: jeden ciągły tekst na całą szerokość, lead większym stopniem (ok. 100 znaków w linii na 1440 px) -->
-            <p class="wide-lead cmp-lead" set:html={P('Sprawdziłem w bazie, z czego ekipa korzysta: dziewięć pozycji menu, przy każdej liczba wpisów i data ostatniego. Potem rozmowa z Filipem o dniu pracy. Dokumenty od firmy, dla której montują, przychodziły jako PDF bez pól, a Filip wypełniał je ręcznie u klienta. W menu zostało to, czego używają w pracy: Zlecenia, Kalendarz i Rysunki. Reszta jest pod „Więcej”.')} />
+            <!-- korekta Kacpra 23.11: jeden ciągły tekst na całą szerokość; runda 11: historia od poprzedniej wersji (Lovable, marzec) do decyzji o menu -->
+            <p class="wide-lead cmp-lead" set:html={P('GlassStone miało już stronę i panel do niej, wygenerowane w marcu 2026 w Lovable, narzędziu, które składa aplikację z opisu. Zanim cokolwiek zmieniłem, sprawdziłem w bazie tego panelu, z czego ekipa naprawdę korzysta: przy każdej z dziewięciu pozycji menu liczbę wpisów i datę ostatniego. Osiem z dziewięciu stało od miesięcy albo było pustych, a kalendarz montaży miał jeden termin w całej historii. Potem rozmowa z Filipem o dniu pracy: dokumenty od firmy, dla której montują, przychodziły jako PDF bez pól, a Filip wypełniał je ręcznie u klienta. W menu zostało to, czego używają w pracy: Zlecenia, Kalendarz i Rysunki, a reszta poszła pod „Więcej”.')} />
             <!-- runda 9 (Sławek): 9 i 4 jako bohater porównania, w geście otwarcia (GLASS konturem, STONE pełne): „9” konturem, „4” pełne
                  kobaltem. Pozycje obu menu w tej samej siatce kafelków 3 kolumn, więc „Po” jest krótsze o rząd, nie o pustą płachtę. -->
             <div class="cmp-col cmp-c1">
               <div class="cmp-top">
                 <span class="cmp-big cmp-9" aria-hidden="true">9</span>
-                <p class="cmp-h" id="pp-przed"><b>Przed</b> <span set:html={P('Menu panelu, 9 pozycji. Odczyt z bazy 22.10.2026.')} /></p>
+                <p class="cmp-h" id="pp-przed"><b>Przed</b> <span set:html={P('Menu starego panelu, 9 pozycji. Liczby z bazy panelu, odczyt 22.10.2026.')} /></p>
               </div>
               <ol class="cmp-l cmp-przed" role="list" aria-labelledby="pp-przed">{menuPrzed.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
             </div>
