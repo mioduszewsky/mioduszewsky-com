@@ -31,7 +31,11 @@ const P = (t: string) => {
 // Nagłówki: linie ustawione ręcznie (najdłuższa u góry albo równe), każda bez łamania w środku; „¦” = dodatkowe łamanie
 // tylko na telefonie. Rozmiar: zwykły, ale nie większy, niż mieści najdłuższa linia w kolumnie (--fd komputer, --fm telefon,
 // szerokości linii w em zmierzone w przeglądarce, skrypt r5-em.cjs), więc linie nigdy nie łamią się same.
-const H = (linie: string[]) => linie.map((l) => `<span class="ln">${l.split('¦').map((c) => `<span class="sb">${NW(c.trim())}</span>`).join(' ')}</span>`).join(' ');
+const linieH = (linie: string[]) => linie.map((l) => `<span class="ln">${l.split('¦').map((c) => `<span class="sb">${NW(c.trim())}</span>`).join(' ')}</span>`).join(' ');
+// m: osobne linie na telefon, gdy nie da się ich uzyskać samym „¦” (np. inne miejsca łamania); obie wersje ukryte przed czytnikiem, tekst raz w .hsr
+const H = (linie: string[], m?: string[]) => m
+  ? `<span class="hsr">${linie.join(' ')}</span><span class="hd" aria-hidden="true">${linieH(linie)}</span><span class="hm" aria-hidden="true">${linieH(m)}</span>`
+  : linieH(linie);
 
 const wiersze: [string, string][] = [
   ['Strona', 'Kamień i szkło po równo, dwie wyceny od pierwszego ekranu'],
@@ -158,28 +162,35 @@ const ld = {
           </div>
         </section>
 
-        <!-- 3. Rozmowa: dane z bazy i rozmowa z Filipem, zanim powstał nowy panel. Menu panelu jako cztery pozycje. -->
+        <!-- 3. Rozmowa (runda 7 i doprecyzowanie Kacpra 23.11): nagłówek na całą szerokość w jednej linii, pod nim trzy akapity
+             w trzech równych kolumnach, pod nimi „Przed” i „Po” na jednej siatce 6 + 6 (te same wiersze, krój i odstęp; różnica
+             kolorem i wagą), pod krótszą listą „Po” zdanie o dopasowaniu do ekipy. -->
         <section class="paper talk" aria-labelledby="s3-h">
-          <div class="wrap talk-in">
-            <div class="talk-h">
-              <p class="kicker kicker-c">Zanim cokolwiek przebudowałem</p>
-              <h2 id="s3-h" class="fit" style="--fd: 11.9; --fm: 11.9" set:html={H(['Najpierw dane i rozmowa,', 'potem panel.'])} />
-            </div>
-            <div class="talk-txt">
-              <p set:html={P('Sprawdziłem w bazie, z czego ekipa korzysta: dziewięć pozycji menu, przy każdej liczba wpisów i data ostatniego.')} />
-              <p set:html={P('Potem rozmowa z Filipem o dniu pracy. Dokumenty od firmy, dla której montują, przychodziły jako PDF bez pól, a Filip wypełniał je ręcznie u klienta.')} />
-              <p set:html={P('W menu zostało to, czego używają w pracy: Zlecenia, Kalendarz i Rysunki. Reszta jest pod „Więcej”.')} />
-            </div>
+          <div class="wrap talk-h">
+            <p class="kicker kicker-c">Zanim cokolwiek przebudowałem</p>
+            <h2 id="s3-h" class="fit fill" style="--fd: 18.1; --fm: 11.9" set:html={H(['Najpierw dane i rozmowa,¦potem panel.'])} />
           </div>
-          <div class="wrap pp">
-            <figure class="pp-col pp-przed">
-              <figcaption class="pp-h"><b>Przed</b> <span set:html={P('Menu panelu, 9 pozycji. Odczyt z bazy 22.10.2026.')} /></figcaption>
-              <ol>{menuPrzed.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
-            </figure>
-            <figure class="pp-col pp-po">
-              <figcaption class="pp-h"><b>Po</b> <span set:html={P('Menu panelu dziś.')} /></figcaption>
-              <ol>{menuPo.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
-            </figure>
+          <div class="wrap cmp">
+            <!-- korekta Kacpra 23.11: jeden ciągły tekst na całą szerokość, lead większym stopniem (ok. 100 znaków w linii na 1440 px) -->
+            <p class="wide-lead cmp-lead" set:html={P('Sprawdziłem w bazie, z czego ekipa korzysta: dziewięć pozycji menu, przy każdej liczba wpisów i data ostatniego. Potem rozmowa z Filipem o dniu pracy. Dokumenty od firmy, dla której montują, przychodziły jako PDF bez pól, a Filip wypełniał je ręcznie u klienta. W menu zostało to, czego używają w pracy: Zlecenia, Kalendarz i Rysunki. Reszta jest pod „Więcej”.')} />
+            <!-- runda 9 (Sławek): 9 i 4 jako bohater porównania, w geście otwarcia (GLASS konturem, STONE pełne): „9” konturem, „4” pełne
+                 kobaltem. Pozycje obu menu w tej samej siatce kafelków 3 kolumn, więc „Po” jest krótsze o rząd, nie o pustą płachtę. -->
+            <div class="cmp-col cmp-c1">
+              <div class="cmp-top">
+                <span class="cmp-big cmp-9" aria-hidden="true">9</span>
+                <p class="pp-h cmp-h" id="pp-przed"><b>Przed</b> <span set:html={P('Menu panelu, 9 pozycji. Odczyt z bazy 22.10.2026.')} /></p>
+              </div>
+              <ol class="cmp-l cmp-przed" role="list" aria-labelledby="pp-przed">{menuPrzed.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
+            </div>
+            <div class="cmp-col cmp-c2">
+              <div class="cmp-top">
+                <span class="cmp-big cmp-4" aria-hidden="true">4</span>
+                <p class="pp-h cmp-h" id="pp-po"><b>Po</b> <span set:html={P('Menu panelu dziś.')} /></p>
+              </div>
+              <ol class="cmp-l cmp-po" role="list" aria-labelledby="pp-po">{menuPo.map(([k, v]) => <li><span>{k}</span><em set:html={P(v)} /></li>)}</ol>
+              <!-- runda 8: dopasowanie do ekipy (iPad to wybór Filipa) w wolnych kafelkach ostatniego rzędu „Po”, nie w zakończeniu -->
+              <p class="cmp-note" set:html={P('Dokumenty i rysunek zrobiłem pod iPada, bo Filip go miał i chciał na nim pracować, a u innej ekipy zacząłbym od tego, na czym ona pracuje.')} />
+            </div>
           </div>
         </section>
 
@@ -263,14 +274,13 @@ const ld = {
       <!-- 7. Wyjście: kobaltowy blok, pod kreską następna realizacja z pętli. -->
       <section class="end cobalt" data-tone="dark" aria-labelledby="end-h">
         <div class="wrap end-in">
-          <div class="end-h"><h2 id="end-h" class="fit" style="--fd: 11.5; --fm: 11.5" set:html={H(['Ekipa pracuje u klientów,', 'a papiery wypełnia', 'ręcznie?'])} /></div>
+          <!-- runda 8 (Kacper 23.11): zakończenie = nagłówek, jedno zdanie, jeden przycisk, jak w eskapizmie i u Igora („Umów 15 minut”,
+               bezpłatne 15 minut rozmowy wideo ze strony kontaktu). Dopasowanie do ekipy (iPad to wybór Filipa) żyje w sekcji „Najpierw dane”. -->
+          <div class="end-h"><h2 id="end-h" class="fit" style="--fd: 17.8; --fm: 11.85" set:html={H(['Zlecenia Twojej ekipy są w kalendarzu,', 'w telefonie i na papierze naraz?'], ['Zlecenia Twojej ekipy są', 'w kalendarzu, w telefonie', 'i na papierze naraz?'])} /></div>
           <div class="end-txt">
-            <!-- runda 6 (Kacper 23.11): iPad to wybór Filipa, nie oferta dla każdej ekipy; obietnica = narzędzie pod to, jak i na czym ekipa już pracuje -->
-            <p set:html={P('U GlassStone zacząłem od danych z panelu i rozmowy z Filipem o dniu pracy. Kalendarz Google został, bo ekipa już go używała. Dokumenty i rysunek zrobiłem pod iPada, bo Filip go miał i chciał na nim pracować.')} />
-            <p set:html={P('Napisz, jak wygląda Wasz dzień od zapytania do montażu i na czym pracujecie: telefon, komputer, tablet czy papier. Odpiszę, co bym zbudował, a czego bym nie ruszał.')} />
+            <p set:html={P('W 15 minut bezpłatnej rozmowy powiem Ci, co zbudowałbym najpierw.')} />
             <div class="end-act">
-              <a class="btn" href={contact}>Napisz do mnie</a>
-              <a class="live" href={live} target="_blank" rel="noopener">Zobacz glassstone.pl<ExtArrow weight={600} /></a>
+              <a class="btn" href={contact}>Umów 15 minut</a>
             </div>
           </div>
         </div>
@@ -353,7 +363,8 @@ const ld = {
   .case :is(.cobalt, .ink) :is(a,button):focus-visible { outline-color: var(--white); }
   .case ::selection { background: var(--cob); color: var(--white); }
   .case :global(.nw) { white-space: nowrap; }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .sr, .case :global(.hsr) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .case :global(.hm) { display: none; }
   .skip { position: fixed; top: 12px; left: 12px; z-index: 150; padding: 12px 20px; background: var(--ink); color: var(--white); transform: translateY(-200%); }
   .skip:focus { transform: none; }
   .wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
@@ -367,7 +378,9 @@ const ld = {
   .name { margin-top: clamp(4px, .6vw, 10px) !important; font-weight: 800; letter-spacing: -.045em; line-height: .86; white-space: nowrap;
     font-size: calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 6.4); }
   /* Szkło konturem (przezroczyste jak szkło), kamień pełny: jeden gest z języka GlassStone, bez ozdobników. */
-  .name .glass { color: transparent; -webkit-text-stroke: max(2px, .012em) var(--cob); }
+  /* Geist jest krojem zmiennym i jego obrysy zachodzą na siebie: przezroczyste wypełnienie pokazywało wewnętrzne kreski (ukos w „L”,
+     nacięcie w „G”). Wypełnienie w kolorze tła nad obrysem podwójnej grubości (paint-order) zostawia tylko zewnętrzną krawędź. */
+  .name .glass { color: var(--white); -webkit-text-stroke: max(4px, .024em) var(--cob); paint-order: stroke fill; }
   .rule { margin-top: clamp(14px, 2vw, 30px); height: clamp(3px, .28vw, 5px); background: var(--ink); }
   .open-body { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: center; padding-top: var(--in); }
   .open-txt { grid-column: 1 / span 5; align-self: center; display: grid; gap: clamp(18px, 3vh, 32px); }
@@ -420,31 +433,37 @@ const ld = {
   .duo .phone { grid-column: 10 / -1; }
   .duo img { border-radius: 12px; background: var(--white); }
 
-  /* 3. Rozmowa */
+  /* 3. Rozmowa (runda 7): nagłówek nad całością, potem jedna siatka 6 + 6 kolumn dla tekstu i obu list. */
   .paper { background: var(--white); }
   .talk { padding: var(--sec) 0; }
-  .talk-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: start; }
-  /* nagłówek 7 kolumn: „Najpierw dane i rozmowa,” mieści się w jednej linii w zwykłym rozmiarze */
-  .talk-h { grid-column: 1 / span 7; display: grid; gap: 16px; }
-  .talk-txt { grid-column: 8 / -1; display: grid; gap: 18px; padding-top: 6px; }
-  .talk-txt p { font-size: clamp(17px, 1.35vw, 20px); line-height: 1.6; max-width: 32em; }
-  /* Przed i po: dziewięć pozycji z liczbami z bazy obok czterech dzisiejszych. */
-  .pp { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); margin-top: var(--in); }
-  .pp-col { margin: 0; display: grid; grid-template-rows: auto 1fr; }
-  /* „Po” ma 4 pozycje, „Przed” 9: wiersze „Po” rozciągnięte na wysokość „Przed”, bez pustej połaci pod listą. */
-  .pp-po ol { display: grid; grid-auto-rows: 1fr; }
-  .pp-przed { grid-column: 1 / span 7; }
-  .pp-po { grid-column: 8 / -1; }
-  .pp-h { padding: 0 0 12px; font-size: 14px; color: var(--mute); border-bottom: var(--line) solid var(--ink); }
-  .pp-h b { display: block; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); margin-bottom: 4px; }
-  .pp ol { list-style: none; padding: 0; margin: 0; }
-  .pp li { display: grid; grid-template-columns: minmax(0, 9em) minmax(0, 1fr); gap: 12px; padding: 11px 0; border-bottom: 1px solid #dfe2e6; align-items: baseline; }
-  .pp li span { font-weight: 650; font-size: clamp(16px, 1.25vw, 18px); }
-  .pp li em { font-style: normal; font-size: 15px; color: var(--mute); font-variant-numeric: tabular-nums; }
-  .pp-przed li span { color: #6b7178; } /* szary „przed” z kontrastem 4,5:1 na bieli (recenzja Codexa 23.11) */
-  .pp-po li { padding: 16px 0; align-content: center; }
-  .pp-po li span { font-size: clamp(20px, 1.8vw, 26px); color: var(--cob); }
-  .pp-po li:last-child span { color: var(--mute); }
+  .talk-h { display: grid; gap: 16px; }
+  .cmp { display: grid; grid-template-columns: var(--cols); column-gap: var(--cgap); row-gap: var(--in); margin-top: var(--in); }
+  /* tekst pod nagłówkiem sekcji: jeden ciągły lead na całą szerokość siatki, stopień dobrany na ok. 100 znaków w linii
+     (1440 px: 26,6 px, 101-108 znaków; 2000 px: 32 px; 1024 px: 19 px), korekta Kacpra 23.11 */
+  .wide-lead { font-size: clamp(19px, 1.85vw, 32px); line-height: 1.5; letter-spacing: -.005em; }
+  .cmp-lead { grid-column: 1 / -1; }
+  /* nagłówek sekcji rozciągnięty na całą szerokość siatki w jednej linii (Kacper 23.11), bez górnej granicy rozmiaru */
+  .case .fill { --fs: 200px; }
+  .cmp-c1 { grid-column: 1 / span 6; }
+  .cmp-c2 { grid-column: 7 / -1; }
+  .cmp-col { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(16px, 1.8vw, 28px); row-gap: clamp(16px, 1.6vw, 24px); align-content: start; }
+  /* liczba i etykieta w jednym rzędzie, dół do dołu, pod nimi jedna kreska jak w otwarciu */
+  .cmp-top { grid-column: 1 / -1; display: flex; align-items: flex-end; gap: clamp(14px, 1.6vw, 24px); padding-bottom: 14px; border-bottom: var(--line) solid var(--ink); }
+  .cmp-big { font-weight: 800; font-size: clamp(120px, 14vw, 260px); line-height: .74; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+  .cmp-9 { color: var(--white); -webkit-text-stroke: max(4px, .02em) #8c9299; paint-order: stroke fill; }
+  .cmp-4 { color: var(--cob); }
+  .cmp-h { padding-bottom: 4px; font-size: 14px; line-height: 1.45; color: var(--mute); }
+  .cmp-h b { display: block; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); margin-bottom: 4px; }
+  /* listy bez własnego pudełka: kafelki są komórkami siatki kolumny, ten sam rozmiar w „Przed” i „Po” */
+  .cmp-l { display: contents; list-style: none; }
+  .cmp-l li { display: grid; align-content: start; gap: 4px; padding-top: 12px; border-top: 1px solid #dfe2e6; }
+  .cmp-l li span { font-weight: 650; font-size: clamp(16px, 1.25vw, 19px); line-height: 1.25; }
+  .cmp-l li em { font-style: normal; font-size: 14px; line-height: 1.45; color: var(--mute); font-variant-numeric: tabular-nums; }
+  .cmp-przed li span { color: #6b7178; } /* szary „przed” z kontrastem 4,9:1 na bieli (recenzja Codexa 23.11) */
+  .cmp-po li span { font-weight: 750; color: var(--cob); }
+  .cmp-po li:last-of-type span { color: var(--ink); }
+  /* zdanie o dopasowaniu w dwóch wolnych kafelkach ostatniego rzędu „Po”, tym samym stopniem co nazwy pozycji */
+  .cmp-note { grid-column: span 2; padding-top: 12px; border-top: 1px solid #dfe2e6; font-size: clamp(15px, 1.1vw, 17px); line-height: 1.5; color: var(--ink); }
 
   /* 4. Narzędzia */
   .tools { padding-bottom: var(--sec); }
@@ -464,8 +483,9 @@ const ld = {
   .case .m-cap { display: none; }
   .num { font-weight: 800; font-size: clamp(44px, 5vw, 80px); line-height: 1; letter-spacing: -.05em; color: var(--cob); }
   .label { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-  .steps h3 { --fs: clamp(22px, 2.1vw, 36px); font-weight: 750; font-size: var(--fs); line-height: 1.15; letter-spacing: -.02em; }
-  .step-txt > p:last-child { font-size: clamp(16px, 1.3vw, 21px); line-height: 1.6; max-width: 30em; }
+  .steps h3 { --fs: clamp(22px, 2.4vw, 40px); font-weight: 750; font-size: var(--fs); line-height: 1.15; letter-spacing: -.02em; }
+  /* runda 7: tekst kroku większy (jak lead), żeby kolumna tekstu wypełniała wysokość obok ujęcia, bez pustego pola nad i pod nim */
+  .step-txt > p:last-child { font-size: clamp(17px, 1.6vw, 25px); line-height: 1.55; }
   .shot img { border: var(--line) solid #d5d8dd; border-radius: 12px; }
   .doc { max-width: none; }
   .doc img { background: var(--white); }
@@ -494,11 +514,11 @@ const ld = {
 
   /* 7. Wyjście */
   .end { padding-top: var(--sec); }
-  .end-in { display: grid; grid-template-columns: var(--cols); gap: var(--cgap); align-items: end; padding-bottom: var(--sec); }
-  .end-h { grid-column: 1 / span 7; }
-  .end-txt { display: grid; gap: 16px; grid-column: 8 / -1; }
-  .end-act { margin-top: 8px; }
-  .end-txt p { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.55; max-width: 26em; }
+  /* zakończenie (runda 8): nagłówek na całą szerokość, pod nim jedno zdanie i przycisk w jednym rzędzie */
+  .end-in { display: grid; grid-template-columns: var(--cols); column-gap: var(--cgap); row-gap: var(--in); padding-bottom: var(--sec); }
+  .end-h { grid-column: 1 / -1; }
+  .end-txt { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 20px 40px; }
+  .end-txt p { font-size: clamp(18px, 1.6vw, 24px); line-height: 1.45; }
   .end-act { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
   .btn { display: inline-block; padding: 18px 30px; border-radius: 999px; background: var(--white); color: var(--cob); text-decoration: none; font-size: 16px; font-weight: 700; }
   .btn:hover { background: #e8ecff; }
@@ -511,21 +531,20 @@ const ld = {
   .foot { background: #f8f9f2; }
 
   /* Na co dzień do 1100 px: nagłówek nad czterema pozycjami, żeby pod krótkim nagłówkiem nie zostawała pusta kolumna. */
-  @media (max-width: 1100px) { .rows-big { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 1100px) { .rows-big { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cmp-c1, .cmp-c2 { grid-column: 1 / -1; } }
   @media (max-width: 900px) {
-    .open-body, .duo, .site .head, .talk-in, .steps > li, .step-media.pair, .draw-in, .daily-in, .end-in { grid-template-columns: minmax(0, 1fr); }
-    .open-body > *, .duo > *, .site .head > *, .talk-in > *, .steps > li > *, .draw-in > *, .daily-in > *, .end-in > *, .end-h, .daily h2, .rows-big { grid-column: 1 / -1; }
+    .open-body, .duo, .site .head, .cmp, .steps > li, .step-media.pair, .draw-in, .daily-in, .end-in { grid-template-columns: minmax(0, 1fr); }
+    .open-body > *, .duo > *, .site .head > *, .cmp > *, .steps > li > *, .draw-in > *, .daily-in > *, .end-in > *, .end-h, .daily h2, .rows-big { grid-column: 1 / -1; }
     /* bez kartki na pętli: protokół pod pętlą z własnym podpisem, jak przed rundą 5 */
     .step-media.pair { display: grid; }
     .pair .doc { position: static; width: auto; margin-top: 0; }
     .pair .doc img { box-shadow: none; border-color: #d5d8dd; border-radius: 12px; }
     .case .m-cap { display: block; }
     .case .d-only { display: none; }
-    .site .head { row-gap: 18px; }
     .rows-big { grid-template-columns: minmax(0, 1fr); }
     .step-txt { align-self: start; }
-    .pp { grid-template-columns: minmax(0, 1fr); }
-    .pp-przed, .pp-po { grid-column: 1 / -1; }
+    .site .head { row-gap: 18px; }
+    .cmp-col { row-gap: 14px; }
     .duo .phone { width: 62%; justify-self: center; }
   }
   /* Telefon: ujęcia narzędzi pełnym ekranem i od krawędzi do krawędzi (bez marginesów, bez zaokrągleń); podpisy wracają na krawędź tekstu. */
@@ -538,12 +557,15 @@ const ld = {
     .doc { max-width: none; }
     .m-only { display: block; }
     .shot .loop, .draw-shot .loop { border-radius: 0; border-inline: 0; }
-    .pp li { grid-template-columns: minmax(0, 7.5em) minmax(0, 1fr); }
+    .cmp-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cmp-note { grid-column: 1 / -1; }
     .rows > div { grid-template-columns: minmax(0, 7.2em) minmax(0, 1fr); }
     .rows-big > div { grid-template-columns: minmax(0, 1fr); }
     .zdanie { --fs: clamp(26px, 7.8vw, 34px); }
     @supports (width: 1cqi) { .case .fit { font-size: min(var(--fs), 100cqi / var(--fm)); } }
     .case :global(.ln .sb) { display: block; }
+    .case :global(.hd) { display: none; }
+    .case :global(.hm) { display: block; }
   }
   @media (max-width: 480px) {
     .open { padding-top: calc(82px + clamp(8px, 1.6vw, 24px)); }
