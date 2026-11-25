@@ -281,11 +281,12 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
 
       <div class="more">
         <p class="label rv">{p?.work.more || 'More work'}</p>
-        <a class="mrow rv" href="https://glassstone.pl" target="_blank" rel="noopener" data-thumb={thumbGlassstone.src}>
+        <!-- GlassStone prowadzi na case (Kacper 25.11: „ma być spójne”), w tej samej karcie; opis = podtytuł case'u. -->
+        <a class="mrow rv" href={isPl ? '/pl/realizacje/glassstone/' : '/work/glassstone/'} data-thumb={thumbGlassstone.src}>
           <span class="mname">GlassStone</span>
-          <span class="mdesc">{p?.work.glassstone || 'Company website with a portfolio gallery, publishing tools and an admin panel. A system the business keeps using after launch.'}</span>
-          <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
-          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbGlassstone.src} alt="" loading="lazy" decoding="async" /><span class="mpeek-cta">{isPl ? 'Otwórz stronę' : 'Open the website'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span></span></span>
+          <span class="mdesc">{p?.work.glassstone || 'A new website, and an iPad the crew runs each job on, from enquiry to signature.'}</span>
+          <span class="sarr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg></span>
+          <span class="mpeek" aria-hidden="true"><span class="mpeek-in"><img src={thumbGlassstone.src} alt="" loading="lazy" decoding="async" /><span class="mpeek-cta">{isPl ? 'Zobacz case study' : 'See the case study'}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg></span></span></span>
         </a>
         <a class="mrow rv" href="https://www.cannversity.com" target="_blank" rel="noopener" data-thumb={thumbCannversity.src}>
           <span class="mname">Cannversity</span>
