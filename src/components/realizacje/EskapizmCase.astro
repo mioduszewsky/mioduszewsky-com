@@ -71,17 +71,19 @@ const T = pl ? {
     f: ['Dla Justyny', 'nic z planu nie znika bez jej zgody.'],
     alt: 'Ekran AI Plan Buildera: z lewej czat Justyny z agentem i potwierdzenia wykonanych zmian, z prawej podgląd planu podróży do Tajlandii z paskiem „Kontrola planu: Plan wygląda dobrze”. Imiona klientów zmienione.' },
   s4: { t: 'Klient dostaje', s: 'Plan otwiera się w telefonie, w przeglądarce, po zalogowaniu do „Mój plan”.',
-    d: 'W środku plan dnia, noclegi, transfery, budżet, pogoda i czat AI o tej podróży. Przychodzi do 7 dni roboczych od briefu (ustaleń o wyjeździe).',
+    d: 'W środku plan dnia, noclegi, transfery, budżet, pogoda i czat AI o tej podróży. Dwa etapy, zwykle po tygodniu: loty i noclegi, potem cały plan.',
     f: ['Dla klienta', 'plan, który otwiera z telefonu i o który może zapytać.'],
     altPlan: 'Przykładowy plan Tajlandia 2027 na telefonie: przegląd, potem plan dnia z kolejnymi dniami wyjazdu.',
     alts: ['Telefon z ekranem „Plan dnia” przykładowego planu Tajlandia 2027: kolejne dni wyjazdu z programem.', 'Telefon z ekranem „Budżet” przykładowego planu Tajlandia 2027: całkowity budżet na osobę i koszty w kategoriach.'],
     sceneAlt: 'Zatoka na Phi Phi z finału filmu eskapizmu: zielone skały nad turkusową wodą.' },
   // stacja 05 (D4, Kacper 21.10): błędów nie ukrywamy, zgłoszenie z każdego ekranu panelu trafia od razu do mnie i jest szybko naprawione.
   // Liczby z bazy eskapizmu 21.10 (ai_builder_issue_reports + platform_issue_reports): 41 zgłoszeń, 32 od Justyny, wszystkie „fixed”;
+  // ponowne liczenie 25.11.2026: 42 zgłoszenia (32 Justyna, 10 Kacper, ostatnie 13.11), wszystkie „fixed”; zrzut panelu zostaje z 19.10 (podpis z datą).
+  // Stacja 04 od 25.11: plan w dwóch etapach (eskapizmplany 68801576, regulamin z 14.11) zamiast „do 7 dni roboczych od briefu”.
   // 14.07 Justyna zgłosiła 8, siedem zamkniętych tego samego dnia po 10-64 min (cztery do 14 min). Mediany całości nie podajemy:
   // 25 zgłoszeń zamknięto jednym kliknięciem 08.07, więc resolved_at nie mówi, kiedy powstała poprawka.
   s5: { t: 'Błędy się zdarzają', s: 'Kto pracuje w panelu, zgłasza błąd albo pomysł z dowolnego ekranu, a ja widzę to od razu.',
-    d: 'Najwięcej zgłasza Justyna, bo siedzi w panelu codziennie: 32 z 41. Wszystkie są naprawione, żadne nie czeka.',
+    d: 'Najwięcej zgłasza Justyna, bo siedzi w panelu codziennie: 32 z 42. Wszystkie są naprawione, żadne nie czeka.',
     f: ['Dla Justyny', 'z ośmiu błędów zgłoszonych 14 lipca siedem naprawiłem tego samego dnia, cztery w kwadrans.'],
     cap: 'Ekran zgłoszeń w panelu, stan na 19.10.2026. Treść zgłoszeń zamazana.',
     alt: 'Panel admina eskapizmu: z lewej menu z pozycjami Dashboard, Marketing, Użytkownicy, Zamówienia, Zadania, Plany, Kody rabatowe, Afiliacje, AI Plan Builder, Bugs, CMS / Blog i dalszymi, z prawej ekran zgłoszeń z licznikami Nowe 0, W toku 0, Naprawione 41 i wierszami zgłoszeń z rozmytą treścią.' },
@@ -138,13 +140,13 @@ const T = pl ? {
     f: ['For Justyna', 'nothing leaves the plan without her say-so.'],
     alt: 'The AI Plan Builder screen in Polish: Justyna\'s chat with the agent on the left, and on the right a preview of a Thailand travel plan under a bar reading "Kontrola planu: Plan wygląda dobrze" (Plan check: plan looks good). Client names changed.' },
   s4: { t: 'The client gets it', s: 'The plan opens on their phone, in the browser, behind their own login.',
-    d: 'Inside: the day plan, stays, transfers, budget, weather and an AI chat about this exact trip. It arrives within 7 business days of the brief (what we\'ve agreed about the trip).',
+    d: 'Inside: the day plan, stays, transfers, budget, weather and an AI chat about this exact trip. It comes in two stages, about a week each: flights and stays first, then the full plan.',
     f: ['For the client', 'a plan on their phone that takes questions.'],
     altPlan: 'The sample Thailand 2027 plan on a phone (in Polish): the overview, then the day plan, day by day.',
     alts: ['A phone showing the "Plan dnia" (day plan) screen of the sample Thailand 2027 plan: the trip day by day.', 'A phone showing the "Budżet" (budget) screen of the sample Thailand 2027 plan: the total budget per person and costs by category.'],
     sceneAlt: 'The bay on Phi Phi from the end of the eskapizm film: green cliffs over turquoise water.' },
   s5: { t: 'Bugs happen', s: 'Anyone working in the dashboard can report a bug or an idea from any screen, and I see it right away.',
-    d: 'Justyna files most of them, since she\'s in the dashboard every day: 32 of 41. Every one is fixed, none waiting.',
+    d: 'Justyna files most of them, since she\'s in the dashboard every day: 32 of 42. Every one is fixed, none waiting.',
     f: ['For Justyna', 'she reported eight bugs on July 14, and I fixed seven that same day, four within 15 minutes.'],
     cap: 'The bug reports screen in the dashboard, October 19, 2026. Report text blurred.',
     alt: 'The eskapizm admin dashboard, in Polish: on the left a menu with Dashboard, Marketing, Users, Orders, Tasks, Plans, Discount codes, Affiliates, AI Plan Builder, Bugs, CMS / Blog and more, on the right the bug reports screen with counters New 0, In progress 0, Fixed 41 and rows of reports with blurred text.' },
