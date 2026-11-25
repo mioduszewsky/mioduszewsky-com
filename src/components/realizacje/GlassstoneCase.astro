@@ -694,12 +694,13 @@ const ld = {
      Pierwszy ekran jak plakat: zdanie u góry, wiersze i link na dole ekranu, światło między nimi; film dopiero po przewinięciu.
      Bez JS i bez liczenia wysokości nazwy: nagłówek dostaje min. wysokość = okno + wysokość filmu (pełna szerokość, 1200/1920,
      z kreskami) + odstęp + dolny margines sekcji, a blok tekstu rośnie i wypełnia resztę. Desktop i tablet bez zmian (ZATWIERDZONE 23.11). */
-  /* pełna wysokość tylko na telefonie w pionie (proporcja węższa niż 2:3); wąski tablet w pionie i telefon w poziomie zostają
-     przy dawnym układzie (recenzja Codexa 25.11: na 699x1024 światło między zdaniem a listą rosło do 434 px) */
-  @media (max-width: 700px) and (max-aspect-ratio: 2/3) {
+  /* pełna wysokość tylko na telefonie w pionie (szerokość ≤480 px i proporcja ≤2:3), a okno liczone najwyżej jako 220% szerokości
+     (telefony z paskami Safari 170-178%, bez pasków do ok. 216%), żeby wysokie wąskie okno nie dostało dziury; wąski tablet i telefon w poziomie zostają przy dawnym
+     układzie (recenzja Codexa 25.11: na 699x1024 i 682x1024 światło między zdaniem a listą rosło do ok. 435 px) */
+  @media (max-width: 480px) and (max-aspect-ratio: 2/3) {
     .open { display: flex; flex-direction: column; box-sizing: border-box;
-      min-height: calc(100vh + 100vw * 1200 / 1920 + 2 * var(--line) + var(--cgap) + var(--sec));
-      min-height: calc(100svh + 100vw * 1200 / 1920 + 2 * var(--line) + var(--cgap) + var(--sec)); }
+      min-height: calc(min(100vh, 220vw) + 100vw * 1200 / 1920 + 2 * var(--line) + var(--cgap) + var(--sec));
+      min-height: calc(min(100svh, 220vw) + 100vw * 1200 / 1920 + 2 * var(--line) + var(--cgap) + var(--sec)); }
     .open > .wrap { width: 100%; } /* w flexie marginesy auto zwężały .wrap o 1-2 px */
     /* align-items / align-self: stretch, bo reguły siatki (center) w flexie centrują w poziomie, a .open-txt z container-type kurczy się wtedy do zera */
     .open-body { flex: 1 0 auto; display: flex; flex-direction: column; align-items: stretch; gap: var(--cgap); }
