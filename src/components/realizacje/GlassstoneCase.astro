@@ -709,12 +709,13 @@ const ld = {
        między listą a linkiem, pod linkiem), zamiast jednej dziury nad listą na wysokich telefonach; na 390x664 zapasu prawie nie ma */
     .open-txt { flex: 1 0 auto; align-self: stretch; display: flex; flex-direction: column; justify-content: space-evenly; gap: 0; padding-bottom: 28px; }
     .open-shot { flex: none; }
+    .case .open .live { margin-top: clamp(20px, 3vh, 28px); } /* min. 20 px tylko na telefonie: na 320x568 przerwy 32 i 20 trzymają stosunek ≤1,6 (runda 5) */
   }
   @media (max-width: 700px) {
     /* ciężar: zdanie o stopień lżejsze, wiersze zwykłą grubością, kreski między wierszami cienkie i szare (górna zostaje czarna) */
     .open .zdanie { --fs: clamp(24px, 7vw, 30px); font-weight: 650; margin-bottom: 32px; }
     .open .rows > div { padding: 14px 0; border-bottom: 1px solid #d5d8dd; }
     .open .rows dd { font-weight: 500; font-size: 16px; line-height: 1.45; }
-    .open .live { margin-top: clamp(20px, 3vh, 28px); } /* min. 20 px: na 320x568 przerwy 32 i 20 trzymają stosunek ≤1,6 (runda 5) */
+    .open .live { margin-top: clamp(18px, 3vh, 28px); }
   }
 </style>
