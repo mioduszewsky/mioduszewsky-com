@@ -68,9 +68,8 @@ const n = cases.length;
 const center = (n - 1) / 2;
 // Telefon startuje od środkowej karty (Kacper 21.10: „z defaultu na środkowym”); przy parzystej liczbie lewa ze środkowych.
 const mid0 = Math.floor(center);
-// Warstwy: środek na wierzchu, brzegi pod spodem, żeby żadna karta nie chowała się za sąsiadami. Przy parzystej liczbie
-// na froncie lewa ze środkowych, ta sama, od której startuje telefon (mid0), więc komputer i telefon pokazują tę samą kartę (25.11).
-const zOf = (i: number) => 20 - Math.round(Math.abs(i - center) * 4) + (i < center ? 1 : 0);
+// Warstwy: środek na wierzchu, brzegi pod spodem, żeby żadna karta nie chowała się za sąsiadami.
+const zOf = (i: number) => 20 - Math.round(Math.abs(i - center) * 4) + (i > center ? 1 : 0);
 
 const ld = {
   '@context': 'https://schema.org',

@@ -1,15 +1,15 @@
 // Pętla „Następna realizacja” (decyzja Kacpra 20.10.2026), jedno źródło dla wszystkich case'ów.
-// GlassStone (nowy case 22.11.2026, EN od 25.11.2026) na drugim miejscu, czyli karta frontowa wachlarza na komputerze i pierwsza
-// widoczna na telefonie (karuzela startuje od lewej ze środkowych; runda 2 Fincha 25.11). Reszta w dawnej kolejności.
-// PL i EN: eskapizm → GlassStone → Cannversity → Igor Grabowski → eskapizm.
+// GlassStone (nowy case 22.11.2026, EN od 25.11.2026) skrajnie z lewej, na froncie wachlarza eskapizm i Cannversity
+// (decyzja Kacpra 25.11 07:00: „GlassStone daj do lewej i na froncie zostaw eskapizm i Cannversity”).
+// PL i EN: GlassStone → eskapizm → Cannversity → Igor Grabowski → GlassStone.
 // Ta sama kolejność kart na stronie zbiorczej (CaseIndex czyta caseOrder).
 import type { Locale } from '../i18n/site';
 
 // bez obrazu: wiersz „Następna realizacja” to sam tekst (runda 3, 20.10)
 type Case = { slug: string; name: string; locales: Locale[] };
 export const caseOrder: Case[] = [
-  { slug: 'eskapizm', name: 'eskapizm', locales: ['pl', 'en'] },
   { slug: 'glassstone', name: 'GlassStone', locales: ['pl', 'en'] },
+  { slug: 'eskapizm', name: 'eskapizm', locales: ['pl', 'en'] },
   { slug: 'cannversity', name: 'Cannversity', locales: ['pl', 'en'] },
   { slug: 'igor-grabowski', name: 'Igor Grabowski', locales: ['pl', 'en'] },
 ];
