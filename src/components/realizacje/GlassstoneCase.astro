@@ -690,4 +690,23 @@ const ld = {
     /* wiersze otwarcia: etykieta nad tekstem, bo obok niej zostawało 153 px i związane słowa („od pierwszego ekranu”) nie mieściły się */
     .rows > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   }
+  /* Runda 4 (Kacper 25.11, iPhone): na telefonie film ze stroną nie może wchodzić na pierwszy ekran, a pierwsza sekcja ma oddychać.
+     Pierwszy ekran jak plakat: zdanie u góry, wiersze i link na dole ekranu, światło między nimi; film dopiero po przewinięciu.
+     Bez JS i bez liczenia wysokości nazwy: nagłówek dostaje min. wysokość = okno + wysokość filmu (pełna szerokość, 1200/1920,
+     z kreskami) + odstęp + dolny margines sekcji, a blok tekstu rośnie i wypełnia resztę. Desktop i tablet bez zmian (ZATWIERDZONE 23.11). */
+  @media (max-width: 700px) {
+    .open { display: flex; flex-direction: column; box-sizing: border-box;
+      min-height: calc(100vh + 100vw * 1200 / 1920 + 2 * var(--line) + var(--cgap) + var(--sec));
+      min-height: calc(100svh + 100vw * 1200 / 1920 + 2 * var(--line) + var(--cgap) + var(--sec)); }
+    /* align-items / align-self: stretch, bo reguły siatki (center) w flexie centrują w poziomie, a .open-txt z container-type kurczy się wtedy do zera */
+    .open-body { flex: 1 0 auto; display: flex; flex-direction: column; align-items: stretch; gap: var(--cgap); }
+    .open-txt { flex: 1 0 auto; align-self: stretch; display: flex; flex-direction: column; gap: 0; padding-bottom: 28px; }
+    .open-shot { flex: none; }
+    /* ciężar: zdanie o stopień lżejsze, wiersze zwykłą grubością, kreski między wierszami cienkie i szare (górna zostaje czarna) */
+    .open .zdanie { --fs: clamp(24px, 7vw, 30px); font-weight: 650; margin-bottom: 32px; }
+    .open .rows { margin-top: auto; }
+    .open .rows > div { padding: 14px 0; border-bottom: 1px solid #d5d8dd; }
+    .open .rows dd { font-weight: 500; font-size: 16px; line-height: 1.45; }
+    .open .live { margin-top: clamp(18px, 3vh, 28px); }
+  }
 </style>
