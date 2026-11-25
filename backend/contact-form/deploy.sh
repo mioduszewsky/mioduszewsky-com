@@ -53,10 +53,10 @@ if aws lambda get-function --function-name "$FN" --region "$REGION" >/dev/null 2
   aws lambda update-function-code --function-name "$FN" --zip-file fileb://function.zip --region "$REGION" >/dev/null
   aws lambda wait function-updated --function-name "$FN" --region "$REGION"
   aws lambda update-function-configuration --function-name "$FN" --region "$REGION" \
-    --environment "$ENV" --memory-size 256 --timeout 10 >/dev/null
+    --runtime nodejs24.x --environment "$ENV" --memory-size 256 --timeout 10 >/dev/null
 else
   aws lambda create-function --function-name "$FN" --region "$REGION" \
-    --runtime nodejs20.x --handler index.handler --role "$ROLE_ARN" \
+    --runtime nodejs24.x --handler index.handler --role "$ROLE_ARN" \
     --zip-file fileb://function.zip --memory-size 256 --timeout 10 \
     --environment "$ENV" \
     --tags "$TAGS" >/dev/null
