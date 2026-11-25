@@ -36,7 +36,7 @@ export const homePl = {
     aigorAlt: 'igorgrabowski.com. Przewiń działającą stronę.',
     aigorNote: 'to one pager.\ntu klikasz',
     more: 'Więcej realizacji',
-    glassstone: 'Strona firmy z galerią realizacji, narzędziami do publikacji i panelem administracyjnym. Coś, z czego firma korzysta także po publikacji.',
+    glassstone: 'Strona i iPad, na którym ekipa prowadzi zlecenie od zapytania do podpisu.',
     cannversity: 'Landing page dla doradztwa w branży konopnej. Złożona oferta ułożona w prostą strukturę, którą da się szybko zrozumieć.',
     decksName: 'Prezentacje projektowe',
     decks: 'Interaktywne prezentacje i modele finansowe, które zderzają pomysł z realnymi ograniczeniami i decyzją biznesową.',
