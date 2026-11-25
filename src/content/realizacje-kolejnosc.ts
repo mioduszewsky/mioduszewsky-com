@@ -1,7 +1,7 @@
-// Pętla „Następna realizacja” (decyzja Kacpra 20.10.2026), jedno źródło dla wszystkich czterech case'ów.
-// PL i EN: eskapizm → Cannversity → Igor Grabowski → eskapizm.
-// GlassStone wraca 22.11.2026 z nowym case'em (nowa strona i panel), tylko po polsku: w EN nie ma karty ani miejsca w pętli.
-// PL: eskapizm → Cannversity → Igor Grabowski → GlassStone → eskapizm.
+// Pętla „Następna realizacja” (decyzja Kacpra 20.10.2026), jedno źródło dla wszystkich case'ów.
+// GlassStone (nowy case 22.11.2026, EN od 25.11.2026) na drugim miejscu, czyli karta frontowa wachlarza na komputerze i pierwsza
+// widoczna na telefonie (karuzela startuje od lewej ze środkowych; runda 2 Fincha 25.11). Reszta w dawnej kolejności.
+// PL i EN: eskapizm → GlassStone → Cannversity → Igor Grabowski → eskapizm.
 // Ta sama kolejność kart na stronie zbiorczej (CaseIndex czyta caseOrder).
 import type { Locale } from '../i18n/site';
 
@@ -9,9 +9,9 @@ import type { Locale } from '../i18n/site';
 type Case = { slug: string; name: string; locales: Locale[] };
 export const caseOrder: Case[] = [
   { slug: 'eskapizm', name: 'eskapizm', locales: ['pl', 'en'] },
+  { slug: 'glassstone', name: 'GlassStone', locales: ['pl', 'en'] },
   { slug: 'cannversity', name: 'Cannversity', locales: ['pl', 'en'] },
   { slug: 'igor-grabowski', name: 'Igor Grabowski', locales: ['pl', 'en'] },
-  { slug: 'glassstone', name: 'GlassStone', locales: ['pl'] },
 ];
 
 export const caseHref = (slug: string, locale: Locale) => (locale === 'pl' ? `/pl/realizacje/${slug}/` : `/work/${slug}/`);

@@ -193,9 +193,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://mioduszewsky.com/pl/realizacje/glassstone/</loc>
-    <lastmod>2026-11-23</lastmod>
+    <loc>https://mioduszewsky.com/work/glassstone/</loc>
+    <lastmod>2026-11-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/glassstone/" />
     <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/glassstone/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/glassstone/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mioduszewsky.com/pl/realizacje/glassstone/</loc>
+    <lastmod>2026-11-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mioduszewsky.com/work/glassstone/" />
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://mioduszewsky.com/pl/realizacje/glassstone/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mioduszewsky.com/work/glassstone/" />
     <priority>0.7</priority>
   </url>
 </urlset>
