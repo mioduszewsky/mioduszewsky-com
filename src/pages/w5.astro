@@ -1306,21 +1306,28 @@ const [lpMe, lpBuilding, lpEskapizm, lpCannversity] = await Promise.all(
             card.className = 'lp-card';
             card.style.setProperty('--tilt', tilt + 'deg');
             card.style.setProperty('--lp-x', '0px');
-            card.appendChild(lpImage(el, card, () => { card?.remove(); card = null; }));
+            card.appendChild(lpImage(el, card, () => {
+              card?.remove(); card = null;
+              el.classList.remove('lp-on'); if (openEl === el) openEl = null;
+            }));
             el.appendChild(card);
           };
           // karta wyśrodkowana na słowie - przy krawędzi ekranu dogięta z powrotem w kadr.
           // Liczone przy otwarciu z pełnego rozmiaru i obrotu karty, nie z prostokąta w trakcie
-          // skalowania (0.82): karta budowana w tle wystawała wtedy poza ekran.
+          // skalowania (0.82): karta budowana w tle wystawała wtedy poza ekran. Obrót idzie
+          // wokół środka dolnej krawędzi (transform-origin), więc przechyla się górna krawędź.
           const fit = () => {
             if (!card) return;
             const r = el.getBoundingClientRect();
-            const t = Math.abs(tilt) * Math.PI / 180;
-            const half = (card.offsetWidth * Math.cos(t) + card.offsetHeight * Math.sin(t)) / 2;
+            const t = tilt * Math.PI / 180;
+            const halfW = (card.offsetWidth / 2) * Math.cos(t);
+            const lean = card.offsetHeight * Math.sin(t);
             const mid = r.left + r.width / 2;
+            const left = mid - halfW + Math.min(0, lean);
+            const right = mid + halfW + Math.max(0, lean);
             let shift = 0;
-            if (mid - half < 10) shift = 10 - (mid - half);
-            else if (mid + half > innerWidth - 10) shift = innerWidth - 10 - (mid + half);
+            if (left < 10) shift = 10 - left;
+            else if (right > innerWidth - 10) shift = innerWidth - 10 - right;
             card.style.setProperty('--lp-x', shift.toFixed(1) + 'px');
           };
           lpBuilders.push(build);
