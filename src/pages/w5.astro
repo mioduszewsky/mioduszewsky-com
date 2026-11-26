@@ -18,6 +18,10 @@ import { cannabisHref, cannabisCopy } from '../content/cannabis';
 import { getImage } from 'astro:assets';
 import logoPosterSrc from '../assets/logo3d/logo-poster.webp';
 import logoNavPosterSrc from '../assets/logo3d/logo-nav-poster.webp';
+import lpMeSrc from '../assets/about/me-portrait.jpg';
+import lpBuildingSrc from '../assets/about/building.jpg';
+import lpEskapizmSrc from '../assets/about/eskapizm.jpg';
+import lpCannversitySrc from '../assets/about/cannversity.jpg';
 
 // Tryb prod (index): bez przełącznika wariantów, z indeksowaniem i meta description.
 interface Props { prod?: boolean; title?: string; locale?: Locale; }
@@ -67,6 +71,20 @@ const manifPost = crossAt >= 0 ? manifLine1.slice(crossAt + manifCross.length) :
 // Plakaty logo: oryginał 2048 px, na ekranie max 680 px (kurtyna) i ~250 px (nav) w CSS
 const logoPoster = await getImage({ src: logoPosterSrc, width: 1400, format: 'webp' });
 const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format: 'webp' });
+// Zdjęcia pod słowami (.lp): karta ma 180×224 px obrazu, a oryginały to 78-255 KB JPG
+// do 900 px. Przycięte jak object-fit: cover (środek) do 2x i 3x gęstości ekranu, WebP,
+// pod /_astro/ z cache na rok. Skrypt niżej wczytuje je w tle, zanim sekcja wjedzie na ekran.
+const lpImg = async (src: ImageMetadata) => {
+  const [x2, x3] = await Promise.all([
+    getImage({ src, width: 360, height: 448, fit: 'cover', format: 'webp', quality: 78 }),
+    getImage({ src, width: 540, height: 672, fit: 'cover', format: 'webp', quality: 74 }),
+  ]);
+  // gęstość (2x/3x), nie szerokość: sharp nie powiększa, więc building 3x ma 506 px, nie 540
+  return { src: x2.src, srcset: `${x2.src} 2x, ${x3.src} 3x` };
+};
+const [lpMe, lpBuilding, lpEskapizm, lpCannversity] = await Promise.all(
+  [lpMeSrc, lpBuildingSrc, lpEskapizmSrc, lpCannversitySrc].map(lpImg),
+);
 ---
 
 <VariantLayout
@@ -344,16 +362,16 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
       <div class="how-why">
         {isPl ? (
           <>
-            <p class="how-why-t rv how-why-full how-me">Siemka, tu <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>. Zanim zacząłem robić strony, pracowałem przy prowadzeniu projektów i startupów. Designu i developmentu nauczyłem się później, bo chciałem sam zamieniać pomysły w działające produkty.</p>
-            <p class="how-why-t rv">Biorę to, co masz w głowie i w biznesie, i przekładam na <span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">działającą stronę</span>. Patrzę na cały ciąg: <em>decyzja, oferta, treść, design, wdrożenie i publikacja</em>.</p>
-            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> to spółka, którą współprowadzę. <span class="dim2"><span class="lp" data-tap data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span> powstało, kiedy wchodziłem głębiej w branżę konopną.</span> Oba nauczyły mnie patrzeć na stronę przez pryzmat tego, co ma zrobić dla firmy.</p>
+            <p class="how-why-t rv how-why-full how-me">Siemka, tu <span class="lp" data-lp={lpMe.src} data-lp-srcset={lpMe.srcset} data-tilt="-4">Kacper</span>. Zanim zacząłem robić strony, pracowałem przy prowadzeniu projektów i startupów. Designu i developmentu zacząłem się uczyć później, bo chciałem zamieniać pomysły w działające produkty.</p>
+            <p class="how-why-t rv">Biorę to, co masz w głowie i w biznesie, i przekładam na <span class="lp" data-tap data-lp={lpBuilding.src} data-lp-srcset={lpBuilding.srcset} data-tilt="-3">działającą stronę</span>. Patrzę na cały ciąg: <em>decyzja, oferta, treść, design, wdrożenie i publikacja</em>.</p>
+            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp={lpEskapizm.src} data-lp-srcset={lpEskapizm.srcset} data-tilt="4">eskapizm</span> to spółka, którą współprowadzę. <span class="dim2"><span class="lp" data-tap data-lp={lpCannversity.src} data-lp-srcset={lpCannversity.srcset} data-tilt="-2">Cannversity</span> powstało, kiedy wchodziłem głębiej w branżę konopną.</span> Oba nauczyły mnie patrzeć na stronę przez pryzmat tego, co ma zrobić dla firmy.</p>
           </>
         ) : (
           <>
-            <p class="how-why-t rv how-why-full how-me">Behind mioduszewsky there is one person, not an agency. I am <span class="lp" data-lp="/about/me-portrait.jpg" data-tilt="-4">Kacper</span>, and I build from Wrocław. I build things to keep working long after the first impression fades.</p>
+            <p class="how-why-t rv how-why-full how-me">Behind mioduszewsky there is one person, not an agency. I am <span class="lp" data-lp={lpMe.src} data-lp-srcset={lpMe.srcset} data-tilt="-4">Kacper</span>, and I build from Wrocław. I build things to keep working long after the first impression fades.</p>
             <p class="how-why-t rv">I am not the best specialist in every single discipline. <span class="dim2">A dedicated designer may draw a prettier system. A specialist developer may write more advanced code.</span> But depth in one craft is not what makes the whole thing work.</p>
             <p class="how-why-t rv">I work across the points where projects usually break: <em>the decision, the offer, the design, the build, the launch</em>. One system, by one person.</p>
-            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp="/about/eskapizm.jpg" data-tilt="4">eskapizm</span> and <span class="lp" data-tap data-lp="/about/cannversity.jpg" data-tilt="-2">Cannversity</span>, shown above, are not client work. <span class="dim2">They are my own projects.</span> I run this exact system on <span class="lp" data-tap data-lp="/about/building.jpg" data-tilt="-3">my own business</span> before I ever run it on yours.</p>
+            <p class="how-why-t rv how-why-full"><span class="lp" data-tap data-lp={lpEskapizm.src} data-lp-srcset={lpEskapizm.srcset} data-tilt="4">eskapizm</span> and <span class="lp" data-tap data-lp={lpCannversity.src} data-lp-srcset={lpCannversity.srcset} data-tilt="-2">Cannversity</span>, shown above, are not client work. <span class="dim2">They are my own projects.</span> I run this exact system on <span class="lp" data-tap data-lp={lpBuilding.src} data-lp-srcset={lpBuilding.srcset} data-tilt="-3">my own business</span> before I ever run it on yours.</p>
           </>
         )}
       </div>
@@ -1190,10 +1208,44 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
     gsap.registerPlugin(ScrollTrigger);
 
     // LINK-PREVIEW: hover na słowie odsłania zdjęcie Kacpra (native, bez React).
-    // Zdjęcia ładują się leniwie dopiero przy pierwszym najechaniu.
+    // Dawniej obraz powstawał dopiero przy pierwszym najechaniu albo dotknięciu, a karta
+    // pokazywała się od razu, więc na wolnym łączu stała pusta (biały kwadrat). Teraz
+    // obraz ściąga się w tle, gdy sekcja zbliża się do ekranu, a karta wjeżdża dopiero
+    // z gotowym, zdekodowanym obrazem (klasa lp-ready).
     {
       const finePointer = matchMedia('(pointer: fine)').matches;
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // onFail: przerwane pobranie usuwa kartę, żeby następne najechanie albo dotknięcie
+      // spróbowało jeszcze raz, zamiast trzymać niewidoczną kartę do przeładowania strony.
+      const lpImage = (el: HTMLElement, card: HTMLElement, onFail: () => void) => {
+        const img = document.createElement('img');
+        img.alt = '';
+        img.decoding = 'async';
+        if (el.dataset.lpSrcset) img.srcset = el.dataset.lpSrcset;
+        img.src = el.dataset.lp || '';
+        // decode() po load tylko odracza pokazanie do zdekodowania; jego odmowa nie ukrywa
+        // obrazu, który już się wczytał
+        const ready = () => card.classList.add('lp-ready');
+        if (img.complete && img.naturalWidth) ready();
+        else {
+          img.addEventListener('load', () => { img.decode().catch(() => {}).then(ready); }, { once: true });
+          img.addEventListener('error', onFail, { once: true });
+        }
+        return img;
+      };
+      // Kto pierwszy: wczytanie w tle albo najechanie. Karta powstaje raz (build sprawdza card).
+      const lpBuilders: Array<() => void> = [];
+      const lpZone = document.querySelector('.how-why');
+      if (lpZone && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          io.disconnect();
+          lpBuilders.forEach((b) => b());
+        }, { rootMargin: '150% 0px' });
+        // Bez czekania na load: na wolnym łączu wideo z pierwszego ekranu trzyma load długo.
+        // Pierwszego ekranu (LCP) to nie rusza, bo sekcja leży kilka ekranów niżej.
+        io.observe(lpZone);
+      }
       if (finePointer) {
         document.querySelectorAll<HTMLElement>('.lp').forEach((el) => {
           let card: HTMLElement | null = null;
@@ -1201,19 +1253,16 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
           let curX = 0;
           let tgtX = 0;
           const tilt = parseFloat(el.dataset.tilt || '0');
-          const src = el.dataset.lp || '';
 
           const build = () => {
+            if (card) return;
             card = document.createElement('span');
             card.className = 'lp-card';
             card.style.setProperty('--tilt', tilt + 'deg');
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = '';
-            img.decoding = 'async';
-            card.appendChild(img);
+            card.appendChild(lpImage(el, card, () => { card?.remove(); card = null; }));
             el.appendChild(card);
           };
+          lpBuilders.push(build);
           const loop = () => {
             curX += (tgtX - curX) * 0.15;
             if (card) card.style.setProperty('--lp-x', curX.toFixed(1) + 'px');
@@ -1251,30 +1300,41 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
         document.querySelectorAll<HTMLElement>('.lp').forEach((el) => {
           let card: HTMLElement | null = null;
           const tilt = parseFloat(el.dataset.tilt || '0');
-          const src = el.dataset.lp || '';
           const build = () => {
+            if (card) return;
             card = document.createElement('span');
             card.className = 'lp-card';
             card.style.setProperty('--tilt', tilt + 'deg');
             card.style.setProperty('--lp-x', '0px');
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = '';
-            img.decoding = 'async';
-            card.appendChild(img);
+            card.appendChild(lpImage(el, card, () => {
+              card?.remove(); card = null;
+              el.classList.remove('lp-on'); if (openEl === el) openEl = null;
+            }));
             el.appendChild(card);
-            // karta wyśrodkowana na słowie - przy krawędzi ekranu dogięta z powrotem w kadr
-            requestAnimationFrame(() => {
-              const r = card!.getBoundingClientRect();
-              let shift = 0;
-              if (r.left < 10) shift = 10 - r.left;
-              else if (r.right > innerWidth - 10) shift = innerWidth - 10 - r.right;
-              if (shift) card!.style.setProperty('--lp-x', shift + 'px');
-            });
           };
+          // karta wyśrodkowana na słowie - przy krawędzi ekranu dogięta z powrotem w kadr.
+          // Liczone przy otwarciu z pełnego rozmiaru i obrotu karty, nie z prostokąta w trakcie
+          // skalowania (0.82): karta budowana w tle wystawała wtedy poza ekran. Obrót idzie
+          // wokół środka dolnej krawędzi (transform-origin), więc przechyla się górna krawędź.
+          const fit = () => {
+            if (!card) return;
+            const r = el.getBoundingClientRect();
+            const t = tilt * Math.PI / 180;
+            const halfW = (card.offsetWidth / 2) * Math.cos(t);
+            const lean = card.offsetHeight * Math.sin(t);
+            const mid = r.left + r.width / 2;
+            const left = mid - halfW + Math.min(0, lean);
+            const right = mid + halfW + Math.max(0, lean);
+            let shift = 0;
+            if (left < 10) shift = 10 - left;
+            else if (right > innerWidth - 10) shift = innerWidth - 10 - right;
+            card.style.setProperty('--lp-x', shift.toFixed(1) + 'px');
+          };
+          lpBuilders.push(build);
           const open = () => {
             if (openEl && openEl !== el) openEl.classList.remove('lp-on');
             if (!card) build();
+            fit();
             el.classList.add('lp-on');
             openEl = el;
           };
@@ -1724,14 +1784,15 @@ const logoNavPoster = await getImage({ src: logoNavPosterSrc, width: 520, format
     transform-origin: bottom center;
     transition: opacity 0.26s ease, transform 0.44s cubic-bezier(0.34, 1.4, 0.5, 1);
   }
-  :global(.lp.lp-on .lp-card) {
+  /* lp-ready: obraz już wczytany i zdekodowany, więc karta nigdy nie wjeżdża pusta */
+  :global(.lp.lp-on .lp-card.lp-ready) {
     opacity: 1;
     transform: translate(-50%, 0) translateX(var(--lp-x, 0px)) rotate(var(--tilt, 0deg)) scale(1);
   }
   :global(.lp-card img) { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; display: block; }
   @media (prefers-reduced-motion: reduce) {
     :global(.lp-card) { transition: opacity 0.2s ease; }
-    :global(.lp.lp-on .lp-card) { transform: translate(-50%, 0) rotate(var(--tilt, 0deg)); }
+    :global(.lp.lp-on .lp-card.lp-ready) { transform: translate(-50%, 0) translateX(var(--lp-x, 0px)) rotate(var(--tilt, 0deg)); }
   }
 
   .serv { padding: 9vh 3vw 10vh; }

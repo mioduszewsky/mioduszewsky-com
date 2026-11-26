@@ -61,7 +61,7 @@ export const homePl = {
     newTitle: 'U mnie',
     newList: ['Rozmawiamy o biznesie.', 'Ustalam, co ma powstać.', 'Układam treść i strukturę.', 'Projektuję i buduję.', 'Publikujemy.'],
     newOut: 'Od pierwszej rozmowy do publikacji rozmawiasz z *tą samą osobą*.',
-    why1: 'Siemka, tu Kacper. Zanim zacząłem robić strony, pracowałem przy prowadzeniu projektów i startupów. Designu i developmentu nauczyłem się później, bo chciałem sam zamieniać pomysły w działające produkty.',
+    why1: 'Siemka, tu Kacper. Zanim zacząłem robić strony, pracowałem przy prowadzeniu projektów i startupów. Designu i developmentu zacząłem się uczyć później, bo chciałem zamieniać pomysły w działające produkty.',
     why2: 'Biorę to, co masz w głowie i w biznesie, i przekładam na działającą stronę. Patrzę na cały ciąg: decyzja, oferta, treść, design, wdrożenie i publikacja.',
     why3: 'eskapizm to spółka, którą współprowadzę. Cannversity powstało, kiedy wchodziłem głębiej w branżę konopną. Oba nauczyły mnie patrzeć na stronę przez pryzmat tego, co ma zrobić dla firmy.',
   },
